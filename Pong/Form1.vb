@@ -82,6 +82,10 @@ Public Class Form1
     Private ReadOnly ScoreFont As New Font(FontFamily.GenericSansSerif, 75)
     Private ReadOnly AlineCenterMiddle As New StringFormat
 
+
+    Dim InstructStartLocation As Point
+    Private ReadOnly InstructStartText As String = "Press 1 or 2 for the number of players."
+
     'One Player Instructions Data *************************
     Private InstructOneLocation As Point
     Private Const InstructOneText As String =
@@ -1127,6 +1131,8 @@ Public Class Form1
 
     Private Sub UpdateStartScreen()
 
+        InstructStartLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) - 15)
+
         If OneKeyDown = True Then
 
             PlayBounceSound()
@@ -1400,8 +1406,13 @@ Public Class Form1
 
         DrawTitle()
 
-        'Draw instructions.
-        Buffer.Graphics.DrawString("Press 1 or 2 for the number of players.", InstructionsFont, Brushes.White, ClientSize.Width \ 2, ClientSize.Height \ 2 - 15, AlineCenter)
+        DrawStartScreenInstructions()
+
+    End Sub
+
+    Private Sub DrawStartScreenInstructions()
+
+        Buffer.Graphics.DrawString(InstructStartText, InstructionsFont, Brushes.White, InstructStartLocation, AlineCenter)
 
     End Sub
 
@@ -1460,15 +1471,18 @@ Public Class Form1
 
         'Centers the court line in the client area of our form.
         CenterlineTop = New Point(ClientSize.Width \ 2, 0)
+
         CenterlineBottom = New Point(ClientSize.Width \ 2, ClientSize.Height)
 
     End Sub
 
     Private Sub LayoutInstructions()
 
-        InstructOneLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - 15)
+        Dim Location As New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) - 15)
 
-        InstructTwoLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - 15)
+        InstructOneLocation = Location
+
+        InstructTwoLocation = Location
 
     End Sub
 
