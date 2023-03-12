@@ -1472,19 +1472,19 @@ Public Class Form1
 
     Private Shared Sub PlayBounceSound()
 
-        My.Computer.Audio.Play(Application.StartupPath & "bounce.wav")
+        'My.Computer.Audio.Play(Application.StartupPath & "bounce.wav")
 
     End Sub
 
     Private Shared Sub PlayScoreSound()
 
-        My.Computer.Audio.Play(Application.StartupPath & "score.wav")
+        'My.Computer.Audio.Play(Application.StartupPath & "score.wav")
 
     End Sub
 
     Private Shared Sub PlayWinningSound()
 
-        My.Computer.Audio.Play(Application.StartupPath & "winning.wav")
+        'My.Computer.Audio.Play(Application.StartupPath & "winning.wav")
 
     End Sub
 
