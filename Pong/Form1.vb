@@ -1489,11 +1489,15 @@ Public Class Form1
 
         'My.Computer.Audio.Play(Application.StartupPath & "score.wav")
 
+        My.Computer.Audio.Play(My.Resources.score, AudioPlayMode.Background)
+
     End Sub
 
     Private Shared Sub PlayWinningSound()
 
         'My.Computer.Audio.Play(Application.StartupPath & "winning.wav")
+
+        My.Computer.Audio.Play(My.Resources.winning, AudioPlayMode.Background)
 
     End Sub
 
