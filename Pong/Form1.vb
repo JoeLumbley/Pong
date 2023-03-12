@@ -1474,28 +1474,20 @@ Public Class Form1
 
     Private Shared Sub PlayBounceSound()
 
-        'My.Computer.Audio.Play(Application.StartupPath & "bounce.wav")
-
         My.Computer.Audio.Play(My.Resources.bounce, AudioPlayMode.Background)
 
         'Used Audacity to generate a tone - Frequency:600Hz  Amplitude:0.1  Duration:0.183s
-        'save as bounce.wav in Pong\bin\Debug\net6.0-windows.
+        'save as bounce.wav.
 
     End Sub
 
-
-
     Private Shared Sub PlayScoreSound()
-
-        'My.Computer.Audio.Play(Application.StartupPath & "score.wav")
 
         My.Computer.Audio.Play(My.Resources.score, AudioPlayMode.Background)
 
     End Sub
 
     Private Shared Sub PlayWinningSound()
-
-        'My.Computer.Audio.Play(Application.StartupPath & "winning.wav")
 
         My.Computer.Audio.Play(My.Resources.winning, AudioPlayMode.Background)
 
