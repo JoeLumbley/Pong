@@ -24,6 +24,8 @@
 'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
 'SOFTWARE.
 
+Imports System.Media
+
 Public Class Form1
 
     Private Enum GameStateEnum
@@ -1474,7 +1476,14 @@ Public Class Form1
 
         'My.Computer.Audio.Play(Application.StartupPath & "bounce.wav")
 
+        My.Computer.Audio.Play(My.Resources.bounce, AudioPlayMode.Background)
+
+        'Used Audacity to generate a tone - Frequency:600Hz  Amplitude:0.1  Duration:0.183s
+        'save as bounce.wav in Pong\bin\Debug\net6.0-windows.
+
     End Sub
+
+
 
     Private Shared Sub PlayScoreSound()
 
