@@ -714,7 +714,7 @@ Public Class Form1
 
         'Is the right paddle player rolling the mouse wheel up?
         If MouseWheelUp = True Then
-            'Yes, the right paddle player is rolling the mouse wheel up?
+            'Yes, the right paddle player is rolling the mouse wheel up.
 
             'Move right paddle up.
             RightPaddle.Y -= RightPaddleSpeed * 4
@@ -732,7 +732,7 @@ Public Class Form1
 
         'Is the right paddle player rolling the mouse wheel down?
         If MouseWheelDown = True Then
-            'Yes, the right paddle player is rolling the mouse wheel down?
+            'Yes, the right paddle player is rolling the mouse wheel down.
 
             'Move right paddle down.
             RightPaddle.Y += RightPaddleSpeed * 4
