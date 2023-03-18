@@ -24,8 +24,6 @@
 'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
 'SOFTWARE.
 
-Imports System.Media
-
 Public Class Form1
 
     Private Enum GameStateEnum
@@ -68,7 +66,7 @@ Public Class Form1
     Private LeftPaddle As Rectangle
     Private LeftPaddleSpeed As Integer
     Private LeftPaddleScore As Integer
-    Private LeftPaddleScoreLocation As Point
+    Private LPadScoreLocation As Point
     Private ReadOnly LeftPaddleMidlinePen As New Pen(Color.Goldenrod, 7)
     '***********************************
 
@@ -76,7 +74,7 @@ Public Class Form1
     Private RightPaddle As Rectangle
     Private RightPaddleSpeed As Integer
     Private RightPaddleScore As Integer
-    Private RightPaddleScoreLocation As Point
+    Private RPadScoreLocation As Point
     '***********************************
 
     Private ReadOnly ScoreFont As New Font(FontFamily.GenericSansSerif, 75)
@@ -159,7 +157,45 @@ Public Class Form1
 
     Dim DrawFlashingText As Boolean = True
 
+    'Joystick Data**************************************************************************************
+    Private Declare Function joyGetPosEx Lib "winmm.dll" (ByVal uJoyID As Long, ByRef pji As JOYINFOEX) As Long
+    Private Const JOY_RETURNBUTTONS As Long = &H80&
+    Private Const JOY_RETURNCENTERED As Long = &H400&
+    Private Const JOY_RETURNPOV As Long = &H40&
+    Private Const JOY_RETURNPOVCTS As Long = &H200&
+    Private Const JOY_RETURNR As Long = &H8&
+    Private Const JOY_RETURNRAWDATA As Long = &H100&
+    Private Const JOY_RETURNU As Long = &H10
+    Private Const JOY_RETURNV As Long = &H20
+    Private Const JOY_RETURNX As Long = &H1&
+    Private Const JOY_RETURNY As Long = &H2&
+    Private Const JOY_RETURNZ As Long = &H4&
+    Private Const JOY_RETURNALL As Long = (JOY_RETURNX Or JOY_RETURNY Or JOY_RETURNZ Or JOY_RETURNR Or JOY_RETURNU Or JOY_RETURNV Or JOY_RETURNPOV Or JOY_RETURNBUTTONS)
+    Private Structure JOYINFOEX
+        Public dwSize As Long ' size of structure
+        Public dwFlags As Long ' flags to dicate what to return
+        Public dwXpos As Long ' x position
+        Public dwYpos As Long ' y position
+        Public dwZpos As Long ' z position
+        Public dwRpos As Long ' rudder/4th axis position
+        Public dwUpos As Long ' 5th axis position
+        Public dwVpos As Long ' 6th axis position
+        Public dwButtons As Long ' button states
+        Public dwButtonNumber As Long ' current button number pressed
+        Public dwPOV As Long ' point of view state
+        Public dwReserved1 As Long ' reserved for communication between winmm driver
+        Public dwReserved2 As Long ' reserved for future expansion
+    End Structure
+    Private JI As JOYINFOEX
+    Private Joystick0Down As Boolean = False
+    Private Joystick0Up As Boolean = False
+    Private Joystick0Home As Boolean = False
+    '***************************************************************************************************
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        JI.dwSize = Len(JI)
+        JI.dwFlags = JOY_RETURNALL
 
         InitializeGame()
 
@@ -271,6 +307,7 @@ Public Class Form1
     End Sub
 
     Private Sub UpdatePlaying()
+        UpdateJoystick()
 
         UpdatePaddles()
 
@@ -281,6 +318,37 @@ Public Class Form1
         CheckforEndGame()
 
         CheckForPause()
+
+    End Sub
+
+    Private Sub UpdateJoystick()
+
+        'Is joystick 0 connected?
+        If joyGetPosEx(0, JI) = 0 Then
+            'Yes, joystick 0 is connected.
+
+            Select Case JI.dwRpos
+                Case = 18000 'Down
+
+                    Joystick0Home = False
+                    Joystick0Up = False
+                    Joystick0Down = True
+
+                Case = 0 'Up
+
+                    Joystick0Home = False
+                    Joystick0Down = False
+                    Joystick0Up = True
+
+                Case = 65535 'Home
+
+                    Joystick0Up = False
+                    Joystick0Down = False
+                    Joystick0Home = True
+
+            End Select
+
+        End If
 
     End Sub
 
@@ -314,13 +382,13 @@ Public Class Form1
 
     Private Sub DrawRightPaddleScore()
 
-        Buffer.Graphics.DrawString(RightPaddleScore, ScoreFont, Brushes.White, RightPaddleScoreLocation, AlineCenterMiddle)
+        Buffer.Graphics.DrawString(RightPaddleScore, ScoreFont, Brushes.White, RPadScoreLocation, AlineCenterMiddle)
 
     End Sub
 
     Private Sub DrawLeftPaddleScore()
 
-        Buffer.Graphics.DrawString(LeftPaddleScore, ScoreFont, Brushes.White, LeftPaddleScoreLocation, AlineCenterMiddle)
+        Buffer.Graphics.DrawString(LeftPaddleScore, ScoreFont, Brushes.White, LPadScoreLocation, AlineCenterMiddle)
 
     End Sub
 
@@ -441,6 +509,8 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateRightPaddle()
+
+        UpdateRightPaddleJoystick()
 
         UpdateRightPaddleKeyboard()
 
@@ -750,6 +820,69 @@ Public Class Form1
 
     End Sub
 
+    Private Sub UpdateRightPaddleJoystick()
+
+        If Joystick0Down = True Then
+
+            'Move right paddle down.
+            RightPaddle.Y += RightPaddleSpeed
+
+            'Is the right paddle below the playing field?
+            If RightPaddle.Y + RightPaddle.Height > BottomWall Then
+                'Yes, the right paddle is below playing field.
+
+                'Push the right paddle up and back into playing field.
+                RightPaddle.Y = BottomWall - RightPaddle.Height
+
+            End If
+
+        End If
+
+        If Joystick0Up = True Then
+
+            'Move right paddle up.
+            RightPaddle.Y -= RightPaddleSpeed
+
+            'Is the right paddle above the playing field?
+            If RightPaddle.Y < TopWall Then
+                'Yes, the right paddle is above playing field.
+
+                'Push the right paddle down and back into playing field.
+                RightPaddle.Y = TopWall
+
+            End If
+
+        End If
+
+
+
+
+
+
+
+        ''Is joystick 0 connected?
+        'If joyGetPosEx(0, JI) = 0 Then
+        '    'Yes, joystick 0 is connected.
+
+        '    Select Case JI.dwRpos
+        '        Case = 18000
+        '            'Down
+
+
+
+        '        Case = 0
+        '            'Up
+
+
+
+        '    End Select
+
+        'End If
+
+
+
+    End Sub
+
     Private Sub CheckLeftPaddleHit()
 
         'Did the ball hit the left paddle?
@@ -819,7 +952,7 @@ Public Class Form1
 
         If RightPaddle.IntersectsWith(Ball) Then
 
-            Ball.X = RightPaddle.X - Ball.Width + 1
+            Ball.X = RightPaddle.X - (Ball.Width + 5)
 
             ApplyRightPaddleEnglishToBall()
 
@@ -837,7 +970,19 @@ Public Class Form1
 
     Private Sub ApplyRightPaddleEnglishToBall()
 
-        If MouseWheelUp = True Then
+        If Joystick0Down = True Then
+
+            BallDirection = DirectionEnum.DownLeft
+
+        ElseIf Joystick0Up = True Then
+
+            BallDirection = DirectionEnum.UpLeft
+
+        ElseIf Joystick0Home = True Then
+
+            BallDirection = DirectionEnum.Left
+
+        ElseIf MouseWheelUp = True Then
 
             BallDirection = DirectionEnum.UpLeft
 
@@ -884,7 +1029,6 @@ Public Class Form1
         AlineCenterMiddle.LineAlignment = StringAlignment.Center
 
         CenterlinePen.DashStyle = Drawing2D.DashStyle.Dash
-
 
         InitializePaddles()
 
@@ -1230,9 +1374,13 @@ Public Class Form1
 
     Private Sub PlaceBallCenterCourt()
 
+        Ball.Location = New Point((ClientSize.Width \ 2) - (Ball.Width \ 2),
+                                 (ClientSize.Height \ 2) - (Ball.Height \ 2))
+
+
         'Place ball center court.
-        Ball.X = ClientSize.Width \ 2 - Ball.Width \ 2 'Center horizontally
-        Ball.Y = ClientSize.Height \ 2 - Ball.Height \ 2 'Center vertically
+        'Ball.X = ClientSize.Width \ 2 - Ball.Width \ 2 'Center horizontally
+        'Ball.Y = ClientSize.Height \ 2 - Ball.Height \ 2 'Center vertically
 
     End Sub
 
@@ -1278,6 +1426,9 @@ Public Class Form1
 
     Private Sub DrawPauseScreen()
 
+        Dim Location As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
+
+
         DrawCenterCourtLine()
 
         DrawBall()
@@ -1297,7 +1448,8 @@ Public Class Form1
         DrawRightPaddleScore()
 
         'Draw paused text.
-        Buffer.Graphics.DrawString("Paused", TitleFont, Brushes.White, ClientSize.Width \ 2, ClientSize.Height \ 2, AlineCenterMiddle)
+        Buffer.Graphics.DrawString("Paused",
+        TitleFont, Brushes.White, Location, AlineCenterMiddle)
 
     End Sub
 
@@ -1412,7 +1564,8 @@ Public Class Form1
 
     Private Sub DrawStartScreenInstructions()
 
-        Buffer.Graphics.DrawString(InstructStartText, InstructionsFont, Brushes.White, InstructStartLocation, AlineCenter)
+        Buffer.Graphics.DrawString(InstructStartText,
+        InstructionsFont, Brushes.White, InstructStartLocation, AlineCenter)
 
     End Sub
 
@@ -1423,14 +1576,16 @@ Public Class Form1
             DrawTitle()
 
             'Draw one player instructions.
-            Buffer.Graphics.DrawString(InstructOneText, InstructionsFont, Brushes.White, InstructOneLocation, AlineCenter)
+            Buffer.Graphics.DrawString(InstructOneText,
+            InstructionsFont, Brushes.White, InstructOneLocation, AlineCenter)
 
         Else
 
             DrawTitle()
 
             'Draw two player instructions.
-            Buffer.Graphics.DrawString(InstructTwoText, InstructionsFont, Brushes.White, InstructTwoLocation, AlineCenter)
+            Buffer.Graphics.DrawString(InstructTwoText,
+            InstructionsFont, Brushes.White, InstructTwoLocation, AlineCenter)
 
         End If
 
@@ -1438,7 +1593,8 @@ Public Class Form1
 
     Private Sub DrawTitle()
 
-        Buffer.Graphics.DrawString(TitleText, TitleFont, Brushes.White, TitleLocation, AlineCenter)
+        Buffer.Graphics.DrawString(TitleText,
+        TitleFont, Brushes.White, TitleLocation, AlineCenter)
 
     End Sub
 
@@ -1448,9 +1604,10 @@ Public Class Form1
         LeftPaddle.Y = ClientSize.Height \ 2 - LeftPaddle.Height \ 2
 
         'Center the right paddle vertically in the forms client area.
-        RightPaddle.Y = ClientSize.Height \ 2 - RightPaddle.Height \ 2 'Center verticaly
+        RightPaddle.Y = ClientSize.Height \ 2 - RightPaddle.Height \ 2
 
-        'Aline the right paddle along the right side of the form client area allow 20 pixels padding.
+        'Aline the right paddle along the right side of the form client area allow 20
+        'pixels padding.
         RightPaddle.X = ClientSize.Width - RightPaddle.Width - 20
 
         CenterCourtLine()
@@ -1459,9 +1616,9 @@ Public Class Form1
 
         TitleLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - 125)
 
-        LeftPaddleScoreLocation = New Point(ClientSize.Width \ 2 \ 2, 100)
+        LPadScoreLocation = New Point(ClientSize.Width \ 2 \ 2, 100)
 
-        RightPaddleScoreLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), 100)
+        RPadScoreLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), 100)
 
         LayoutInstructions()
 
@@ -1490,8 +1647,9 @@ Public Class Form1
 
         My.Computer.Audio.Play(My.Resources.bounce, AudioPlayMode.Background)
 
-        'Used Audacity to generate a tone - Frequency:600Hz  Amplitude:0.1  Duration:0.183s
-        'save as bounce.wav.
+        'Used Audacity to generate tone.
+        'Frequency:600Hz  Amplitude:0.1  Duration:0.183s
+        'saved as bounce.wav.
 
     End Sub
 
