@@ -307,6 +307,7 @@ Public Class Form1
     End Sub
 
     Private Sub UpdatePlaying()
+
         UpdateJoystick()
 
         UpdatePaddles()
@@ -853,33 +854,6 @@ Public Class Form1
             End If
 
         End If
-
-
-
-
-
-
-
-        ''Is joystick 0 connected?
-        'If joyGetPosEx(0, JI) = 0 Then
-        '    'Yes, joystick 0 is connected.
-
-        '    Select Case JI.dwRpos
-        '        Case = 18000
-        '            'Down
-
-
-
-        '        Case = 0
-        '            'Up
-
-
-
-        '    End Select
-
-        'End If
-
-
 
     End Sub
 
