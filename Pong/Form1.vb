@@ -82,7 +82,9 @@ Public Class Form1
 
 
     Dim InstructStartLocation As Point
-    Private ReadOnly InstructStartText As String = "Press 1 or 2 for the number of players."
+    Private ReadOnly InstructStartText As String =
+        "Press 1 or 2 for the number of players." & vbCrLf &
+        "D Pad: ← 1 → 2"
 
     'One Player Instructions Data *************************
     Private InstructOneLocation As Point
@@ -90,7 +92,8 @@ Public Class Form1
         "Right paddle uses ↑ and ↓ to move." & vbCrLf &
         "Computer plays left paddle." & vbCrLf &
         "First player to 10 points wins." & vbCrLf &
-        "Press space bar to start."
+        "Press space bar to start." & vbCrLf &
+        "D Pad: ↓ to start."
     '******************************************************
 
     'Two Player Instructions Data *************************
@@ -99,7 +102,8 @@ Public Class Form1
         "Left paddle uses W and S to move." & vbCrLf &
         "Right paddle uses ↑ and ↓ to move." & vbCrLf &
         "First player to 10 points wins." & vbCrLf &
-        "Press space bar to start."
+        "Press space bar to start." & vbCrLf &
+        "D Pad: ↓ to start."
     '******************************************************
     Private ReadOnly InstructionsFont As New Font(FontFamily.GenericSansSerif, 13)
     Private ReadOnly AlineCenter As New StringFormat
@@ -135,7 +139,7 @@ Public Class Form1
 
     'Counter Data *************************************
     Private FlashCount As Integer = 0
-    Private StateCounter As Integer = 0
+    Private EndScreenCounter As Integer = 0
     '******************************************************
 
     'Back Buffer Data *************************************
@@ -190,6 +194,8 @@ Public Class Form1
     Private Joystick0Down As Boolean = False
     Private Joystick0Up As Boolean = False
     Private Joystick0Home As Boolean = False
+    Private Joystick0Left As Boolean = False
+    Private Joystick0Right As Boolean = False
     '***************************************************************************************************
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -333,19 +339,41 @@ Public Class Form1
 
                     Joystick0Home = False
                     Joystick0Up = False
+                    Joystick0Right = False
+                    Joystick0Left = False
                     Joystick0Down = True
 
                 Case = 0 'Up
 
                     Joystick0Home = False
                     Joystick0Down = False
+                    Joystick0Right = False
+                    Joystick0Left = False
                     Joystick0Up = True
 
                 Case = 65535 'Home
 
                     Joystick0Up = False
                     Joystick0Down = False
+                    Joystick0Right = False
+                    Joystick0Left = False
                     Joystick0Home = True
+
+                Case = 9000 'Right
+
+                    Joystick0Home = False
+                    Joystick0Left = False
+                    Joystick0Up = False
+                    Joystick0Down = False
+                    Joystick0Right = True
+
+                Case = 27000 'Left
+
+                    Joystick0Home = False
+                    Joystick0Right = False
+                    Joystick0Up = False
+                    Joystick0Down = False
+                    Joystick0Left = True
 
             End Select
 
@@ -1225,6 +1253,14 @@ Public Class Form1
 
     Private Sub UpdatePause()
 
+        UpdateJoystick()
+
+        If Joystick0Down = True Then
+
+            GameState = GameStateEnum.Playing
+
+        End If
+
         If PKeyDown = True Then
 
             PKeyDown = False
@@ -1237,11 +1273,21 @@ Public Class Form1
 
     Private Sub UpdateInstructions()
 
-        If SpaceBarDown = True Then
+        UpdateJoystick()
+
+        If Joystick0Down = True Then
+
+            GameState = GameStateEnum.Serve
 
             PlayBounceSound()
 
+        End If
+
+        If SpaceBarDown = True Then
+
             GameState = GameStateEnum.Serve
+
+            PlayBounceSound()
 
         End If
 
@@ -1249,15 +1295,37 @@ Public Class Form1
 
     Private Sub UpdateStartScreen()
 
+        UpdateJoystick()
+
         InstructStartLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) - 15)
 
-        If OneKeyDown = True Then
-
-            PlayBounceSound()
+        If Joystick0Left = True Then
 
             NumberOfPlayers = 1
 
             GameState = GameStateEnum.Instructions
+
+            PlayBounceSound()
+
+        End If
+
+        If Joystick0Right = True Then
+
+            NumberOfPlayers = 2
+
+            GameState = GameStateEnum.Instructions
+
+            PlayBounceSound()
+
+        End If
+
+        If OneKeyDown = True Then
+
+            NumberOfPlayers = 1
+
+            GameState = GameStateEnum.Instructions
+
+            PlayBounceSound()
 
         End If
 
@@ -1267,6 +1335,8 @@ Public Class Form1
 
             GameState = GameStateEnum.Instructions
 
+            PlayBounceSound()
+
         End If
 
     End Sub
@@ -1275,29 +1345,32 @@ Public Class Form1
 
         UpdateFlashingText()
 
-        StateCounter += 1
+        EndScreenCounter += 1
 
-        If StateCounter >= 300 Then
+        If EndScreenCounter >= 300 Then
 
-            StateCounter = 0
-
-            LeftPaddleScore = 0
-
-            RightPaddleScore = 0
-
-            LeftPaddle.Y = ClientSize.Height \ 2 - LeftPaddle.Height \ 2 'Center verticaly
-
-            RightPaddle.X = ClientSize.Width - RightPaddle.Width - 20 'Aline right 20 pix padding
-            RightPaddle.Y = ClientSize.Height \ 2 - RightPaddle.Height \ 2 'Center verticaly
-
-            PlaceBallCenterCourt()
-
-            'Ball.X = ClientSize.Width \ 2 - Ball.Width \ 2 'Center horizontally
-            'Ball.Y = ClientSize.Height \ 2 - Ball.Height \ 2 'Center vertically
-
-            GameState = GameStateEnum.StartScreen
+            ResetGame()
 
         End If
+
+    End Sub
+
+    Private Sub ResetGame()
+
+        EndScreenCounter = 0
+
+        LeftPaddleScore = 0
+
+        RightPaddleScore = 0
+
+        LeftPaddle.Y = ClientSize.Height \ 2 - LeftPaddle.Height \ 2 'Center verticaly
+
+        RightPaddle.X = ClientSize.Width - RightPaddle.Width - 20 'Aline right 20 pix padding
+        RightPaddle.Y = ClientSize.Height \ 2 - RightPaddle.Height \ 2 'Center verticaly
+
+        PlaceBallCenterCourt()
+
+        GameState = GameStateEnum.StartScreen
 
     End Sub
 
@@ -1351,11 +1424,6 @@ Public Class Form1
         Ball.Location = New Point((ClientSize.Width \ 2) - (Ball.Width \ 2),
                                  (ClientSize.Height \ 2) - (Ball.Height \ 2))
 
-
-        'Place ball center court.
-        'Ball.X = ClientSize.Width \ 2 - Ball.Width \ 2 'Center horizontally
-        'Ball.Y = ClientSize.Height \ 2 - Ball.Height \ 2 'Center vertically
-
     End Sub
 
     Private Sub ServeLeftPaddle()
@@ -1400,16 +1468,13 @@ Public Class Form1
 
     Private Sub DrawPauseScreen()
 
-        Dim Location As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
-
-
         DrawCenterCourtLine()
-
-        DrawBall()
 
         DrawLeftPaddle()
 
         DrawRightPaddle()
+
+        DrawBall()
 
         If NumberOfPlayers = 1 Then
 
@@ -1421,17 +1486,13 @@ Public Class Form1
 
         DrawRightPaddleScore()
 
-        'Draw paused text.
-        Buffer.Graphics.DrawString("Paused",
-        TitleFont, Brushes.White, Location, AlineCenterMiddle)
+        DrawPausedText()
 
     End Sub
 
     Private Sub DrawEndScreen()
 
         DrawCenterCourtLine()
-
-        DrawEndScores()
 
         DrawLeftPaddle()
 
@@ -1444,6 +1505,77 @@ Public Class Form1
             DrawComputerPlayerIdentifier()
 
         End If
+
+        DrawEndScores()
+
+    End Sub
+
+    Private Sub DrawServe()
+
+        DrawCenterCourtLine()
+
+        DrawLeftPaddle()
+
+        DrawRightPaddle()
+
+        DrawBall()
+
+        If NumberOfPlayers = 1 Then
+
+            DrawComputerPlayerIdentifier()
+
+        End If
+
+        DrawLeftPaddleScore()
+
+        DrawRightPaddleScore()
+
+    End Sub
+
+    Private Sub DrawStartScreen()
+
+        DrawTitle()
+
+        DrawStartScreenInstructions()
+
+    End Sub
+
+    Private Sub DrawStartScreenInstructions()
+
+        Buffer.Graphics.DrawString(InstructStartText,
+        InstructionsFont, Brushes.White, InstructStartLocation, AlineCenter)
+
+    End Sub
+
+    Private Sub DrawInstructions()
+
+        If NumberOfPlayers = 1 Then
+
+            DrawTitle()
+
+            'Draw one player instructions.
+            Buffer.Graphics.DrawString(InstructOneText,
+            InstructionsFont, Brushes.White, InstructOneLocation, AlineCenter)
+
+        Else
+
+            DrawTitle()
+
+            'Draw two player instructions.
+            Buffer.Graphics.DrawString(InstructTwoText,
+            InstructionsFont, Brushes.White, InstructTwoLocation, AlineCenter)
+
+        End If
+
+    End Sub
+
+    Private Sub DrawPausedText()
+
+        Dim Location As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
+
+        'Draw paused text.
+        Buffer.Graphics.DrawString("Paused",
+        TitleFont, Brushes.White, Location, AlineCenterMiddle)
 
     End Sub
 
@@ -1509,59 +1641,6 @@ Public Class Form1
     Private Sub DrawCenterCourtLine()
 
         Buffer.Graphics.DrawLine(CenterlinePen, CenterlineTop, CenterlineBottom)
-
-    End Sub
-
-    Private Sub DrawServe()
-
-        DrawCenterCourtLine()
-
-        DrawLeftPaddleScore()
-
-        DrawRightPaddleScore()
-
-        DrawLeftPaddle()
-
-        DrawRightPaddle()
-
-        DrawBall()
-
-    End Sub
-
-    Private Sub DrawStartScreen()
-
-        DrawTitle()
-
-        DrawStartScreenInstructions()
-
-    End Sub
-
-    Private Sub DrawStartScreenInstructions()
-
-        Buffer.Graphics.DrawString(InstructStartText,
-        InstructionsFont, Brushes.White, InstructStartLocation, AlineCenter)
-
-    End Sub
-
-    Private Sub DrawInstructions()
-
-        If NumberOfPlayers = 1 Then
-
-            DrawTitle()
-
-            'Draw one player instructions.
-            Buffer.Graphics.DrawString(InstructOneText,
-            InstructionsFont, Brushes.White, InstructOneLocation, AlineCenter)
-
-        Else
-
-            DrawTitle()
-
-            'Draw two player instructions.
-            Buffer.Graphics.DrawString(InstructTwoText,
-            InstructionsFont, Brushes.White, InstructTwoLocation, AlineCenter)
-
-        End If
 
     End Sub
 
