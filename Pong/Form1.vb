@@ -191,11 +191,20 @@ Public Class Form1
         Public dwReserved2 As Long ' reserved for future expansion
     End Structure
     Private JI As JOYINFOEX
+
+    Private Joystick0Connected As Boolean = False
     Private Joystick0Down As Boolean = False
     Private Joystick0Up As Boolean = False
     Private Joystick0Home As Boolean = False
     Private Joystick0Left As Boolean = False
     Private Joystick0Right As Boolean = False
+
+    Private Joystick1Connected As Boolean = False
+    Private Joystick1Down As Boolean = False
+    Private Joystick1Up As Boolean = False
+    Private Joystick1Home As Boolean = False
+    Private Joystick1Left As Boolean = False
+    Private Joystick1Right As Boolean = False
     '***************************************************************************************************
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -334,6 +343,8 @@ Public Class Form1
         If joyGetPosEx(0, JI) = 0 Then
             'Yes, joystick 0 is connected.
 
+            Joystick0Connected = True
+
             Select Case JI.dwRpos
                 Case = 18000 'Down
 
@@ -376,6 +387,65 @@ Public Class Form1
                     Joystick0Left = True
 
             End Select
+
+        Else
+
+            Joystick0Connected = False
+
+        End If
+
+        'Is joystick 1 connected?
+        If joyGetPosEx(1, JI) = 0 Then
+            'Yes, joystick 1 is connected.
+
+            Joystick1Connected = True
+
+            Select Case JI.dwRpos
+                Case = 18000 'Down
+
+                    Joystick1Home = False
+                    Joystick1Up = False
+                    Joystick1Right = False
+                    Joystick1Left = False
+                    Joystick1Down = True
+
+                Case = 0 'Up
+
+                    Joystick1Home = False
+                    Joystick1Down = False
+                    Joystick1Right = False
+                    Joystick1Left = False
+                    Joystick1Up = True
+
+                Case = 65535 'Home
+
+                    Joystick1Up = False
+                    Joystick1Down = False
+                    Joystick1Right = False
+                    Joystick1Left = False
+                    Joystick1Home = True
+
+                Case = 9000 'Right
+
+                    Joystick1Home = False
+                    Joystick1Left = False
+                    Joystick1Up = False
+                    Joystick1Down = False
+                    Joystick1Right = True
+
+                Case = 27000 'Left
+
+                    Joystick1Home = False
+                    Joystick1Right = False
+                    Joystick1Up = False
+                    Joystick1Down = False
+                    Joystick1Left = True
+
+            End Select
+
+        Else
+
+            Joystick1Connected = False
 
         End If
 
@@ -851,33 +921,75 @@ Public Class Form1
 
     Private Sub UpdateRightPaddleJoystick()
 
-        If Joystick0Down = True Then
+        If Joystick0Connected = True Then
 
-            'Move right paddle down.
-            RightPaddle.Y += RightPaddleSpeed
+            If Joystick0Down = True Then
 
-            'Is the right paddle below the playing field?
-            If RightPaddle.Y + RightPaddle.Height > BottomWall Then
-                'Yes, the right paddle is below playing field.
+                'Move right paddle down.
+                RightPaddle.Y += RightPaddleSpeed
 
-                'Push the right paddle up and back into playing field.
-                RightPaddle.Y = BottomWall - RightPaddle.Height
+                'Is the right paddle below the playing field?
+                If RightPaddle.Y + RightPaddle.Height > BottomWall Then
+                    'Yes, the right paddle is below playing field.
+
+                    'Push the right paddle up and back into playing field.
+                    RightPaddle.Y = BottomWall - RightPaddle.Height
+
+                End If
 
             End If
 
-        End If
+            If Joystick0Up = True Then
 
-        If Joystick0Up = True Then
+                'Move right paddle up.
+                RightPaddle.Y -= RightPaddleSpeed
 
-            'Move right paddle up.
-            RightPaddle.Y -= RightPaddleSpeed
+                'Is the right paddle above the playing field?
+                If RightPaddle.Y < TopWall Then
+                    'Yes, the right paddle is above playing field.
 
-            'Is the right paddle above the playing field?
-            If RightPaddle.Y < TopWall Then
-                'Yes, the right paddle is above playing field.
+                    'Push the right paddle down and back into playing field.
+                    RightPaddle.Y = TopWall
 
-                'Push the right paddle down and back into playing field.
-                RightPaddle.Y = TopWall
+                End If
+
+            End If
+
+        Else
+
+            If Joystick1Connected = True Then
+
+                If Joystick1Down = True Then
+
+                    'Move right paddle down.
+                    RightPaddle.Y += RightPaddleSpeed
+
+                    'Is the right paddle below the playing field?
+                    If RightPaddle.Y + RightPaddle.Height > BottomWall Then
+                        'Yes, the right paddle is below playing field.
+
+                        'Push the right paddle up and back into playing field.
+                        RightPaddle.Y = BottomWall - RightPaddle.Height
+
+                    End If
+
+                End If
+
+                If Joystick1Up = True Then
+
+                    'Move right paddle up.
+                    RightPaddle.Y -= RightPaddleSpeed
+
+                    'Is the right paddle above the playing field?
+                    If RightPaddle.Y < TopWall Then
+                        'Yes, the right paddle is above playing field.
+
+                        'Push the right paddle down and back into playing field.
+                        RightPaddle.Y = TopWall
+
+                    End If
+
+                End If
 
             End If
 
@@ -972,19 +1084,7 @@ Public Class Form1
 
     Private Sub ApplyRightPaddleEnglishToBall()
 
-        If Joystick0Down = True Then
-
-            BallDirection = DirectionEnum.DownLeft
-
-        ElseIf Joystick0Up = True Then
-
-            BallDirection = DirectionEnum.UpLeft
-
-        ElseIf Joystick0Home = True Then
-
-            BallDirection = DirectionEnum.Left
-
-        ElseIf MouseWheelUp = True Then
+        If MouseWheelUp = True Then
 
             BallDirection = DirectionEnum.UpLeft
 
@@ -1007,6 +1107,48 @@ Public Class Form1
         Else
 
             BallDirection = DirectionEnum.Left
+
+        End If
+
+        If Joystick0Connected = True Then
+
+            If Joystick0Down = True Then
+
+                BallDirection = DirectionEnum.DownLeft
+
+            End If
+
+            If Joystick0Up = True Then
+
+                BallDirection = DirectionEnum.UpLeft
+
+            End If
+
+            If Joystick0Home = True Then
+
+                BallDirection = DirectionEnum.Left
+
+            End If
+
+        Else
+
+            If Joystick1Connected = True Then
+
+                If Joystick1Down = True Then
+
+                    BallDirection = DirectionEnum.DownLeft
+
+                ElseIf Joystick1Up = True Then
+
+                    BallDirection = DirectionEnum.UpLeft
+
+                ElseIf Joystick1Home = True Then
+
+                    BallDirection = DirectionEnum.Left
+
+                End If
+
+            End If
 
         End If
 
@@ -1255,7 +1397,7 @@ Public Class Form1
 
         UpdateJoystick()
 
-        If Joystick0Down = True Then
+        If Joystick0Down = True Or Joystick1Down = True Then
 
             GameState = GameStateEnum.Playing
 
@@ -1275,7 +1417,7 @@ Public Class Form1
 
         UpdateJoystick()
 
-        If Joystick0Down = True Then
+        If Joystick0Down = True Or Joystick1Down = True Then
 
             GameState = GameStateEnum.Serve
 
@@ -1299,7 +1441,7 @@ Public Class Form1
 
         InstructStartLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) - 15)
 
-        If Joystick0Left = True Then
+        If Joystick0Left = True Or Joystick1Left = True Then
 
             NumberOfPlayers = 1
 
@@ -1309,7 +1451,7 @@ Public Class Form1
 
         End If
 
-        If Joystick0Right = True Then
+        If Joystick0Right = True Or Joystick1Right = True Then
 
             NumberOfPlayers = 2
 
