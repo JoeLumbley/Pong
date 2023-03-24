@@ -24,6 +24,8 @@
 'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
 'SOFTWARE.
 
+Imports System.Runtime.InteropServices
+
 Public Class Form1
 
     Private Enum GameStateEnum
@@ -84,7 +86,7 @@ Public Class Form1
     Dim InstructStartLocation As Point
     Private ReadOnly InstructStartText As String =
         "Press 1 or 2 for the number of players." & vbCrLf &
-        "D Pad: ← 1 → 2"
+        "Controller: A / Square for 1 player or B / X for 2 players."
 
     'One Player Instructions Data *************************
     Private InstructOneLocation As Point
@@ -93,7 +95,7 @@ Public Class Form1
         "Computer plays left paddle." & vbCrLf &
         "First player to 10 points wins." & vbCrLf &
         "Press space bar to start." & vbCrLf &
-        "D Pad: ↓ to start."
+        "Controller: B / X"
     '******************************************************
 
     'Two Player Instructions Data *************************
@@ -103,7 +105,7 @@ Public Class Form1
         "Right paddle uses ↑ and ↓ to move." & vbCrLf &
         "First player to 10 points wins." & vbCrLf &
         "Press space bar to start." & vbCrLf &
-        "D Pad: ↓ to start."
+        "Controller: A / Square"
     '******************************************************
     Private ReadOnly InstructionsFont As New Font(FontFamily.GenericSansSerif, 13)
     Private ReadOnly AlineCenter As New StringFormat
@@ -161,35 +163,25 @@ Public Class Form1
 
     Dim DrawFlashingText As Boolean = True
 
-    'Joystick Data**************************************************************************************
-    Private Declare Function joyGetPosEx Lib "winmm.dll" (ByVal uJoyID As Long, ByRef pji As JOYINFOEX) As Long
-    Private Const JOY_RETURNBUTTONS As Long = &H80&
-    Private Const JOY_RETURNCENTERED As Long = &H400&
-    Private Const JOY_RETURNPOV As Long = &H40&
-    Private Const JOY_RETURNPOVCTS As Long = &H200&
-    Private Const JOY_RETURNR As Long = &H8&
-    Private Const JOY_RETURNRAWDATA As Long = &H100&
-    Private Const JOY_RETURNU As Long = &H10
-    Private Const JOY_RETURNV As Long = &H20
-    Private Const JOY_RETURNX As Long = &H1&
-    Private Const JOY_RETURNY As Long = &H2&
-    Private Const JOY_RETURNZ As Long = &H4&
-    Private Const JOY_RETURNALL As Long = (JOY_RETURNX Or JOY_RETURNY Or JOY_RETURNZ Or JOY_RETURNR Or JOY_RETURNU Or JOY_RETURNV Or JOY_RETURNPOV Or JOY_RETURNBUTTONS)
-    Private Structure JOYINFOEX
-        Public dwSize As Long ' size of structure
-        Public dwFlags As Long ' flags to dicate what to return
-        Public dwXpos As Long ' x position
-        Public dwYpos As Long ' y position
-        Public dwZpos As Long ' z position
-        Public dwRpos As Long ' rudder/4th axis position
-        Public dwUpos As Long ' 5th axis position
-        Public dwVpos As Long ' 6th axis position
-        Public dwButtons As Long ' button states
-        Public dwButtonNumber As Long ' current button number pressed
-        Public dwPOV As Long ' point of view state
-        Public dwReserved1 As Long ' reserved for communication between winmm driver
-        Public dwReserved2 As Long ' reserved for future expansion
+    'Joystick Data**************************************************************************************************
+    Private Declare Function joyGetPosEx Lib "winmm.dll" (ByVal uJoyID As Integer, ByRef pji As JOYINFOEX) As Integer
+
+    <StructLayout(LayoutKind.Sequential)> Public Structure JOYINFOEX
+        Public dwSize As Integer
+        Public dwFlags As Integer
+        Public dwXpos As Integer
+        Public dwYpos As Integer
+        Public dwZpos As Integer 'Xbox: Trigger
+        Public dwRpos As Integer
+        Public dwUpos As Integer
+        Public dwVpos As Integer
+        Public dwButtons As Integer
+        Public dwButtonNumber As Integer
+        Public dwPOV As Integer 'D-Pad
+        Public dwReserved1 As Integer
+        Public dwReserved2 As Integer
     End Structure
+
     Private JI As JOYINFOEX
 
     Private Joystick0Connected As Boolean = False
@@ -198,6 +190,9 @@ Public Class Form1
     Private Joystick0Home As Boolean = False
     Private Joystick0Left As Boolean = False
     Private Joystick0Right As Boolean = False
+    Private Joystick0A As Boolean = False
+    Private Joystick0B As Boolean = False
+    Private Joystick0Start As Boolean = False
 
     Private Joystick1Connected As Boolean = False
     Private Joystick1Down As Boolean = False
@@ -205,12 +200,15 @@ Public Class Form1
     Private Joystick1Home As Boolean = False
     Private Joystick1Left As Boolean = False
     Private Joystick1Right As Boolean = False
+    Private Joystick1A As Boolean = False
+    Private Joystick1B As Boolean = False
+    Private Joystick1Start As Boolean = False
     '***************************************************************************************************
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        JI.dwSize = Len(JI)
-        JI.dwFlags = JOY_RETURNALL
+        JI.dwSize = 64
+        JI.dwFlags = &HFF ' All information
 
         InitializeGame()
 
@@ -345,7 +343,7 @@ Public Class Form1
 
             Joystick0Connected = True
 
-            Select Case JI.dwRpos
+            Select Case JI.dwPOV
                 Case = 18000 'Down
 
                     Joystick0Home = False
@@ -388,6 +386,19 @@ Public Class Form1
 
             End Select
 
+            Select Case JI.dwButtons
+                Case 0
+                    Joystick0A = False
+                    Joystick0B = False
+                    Joystick0Start = False
+                Case 1
+                    Joystick0A = True
+                Case 2
+                    Joystick0B = True
+                Case 128
+                    Joystick0Start = True
+            End Select
+
         Else
 
             Joystick0Connected = False
@@ -400,7 +411,7 @@ Public Class Form1
 
             Joystick1Connected = True
 
-            Select Case JI.dwRpos
+            Select Case JI.dwPOV
                 Case = 18000 'Down
 
                     Joystick1Home = False
@@ -441,6 +452,19 @@ Public Class Form1
                     Joystick1Down = False
                     Joystick1Left = True
 
+            End Select
+
+            Select Case JI.dwButtons
+                Case 0
+                    Joystick1A = False
+                    Joystick1B = False
+                    Joystick1Start = False
+                Case 1
+                    Joystick1A = True
+                Case 2
+                    Joystick1B = True
+                Case 128
+                    Joystick1Start = True
             End Select
 
         Else
@@ -582,6 +606,19 @@ Public Class Form1
     End Sub
 
     Private Sub CheckForPause()
+
+        UpdateJoystick()
+
+        If Joystick0Start = True Or Joystick1Start = True Then
+
+            Joystick0Start = False
+            Joystick1Start = False
+
+            GameState = GameStateEnum.Pause
+
+            PlayBounceSound()
+
+        End If
 
         If PKeyDown = True Then
 
@@ -1138,11 +1175,15 @@ Public Class Form1
 
                     BallDirection = DirectionEnum.DownLeft
 
-                ElseIf Joystick1Up = True Then
+                End If
+
+                If Joystick1Up = True Then
 
                     BallDirection = DirectionEnum.UpLeft
 
-                ElseIf Joystick1Home = True Then
+                End If
+
+                If Joystick1Home = True Then
 
                     BallDirection = DirectionEnum.Left
 
@@ -1397,7 +1438,10 @@ Public Class Form1
 
         UpdateJoystick()
 
-        If Joystick0Down = True Or Joystick1Down = True Then
+        If Joystick0A = True Or Joystick1A = True Then
+
+            'Joystick0Start = False
+            'Joystick1Start = False
 
             GameState = GameStateEnum.Playing
 
@@ -1416,14 +1460,24 @@ Public Class Form1
     Private Sub UpdateInstructions()
 
         UpdateJoystick()
+        If NumberOfPlayers = 1 Then
+            If Joystick0B = True Or Joystick1B = True Then
 
-        If Joystick0Down = True Or Joystick1Down = True Then
+                GameState = GameStateEnum.Serve
 
-            GameState = GameStateEnum.Serve
+                PlayBounceSound()
 
-            PlayBounceSound()
+            End If
+        Else
+            If Joystick0A = True Or Joystick1A = True Then
 
+                GameState = GameStateEnum.Serve
+
+                PlayBounceSound()
+
+            End If
         End If
+
 
         If SpaceBarDown = True Then
 
@@ -1441,7 +1495,7 @@ Public Class Form1
 
         InstructStartLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) - 15)
 
-        If Joystick0Left = True Or Joystick1Left = True Then
+        If Joystick0A = True Or Joystick1A = True Then
 
             NumberOfPlayers = 1
 
@@ -1451,7 +1505,7 @@ Public Class Form1
 
         End If
 
-        If Joystick0Right = True Or Joystick1Right = True Then
+        If Joystick0B = True Or Joystick1B = True Then
 
             NumberOfPlayers = 2
 
