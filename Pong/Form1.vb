@@ -368,6 +368,7 @@ Public Class Form1
 
                     'Connected(ControllerNumber) = True
 
+                    'Assign Controller to Slot
                     If AControllerID < 0 Then
                         If BControllerID <> ControllerNumber Then
                             AControllerID = ControllerNumber
@@ -380,9 +381,16 @@ Public Class Form1
                     End If
 
                 Else
+                    If AControllerID = ControllerNumber Then
 
-                    'Connected(ControllerNumber) = False
+                        AControllerID = -1
 
+                    End If
+                    If BControllerID = ControllerNumber Then
+
+                        BControllerID = -1
+
+                    End If
                 End If
 
             Catch ex As Exception
