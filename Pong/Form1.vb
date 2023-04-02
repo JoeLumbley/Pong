@@ -88,27 +88,25 @@ Public Class Form1
 
     Dim InstructStartLocation As Point
     Private ReadOnly InstructStartText As String =
-        "Press 1 or 2 for the number of players." & vbCrLf &
-        "Controller: A / Square for 1 player or B / X for 2 players."
+        "One player press: A Square 1" & vbCrLf _
+        & "Two players press: B  X  2"
 
     'One Player Instructions Data *************************
     Private InstructOneLocation As Point
     Private Const InstructOneText As String =
-        "Right paddle uses ↑ and ↓ to move." & vbCrLf &
+        "Right paddle use Keys: ↑↓ Controller: ↑↓ to move." & vbCrLf &
         "Computer plays left paddle." & vbCrLf &
         "First player to 10 points wins." & vbCrLf &
-        "Press space bar to start." & vbCrLf &
-        "Controller: B / X"
+        "To start game press: B  X Space"
     '******************************************************
 
     'Two Player Instructions Data *************************
     Private InstructTwoLocation As Point
     Private Const InstructTwoText As String =
-        "Left paddle uses W and S to move." & vbCrLf &
-        "Right paddle uses ↑ and ↓ to move." & vbCrLf &
+        "Left paddle use Keys: WS Controller: ↑↓ to move." & vbCrLf &
+        "Right paddle use Keys: ↑↓ Controller: ↑↓ to move." & vbCrLf &
         "First player to 10 points wins." & vbCrLf &
-        "Press space bar to start." & vbCrLf &
-        "Controller: A / Square"
+        "To start game press: A Square Space"
     '******************************************************
     Private ReadOnly InstructionsFont As New Font(FontFamily.GenericSansSerif, 13)
     Private ReadOnly AlineCenter As New StringFormat
@@ -358,9 +356,9 @@ Public Class Form1
 
                 If joyGetPosEx(ControllerNumber, ControllerData) = 0 Then
 
-                    UpdateButtonPosition()
-
                     UpdateDPadPosition()
+
+                    UpdateButtonPosition()
 
                     'UpdateLeftThumbstickPosition()
 
@@ -368,7 +366,7 @@ Public Class Form1
 
                     'UpdateRightThumbstickPosition()
 
-                    Connected(ControllerNumber) = True
+                    'Connected(ControllerNumber) = True
 
                     If AControllerID < 0 Then
                         If BControllerID <> ControllerNumber Then
@@ -383,7 +381,7 @@ Public Class Form1
 
                 Else
 
-                    Connected(ControllerNumber) = False
+                    'Connected(ControllerNumber) = False
 
                 End If
 
