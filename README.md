@@ -1,5 +1,7 @@
 # Pong
-This is an example app showing how to make a game in VB.NET.
-In this version of the classic game you can use Xbox or PlayStation controllers.
+In this app we remake the classic ping pong game.
+This version is resizable, pausable and has a computer player.
+Supports keyboard, mouse, Xbox and PlayStation controllers.
+Written in VB.NET this year 2023 actually works on Windows 10 64-Bit.
 I'm making a video to explain the code on my YouTube channel.
 https://www.youtube.com/@codewithjoe6074
