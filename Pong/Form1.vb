@@ -1,9 +1,8 @@
 ﻿'Pong
 'In this app we remake the classic ping pong game.
-'This version is resizable, pausable, has a computer player and supports keyboard,
-'mouse, Xbox or PlayStation controllers.
+'This version is resizable, pausable and has a computer player.
+'Supports keyboard, mouse, Xbox or PlayStation controllers.
 'Written in VB.NET this year 2023 actually works on Windows 10 64-Bit.
-'In this version of the classic game you can use Xbox or PlayStation controllers.
 'I'm making a video to explain the code on my YouTube channel.
 'https://www.youtube.com/@codewithjoe6074
 '
