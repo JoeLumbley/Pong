@@ -165,7 +165,7 @@ Public Class Form1
     Dim DrawFlashingText As Boolean = True
 
     'Joystick Data**************************************************************************************************
-    Private Declare Function joyGetPosEx Lib "winmm.dll" (ByVal uJoyID As Integer, ByRef pji As JOYINFOEX) As Integer
+    Private Declare Function joyGetPosEx Lib "winmm.dll" (ByVal uJoyID As Integer, ByRef pControllerData As JOYINFOEX) As Integer
 
     <StructLayout(LayoutKind.Sequential)> Public Structure JOYINFOEX
         Public dwSize As Integer
@@ -183,33 +183,44 @@ Public Class Form1
         Public dwReserved2 As Integer
     End Structure
 
-    Private JI As JOYINFOEX
+    'Private ControllerData As JOYINFOEX
 
-    Private Joystick0Connected As Boolean = False
-    Private Joystick0Down As Boolean = False
-    Private Joystick0Up As Boolean = False
-    Private Joystick0Home As Boolean = False
-    Private Joystick0Left As Boolean = False
-    Private Joystick0Right As Boolean = False
-    Private Joystick0A As Boolean = False
-    Private Joystick0B As Boolean = False
-    Private Joystick0Start As Boolean = False
+    'Private Joystick0Connected As Boolean = False
+    Private AControllerID As Integer = -1
+    Private AControllerDown As Boolean = False
+    Private AControllerUp As Boolean = False
+    Private AControllerNeutral As Boolean = False
+    Private AControllerLeft As Boolean = False
+    Private AControllerRight As Boolean = False
+    Private AControllerA As Boolean = False
+    Private AControllerB As Boolean = False
+    Private AControllerStart As Boolean = False
 
-    Private Joystick1Connected As Boolean = False
-    Private Joystick1Down As Boolean = False
-    Private Joystick1Up As Boolean = False
-    Private Joystick1Home As Boolean = False
-    Private Joystick1Left As Boolean = False
-    Private Joystick1Right As Boolean = False
-    Private Joystick1A As Boolean = False
-    Private Joystick1B As Boolean = False
-    Private Joystick1Start As Boolean = False
+    'Private Joystick1Connected As Boolean = False
+    Private BControllerID As Integer = -1
+    Private BControllerDown As Boolean = False
+    Private BControllerUp As Boolean = False
+    Private BControllerNeutral As Boolean = False
+    Private BControllerLeft As Boolean = False
+    Private BControllerRight As Boolean = False
+    Private BControllerA As Boolean = False
+    Private BControllerB As Boolean = False
+    Private BControllerStart As Boolean = False
+
+    Private Const NeutralStart = 21845
+    Private Const NeutralEnd = 43690
+
+    Private ControllerData As JOYINFOEX
+
+    Private ControllerNumber As Long = 0
+
+    Private Connected(0 To 15) As Boolean
     '***************************************************************************************************
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        JI.dwSize = 64
-        JI.dwFlags = &HFF ' All information
+        ControllerData.dwSize = 64
+        ControllerData.dwFlags = &HFF ' All information
 
         InitializeGame()
 
@@ -322,7 +333,9 @@ Public Class Form1
 
     Private Sub UpdatePlaying()
 
-        UpdateJoystick()
+        'UpdateJoystick()
+
+        GetControllerData()
 
         UpdatePaddles()
 
@@ -335,146 +348,346 @@ Public Class Form1
         CheckForPause()
 
     End Sub
+    Private Sub GetControllerData()
 
-    Private Sub UpdateJoystick()
+        For ControllerNumber = 0 To 15 'Up to 16 controllers
 
-        'Is joystick 0 connected?
-        If joyGetPosEx(0, JI) = 0 Then
-            'Yes, joystick 0 is connected.
+            Try
 
-            Joystick0Connected = True
+                If joyGetPosEx(ControllerNumber, ControllerData) = 0 Then
 
-            Select Case JI.dwPOV
-                Case = 18000 'Down
+                    UpdateButtonPosition()
 
-                    Joystick0Home = False
-                    Joystick0Up = False
-                    Joystick0Right = False
-                    Joystick0Left = False
-                    Joystick0Down = True
+                    UpdateDPadPosition()
 
-                Case = 0 'Up
+                    'UpdateLeftThumbstickPosition()
 
-                    Joystick0Home = False
-                    Joystick0Down = False
-                    Joystick0Right = False
-                    Joystick0Left = False
-                    Joystick0Up = True
+                    'UpdateTriggerPosition()
 
-                Case = 65535 'Home
+                    'UpdateRightThumbstickPosition()
 
-                    Joystick0Up = False
-                    Joystick0Down = False
-                    Joystick0Right = False
-                    Joystick0Left = False
-                    Joystick0Home = True
+                    Connected(ControllerNumber) = True
 
-                Case = 9000 'Right
+                    If AControllerID < 0 Then
+                        If BControllerID <> ControllerNumber Then
+                            AControllerID = ControllerNumber
+                        End If
+                    End If
+                    If BControllerID < 0 Then
+                        If AControllerID <> ControllerNumber Then
+                            BControllerID = ControllerNumber
+                        End If
+                    End If
 
-                    Joystick0Home = False
-                    Joystick0Left = False
-                    Joystick0Up = False
-                    Joystick0Down = False
-                    Joystick0Right = True
+                Else
 
-                Case = 27000 'Left
+                    Connected(ControllerNumber) = False
 
-                    Joystick0Home = False
-                    Joystick0Right = False
-                    Joystick0Up = False
-                    Joystick0Down = False
-                    Joystick0Left = True
+                End If
 
-            End Select
+            Catch ex As Exception
 
-            Select Case JI.dwButtons
-                Case 0
-                    Joystick0A = False
-                    Joystick0B = False
-                    Joystick0Start = False
-                Case 1
-                    Joystick0A = True
-                Case 2
-                    Joystick0B = True
-                Case 128
-                    Joystick0Start = True
-            End Select
+                MsgBox(ex.ToString)
 
-        Else
+                Exit Sub
 
-            Joystick0Connected = False
+            End Try
 
-        End If
+        Next
 
-        'Is joystick 1 connected?
-        If joyGetPosEx(1, JI) = 0 Then
-            'Yes, joystick 1 is connected.
 
-            Joystick1Connected = True
-
-            Select Case JI.dwPOV
-                Case = 18000 'Down
-
-                    Joystick1Home = False
-                    Joystick1Up = False
-                    Joystick1Right = False
-                    Joystick1Left = False
-                    Joystick1Down = True
-
-                Case = 0 'Up
-
-                    Joystick1Home = False
-                    Joystick1Down = False
-                    Joystick1Right = False
-                    Joystick1Left = False
-                    Joystick1Up = True
-
-                Case = 65535 'Home
-
-                    Joystick1Up = False
-                    Joystick1Down = False
-                    Joystick1Right = False
-                    Joystick1Left = False
-                    Joystick1Home = True
-
-                Case = 9000 'Right
-
-                    Joystick1Home = False
-                    Joystick1Left = False
-                    Joystick1Up = False
-                    Joystick1Down = False
-                    Joystick1Right = True
-
-                Case = 27000 'Left
-
-                    Joystick1Home = False
-                    Joystick1Right = False
-                    Joystick1Up = False
-                    Joystick1Down = False
-                    Joystick1Left = True
-
-            End Select
-
-            Select Case JI.dwButtons
-                Case 0
-                    Joystick1A = False
-                    Joystick1B = False
-                    Joystick1Start = False
-                Case 1
-                    Joystick1A = True
-                Case 2
-                    Joystick1B = True
-                Case 128
-                    Joystick1Start = True
-            End Select
-
-        Else
-
-            Joystick1Connected = False
-
-        End If
 
     End Sub
+
+    Private Sub UpdateButtonPosition()
+        'The range of buttons is 0 to 255.
+        '                                                                            XBox / PlayStation
+        'What buttons are down?
+        Select Case ControllerData.dwButtons
+            Case 0 'All the buttons are up.
+                If AControllerID = ControllerNumber Then
+                    AControllerStart = False
+                    AControllerA = False
+                    AControllerB = False
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerStart = False
+                    BControllerA = False
+                    BControllerB = False
+                End If
+                'LabelButtons.Text = ""
+            Case 1 'A / Square button is down.
+                If AControllerID = ControllerNumber Then
+                    AControllerStart = False
+                    AControllerB = False
+                    AControllerA = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerStart = False
+                    BControllerB = False
+                    BControllerA = True
+                End If
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: A / Square"
+            Case 2 'B / X button is down.
+                If AControllerID = ControllerNumber Then
+                    AControllerStart = False
+                    AControllerA = False
+                    AControllerB = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerStart = False
+                    BControllerA = False
+                    BControllerB = True
+                End If
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: B / X "
+            Case 4 'X / Circle button is down.
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: X / Circle"
+            Case 8 'Y / Triangle button is down.
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: Y / Triangle"
+            Case 16 'Left Bumper is down.
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: Left Bumper"
+            Case 32 'Right Bumper is down.
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: Right Bumper"
+            Case 64 'Back / Left Trigger is down.
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: Back / Left Trigger"
+            Case 128 'Start / Right Trigger is down.
+
+
+                If AControllerID = ControllerNumber Then
+                    AControllerA = False
+                    AControllerB = False
+                    AControllerStart = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerA = False
+                    BControllerB = False
+                    BControllerStart = True
+
+                End If
+
+
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: Start / Right Trigger"
+            Case 3 'A+B / Square+X buttons are down.
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: A+B / Square+X"
+            Case 5 'A+X / Square+Circle buttons are down.
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: A+X / Square+Circle"
+            Case 9 'A+Y / Square+Triangle buttons are down.
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: A+Y / Square+Triangle"
+            Case 6 'B+X / X+Circle buttons are down.
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: B+X / X+Circle"
+            Case 10 'B+Y / X+Triangle buttons are down.
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: B+Y / X+Triangle"
+            Case 12 'X+Y / Circle+Triangle buttons are down.
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: X+Y / Circle+Triangle"
+            Case 48 'Left Bumper+Right Bumper buttons are down.
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: Left Bumper+Right Bumper"
+            Case 192 'Back+Start / Left Trigger+Right Trigger are down.
+                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: Back+Start / Left Trigger+Right Trigger"
+        End Select
+
+    End Sub
+
+    Private Sub UpdateDPadPosition()
+        'The range of POV is 0 to 65535.
+        '0 through 31500 is used to represent the angle.
+        'degrees = POV \ 100  315° = 31500 \ 100
+
+        'What position is the D-Pad in?
+        Select Case ControllerData.dwPOV
+            Case 0 '0° Up
+                If AControllerID = ControllerNumber Then
+                    AControllerNeutral = False
+                    AControllerDown = False
+                    AControllerUp = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerNeutral = False
+                    BControllerDown = False
+                    BControllerUp = True
+                End If
+                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Up"
+            Case 4500 '45° Up Right
+                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Up Right"
+            Case 9000 '90° Right
+                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Right"
+            Case 13500 '135° Down Right
+                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Down Right"
+            Case 18000 '180° Down
+                If AControllerID = ControllerNumber Then
+                    AControllerNeutral = False
+                    AControllerUp = False
+                    AControllerDown = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerNeutral = False
+                    BControllerUp = False
+                    BControllerDown = True
+                End If
+                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Down"
+            Case 22500 '225° Down Left
+                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Down Left"
+            Case 27000 '270° Left
+                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Left"
+            Case 31500 '315° Up Left
+                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Up Left"
+            Case 65535 'Neutral
+                If AControllerID = ControllerNumber Then
+                    AControllerUp = False
+                    AControllerDown = False
+                    AControllerNeutral = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerUp = False
+                    BControllerDown = False
+                    BControllerNeutral = True
+                End If
+
+
+
+                'LabelDPad.Text = ""
+        End Select
+
+    End Sub
+
+    'Private Sub UpdateJoystick()
+
+    '    'Is joystick 0 connected?
+    '    If joyGetPosEx(0, ControllerData) = 0 Then
+    '        'Yes, joystick 0 is connected.
+
+    '        Joystick0Connected = True
+
+    '        Select Case ControllerData.dwPOV
+    '            Case = 18000 'Down
+
+    '                Joystick0Home = False
+    '                Joystick0Up = False
+    '                Joystick0Right = False
+    '                Joystick0Left = False
+    '                Joystick0Down = True
+
+    '            Case = 0 'Up
+
+    '                Joystick0Home = False
+    '                Joystick0Down = False
+    '                Joystick0Right = False
+    '                Joystick0Left = False
+    '                Joystick0Up = True
+
+    '            Case = 65535 'Home
+
+    '                Joystick0Up = False
+    '                Joystick0Down = False
+    '                Joystick0Right = False
+    '                Joystick0Left = False
+    '                Joystick0Home = True
+
+    '            Case = 9000 'Right
+
+    '                Joystick0Home = False
+    '                Joystick0Left = False
+    '                Joystick0Up = False
+    '                Joystick0Down = False
+    '                Joystick0Right = True
+
+    '            Case = 27000 'Left
+
+    '                Joystick0Home = False
+    '                Joystick0Right = False
+    '                Joystick0Up = False
+    '                Joystick0Down = False
+    '                Joystick0Left = True
+
+    '        End Select
+
+    '        Select Case ControllerData.dwButtons
+    '            Case 0
+    '                Joystick0A = False
+    '                Joystick0B = False
+    '                Joystick0Start = False
+    '            Case 1
+    '                Joystick0A = True
+    '            Case 2
+    '                Joystick0B = True
+    '            Case 128
+    '                Joystick0Start = True
+    '        End Select
+
+    '    Else
+
+    '        Joystick0Connected = False
+
+    '    End If
+
+    '    'Is joystick 1 connected?
+    '    If joyGetPosEx(1, ControllerData) = 0 Then
+    '        'Yes, joystick 1 is connected.
+
+    '        Joystick1Connected = True
+
+    '        Select Case ControllerData.dwPOV
+    '            Case = 18000 'Down
+
+    '                Joystick1Home = False
+    '                Joystick1Up = False
+    '                Joystick1Right = False
+    '                Joystick1Left = False
+    '                Joystick1Down = True
+
+    '            Case = 0 'Up
+
+    '                Joystick1Home = False
+    '                Joystick1Down = False
+    '                Joystick1Right = False
+    '                Joystick1Left = False
+    '                Joystick1Up = True
+
+    '            Case = 65535 'Home
+
+    '                Joystick1Up = False
+    '                Joystick1Down = False
+    '                Joystick1Right = False
+    '                Joystick1Left = False
+    '                Joystick1Home = True
+
+    '            Case = 9000 'Right
+
+    '                Joystick1Home = False
+    '                Joystick1Left = False
+    '                Joystick1Up = False
+    '                Joystick1Down = False
+    '                Joystick1Right = True
+
+    '            Case = 27000 'Left
+
+    '                Joystick1Home = False
+    '                Joystick1Right = False
+    '                Joystick1Up = False
+    '                Joystick1Down = False
+    '                Joystick1Left = True
+
+    '        End Select
+
+    '        Select Case ControllerData.dwButtons
+    '            Case 0
+    '                Joystick1A = False
+    '                Joystick1B = False
+    '                Joystick1Start = False
+    '            Case 1
+    '                Joystick1A = True
+    '            Case 2
+    '                Joystick1B = True
+    '            Case 128
+    '                Joystick1Start = True
+    '        End Select
+
+    '    Else
+
+    '        Joystick1Connected = False
+
+    '    End If
+
+    'End Sub
 
     Private Sub DrawPlaying()
 
@@ -608,12 +821,12 @@ Public Class Form1
 
     Private Sub CheckForPause()
 
-        UpdateJoystick()
+        GetControllerData()
 
-        If Joystick0Start = True Or Joystick1Start = True Then
+        If AControllerStart = True Or BControllerStart = True Then
 
-            Joystick0Start = False
-            Joystick1Start = False
+            AControllerStart = False
+            BControllerStart = False
 
             GameState = GameStateEnum.Pause
 
@@ -633,11 +846,14 @@ Public Class Form1
 
     Private Sub UpdateLeftPaddle()
 
+
         If NumberOfPlayers = 1 Then
 
             UpdateLeftPaddleOnePlayer()
 
         Else
+
+            UpdateLeftPaddleJoystick()
 
             UpdateLeftPaddleTwoPlayer()
 
@@ -959,9 +1175,9 @@ Public Class Form1
 
     Private Sub UpdateRightPaddleJoystick()
 
-        If Joystick0Connected = True Then
+        If NumberOfPlayers = 2 Then
 
-            If Joystick0Down = True Then
+            If BControllerDown = True Then
 
                 'Move right paddle down.
                 RightPaddle.Y += RightPaddleSpeed
@@ -977,7 +1193,39 @@ Public Class Form1
 
             End If
 
-            If Joystick0Up = True Then
+            If BControllerUp = True Then
+
+                'Move right paddle up.
+                RightPaddle.Y -= RightPaddleSpeed
+
+                'Is the right paddle above the playing field?
+                If RightPaddle.Y < TopWall Then
+                    'Yes, the right paddle is above playing field.
+
+                    'Push the right paddle down and back into playing field.
+                    RightPaddle.Y = TopWall
+
+                End If
+
+            End If
+        Else
+            If AControllerDown = True Then
+
+                'Move right paddle down.
+                RightPaddle.Y += RightPaddleSpeed
+
+                'Is the right paddle below the playing field?
+                If RightPaddle.Y + RightPaddle.Height > BottomWall Then
+                    'Yes, the right paddle is below playing field.
+
+                    'Push the right paddle up and back into playing field.
+                    RightPaddle.Y = BottomWall - RightPaddle.Height
+
+                End If
+
+            End If
+
+            If AControllerUp = True Then
 
                 'Move right paddle up.
                 RightPaddle.Y -= RightPaddleSpeed
@@ -993,41 +1241,39 @@ Public Class Form1
 
             End If
 
-        Else
+        End If
 
-            If Joystick1Connected = True Then
+    End Sub
 
-                If Joystick1Down = True Then
+    Private Sub UpdateLeftPaddleJoystick()
 
-                    'Move right paddle down.
-                    RightPaddle.Y += RightPaddleSpeed
+        If AControllerDown = True Then
 
-                    'Is the right paddle below the playing field?
-                    If RightPaddle.Y + RightPaddle.Height > BottomWall Then
-                        'Yes, the right paddle is below playing field.
+            'Move left paddle down.
+            LeftPaddle.Y += LeftPaddleSpeed
 
-                        'Push the right paddle up and back into playing field.
-                        RightPaddle.Y = BottomWall - RightPaddle.Height
+            'Is the left paddle below the playing field?
+            If LeftPaddle.Y + LeftPaddle.Height > BottomWall Then
+                'Yes, the left paddle is below playing field.
 
-                    End If
+                'Push the left paddle up and back into playing field.
+                LeftPaddle.Y = BottomWall - LeftPaddle.Height
 
-                End If
+            End If
 
-                If Joystick1Up = True Then
+        End If
 
-                    'Move right paddle up.
-                    RightPaddle.Y -= RightPaddleSpeed
+        If AControllerUp = True Then
 
-                    'Is the right paddle above the playing field?
-                    If RightPaddle.Y < TopWall Then
-                        'Yes, the right paddle is above playing field.
+            'Move left paddle up.
+            LeftPaddle.Y -= LeftPaddleSpeed
 
-                        'Push the right paddle down and back into playing field.
-                        RightPaddle.Y = TopWall
+            'Is the left paddle above the playing field? 
+            If LeftPaddle.Y < TopWall Then
+                'Yes, the left paddle is above playing field.
 
-                    End If
-
-                End If
+                'Push the left paddle down and back into playing field.
+                LeftPaddle.Y = TopWall
 
             End If
 
@@ -1077,6 +1323,30 @@ Public Class Form1
                 BallDirection = DirectionEnum.Right
 
             End If
+
+
+            If AControllerDown = True Then
+
+                BallDirection = DirectionEnum.DownRight
+
+            End If
+
+            If AControllerUp = True Then
+
+                BallDirection = DirectionEnum.UpRight
+
+            End If
+
+            If AControllerNeutral = True Then
+
+                BallDirection = DirectionEnum.Right
+
+            End If
+
+
+
+
+
 
         Else
 
@@ -1148,47 +1418,45 @@ Public Class Form1
 
         End If
 
-        If Joystick0Connected = True Then
 
-            If Joystick0Down = True Then
+        If NumberOfPlayers = 2 Then
+
+            If BControllerDown = True Then
 
                 BallDirection = DirectionEnum.DownLeft
 
             End If
 
-            If Joystick0Up = True Then
+            If BControllerUp = True Then
 
                 BallDirection = DirectionEnum.UpLeft
 
             End If
 
-            If Joystick0Home = True Then
+            If BControllerNeutral = True Then
 
                 BallDirection = DirectionEnum.Left
 
             End If
 
+
         Else
 
-            If Joystick1Connected = True Then
+            If AControllerDown = True Then
 
-                If Joystick1Down = True Then
+                BallDirection = DirectionEnum.DownLeft
 
-                    BallDirection = DirectionEnum.DownLeft
+            End If
 
-                End If
+            If AControllerUp = True Then
 
-                If Joystick1Up = True Then
+                BallDirection = DirectionEnum.UpLeft
 
-                    BallDirection = DirectionEnum.UpLeft
+            End If
 
-                End If
+            If AControllerNeutral = True Then
 
-                If Joystick1Home = True Then
-
-                    BallDirection = DirectionEnum.Left
-
-                End If
+                BallDirection = DirectionEnum.Left
 
             End If
 
@@ -1437,9 +1705,11 @@ Public Class Form1
 
     Private Sub UpdatePause()
 
-        UpdateJoystick()
+        'UpdateJoystick()
 
-        If Joystick0A = True Or Joystick1A = True Then
+        GetControllerData()
+
+        If AControllerA = True Or BControllerA = True Then
 
             'Joystick0Start = False
             'Joystick1Start = False
@@ -1460,9 +1730,12 @@ Public Class Form1
 
     Private Sub UpdateInstructions()
 
-        UpdateJoystick()
+        'UpdateJoystick()
+
+        GetControllerData()
+
         If NumberOfPlayers = 1 Then
-            If Joystick0B = True Or Joystick1B = True Then
+            If AControllerB = True Or BControllerB = True Then
 
                 GameState = GameStateEnum.Serve
 
@@ -1470,7 +1743,7 @@ Public Class Form1
 
             End If
         Else
-            If Joystick0A = True Or Joystick1A = True Then
+            If AControllerA = True Or BControllerA = True Then
 
                 GameState = GameStateEnum.Serve
 
@@ -1492,11 +1765,15 @@ Public Class Form1
 
     Private Sub UpdateStartScreen()
 
-        UpdateJoystick()
+        'UpdateJoystick()
+
+        GetControllerData()
+
+
 
         InstructStartLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) - 15)
 
-        If Joystick0A = True Or Joystick1A = True Then
+        If AControllerA = True Or BControllerA = True Then
 
             NumberOfPlayers = 1
 
@@ -1506,7 +1783,7 @@ Public Class Form1
 
         End If
 
-        If Joystick0B = True Or Joystick1B = True Then
+        If AControllerB = True Or BControllerB = True Then
 
             NumberOfPlayers = 2
 
