@@ -97,7 +97,7 @@ Public Class Form1
         "Computer plays left paddle." & vbCrLf &
         "Right paddle use ↑  ↓ to move." & vbCrLf &
         "First player to 10 points wins." & vbCrLf & vbCrLf &
-        "Pause:  Start  RTrigger  P" & vbCrLf & vbCrLf &
+        "Pause:  Start  RTrigger  P" & vbCrLf &
         "Resume:  A  □  P"
 
     '******************************************************
@@ -109,7 +109,7 @@ Public Class Form1
         "Left paddle use  W  S or DPad:  ↑  ↓  to move." & vbCrLf &
         "Right paddle use  ↑  ↓  to move." & vbCrLf &
         "First player to 10 points wins." & vbCrLf & vbCrLf &
-        "Pause:  Start  RTrigger  P" & vbCrLf & vbCrLf &
+        "Pause:  Start  RTrigger  P" & vbCrLf &
         "Resume:  A  □  P"
 
 
@@ -1633,7 +1633,7 @@ Public Class Form1
 
         End If
 
-        If PKeyDown = True Then
+        If PKeyDown = True Or AKeyDown = True Then
 
             PKeyDown = False
 
