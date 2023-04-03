@@ -352,14 +352,6 @@ Public Class Form1
 
                     UpdateButtonPosition()
 
-                    'UpdateLeftThumbstickPosition()
-
-                    'UpdateTriggerPosition()
-
-                    'UpdateRightThumbstickPosition()
-
-                    'Connected(ControllerNumber) = True
-
                     'Assign Controller to Slot
                     If AControllerID < 0 Then
                         If BControllerID <> ControllerNumber Then
@@ -394,8 +386,6 @@ Public Class Form1
             End Try
 
         Next
-
-
 
     End Sub
 
@@ -554,146 +544,6 @@ Public Class Form1
         End Select
 
     End Sub
-
-    'Private Sub UpdateJoystick()
-
-    '    'Is joystick 0 connected?
-    '    If joyGetPosEx(0, ControllerData) = 0 Then
-    '        'Yes, joystick 0 is connected.
-
-    '        Joystick0Connected = True
-
-    '        Select Case ControllerData.dwPOV
-    '            Case = 18000 'Down
-
-    '                Joystick0Home = False
-    '                Joystick0Up = False
-    '                Joystick0Right = False
-    '                Joystick0Left = False
-    '                Joystick0Down = True
-
-    '            Case = 0 'Up
-
-    '                Joystick0Home = False
-    '                Joystick0Down = False
-    '                Joystick0Right = False
-    '                Joystick0Left = False
-    '                Joystick0Up = True
-
-    '            Case = 65535 'Home
-
-    '                Joystick0Up = False
-    '                Joystick0Down = False
-    '                Joystick0Right = False
-    '                Joystick0Left = False
-    '                Joystick0Home = True
-
-    '            Case = 9000 'Right
-
-    '                Joystick0Home = False
-    '                Joystick0Left = False
-    '                Joystick0Up = False
-    '                Joystick0Down = False
-    '                Joystick0Right = True
-
-    '            Case = 27000 'Left
-
-    '                Joystick0Home = False
-    '                Joystick0Right = False
-    '                Joystick0Up = False
-    '                Joystick0Down = False
-    '                Joystick0Left = True
-
-    '        End Select
-
-    '        Select Case ControllerData.dwButtons
-    '            Case 0
-    '                Joystick0A = False
-    '                Joystick0B = False
-    '                Joystick0Start = False
-    '            Case 1
-    '                Joystick0A = True
-    '            Case 2
-    '                Joystick0B = True
-    '            Case 128
-    '                Joystick0Start = True
-    '        End Select
-
-    '    Else
-
-    '        Joystick0Connected = False
-
-    '    End If
-
-    '    'Is joystick 1 connected?
-    '    If joyGetPosEx(1, ControllerData) = 0 Then
-    '        'Yes, joystick 1 is connected.
-
-    '        Joystick1Connected = True
-
-    '        Select Case ControllerData.dwPOV
-    '            Case = 18000 'Down
-
-    '                Joystick1Home = False
-    '                Joystick1Up = False
-    '                Joystick1Right = False
-    '                Joystick1Left = False
-    '                Joystick1Down = True
-
-    '            Case = 0 'Up
-
-    '                Joystick1Home = False
-    '                Joystick1Down = False
-    '                Joystick1Right = False
-    '                Joystick1Left = False
-    '                Joystick1Up = True
-
-    '            Case = 65535 'Home
-
-    '                Joystick1Up = False
-    '                Joystick1Down = False
-    '                Joystick1Right = False
-    '                Joystick1Left = False
-    '                Joystick1Home = True
-
-    '            Case = 9000 'Right
-
-    '                Joystick1Home = False
-    '                Joystick1Left = False
-    '                Joystick1Up = False
-    '                Joystick1Down = False
-    '                Joystick1Right = True
-
-    '            Case = 27000 'Left
-
-    '                Joystick1Home = False
-    '                Joystick1Right = False
-    '                Joystick1Up = False
-    '                Joystick1Down = False
-    '                Joystick1Left = True
-
-    '        End Select
-
-    '        Select Case ControllerData.dwButtons
-    '            Case 0
-    '                Joystick1A = False
-    '                Joystick1B = False
-    '                Joystick1Start = False
-    '            Case 1
-    '                Joystick1A = True
-    '            Case 2
-    '                Joystick1B = True
-    '            Case 128
-    '                Joystick1Start = True
-    '        End Select
-
-    '    Else
-
-    '        Joystick1Connected = False
-
-    '    End If
-
-    'End Sub
 
     Private Sub DrawPlaying()
 
@@ -1349,11 +1199,6 @@ Public Class Form1
 
             End If
 
-
-
-
-
-
         Else
 
             Select Case RandomNumber()
@@ -1398,69 +1243,142 @@ Public Class Form1
 
     Private Sub ApplyRightPaddleEnglishToBall()
 
-        If MouseWheelUp = True Then
+        'If MouseWheelUp = True Then
 
-            BallDirection = DirectionEnum.UpLeft
+        '    BallDirection = DirectionEnum.UpLeft
 
-            MouseWheelUp = False
+        '    MouseWheelUp = False
 
-        ElseIf MouseWheelDown = True Then
+        'ElseIf MouseWheelDown = True Then
 
-            BallDirection = DirectionEnum.DownLeft
+        '    BallDirection = DirectionEnum.DownLeft
 
-            MouseWheelDown = False
+        '    MouseWheelDown = False
 
-        ElseIf UpArrowKeyDown = True Then
+        'ElseIf UpArrowKeyDown = True Then
 
-            BallDirection = DirectionEnum.UpLeft
+        '    BallDirection = DirectionEnum.UpLeft
 
-        ElseIf DownArrowKeyDown = True Then
+        'ElseIf DownArrowKeyDown = True Then
 
-            BallDirection = DirectionEnum.DownLeft
+        '    BallDirection = DirectionEnum.DownLeft
 
-        Else
+        'Else
 
-            BallDirection = DirectionEnum.Left
+        '    BallDirection = DirectionEnum.Left
 
-        End If
+        'End If
+
+        'If NumberOfPlayers = 2 Then
+
+        '    If BControllerDown = True Then
+
+        '        BallDirection = DirectionEnum.DownLeft
+
+        '    End If
+
+        '    If BControllerUp = True Then
+
+        '        BallDirection = DirectionEnum.UpLeft
+
+        '    End If
+
+        '    If BControllerNeutral = True Then
+
+        '        BallDirection = DirectionEnum.Left
+
+        '    End If
+
+        'Else
+
+        '    If AControllerDown = True Then
+
+        '        BallDirection = DirectionEnum.DownLeft
+
+        '    End If
+
+        '    If AControllerUp = True Then
+
+        '        BallDirection = DirectionEnum.UpLeft
+
+        '    End If
+
+        '    If AControllerNeutral = True Then
+
+        '        BallDirection = DirectionEnum.Left
+
+        '    End If
+
+        'End If
 
 
         If NumberOfPlayers = 2 Then
-
-            If BControllerDown = True Then
-
-                BallDirection = DirectionEnum.DownLeft
-
-            End If
 
             If BControllerUp = True Then
 
                 BallDirection = DirectionEnum.UpLeft
 
-            End If
+            ElseIf BControllerDown = True Then
 
-            If BControllerNeutral = True Then
+                BallDirection = DirectionEnum.DownLeft
+
+            ElseIf MouseWheelUp = True Then
+
+                BallDirection = DirectionEnum.UpLeft
+
+                MouseWheelUp = False
+
+            ElseIf MouseWheelDown = True Then
+
+                BallDirection = DirectionEnum.DownLeft
+
+                MouseWheelDown = False
+
+            ElseIf UpArrowKeyDown = True Then
+
+                BallDirection = DirectionEnum.UpLeft
+
+            ElseIf DownArrowKeyDown = True Then
+
+                BallDirection = DirectionEnum.DownLeft
+
+            Else
 
                 BallDirection = DirectionEnum.Left
 
             End If
 
-
         Else
-
-            If AControllerDown = True Then
-
-                BallDirection = DirectionEnum.DownLeft
-
-            End If
 
             If AControllerUp = True Then
 
                 BallDirection = DirectionEnum.UpLeft
 
-            End If
+            ElseIf AControllerDown = True Then
 
-            If AControllerNeutral = True Then
+                BallDirection = DirectionEnum.DownLeft
+
+            ElseIf MouseWheelUp = True Then
+
+                BallDirection = DirectionEnum.UpLeft
+
+                MouseWheelUp = False
+
+            ElseIf MouseWheelDown = True Then
+
+                BallDirection = DirectionEnum.DownLeft
+
+                MouseWheelDown = False
+
+            ElseIf UpArrowKeyDown = True Then
+
+                BallDirection = DirectionEnum.UpLeft
+
+            ElseIf DownArrowKeyDown = True Then
+
+                BallDirection = DirectionEnum.DownLeft
+
+            Else
 
                 BallDirection = DirectionEnum.Left
 
@@ -1471,9 +1389,6 @@ Public Class Form1
     End Sub
 
     Private Sub InitializeGame()
-
-        'Width = 640
-        'Height = 480
 
         WindowState = FormWindowState.Maximized
 
@@ -1711,14 +1626,9 @@ Public Class Form1
 
     Private Sub UpdatePause()
 
-        'UpdateJoystick()
-
         GetControllerData()
 
         If AControllerA = True Or BControllerA = True Then
-
-            'Joystick0Start = False
-            'Joystick1Start = False
 
             GameState = GameStateEnum.Playing
 
@@ -1735,8 +1645,6 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateInstructions()
-
-        'UpdateJoystick()
 
         GetControllerData()
 
@@ -1771,11 +1679,7 @@ Public Class Form1
 
     Private Sub UpdateStartScreen()
 
-        'UpdateJoystick()
-
         GetControllerData()
-
-
 
         InstructStartLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) - 15)
 
@@ -1901,8 +1805,7 @@ Public Class Form1
 
     Private Sub PlaceBallCenterCourt()
 
-        Ball.Location = New Point((ClientSize.Width \ 2) - (Ball.Width \ 2),
-                                 (ClientSize.Height \ 2) - (Ball.Height \ 2))
+        Ball.Location = New Point((ClientSize.Width \ 2) - (Ball.Width \ 2), (ClientSize.Height \ 2) - (Ball.Height \ 2))
 
     End Sub
 
@@ -2022,8 +1925,7 @@ Public Class Form1
 
     Private Sub DrawStartScreenInstructions()
 
-        Buffer.Graphics.DrawString(InstructStartText,
-        InstructionsFont, Brushes.White, InstructStartLocation, AlineCenter)
+        Buffer.Graphics.DrawString(InstructStartText, InstructionsFont, Brushes.White, InstructStartLocation, AlineCenter)
 
     End Sub
 
@@ -2054,8 +1956,7 @@ Public Class Form1
         Dim Location As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
 
         'Draw paused text.
-        Buffer.Graphics.DrawString("Paused",
-        TitleFont, Brushes.White, Location, AlineCenterMiddle)
+        Buffer.Graphics.DrawString("Paused", TitleFont, Brushes.White, Location, AlineCenterMiddle)
 
     End Sub
 
