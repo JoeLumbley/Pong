@@ -27,6 +27,7 @@
 'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
 'SOFTWARE.
 
+Imports System.Numerics
 Imports System.Runtime.InteropServices
 
 Public Class Form1
@@ -124,6 +125,12 @@ Public Class Form1
     Private OneKeyDown As Boolean = False
     Private TwoKeyDown As Boolean = False
     Private PKeyDown As Boolean = False
+
+    Private AKeyDown As Boolean = False
+    Private BKeyDown As Boolean = False
+    Private XKeyDown As Boolean = False
+
+
     '******************************************************
 
     'Mouse Event Data *************************************
@@ -1483,10 +1490,29 @@ Public Class Form1
 
                 TwoKeyDown = True
 
-                'Did player push down the p key on number pad?
+                'Did player push down the p key?
             Case Keys.P
-                'Yes, player did push down the p key on number pad.
+                'Yes, player did push down the p key.
+
                 PKeyDown = True
+
+                'Did player push down the a key?
+            Case Keys.A
+                'Yes, player did push down the a key.
+
+                AKeyDown = True
+
+                'Did player push down the b key?
+            Case Keys.B
+                'Yes, player did push down the b key.
+
+                BKeyDown = True
+
+                'Did player push down the x key?
+            Case Keys.X
+                'Yes, player did push down the x key.
+
+                XKeyDown = True
 
         End Select
 
@@ -1540,6 +1566,24 @@ Public Class Form1
                 'Yes, player did let the p key up.
                 PKeyDown = False
 
+                'Did player let the a key up?
+            Case Keys.A
+                'Yes, player did let the a key up.
+
+                AKeyDown = False
+
+                'Did player let the b key up?
+            Case Keys.B
+                'Yes, player did push down the b key.
+
+                BKeyDown = False
+
+                'Did player let the x key up?
+            Case Keys.X
+                'Yes, player did push down the x key.
+
+                XKeyDown = False
+
         End Select
 
     End Sub
@@ -1576,7 +1620,17 @@ Public Class Form1
                 PlayBounceSound()
 
             End If
+
+            If SpaceBarDown = True Or BKeyDown = True Or XKeyDown = True Then
+
+                GameState = GameStateEnum.Serve
+
+                PlayBounceSound()
+
+            End If
+
         Else
+
             If AControllerA = True Or BControllerA = True Then
 
                 GameState = GameStateEnum.Serve
@@ -1584,14 +1638,14 @@ Public Class Form1
                 PlayBounceSound()
 
             End If
-        End If
 
+            If SpaceBarDown = True Or AKeyDown = True Then
 
-        If SpaceBarDown = True Then
+                GameState = GameStateEnum.Serve
 
-            GameState = GameStateEnum.Serve
+                PlayBounceSound()
 
-            PlayBounceSound()
+            End If
 
         End If
 
@@ -1623,7 +1677,7 @@ Public Class Form1
 
         End If
 
-        If OneKeyDown = True Then
+        If OneKeyDown = True Or AKeyDown = True Then
 
             NumberOfPlayers = 1
 
@@ -1633,7 +1687,7 @@ Public Class Form1
 
         End If
 
-        If TwoKeyDown = True Then
+        If TwoKeyDown = True Or BKeyDown = True Or XKeyDown = True Then
 
             NumberOfPlayers = 2
 
