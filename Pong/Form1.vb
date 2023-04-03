@@ -592,6 +592,7 @@ Public Class Form1
         UpdateRightPaddle()
 
     End Sub
+
     Private Sub UpdateBall()
 
         MoveBall()
@@ -599,6 +600,7 @@ Public Class Form1
         CheckPaddleHits()
 
     End Sub
+
     Private Sub UpdateScore()
 
         'Did ball enter left goal zone?
@@ -1158,8 +1160,16 @@ Public Class Form1
 
         If NumberOfPlayers = 2 Then
 
-            'Is the left player holding W key down? 
-            If WKeyDown = True Then 'W key moves left paddle up.
+            If AControllerUp = True Then
+
+                BallDirection = DirectionEnum.UpRight
+
+            ElseIf AControllerDown = True Then
+
+                BallDirection = DirectionEnum.DownRight
+
+                'Is the left player holding W key down? 
+            ElseIf WKeyDown = True Then 'W key moves left paddle up.
                 'Yes, the left player is holding W key down.
 
                 'Set the ball direction to up right.
@@ -1173,48 +1183,24 @@ Public Class Form1
                 BallDirection = DirectionEnum.DownRight
 
             Else
-                'Left the player is not holding either W or S key down.
+                'The left player is not holding either W or S key down.
+                'The left player is not holding the controller ↑ ↓ buttons down.
 
                 'Set the ball direction to right.
                 BallDirection = DirectionEnum.Right
 
             End If
 
-
-            If AControllerDown = True Then
-
-                BallDirection = DirectionEnum.DownRight
-
-            End If
-
-            If AControllerUp = True Then
-
-                BallDirection = DirectionEnum.UpRight
-
-            End If
-
-            If AControllerNeutral = True Then
-
-                BallDirection = DirectionEnum.Right
-
-            End If
-
         Else
+            'For the computer player random english.
 
             Select Case RandomNumber()
-
                 Case 1
-
                     BallDirection = DirectionEnum.UpRight
-
                 Case 2
-
                     BallDirection = DirectionEnum.Right
-
                 Case 3
-
                     BallDirection = DirectionEnum.DownRight
-
             End Select
 
         End If
@@ -1242,75 +1228,6 @@ Public Class Form1
     End Sub
 
     Private Sub ApplyRightPaddleEnglishToBall()
-
-        'If MouseWheelUp = True Then
-
-        '    BallDirection = DirectionEnum.UpLeft
-
-        '    MouseWheelUp = False
-
-        'ElseIf MouseWheelDown = True Then
-
-        '    BallDirection = DirectionEnum.DownLeft
-
-        '    MouseWheelDown = False
-
-        'ElseIf UpArrowKeyDown = True Then
-
-        '    BallDirection = DirectionEnum.UpLeft
-
-        'ElseIf DownArrowKeyDown = True Then
-
-        '    BallDirection = DirectionEnum.DownLeft
-
-        'Else
-
-        '    BallDirection = DirectionEnum.Left
-
-        'End If
-
-        'If NumberOfPlayers = 2 Then
-
-        '    If BControllerDown = True Then
-
-        '        BallDirection = DirectionEnum.DownLeft
-
-        '    End If
-
-        '    If BControllerUp = True Then
-
-        '        BallDirection = DirectionEnum.UpLeft
-
-        '    End If
-
-        '    If BControllerNeutral = True Then
-
-        '        BallDirection = DirectionEnum.Left
-
-        '    End If
-
-        'Else
-
-        '    If AControllerDown = True Then
-
-        '        BallDirection = DirectionEnum.DownLeft
-
-        '    End If
-
-        '    If AControllerUp = True Then
-
-        '        BallDirection = DirectionEnum.UpLeft
-
-        '    End If
-
-        '    If AControllerNeutral = True Then
-
-        '        BallDirection = DirectionEnum.Left
-
-        '    End If
-
-        'End If
-
 
         If NumberOfPlayers = 2 Then
 
