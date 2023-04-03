@@ -85,19 +85,17 @@ Public Class Form1
     Private ReadOnly ScoreFont As New Font(FontFamily.GenericSansSerif, 75)
     Private ReadOnly AlineCenterMiddle As New StringFormat
 
-
     Dim InstructStartLocation As Point
     Private ReadOnly InstructStartText As String =
-        "One player press: A Square 1" & vbCrLf _
-        & "Two players press: B  X  2"
+        "One player:  A  □  1   Two players:  B  X  2"
 
     'One Player Instructions Data *************************
     Private InstructOneLocation As Point
     Private Const InstructOneText As String =
         "Right paddle use Keys: ↑↓ Controller: ↑↓ to move." & vbCrLf &
         "Computer plays left paddle." & vbCrLf &
-        "First player to 10 points wins." & vbCrLf &
-        "To start game press: B  X Space"
+        "First player to 10 points wins." & vbCrLf & vbCrLf &
+        "Start:  B  X  Space"
     '******************************************************
 
     'Two Player Instructions Data *************************
@@ -105,8 +103,8 @@ Public Class Form1
     Private Const InstructTwoText As String =
         "Left paddle use Keys: WS Controller: ↑↓ to move." & vbCrLf &
         "Right paddle use Keys: ↑↓ Controller: ↑↓ to move." & vbCrLf &
-        "First player to 10 points wins." & vbCrLf &
-        "To start game press: A Square Space"
+        "First player to 10 points wins." & vbCrLf & vbCrLf &
+        "Start:  A  □  Space"
     '******************************************************
     Private ReadOnly InstructionsFont As New Font(FontFamily.GenericSansSerif, 13)
     Private ReadOnly AlineCenter As New StringFormat
@@ -183,9 +181,6 @@ Public Class Form1
         Public dwReserved2 As Integer
     End Structure
 
-    'Private ControllerData As JOYINFOEX
-
-    'Private Joystick0Connected As Boolean = False
     Private AControllerID As Integer = -1
     Private AControllerDown As Boolean = False
     Private AControllerUp As Boolean = False
@@ -196,7 +191,6 @@ Public Class Form1
     Private AControllerB As Boolean = False
     Private AControllerStart As Boolean = False
 
-    'Private Joystick1Connected As Boolean = False
     Private BControllerID As Integer = -1
     Private BControllerDown As Boolean = False
     Private BControllerUp As Boolean = False
@@ -333,8 +327,6 @@ Public Class Form1
 
     Private Sub UpdatePlaying()
 
-        'UpdateJoystick()
-
         GetControllerData()
 
         UpdatePaddles()
@@ -409,7 +401,7 @@ Public Class Form1
 
     Private Sub UpdateButtonPosition()
         'The range of buttons is 0 to 255.
-        '                                                                            XBox / PlayStation
+        '         XBox / PlayStation
         'What buttons are down?
         Select Case ControllerData.dwButtons
             Case 0 'All the buttons are up.
@@ -423,7 +415,6 @@ Public Class Form1
                     BControllerA = False
                     BControllerB = False
                 End If
-                'LabelButtons.Text = ""
             Case 1 'A / Square button is down.
                 If AControllerID = ControllerNumber Then
                     AControllerStart = False
@@ -435,7 +426,6 @@ Public Class Form1
                     BControllerB = False
                     BControllerA = True
                 End If
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: A / Square"
             Case 2 'B / X button is down.
                 If AControllerID = ControllerNumber Then
                     AControllerStart = False
@@ -447,20 +437,12 @@ Public Class Form1
                     BControllerA = False
                     BControllerB = True
                 End If
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: B / X "
             Case 4 'X / Circle button is down.
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: X / Circle"
             Case 8 'Y / Triangle button is down.
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: Y / Triangle"
             Case 16 'Left Bumper is down.
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: Left Bumper"
             Case 32 'Right Bumper is down.
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: Right Bumper"
             Case 64 'Back / Left Trigger is down.
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: Back / Left Trigger"
             Case 128 'Start / Right Trigger is down.
-
-
                 If AControllerID = ControllerNumber Then
                     AControllerA = False
                     AControllerB = False
@@ -470,27 +452,15 @@ Public Class Form1
                     BControllerA = False
                     BControllerB = False
                     BControllerStart = True
-
                 End If
-
-
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Button: Start / Right Trigger"
             Case 3 'A+B / Square+X buttons are down.
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: A+B / Square+X"
             Case 5 'A+X / Square+Circle buttons are down.
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: A+X / Square+Circle"
             Case 9 'A+Y / Square+Triangle buttons are down.
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: A+Y / Square+Triangle"
             Case 6 'B+X / X+Circle buttons are down.
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: B+X / X+Circle"
             Case 10 'B+Y / X+Triangle buttons are down.
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: B+Y / X+Triangle"
             Case 12 'X+Y / Circle+Triangle buttons are down.
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: X+Y / Circle+Triangle"
             Case 48 'Left Bumper+Right Bumper buttons are down.
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: Left Bumper+Right Bumper"
             Case 192 'Back+Start / Left Trigger+Right Trigger are down.
-                'LabelButtons.Text = "Controller: " & ControllerNumber.ToString & " Buttons: Back+Start / Left Trigger+Right Trigger"
         End Select
 
     End Sub
@@ -513,13 +483,29 @@ Public Class Form1
                     BControllerDown = False
                     BControllerUp = True
                 End If
-                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Up"
             Case 4500 '45° Up Right
-                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Up Right"
+                If AControllerID = ControllerNumber Then
+                    AControllerNeutral = False
+                    AControllerDown = False
+                    AControllerUp = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerNeutral = False
+                    BControllerDown = False
+                    BControllerUp = True
+                End If
             Case 9000 '90° Right
-                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Right"
             Case 13500 '135° Down Right
-                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Down Right"
+                If AControllerID = ControllerNumber Then
+                    AControllerNeutral = False
+                    AControllerUp = False
+                    AControllerDown = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerNeutral = False
+                    BControllerUp = False
+                    BControllerDown = True
+                End If
             Case 18000 '180° Down
                 If AControllerID = ControllerNumber Then
                     AControllerNeutral = False
@@ -531,13 +517,29 @@ Public Class Form1
                     BControllerUp = False
                     BControllerDown = True
                 End If
-                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Down"
             Case 22500 '225° Down Left
-                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Down Left"
+                If AControllerID = ControllerNumber Then
+                    AControllerNeutral = False
+                    AControllerUp = False
+                    AControllerDown = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerNeutral = False
+                    BControllerUp = False
+                    BControllerDown = True
+                End If
             Case 27000 '270° Left
-                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Left"
             Case 31500 '315° Up Left
-                'LabelDPad.Text = "Controller: " & ControllerNumber.ToString & " D-Pad: Up Left"
+                If AControllerID = ControllerNumber Then
+                    AControllerNeutral = False
+                    AControllerDown = False
+                    AControllerUp = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerNeutral = False
+                    BControllerDown = False
+                    BControllerUp = True
+                End If
             Case 65535 'Neutral
                 If AControllerID = ControllerNumber Then
                     AControllerUp = False
@@ -549,10 +551,6 @@ Public Class Form1
                     BControllerDown = False
                     BControllerNeutral = True
                 End If
-
-
-
-                'LabelDPad.Text = ""
         End Select
 
     End Sub
