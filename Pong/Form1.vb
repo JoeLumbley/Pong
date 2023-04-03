@@ -1159,6 +1159,8 @@ Public Class Form1
     Private Sub ApplyLeftPaddleEnglishToBall()
 
         If NumberOfPlayers = 2 Then
+            'The human player must manualy apply english to the ball
+            'by pressing the the controller ↑ ↓ buttons or the W S keys.
 
             If AControllerUp = True Then
 
@@ -1193,6 +1195,7 @@ Public Class Form1
 
         Else
             'For the computer player random english.
+            'This makes the game more interesting.
 
             Select Case RandomNumber()
                 Case 1
