@@ -87,25 +87,32 @@ Public Class Form1
     Private ReadOnly AlineCenterMiddle As New StringFormat
 
     Dim InstructStartLocation As Point
-    Private ReadOnly InstructStartText As String =
-        "One player:  A  □  1   Two players:  B  X  2"
+    Private ReadOnly InstructStartText As String = vbCrLf &
+        "One player:  A  □   Two players:  B  X"
 
     'One Player Instructions Data *************************
     Private InstructOneLocation As Point
-    Private Const InstructOneText As String =
-        "Right paddle use Keys: ↑↓ Controller: ↑↓ to move." & vbCrLf &
+    Private Const InstructOneText As String = vbCrLf &
+        "Start:  B  X" & vbCrLf & vbCrLf &
         "Computer plays left paddle." & vbCrLf &
+        "Right paddle use ↑  ↓ to move." & vbCrLf &
         "First player to 10 points wins." & vbCrLf & vbCrLf &
-        "Start:  B  X  Space"
+        "Pause:  Start  RTrigger  P" & vbCrLf & vbCrLf &
+        "Resume:  A  □  P"
+
     '******************************************************
 
     'Two Player Instructions Data *************************
     Private InstructTwoLocation As Point
-    Private Const InstructTwoText As String =
-        "Left paddle use Keys: WS Controller: ↑↓ to move." & vbCrLf &
-        "Right paddle use Keys: ↑↓ Controller: ↑↓ to move." & vbCrLf &
+    Private Const InstructTwoText As String = vbCrLf &
+        "Start:  A  □" & vbCrLf & vbCrLf &
+        "Left paddle use  W  S or DPad:  ↑  ↓  to move." & vbCrLf &
+        "Right paddle use  ↑  ↓  to move." & vbCrLf &
         "First player to 10 points wins." & vbCrLf & vbCrLf &
-        "Start:  A  □  Space"
+        "Pause:  Start  RTrigger  P" & vbCrLf & vbCrLf &
+        "Resume:  A  □  P"
+
+
     '******************************************************
     Private ReadOnly InstructionsFont As New Font(FontFamily.GenericSansSerif, 13)
     Private ReadOnly AlineCenter As New StringFormat
@@ -197,6 +204,7 @@ Public Class Form1
     Private AControllerA As Boolean = False
     Private AControllerB As Boolean = False
     Private AControllerStart As Boolean = False
+    Private AControllerX As Boolean = False
 
     Private BControllerID As Integer = -1
     Private BControllerDown As Boolean = False
@@ -207,6 +215,7 @@ Public Class Form1
     Private BControllerA As Boolean = False
     Private BControllerB As Boolean = False
     Private BControllerStart As Boolean = False
+    Private BControllerX As Boolean = False
 
     Private Const NeutralStart = 21845
     Private Const NeutralEnd = 43690
@@ -406,35 +415,59 @@ Public Class Form1
                     AControllerStart = False
                     AControllerA = False
                     AControllerB = False
+                    AControllerX = False
                 End If
                 If BControllerID = ControllerNumber Then
                     BControllerStart = False
                     BControllerA = False
                     BControllerB = False
+                    BControllerX = False
                 End If
             Case 1 'A / Square button is down.
                 If AControllerID = ControllerNumber Then
                     AControllerStart = False
                     AControllerB = False
+                    AControllerX = False
                     AControllerA = True
                 End If
                 If BControllerID = ControllerNumber Then
                     BControllerStart = False
                     BControllerB = False
+                    BControllerX = False
                     BControllerA = True
                 End If
             Case 2 'B / X button is down.
                 If AControllerID = ControllerNumber Then
                     AControllerStart = False
                     AControllerA = False
+                    AControllerX = False
                     AControllerB = True
                 End If
                 If BControllerID = ControllerNumber Then
                     BControllerStart = False
                     BControllerA = False
+                    BControllerX = False
                     BControllerB = True
                 End If
             Case 4 'X / Circle button is down.
+
+                If AControllerID = ControllerNumber Then
+                    AControllerStart = False
+                    AControllerA = False
+                    BControllerB = False
+                    AControllerX = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerStart = False
+                    BControllerA = False
+                    BControllerB = False
+                    BControllerX = True
+                End If
+
+
+
+
+
             Case 8 'Y / Triangle button is down.
             Case 16 'Left Bumper is down.
             Case 32 'Right Bumper is down.
@@ -443,11 +476,13 @@ Public Class Form1
                 If AControllerID = ControllerNumber Then
                     AControllerA = False
                     AControllerB = False
+                    AControllerX = False
                     AControllerStart = True
                 End If
                 If BControllerID = ControllerNumber Then
                     BControllerA = False
                     BControllerB = False
+                    BControllerX = False
                     BControllerStart = True
                 End If
             Case 3 'A+B / Square+X buttons are down.
@@ -1613,7 +1648,16 @@ Public Class Form1
         GetControllerData()
 
         If NumberOfPlayers = 1 Then
+
             If AControllerB = True Or BControllerB = True Then
+
+                GameState = GameStateEnum.Serve
+
+                PlayBounceSound()
+
+            End If
+
+            If AControllerX = True Or BControllerX = True Then
 
                 GameState = GameStateEnum.Serve
 
@@ -1668,6 +1712,16 @@ Public Class Form1
         End If
 
         If AControllerB = True Or BControllerB = True Then
+
+            NumberOfPlayers = 2
+
+            GameState = GameStateEnum.Instructions
+
+            PlayBounceSound()
+
+        End If
+
+        If AControllerX = True Or BControllerX = True Then
 
             NumberOfPlayers = 2
 
