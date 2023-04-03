@@ -206,6 +206,12 @@ Public Class Form1
     Private AControllerStart As Boolean = False
     Private AControllerX As Boolean = False
 
+
+    Private AControllerTsUp As Boolean = False
+    Private AControllerTsDown As Boolean = False
+
+
+
     Private BControllerID As Integer = -1
     Private BControllerDown As Boolean = False
     Private BControllerUp As Boolean = False
@@ -216,6 +222,9 @@ Public Class Form1
     Private BControllerB As Boolean = False
     Private BControllerStart As Boolean = False
     Private BControllerX As Boolean = False
+
+    Private BControllerTsUp As Boolean = False
+    Private BControllerTsDown As Boolean = False
 
     Private Const NeutralStart = 21845
     Private Const NeutralEnd = 43690
@@ -367,6 +376,8 @@ Public Class Form1
                     UpdateDPadPosition()
 
                     UpdateButtonPosition()
+
+                    UpdateLeftThumbstickPosition()
 
                     'Assign Controller to Slot
                     If AControllerID < 0 Then
@@ -584,6 +595,69 @@ Public Class Form1
                     BControllerNeutral = True
                 End If
         End Select
+
+    End Sub
+
+    Private Sub UpdateLeftThumbstickPosition()
+        'The range on the X-axis is 0 to 65535.
+        'The range on the Y-axis is 0 to 65535.
+
+        ''What position is the left thumbstick in on the X-axis?
+        'If ControllerData.dwXpos <= NeutralStart Then
+        '    'The left thumbstick is in the left position.
+
+        '    LabelXaxis.Text = "Controller: " & ControllerNumber.ToString & " Left Thumbstick: Left"
+
+        'ElseIf ControllerData.dwXpos >= NeutralEnd Then
+        '    'The left thumbstick is in the right position.
+
+        '    LabelXaxis.Text = "Controller: " & ControllerNumber.ToString & " Left Thumbstick: Right"
+
+        'Else
+        '    'The left thumbstick is in the neutral position.
+
+        '    LabelXaxis.Text = ""
+
+        'End If
+
+        'What position is the left thumbstick in on the Y-axis?
+        If ControllerData.dwYpos <= NeutralStart Then
+            'The left thumbstick is in the up position.
+
+            If AControllerID = ControllerNumber Then
+                AControllerTsDown = False
+                AControllerTsUp = True
+            End If
+            If BControllerID = ControllerNumber Then
+                BControllerTsDown = False
+                BControllerTsUp = True
+            End If
+
+        ElseIf ControllerData.dwYpos >= NeutralEnd Then
+            'The left thumbstick is in the down position.
+
+            If AControllerID = ControllerNumber Then
+                AControllerTsUp = False
+                AControllerTsDown = True
+            End If
+            If BControllerID = ControllerNumber Then
+                BControllerTsUp = False
+                BControllerTsDown = True
+            End If
+
+        Else
+            'The left thumbstick is in the neutral position.
+
+            If AControllerID = ControllerNumber Then
+                AControllerTsUp = False
+                AControllerTsDown = False
+            End If
+            If BControllerID = ControllerNumber Then
+                BControllerTsUp = False
+                BControllerTsDown = False
+            End If
+
+        End If
 
     End Sub
 
@@ -1108,7 +1182,42 @@ Public Class Form1
                 End If
 
             End If
+
+
+            If BControllerTsDown = True Then
+
+                'Move right paddle down.
+                RightPaddle.Y += RightPaddleSpeed
+
+                'Is the right paddle below the playing field?
+                If RightPaddle.Y + RightPaddle.Height > BottomWall Then
+                    'Yes, the right paddle is below playing field.
+
+                    'Push the right paddle up and back into playing field.
+                    RightPaddle.Y = BottomWall - RightPaddle.Height
+
+                End If
+
+            End If
+
+            If BControllerTsUp = True Then
+
+                'Move right paddle up.
+                RightPaddle.Y -= RightPaddleSpeed
+
+                'Is the right paddle above the playing field?
+                If RightPaddle.Y < TopWall Then
+                    'Yes, the right paddle is above playing field.
+
+                    'Push the right paddle down and back into playing field.
+                    RightPaddle.Y = TopWall
+
+                End If
+
+            End If
+
         Else
+
             If AControllerDown = True Then
 
                 'Move right paddle down.
@@ -1140,6 +1249,41 @@ Public Class Form1
                 End If
 
             End If
+
+            If AControllerTsDown = True Then
+
+                'Move right paddle down.
+                RightPaddle.Y += RightPaddleSpeed
+
+                'Is the right paddle below the playing field?
+                If RightPaddle.Y + RightPaddle.Height > BottomWall Then
+                    'Yes, the right paddle is below playing field.
+
+                    'Push the right paddle up and back into playing field.
+                    RightPaddle.Y = BottomWall - RightPaddle.Height
+
+                End If
+
+            End If
+
+
+            If AControllerTsUp = True Then
+
+                'Move right paddle up.
+                RightPaddle.Y -= RightPaddleSpeed
+
+                'Is the right paddle above the playing field?
+                If RightPaddle.Y < TopWall Then
+                    'Yes, the right paddle is above playing field.
+
+                    'Push the right paddle down and back into playing field.
+                    RightPaddle.Y = TopWall
+
+                End If
+
+            End If
+
+
 
         End If
 
@@ -1284,6 +1428,14 @@ Public Class Form1
 
                 BallDirection = DirectionEnum.DownLeft
 
+            ElseIf BControllerTsUp = True Then
+
+                BallDirection = DirectionEnum.UpLeft
+
+            ElseIf BControllerTsDown = True Then
+
+                BallDirection = DirectionEnum.DownLeft
+
             ElseIf MouseWheelUp = True Then
 
                 BallDirection = DirectionEnum.UpLeft
@@ -1317,6 +1469,14 @@ Public Class Form1
                 BallDirection = DirectionEnum.UpLeft
 
             ElseIf AControllerDown = True Then
+
+                BallDirection = DirectionEnum.DownLeft
+
+            ElseIf AControllerTsUp = True Then
+
+                BallDirection = DirectionEnum.UpLeft
+
+            ElseIf AControllerTsDown = True Then
 
                 BallDirection = DirectionEnum.DownLeft
 
