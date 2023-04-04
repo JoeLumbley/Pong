@@ -1323,6 +1323,39 @@ Public Class Form1
 
         End If
 
+
+        If AControllerTsDown = True Then
+
+            'Move left paddle down.
+            LeftPaddle.Y += LeftPaddleSpeed
+
+            'Is the left paddle below the playing field?
+            If LeftPaddle.Y + LeftPaddle.Height > BottomWall Then
+                'Yes, the left paddle is below playing field.
+
+                'Push the left paddle up and back into playing field.
+                LeftPaddle.Y = BottomWall - LeftPaddle.Height
+
+            End If
+
+        End If
+
+        If AControllerTsUp = True Then
+
+            'Move left paddle up.
+            LeftPaddle.Y -= LeftPaddleSpeed
+
+            'Is the left paddle above the playing field? 
+            If LeftPaddle.Y < TopWall Then
+                'Yes, the left paddle is above playing field.
+
+                'Push the left paddle down and back into playing field.
+                LeftPaddle.Y = TopWall
+
+            End If
+
+        End If
+
     End Sub
 
     Private Sub CheckLeftPaddleHit()
@@ -1346,13 +1379,21 @@ Public Class Form1
 
         If NumberOfPlayers = 2 Then
             'The human player must manualy apply english to the ball
-            'by pressing the the controller ↑ ↓ buttons or the W S keys.
+            'by pressing the controller ↑ ↓ buttons or the W S keys.
 
             If AControllerUp = True Then
 
                 BallDirection = DirectionEnum.UpRight
 
             ElseIf AControllerDown = True Then
+
+                BallDirection = DirectionEnum.DownRight
+
+            ElseIf AControllerTsUp = True Then
+
+                BallDirection = DirectionEnum.UpRight
+
+            ElseIf AControllerTsDown = True Then
 
                 BallDirection = DirectionEnum.DownRight
 
@@ -1395,6 +1436,7 @@ Public Class Form1
         End If
 
     End Sub
+
 
     Private Sub CheckRightPaddleHit()
 
