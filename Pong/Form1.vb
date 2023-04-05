@@ -279,7 +279,7 @@ Public Class Form1
 
         UpdateGame()
 
-        Refresh()
+        Refresh() 'Calls OnPaint Event
 
     End Sub
 
