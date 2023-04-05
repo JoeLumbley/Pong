@@ -238,10 +238,37 @@ Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        InitializeGame()
+
+    End Sub
+
+    Private Sub InitializeGame()
+
         ControllerData.dwSize = 64
         ControllerData.dwFlags = &HFF ' All information
 
-        InitializeGame()
+        WindowState = FormWindowState.Maximized
+
+        Text = "Code with Joe - Pong"
+
+        SetStyle(ControlStyles.AllPaintingInWmPaint, True) ' True is better
+        SetStyle(ControlStyles.OptimizedDoubleBuffer, True) ' True is better
+
+        LayoutInstructions()
+
+        AlineCenter.Alignment = StringAlignment.Center
+        AlineCenterMiddle.Alignment = StringAlignment.Center
+        AlineCenterMiddle.LineAlignment = StringAlignment.Center
+
+        CenterlinePen.DashStyle = Drawing2D.DashStyle.Dash
+
+        InitializePaddles()
+
+        InitializeBall()
+
+        Context = BufferedGraphicsManager.Current
+        Context.MaximumBuffer = New Size(Width + 1, Height + 1)
+        Buffer = Context.Allocate(CreateGraphics(), New Rectangle(0, 0, Width, Height))
 
         Timer1.Interval = 16
         Timer1.Start()
@@ -253,35 +280,6 @@ Public Class Form1
         UpdateGame()
 
         Refresh()
-
-    End Sub
-
-    Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
-
-        DrawGame()
-
-        'Show buffer on form.
-        Buffer.Render(e.Graphics)
-
-        'Release memory used by buffer.
-        Buffer.Dispose()
-        Buffer = Nothing
-
-        'Create new buffer.
-        Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)
-
-        'Use these settings when drawing to the backbuffer.
-        With Buffer.Graphics
-            'Bug fix don't change.
-            .CompositingMode = Drawing2D.CompositingMode.SourceOver
-            'To fix draw string error: "Parameters not valid."
-            'I set the compositing mode to source over.
-            .SmoothingMode = Drawing2D.SmoothingMode.HighSpeed
-            .TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAlias
-            .CompositingQuality = Drawing2D.CompositingQuality.HighSpeed
-            .InterpolationMode = Drawing2D.InterpolationMode.NearestNeighbor
-            .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighSpeed
-        End With
 
     End Sub
 
@@ -314,6 +312,51 @@ Public Class Form1
                 UpdatePause()
 
         End Select
+
+    End Sub
+
+    Private Sub UpdatePlaying()
+
+        GetControllerData()
+
+        UpdatePaddles()
+
+        UpdateBall()
+
+        UpdateScore()
+
+        CheckforEndGame()
+
+        CheckForPause()
+
+    End Sub
+
+    Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
+
+        DrawGame()
+
+        'Show buffer on form.
+        Buffer.Render(e.Graphics)
+
+        'Release memory used by buffer.
+        Buffer.Dispose()
+        Buffer = Nothing
+
+        'Create new buffer.
+        Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)
+
+        'Use these settings when drawing to the backbuffer.
+        With Buffer.Graphics
+            'Bug fix don't change.
+            .CompositingMode = Drawing2D.CompositingMode.SourceOver
+            'To fix draw string error: "Parameters not valid."
+            'I set the compositing mode to source over.
+            .SmoothingMode = Drawing2D.SmoothingMode.HighSpeed
+            .TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAlias
+            .CompositingQuality = Drawing2D.CompositingQuality.HighSpeed
+            .InterpolationMode = Drawing2D.InterpolationMode.NearestNeighbor
+            .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighSpeed
+        End With
 
     End Sub
 
@@ -350,329 +393,6 @@ Public Class Form1
 
     End Sub
 
-    Private Sub UpdatePlaying()
-
-        GetControllerData()
-
-        UpdatePaddles()
-
-        UpdateBall()
-
-        UpdateScore()
-
-        CheckforEndGame()
-
-        CheckForPause()
-
-    End Sub
-    Private Sub GetControllerData()
-
-        For ControllerNumber = 0 To 15 'Up to 16 controllers
-
-            Try
-
-                'Did an error happen when we called joyGetPosEx?
-                If joyGetPosEx(ControllerNumber, ControllerData) = 0 Then
-                    'No errors.
-
-                    UpdateDPadPosition()
-
-                    UpdateButtonPosition()
-
-                    UpdateLeftThumbstickPosition()
-
-                    AssignController()
-
-                Else
-                    'Yes, we have an error.
-
-                    UnassignController()
-
-                End If
-
-            Catch ex As Exception
-
-                MsgBox(ex.ToString)
-
-                Exit Sub
-
-            End Try
-
-        Next
-
-    End Sub
-
-    Private Sub UnassignController()
-
-        If AControllerID = ControllerNumber Then
-
-            AControllerID = -1
-
-        End If
-
-        If BControllerID = ControllerNumber Then
-
-            BControllerID = -1
-
-        End If
-
-    End Sub
-
-    Private Sub AssignController()
-        'Assign controller a letter.
-
-        'Has a controller been assigned to A?
-        If AControllerID < 0 Then
-            'No controller been assigned to A.
-
-            'Is the controller assigned to B?
-            If BControllerID <> ControllerNumber Then
-                'No, the controller is not assigned to B.
-
-                'Assign controller to A.
-                AControllerID = ControllerNumber
-
-            End If
-
-        End If
-
-        'Has a controller been assigned to B?
-        If BControllerID < 0 Then
-            'No, a controller has not been assigned to B.
-
-            'Is the controller assigned to A?
-            If AControllerID <> ControllerNumber Then
-                'No, the controller is not assigned to A.
-
-                'Assign controller to B.
-                BControllerID = ControllerNumber
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateButtonPosition()
-        'The range of buttons is 0 to 255.
-        '         XBox / PlayStation
-        'What buttons are down?
-        Select Case ControllerData.dwButtons
-            Case 0 'All the buttons are up.
-                If AControllerID = ControllerNumber Then
-                    AControllerStart = False
-                    AControllerA = False
-                    AControllerB = False
-                    AControllerX = False
-                End If
-                If BControllerID = ControllerNumber Then
-                    BControllerStart = False
-                    BControllerA = False
-                    BControllerB = False
-                    BControllerX = False
-                End If
-            Case 1 'A / Square button is down.
-                If AControllerID = ControllerNumber Then
-                    AControllerStart = False
-                    AControllerB = False
-                    AControllerX = False
-                    AControllerA = True
-                End If
-                If BControllerID = ControllerNumber Then
-                    BControllerStart = False
-                    BControllerB = False
-                    BControllerX = False
-                    BControllerA = True
-                End If
-            Case 2 'B / X button is down.
-                If AControllerID = ControllerNumber Then
-                    AControllerStart = False
-                    AControllerA = False
-                    AControllerX = False
-                    AControllerB = True
-                End If
-                If BControllerID = ControllerNumber Then
-                    BControllerStart = False
-                    BControllerA = False
-                    BControllerX = False
-                    BControllerB = True
-                End If
-            Case 4 'X / Circle button is down.
-                If AControllerID = ControllerNumber Then
-                    AControllerStart = False
-                    AControllerA = False
-                    BControllerB = False
-                    AControllerX = True
-                End If
-                If BControllerID = ControllerNumber Then
-                    BControllerStart = False
-                    BControllerA = False
-                    BControllerB = False
-                    BControllerX = True
-                End If
-            Case 8 'Y / Triangle button is down.
-            Case 16 'Left Bumper is down.
-            Case 32 'Right Bumper is down.
-            Case 64 'Back / Left Trigger is down.
-            Case 128 'Start / Right Trigger is down.
-                If AControllerID = ControllerNumber Then
-                    AControllerA = False
-                    AControllerB = False
-                    AControllerX = False
-                    AControllerStart = True
-                End If
-                If BControllerID = ControllerNumber Then
-                    BControllerA = False
-                    BControllerB = False
-                    BControllerX = False
-                    BControllerStart = True
-                End If
-            Case 3 'A+B / Square+X buttons are down.
-            Case 5 'A+X / Square+Circle buttons are down.
-            Case 9 'A+Y / Square+Triangle buttons are down.
-            Case 6 'B+X / X+Circle buttons are down.
-            Case 10 'B+Y / X+Triangle buttons are down.
-            Case 12 'X+Y / Circle+Triangle buttons are down.
-            Case 48 'Left Bumper+Right Bumper buttons are down.
-            Case 192 'Back+Start / Left Trigger+Right Trigger are down.
-        End Select
-
-    End Sub
-
-    Private Sub UpdateDPadPosition()
-        'The range of POV is 0 to 65535.
-        '0 through 31500 is used to represent the angle.
-        'degrees = POV \ 100  315° = 31500 \ 100
-
-        'What position is the D-Pad in?
-        Select Case ControllerData.dwPOV
-            Case 0 '0° Up
-                If AControllerID = ControllerNumber Then
-                    AControllerNeutral = False
-                    AControllerDown = False
-                    AControllerUp = True
-                End If
-                If BControllerID = ControllerNumber Then
-                    BControllerNeutral = False
-                    BControllerDown = False
-                    BControllerUp = True
-                End If
-            Case 4500 '45° Up Right
-                If AControllerID = ControllerNumber Then
-                    AControllerNeutral = False
-                    AControllerDown = False
-                    AControllerUp = True
-                End If
-                If BControllerID = ControllerNumber Then
-                    BControllerNeutral = False
-                    BControllerDown = False
-                    BControllerUp = True
-                End If
-            Case 9000 '90° Right
-            Case 13500 '135° Down Right
-                If AControllerID = ControllerNumber Then
-                    AControllerNeutral = False
-                    AControllerUp = False
-                    AControllerDown = True
-                End If
-                If BControllerID = ControllerNumber Then
-                    BControllerNeutral = False
-                    BControllerUp = False
-                    BControllerDown = True
-                End If
-            Case 18000 '180° Down
-                If AControllerID = ControllerNumber Then
-                    AControllerNeutral = False
-                    AControllerUp = False
-                    AControllerDown = True
-                End If
-                If BControllerID = ControllerNumber Then
-                    BControllerNeutral = False
-                    BControllerUp = False
-                    BControllerDown = True
-                End If
-            Case 22500 '225° Down Left
-                If AControllerID = ControllerNumber Then
-                    AControllerNeutral = False
-                    AControllerUp = False
-                    AControllerDown = True
-                End If
-                If BControllerID = ControllerNumber Then
-                    BControllerNeutral = False
-                    BControllerUp = False
-                    BControllerDown = True
-                End If
-            Case 27000 '270° Left
-            Case 31500 '315° Up Left
-                If AControllerID = ControllerNumber Then
-                    AControllerNeutral = False
-                    AControllerDown = False
-                    AControllerUp = True
-                End If
-                If BControllerID = ControllerNumber Then
-                    BControllerNeutral = False
-                    BControllerDown = False
-                    BControllerUp = True
-                End If
-            Case 65535 'Neutral
-                If AControllerID = ControllerNumber Then
-                    AControllerUp = False
-                    AControllerDown = False
-                    AControllerNeutral = True
-                End If
-                If BControllerID = ControllerNumber Then
-                    BControllerUp = False
-                    BControllerDown = False
-                    BControllerNeutral = True
-                End If
-        End Select
-
-    End Sub
-
-    Private Sub UpdateLeftThumbstickPosition()
-        'The range on the Y-axis is 0 to 65535.
-
-        'What position is the left thumbstick in on the Y-axis?
-        If ControllerData.dwYpos <= NeutralStart Then
-            'The left thumbstick is in the up position.
-
-            If AControllerID = ControllerNumber Then
-                AControllerTsDown = False
-                AControllerTsUp = True
-            End If
-            If BControllerID = ControllerNumber Then
-                BControllerTsDown = False
-                BControllerTsUp = True
-            End If
-
-        ElseIf ControllerData.dwYpos >= NeutralEnd Then
-            'The left thumbstick is in the down position.
-
-            If AControllerID = ControllerNumber Then
-                AControllerTsUp = False
-                AControllerTsDown = True
-            End If
-            If BControllerID = ControllerNumber Then
-                BControllerTsUp = False
-                BControllerTsDown = True
-            End If
-
-        Else
-            'The left thumbstick is in the neutral position.
-
-            If AControllerID = ControllerNumber Then
-                AControllerTsUp = False
-                AControllerTsDown = False
-            End If
-            If BControllerID = ControllerNumber Then
-                BControllerTsUp = False
-                BControllerTsDown = False
-            End If
-
-        End If
-
-    End Sub
-
     Private Sub DrawPlaying()
 
         DrawCenterCourtLine()
@@ -692,24 +412,6 @@ Public Class Form1
         DrawLeftPaddleScore()
 
         DrawRightPaddleScore()
-
-    End Sub
-
-    Private Sub DrawComputerPlayerIdentifier()
-
-        Buffer.Graphics.DrawString("CPU", InstructionsFont, Brushes.White, ClientSize.Width \ 2 \ 2, 20, AlineCenterMiddle)
-
-    End Sub
-
-    Private Sub DrawRightPaddleScore()
-
-        Buffer.Graphics.DrawString(RightPaddleScore, ScoreFont, Brushes.White, RPadScoreLocation, AlineCenterMiddle)
-
-    End Sub
-
-    Private Sub DrawLeftPaddleScore()
-
-        Buffer.Graphics.DrawString(LeftPaddleScore, ScoreFont, Brushes.White, LPadScoreLocation, AlineCenterMiddle)
 
     End Sub
 
@@ -895,102 +597,6 @@ Public Class Form1
         CheckLeftPaddleHit()
 
         CheckRightPaddleHit()
-
-    End Sub
-
-    Private Sub MoveBallRight()
-
-        Ball.X += BallSpeed
-
-    End Sub
-
-    Private Sub MoveBallLeft()
-
-        Ball.X -= BallSpeed
-
-    End Sub
-
-    Private Sub MoveBallDown()
-
-        Ball.Y += BallSpeed
-
-    End Sub
-
-    Private Sub MoveBallUp()
-
-        Ball.Y -= BallSpeed
-
-    End Sub
-
-    Private Sub MoveBallDownRight()
-
-        MoveBallRight()
-
-        MoveBallDown()
-
-        'Did the ball hit the bottom wall?
-        If Ball.Y + Ball.Height > BottomWall Then
-            'Yes, the ball hit the bottom wall.
-
-            BallDirection = DirectionEnum.UpRight
-
-            PlayBounceSound()
-
-        End If
-
-    End Sub
-
-    Private Sub MoveBallUpRight()
-
-        MoveBallRight()
-
-        MoveBallUp()
-
-        'Did the ball hit the top wall?
-        If Ball.Y < TopWall Then
-            'Yes, the ball hit the top wall.
-
-            BallDirection = DirectionEnum.DownRight
-
-            PlayBounceSound()
-
-        End If
-
-    End Sub
-
-    Private Sub MoveBallDownLeft()
-
-        MoveBallLeft()
-
-        MoveBallDown()
-
-        'Did the ball hit the bottom wall?
-        If Ball.Y + Ball.Height > BottomWall Then
-            'Yes, the ball hit the bottom wall.
-
-            BallDirection = DirectionEnum.UpLeft
-
-            PlayBounceSound()
-
-        End If
-
-    End Sub
-
-    Private Sub MoveBallUpLeft()
-
-        MoveBallLeft()
-
-        MoveBallUp()
-
-        'Did the ball hit the top wall?
-        If Ball.Y < TopWall Then
-            'Yes, the ball hit the top wall.
-
-            BallDirection = DirectionEnum.DownLeft
-
-            PlayBounceSound()
-
-        End If
 
     End Sub
 
@@ -1387,6 +993,26 @@ Public Class Form1
 
     End Sub
 
+    Private Sub CheckRightPaddleHit()
+
+        If RightPaddle.IntersectsWith(Ball) Then
+
+            Ball.X = RightPaddle.X - (Ball.Width + 5)
+
+            ApplyRightPaddleEnglishToBall()
+
+            PlayBounceSound()
+
+        Else
+
+            MouseWheelUp = False
+
+            MouseWheelDown = False
+
+        End If
+
+    End Sub
+
     Private Sub ApplyLeftPaddleEnglishToBall()
 
         If NumberOfPlayers = 2 Then
@@ -1444,27 +1070,6 @@ Public Class Form1
                 Case 3
                     BallDirection = DirectionEnum.DownRight
             End Select
-
-        End If
-
-    End Sub
-
-
-    Private Sub CheckRightPaddleHit()
-
-        If RightPaddle.IntersectsWith(Ball) Then
-
-            Ball.X = RightPaddle.X - (Ball.Width + 5)
-
-            ApplyRightPaddleEnglishToBall()
-
-            PlayBounceSound()
-
-        Else
-
-            MouseWheelUp = False
-
-            MouseWheelDown = False
 
         End If
 
@@ -1564,32 +1169,799 @@ Public Class Form1
 
     End Sub
 
-    Private Sub InitializeGame()
+    Private Sub UpdatePause()
 
-        WindowState = FormWindowState.Maximized
+        GetControllerData()
 
-        Text = "Code with Joe - Pong"
+        If AControllerA = True Or BControllerA = True Then
 
-        SetStyle(ControlStyles.AllPaintingInWmPaint, True) ' True is better
-        SetStyle(ControlStyles.OptimizedDoubleBuffer, True) ' True is better
+            GameState = GameStateEnum.Playing
 
-        LayoutInstructions()
+        End If
 
-        AlineCenter.Alignment = StringAlignment.Center
-        AlineCenterMiddle.Alignment = StringAlignment.Center
-        AlineCenterMiddle.LineAlignment = StringAlignment.Center
+        If PKeyDown = True Or AKeyDown = True Then
 
-        CenterlinePen.DashStyle = Drawing2D.DashStyle.Dash
+            PKeyDown = False
 
-        InitializePaddles()
+            GameState = GameStateEnum.Playing
 
-        InitializeBall()
-
-        Context = BufferedGraphicsManager.Current
-        Context.MaximumBuffer = New Size(Width + 1, Height + 1)
-        Buffer = Context.Allocate(CreateGraphics(), New Rectangle(0, 0, Width, Height))
+        End If
 
     End Sub
+
+    Private Sub UpdateInstructions()
+
+        GetControllerData()
+
+        If NumberOfPlayers = 1 Then
+
+            If AControllerB = True Or BControllerB = True Then
+
+                GameState = GameStateEnum.Serve
+
+                PlayBounceSound()
+
+            End If
+
+            If AControllerX = True Or BControllerX = True Then
+
+                GameState = GameStateEnum.Serve
+
+                PlayBounceSound()
+
+            End If
+
+            If SpaceBarDown = True Or BKeyDown = True Or XKeyDown = True Then
+
+                GameState = GameStateEnum.Serve
+
+                PlayBounceSound()
+
+            End If
+
+        Else
+
+            If AControllerA = True Or BControllerA = True Then
+
+                GameState = GameStateEnum.Serve
+
+                PlayBounceSound()
+
+            End If
+
+            If SpaceBarDown = True Or AKeyDown = True Then
+
+                GameState = GameStateEnum.Serve
+
+                PlayBounceSound()
+
+            End If
+
+        End If
+
+    End Sub
+
+    Private Sub UpdateStartScreen()
+
+        GetControllerData()
+
+        InstructStartLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) - 15)
+
+        If AControllerA = True Or BControllerA = True Then
+
+            NumberOfPlayers = 1
+
+            GameState = GameStateEnum.Instructions
+
+            PlayBounceSound()
+
+        End If
+
+        If AControllerB = True Or BControllerB = True Then
+
+            NumberOfPlayers = 2
+
+            GameState = GameStateEnum.Instructions
+
+            PlayBounceSound()
+
+        End If
+
+        If AControllerX = True Or BControllerX = True Then
+
+            NumberOfPlayers = 2
+
+            GameState = GameStateEnum.Instructions
+
+            PlayBounceSound()
+
+        End If
+
+        If OneKeyDown = True Or AKeyDown = True Then
+
+            NumberOfPlayers = 1
+
+            GameState = GameStateEnum.Instructions
+
+            PlayBounceSound()
+
+        End If
+
+        If TwoKeyDown = True Or BKeyDown = True Or XKeyDown = True Then
+
+            NumberOfPlayers = 2
+
+            GameState = GameStateEnum.Instructions
+
+            PlayBounceSound()
+
+        End If
+
+    End Sub
+
+    Private Sub UpdateEndScreen()
+
+        UpdateFlashingText()
+
+        EndScreenCounter += 1
+
+        If EndScreenCounter >= 300 Then
+
+            ResetGame()
+
+        End If
+
+    End Sub
+
+    Private Sub ResetGame()
+
+        EndScreenCounter = 0
+
+        LeftPaddleScore = 0
+
+        RightPaddleScore = 0
+
+        LeftPaddle.Y = ClientSize.Height \ 2 - LeftPaddle.Height \ 2 'Center verticaly
+
+        RightPaddle.X = ClientSize.Width - RightPaddle.Width - 20 'Aline right 20 pix padding
+        RightPaddle.Y = ClientSize.Height \ 2 - RightPaddle.Height \ 2 'Center verticaly
+
+        PlaceBallCenterCourt()
+
+        GameState = GameStateEnum.StartScreen
+
+    End Sub
+
+    Private Sub UpdateServe()
+
+        PlaceBallCenterCourt()
+
+        If Serving = ServeStateEnum.RightPaddle Then
+
+            ServeRightPaddle()
+
+        Else
+
+            ServeLeftPaddle()
+
+        End If
+
+        GameState = GameStateEnum.Playing
+
+    End Sub
+
+    Private Sub PlaceBallCenterCourt()
+
+        Ball.Location = New Point((ClientSize.Width \ 2) - (Ball.Width \ 2), (ClientSize.Height \ 2) - (Ball.Height \ 2))
+
+    End Sub
+
+    Private Sub ServeLeftPaddle()
+
+        Select Case RandomNumber()
+
+            Case 1
+
+                BallDirection = DirectionEnum.UpRight
+
+            Case 2
+
+                BallDirection = DirectionEnum.Right
+
+            Case 3
+
+                BallDirection = DirectionEnum.DownRight
+
+        End Select
+
+    End Sub
+
+    Private Sub ServeRightPaddle()
+
+        Select Case RandomNumber()
+
+            Case 1
+
+                BallDirection = DirectionEnum.UpLeft
+
+            Case 2
+
+                BallDirection = DirectionEnum.Left
+
+            Case 3
+
+                BallDirection = DirectionEnum.DownLeft
+
+        End Select
+
+    End Sub
+
+    Private Sub DrawPauseScreen()
+
+        DrawCenterCourtLine()
+
+        DrawLeftPaddle()
+
+        DrawRightPaddle()
+
+        DrawBall()
+
+        If NumberOfPlayers = 1 Then
+
+            DrawComputerPlayerIdentifier()
+
+        End If
+
+        DrawLeftPaddleScore()
+
+        DrawRightPaddleScore()
+
+        DrawPausedText()
+
+    End Sub
+
+    Private Sub DrawEndScreen()
+
+        DrawCenterCourtLine()
+
+        DrawLeftPaddle()
+
+        DrawRightPaddle()
+
+        DrawBall()
+
+        If NumberOfPlayers = 1 Then
+
+            DrawComputerPlayerIdentifier()
+
+        End If
+
+        DrawEndScores()
+
+    End Sub
+
+    Private Sub DrawServe()
+
+        DrawCenterCourtLine()
+
+        DrawLeftPaddle()
+
+        DrawRightPaddle()
+
+        DrawBall()
+
+        If NumberOfPlayers = 1 Then
+
+            DrawComputerPlayerIdentifier()
+
+        End If
+
+        DrawLeftPaddleScore()
+
+        DrawRightPaddleScore()
+
+    End Sub
+
+    Private Sub DrawStartScreen()
+
+        DrawTitle()
+
+        DrawStartScreenInstructions()
+
+    End Sub
+
+    Private Sub DrawInstructions()
+
+        If NumberOfPlayers = 1 Then
+
+            DrawTitle()
+
+            'Draw one player instructions.
+            Buffer.Graphics.DrawString(InstructOneText,
+            InstructionsFont, Brushes.White, InstructOneLocation, AlineCenter)
+
+        Else
+
+            DrawTitle()
+
+            'Draw two player instructions.
+            Buffer.Graphics.DrawString(InstructTwoText,
+            InstructionsFont, Brushes.White, InstructTwoLocation, AlineCenter)
+
+        End If
+
+    End Sub
+
+    Private Sub DrawEndScores()
+
+        'Did the left paddle win?
+        If Winner = WinStateEnum.LeftPaddle Then
+            'Yes, the left paddle won.
+
+            'Flash the winning score.
+            If DrawFlashingText = True Then
+
+                DrawLeftPaddleScore()
+
+            End If
+
+        Else
+            'No, the left paddle didn't win.
+
+            DrawLeftPaddleScore()
+
+        End If
+
+        'Did the right paddle win?
+        If Winner = WinStateEnum.RightPaddle Then
+            'Yes, the right paddle won.
+
+
+            'Flash the winning score.
+            If DrawFlashingText = True Then
+
+                DrawRightPaddleScore()
+
+            End If
+
+        Else
+            'No, the right paddle didn't win.
+
+            DrawRightPaddleScore()
+
+        End If
+
+    End Sub
+
+    Private Sub GetControllerData()
+
+        For ControllerNumber = 0 To 15 'Up to 16 controllers
+
+            Try
+
+                'Did an error happen when we called joyGetPosEx?
+                If joyGetPosEx(ControllerNumber, ControllerData) = 0 Then
+                    'No errors.
+
+                    UpdateDPadPosition()
+
+                    UpdateButtonPosition()
+
+                    UpdateLeftThumbstickPosition()
+
+                    AssignController()
+
+                Else
+                    'Yes, we have an error.
+
+                    UnassignController()
+
+                End If
+
+            Catch ex As Exception
+
+                MsgBox(ex.ToString)
+
+                Exit Sub
+
+            End Try
+
+        Next
+
+    End Sub
+
+    Private Sub UpdateButtonPosition()
+        'The range of buttons is 0 to 255.
+        '         XBox / PlayStation
+        'What buttons are down?
+        Select Case ControllerData.dwButtons
+            Case 0 'All the buttons are up.
+                If AControllerID = ControllerNumber Then
+                    AControllerStart = False
+                    AControllerA = False
+                    AControllerB = False
+                    AControllerX = False
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerStart = False
+                    BControllerA = False
+                    BControllerB = False
+                    BControllerX = False
+                End If
+            Case 1 'A / Square button is down.
+                If AControllerID = ControllerNumber Then
+                    AControllerStart = False
+                    AControllerB = False
+                    AControllerX = False
+                    AControllerA = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerStart = False
+                    BControllerB = False
+                    BControllerX = False
+                    BControllerA = True
+                End If
+            Case 2 'B / X button is down.
+                If AControllerID = ControllerNumber Then
+                    AControllerStart = False
+                    AControllerA = False
+                    AControllerX = False
+                    AControllerB = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerStart = False
+                    BControllerA = False
+                    BControllerX = False
+                    BControllerB = True
+                End If
+            Case 4 'X / Circle button is down.
+                If AControllerID = ControllerNumber Then
+                    AControllerStart = False
+                    AControllerA = False
+                    BControllerB = False
+                    AControllerX = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerStart = False
+                    BControllerA = False
+                    BControllerB = False
+                    BControllerX = True
+                End If
+            Case 8 'Y / Triangle button is down.
+            Case 16 'Left Bumper is down.
+            Case 32 'Right Bumper is down.
+            Case 64 'Back / Left Trigger is down.
+            Case 128 'Start / Right Trigger is down.
+                If AControllerID = ControllerNumber Then
+                    AControllerA = False
+                    AControllerB = False
+                    AControllerX = False
+                    AControllerStart = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerA = False
+                    BControllerB = False
+                    BControllerX = False
+                    BControllerStart = True
+                End If
+            Case 3 'A+B / Square+X buttons are down.
+            Case 5 'A+X / Square+Circle buttons are down.
+            Case 9 'A+Y / Square+Triangle buttons are down.
+            Case 6 'B+X / X+Circle buttons are down.
+            Case 10 'B+Y / X+Triangle buttons are down.
+            Case 12 'X+Y / Circle+Triangle buttons are down.
+            Case 48 'Left Bumper+Right Bumper buttons are down.
+            Case 192 'Back+Start / Left Trigger+Right Trigger are down.
+        End Select
+
+    End Sub
+
+    Private Sub UpdateDPadPosition()
+        'The range of POV is 0 to 65535.
+        '0 through 31500 is used to represent the angle.
+        'degrees = POV \ 100  315° = 31500 \ 100
+
+        'What position is the D-Pad in?
+        Select Case ControllerData.dwPOV
+            Case 0 '0° Up
+                If AControllerID = ControllerNumber Then
+                    AControllerNeutral = False
+                    AControllerDown = False
+                    AControllerUp = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerNeutral = False
+                    BControllerDown = False
+                    BControllerUp = True
+                End If
+            Case 4500 '45° Up Right
+                If AControllerID = ControllerNumber Then
+                    AControllerNeutral = False
+                    AControllerDown = False
+                    AControllerUp = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerNeutral = False
+                    BControllerDown = False
+                    BControllerUp = True
+                End If
+            Case 9000 '90° Right
+            Case 13500 '135° Down Right
+                If AControllerID = ControllerNumber Then
+                    AControllerNeutral = False
+                    AControllerUp = False
+                    AControllerDown = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerNeutral = False
+                    BControllerUp = False
+                    BControllerDown = True
+                End If
+            Case 18000 '180° Down
+                If AControllerID = ControllerNumber Then
+                    AControllerNeutral = False
+                    AControllerUp = False
+                    AControllerDown = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerNeutral = False
+                    BControllerUp = False
+                    BControllerDown = True
+                End If
+            Case 22500 '225° Down Left
+                If AControllerID = ControllerNumber Then
+                    AControllerNeutral = False
+                    AControllerUp = False
+                    AControllerDown = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerNeutral = False
+                    BControllerUp = False
+                    BControllerDown = True
+                End If
+            Case 27000 '270° Left
+            Case 31500 '315° Up Left
+                If AControllerID = ControllerNumber Then
+                    AControllerNeutral = False
+                    AControllerDown = False
+                    AControllerUp = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerNeutral = False
+                    BControllerDown = False
+                    BControllerUp = True
+                End If
+            Case 65535 'Neutral
+                If AControllerID = ControllerNumber Then
+                    AControllerUp = False
+                    AControllerDown = False
+                    AControllerNeutral = True
+                End If
+                If BControllerID = ControllerNumber Then
+                    BControllerUp = False
+                    BControllerDown = False
+                    BControllerNeutral = True
+                End If
+        End Select
+
+    End Sub
+
+    Private Sub UpdateLeftThumbstickPosition()
+        'The range on the Y-axis is 0 to 65535.
+
+        'What position is the left thumbstick in on the Y-axis?
+        If ControllerData.dwYpos <= NeutralStart Then
+            'The left thumbstick is in the up position.
+
+            If AControllerID = ControllerNumber Then
+                AControllerTsDown = False
+                AControllerTsUp = True
+            End If
+            If BControllerID = ControllerNumber Then
+                BControllerTsDown = False
+                BControllerTsUp = True
+            End If
+
+        ElseIf ControllerData.dwYpos >= NeutralEnd Then
+            'The left thumbstick is in the down position.
+
+            If AControllerID = ControllerNumber Then
+                AControllerTsUp = False
+                AControllerTsDown = True
+            End If
+            If BControllerID = ControllerNumber Then
+                BControllerTsUp = False
+                BControllerTsDown = True
+            End If
+
+        Else
+            'The left thumbstick is in the neutral position.
+
+            If AControllerID = ControllerNumber Then
+                AControllerTsUp = False
+                AControllerTsDown = False
+            End If
+            If BControllerID = ControllerNumber Then
+                BControllerTsUp = False
+                BControllerTsDown = False
+            End If
+
+        End If
+
+    End Sub
+
+    Private Sub AssignController()
+        'Assign controller a letter.
+
+        'Has a controller been assigned to A?
+        If AControllerID < 0 Then
+            'No controller been assigned to A.
+
+            'Is the controller assigned to B?
+            If BControllerID <> ControllerNumber Then
+                'No, the controller is not assigned to B.
+
+                'Assign controller to A.
+                AControllerID = ControllerNumber
+
+            End If
+
+        End If
+
+        'Has a controller been assigned to B?
+        If BControllerID < 0 Then
+            'No, a controller has not been assigned to B.
+
+            'Is the controller assigned to A?
+            If AControllerID <> ControllerNumber Then
+                'No, the controller is not assigned to A.
+
+                'Assign controller to B.
+                BControllerID = ControllerNumber
+
+            End If
+
+        End If
+
+    End Sub
+
+    Private Sub UnassignController()
+
+        'Is this the controller to unassign?
+        If AControllerID = ControllerNumber Then
+            'Yes, this is the one.
+
+            'Unassign
+            AControllerID = -1
+
+        End If
+
+        'Is this the controller to unassign?
+        If BControllerID = ControllerNumber Then
+            'Yes, this is the one.
+
+            'Unassign
+            BControllerID = -1
+
+        End If
+
+    End Sub
+
+    Private Sub DrawComputerPlayerIdentifier()
+
+        Buffer.Graphics.DrawString("CPU", InstructionsFont, Brushes.White, ClientSize.Width \ 2 \ 2, 20, AlineCenterMiddle)
+
+    End Sub
+
+    Private Sub DrawRightPaddleScore()
+
+        Buffer.Graphics.DrawString(RightPaddleScore, ScoreFont, Brushes.White, RPadScoreLocation, AlineCenterMiddle)
+
+    End Sub
+
+    Private Sub DrawLeftPaddleScore()
+
+        Buffer.Graphics.DrawString(LeftPaddleScore, ScoreFont, Brushes.White, LPadScoreLocation, AlineCenterMiddle)
+
+    End Sub
+
+    Private Sub MoveBallRight()
+
+        Ball.X += BallSpeed
+
+    End Sub
+
+    Private Sub MoveBallLeft()
+
+        Ball.X -= BallSpeed
+
+    End Sub
+
+    Private Sub MoveBallDown()
+
+        Ball.Y += BallSpeed
+
+    End Sub
+
+    Private Sub MoveBallUp()
+
+        Ball.Y -= BallSpeed
+
+    End Sub
+
+    Private Sub MoveBallDownRight()
+
+        MoveBallRight()
+
+        MoveBallDown()
+
+        'Did the ball hit the bottom wall?
+        If Ball.Y + Ball.Height > BottomWall Then
+            'Yes, the ball hit the bottom wall.
+
+            BallDirection = DirectionEnum.UpRight
+
+            PlayBounceSound()
+
+        End If
+
+    End Sub
+
+    Private Sub MoveBallUpRight()
+
+        MoveBallRight()
+
+        MoveBallUp()
+
+        'Did the ball hit the top wall?
+        If Ball.Y < TopWall Then
+            'Yes, the ball hit the top wall.
+
+            BallDirection = DirectionEnum.DownRight
+
+            PlayBounceSound()
+
+        End If
+
+    End Sub
+
+    Private Sub MoveBallDownLeft()
+
+        MoveBallLeft()
+
+        MoveBallDown()
+
+        'Did the ball hit the bottom wall?
+        If Ball.Y + Ball.Height > BottomWall Then
+            'Yes, the ball hit the bottom wall.
+
+            BallDirection = DirectionEnum.UpLeft
+
+            PlayBounceSound()
+
+        End If
+
+    End Sub
+
+    Private Sub MoveBallUpLeft()
+
+        MoveBallLeft()
+
+        MoveBallUp()
+
+        'Did the ball hit the top wall?
+        If Ball.Y < TopWall Then
+            'Yes, the ball hit the top wall.
+
+            BallDirection = DirectionEnum.DownLeft
+
+            PlayBounceSound()
+
+        End If
+
+    End Sub
+
+
 
     Private Sub InitializePaddles()
 
@@ -1617,6 +1989,156 @@ Public Class Form1
         BallSpeed = 10
 
     End Sub
+
+    Private Sub LayoutGame()
+
+        'Center the left paddle vertically in the forms client area.
+        LeftPaddle.Y = ClientSize.Height \ 2 - LeftPaddle.Height \ 2
+
+        'Center the right paddle vertically in the forms client area.
+        RightPaddle.Y = ClientSize.Height \ 2 - RightPaddle.Height \ 2
+
+        'Aline the right paddle along the right side of the form client area allow 20
+        'pixels padding.
+        RightPaddle.X = ClientSize.Width - RightPaddle.Width - 20
+
+        CenterCourtLine()
+
+        BottomWall = ClientSize.Height
+
+        TitleLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - 125)
+
+        LPadScoreLocation = New Point(ClientSize.Width \ 2 \ 2, 100)
+
+        RPadScoreLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), 100)
+
+        LayoutInstructions()
+
+    End Sub
+
+    Private Sub UpdateFlashingText()
+        'This algorithm controls the rate of flash for text.
+
+        'Advance the frame counter.
+        FlashCount += 1
+
+        'Draw text for 20 frames.
+        If FlashCount <= 20 Then
+
+            DrawFlashingText = True
+
+        Else
+
+            DrawFlashingText = False
+
+        End If
+
+        'Dont draw text for the next 20 frames.
+        If FlashCount >= 40 Then
+
+            'Repete
+            FlashCount = 0
+
+        End If
+
+    End Sub
+
+    Private Sub DrawStartScreenInstructions()
+
+        Buffer.Graphics.DrawString(InstructStartText, InstructionsFont, Brushes.White, InstructStartLocation, AlineCenter)
+
+    End Sub
+
+    Private Sub DrawPausedText()
+
+        Dim Location As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
+
+        'Draw paused text.
+        Buffer.Graphics.DrawString("Paused", TitleFont, Brushes.White, Location, AlineCenterMiddle)
+
+    End Sub
+
+    Private Sub DrawBall()
+
+        Buffer.Graphics.FillRectangle(Brushes.White, Ball)
+
+    End Sub
+
+    Private Sub DrawRightPaddle()
+
+        Buffer.Graphics.FillRectangle(Brushes.White, RightPaddle)
+
+    End Sub
+
+    Private Sub DrawLeftPaddle()
+
+        Buffer.Graphics.FillRectangle(Brushes.White, LeftPaddle)
+
+    End Sub
+
+    Private Sub DrawCenterCourtLine()
+
+        Buffer.Graphics.DrawLine(CenterlinePen, CenterlineTop, CenterlineBottom)
+
+    End Sub
+
+    Private Sub DrawTitle()
+
+        Buffer.Graphics.DrawString(TitleText,
+        TitleFont, Brushes.White, TitleLocation, AlineCenter)
+
+    End Sub
+
+    Private Sub CenterCourtLine()
+
+        'Centers the court line in the client area of our form.
+        CenterlineTop = New Point(ClientSize.Width \ 2, 0)
+
+        CenterlineBottom = New Point(ClientSize.Width \ 2, ClientSize.Height)
+
+    End Sub
+
+    Private Sub LayoutInstructions()
+
+        Dim Location As New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) - 15)
+
+        InstructOneLocation = Location
+
+        InstructTwoLocation = Location
+
+    End Sub
+
+    Private Shared Sub PlayBounceSound()
+
+        My.Computer.Audio.Play(My.Resources.bounce, AudioPlayMode.Background)
+
+        'Used Audacity to generate tone.
+        'Frequency:600Hz  Amplitude:0.1  Duration:0.183s
+        'saved as bounce.wav.
+
+    End Sub
+
+    Private Shared Sub PlayScoreSound()
+
+        My.Computer.Audio.Play(My.Resources.score, AudioPlayMode.Background)
+
+    End Sub
+
+    Private Shared Sub PlayWinningSound()
+
+        My.Computer.Audio.Play(My.Resources.winning, AudioPlayMode.Background)
+
+    End Sub
+
+    Private Shared Function RandomNumber() As Integer
+
+        'Initialize random-number generator.
+        Randomize()
+
+        'Generate random number between 1 and 3.
+        Return CInt(Int((3 * Rnd()) + 1))
+
+    End Function
 
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
 
@@ -1829,527 +2351,13 @@ Public Class Form1
 
                 'Did player let the x key up?
             Case Keys.X
-                'Yes, player did push down the x key.
+                'Yes, player let the x key up.
 
                 XKeyDown = False
 
         End Select
 
     End Sub
-
-    Private Sub UpdatePause()
-
-        GetControllerData()
-
-        If AControllerA = True Or BControllerA = True Then
-
-            GameState = GameStateEnum.Playing
-
-        End If
-
-        If PKeyDown = True Or AKeyDown = True Then
-
-            PKeyDown = False
-
-            GameState = GameStateEnum.Playing
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateInstructions()
-
-        GetControllerData()
-
-        If NumberOfPlayers = 1 Then
-
-            If AControllerB = True Or BControllerB = True Then
-
-                GameState = GameStateEnum.Serve
-
-                PlayBounceSound()
-
-            End If
-
-            If AControllerX = True Or BControllerX = True Then
-
-                GameState = GameStateEnum.Serve
-
-                PlayBounceSound()
-
-            End If
-
-            If SpaceBarDown = True Or BKeyDown = True Or XKeyDown = True Then
-
-                GameState = GameStateEnum.Serve
-
-                PlayBounceSound()
-
-            End If
-
-        Else
-
-            If AControllerA = True Or BControllerA = True Then
-
-                GameState = GameStateEnum.Serve
-
-                PlayBounceSound()
-
-            End If
-
-            If SpaceBarDown = True Or AKeyDown = True Then
-
-                GameState = GameStateEnum.Serve
-
-                PlayBounceSound()
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateStartScreen()
-
-        GetControllerData()
-
-        InstructStartLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) - 15)
-
-        If AControllerA = True Or BControllerA = True Then
-
-            NumberOfPlayers = 1
-
-            GameState = GameStateEnum.Instructions
-
-            PlayBounceSound()
-
-        End If
-
-        If AControllerB = True Or BControllerB = True Then
-
-            NumberOfPlayers = 2
-
-            GameState = GameStateEnum.Instructions
-
-            PlayBounceSound()
-
-        End If
-
-        If AControllerX = True Or BControllerX = True Then
-
-            NumberOfPlayers = 2
-
-            GameState = GameStateEnum.Instructions
-
-            PlayBounceSound()
-
-        End If
-
-        If OneKeyDown = True Or AKeyDown = True Then
-
-            NumberOfPlayers = 1
-
-            GameState = GameStateEnum.Instructions
-
-            PlayBounceSound()
-
-        End If
-
-        If TwoKeyDown = True Or BKeyDown = True Or XKeyDown = True Then
-
-            NumberOfPlayers = 2
-
-            GameState = GameStateEnum.Instructions
-
-            PlayBounceSound()
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateEndScreen()
-
-        UpdateFlashingText()
-
-        EndScreenCounter += 1
-
-        If EndScreenCounter >= 300 Then
-
-            ResetGame()
-
-        End If
-
-    End Sub
-
-    Private Sub ResetGame()
-
-        EndScreenCounter = 0
-
-        LeftPaddleScore = 0
-
-        RightPaddleScore = 0
-
-        LeftPaddle.Y = ClientSize.Height \ 2 - LeftPaddle.Height \ 2 'Center verticaly
-
-        RightPaddle.X = ClientSize.Width - RightPaddle.Width - 20 'Aline right 20 pix padding
-        RightPaddle.Y = ClientSize.Height \ 2 - RightPaddle.Height \ 2 'Center verticaly
-
-        PlaceBallCenterCourt()
-
-        GameState = GameStateEnum.StartScreen
-
-    End Sub
-
-    Private Sub UpdateFlashingText()
-        'This algorithm controls the rate of flash for text.
-
-        'Advance the frame counter.
-        FlashCount += 1
-
-        'Draw text for 20 frames.
-        If FlashCount <= 20 Then
-
-            DrawFlashingText = True
-
-        Else
-
-            DrawFlashingText = False
-
-        End If
-
-        'Dont draw text for the next 20 frames.
-        If FlashCount >= 40 Then
-
-            'Repete
-            FlashCount = 0
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateServe()
-
-        PlaceBallCenterCourt()
-
-        If Serving = ServeStateEnum.RightPaddle Then
-
-            ServeRightPaddle()
-
-        Else
-
-            ServeLeftPaddle()
-
-        End If
-
-        GameState = GameStateEnum.Playing
-
-    End Sub
-
-    Private Sub PlaceBallCenterCourt()
-
-        Ball.Location = New Point((ClientSize.Width \ 2) - (Ball.Width \ 2), (ClientSize.Height \ 2) - (Ball.Height \ 2))
-
-    End Sub
-
-    Private Sub ServeLeftPaddle()
-
-        Select Case RandomNumber()
-
-            Case 1
-
-                BallDirection = DirectionEnum.UpRight
-
-            Case 2
-
-                BallDirection = DirectionEnum.Right
-
-            Case 3
-
-                BallDirection = DirectionEnum.DownRight
-
-        End Select
-
-    End Sub
-
-    Private Sub ServeRightPaddle()
-
-        Select Case RandomNumber()
-
-            Case 1
-
-                BallDirection = DirectionEnum.UpLeft
-
-            Case 2
-
-                BallDirection = DirectionEnum.Left
-
-            Case 3
-
-                BallDirection = DirectionEnum.DownLeft
-
-        End Select
-
-    End Sub
-
-    Private Sub DrawPauseScreen()
-
-        DrawCenterCourtLine()
-
-        DrawLeftPaddle()
-
-        DrawRightPaddle()
-
-        DrawBall()
-
-        If NumberOfPlayers = 1 Then
-
-            DrawComputerPlayerIdentifier()
-
-        End If
-
-        DrawLeftPaddleScore()
-
-        DrawRightPaddleScore()
-
-        DrawPausedText()
-
-    End Sub
-
-    Private Sub DrawEndScreen()
-
-        DrawCenterCourtLine()
-
-        DrawLeftPaddle()
-
-        DrawRightPaddle()
-
-        DrawBall()
-
-        If NumberOfPlayers = 1 Then
-
-            DrawComputerPlayerIdentifier()
-
-        End If
-
-        DrawEndScores()
-
-    End Sub
-
-    Private Sub DrawServe()
-
-        DrawCenterCourtLine()
-
-        DrawLeftPaddle()
-
-        DrawRightPaddle()
-
-        DrawBall()
-
-        If NumberOfPlayers = 1 Then
-
-            DrawComputerPlayerIdentifier()
-
-        End If
-
-        DrawLeftPaddleScore()
-
-        DrawRightPaddleScore()
-
-    End Sub
-
-    Private Sub DrawStartScreen()
-
-        DrawTitle()
-
-        DrawStartScreenInstructions()
-
-    End Sub
-
-    Private Sub DrawStartScreenInstructions()
-
-        Buffer.Graphics.DrawString(InstructStartText, InstructionsFont, Brushes.White, InstructStartLocation, AlineCenter)
-
-    End Sub
-
-    Private Sub DrawInstructions()
-
-        If NumberOfPlayers = 1 Then
-
-            DrawTitle()
-
-            'Draw one player instructions.
-            Buffer.Graphics.DrawString(InstructOneText,
-            InstructionsFont, Brushes.White, InstructOneLocation, AlineCenter)
-
-        Else
-
-            DrawTitle()
-
-            'Draw two player instructions.
-            Buffer.Graphics.DrawString(InstructTwoText,
-            InstructionsFont, Brushes.White, InstructTwoLocation, AlineCenter)
-
-        End If
-
-    End Sub
-
-    Private Sub DrawPausedText()
-
-        Dim Location As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
-
-        'Draw paused text.
-        Buffer.Graphics.DrawString("Paused", TitleFont, Brushes.White, Location, AlineCenterMiddle)
-
-    End Sub
-
-    Private Sub DrawBall()
-
-        Buffer.Graphics.FillRectangle(Brushes.White, Ball)
-
-    End Sub
-
-    Private Sub DrawRightPaddle()
-
-        Buffer.Graphics.FillRectangle(Brushes.White, RightPaddle)
-
-    End Sub
-
-    Private Sub DrawLeftPaddle()
-
-        Buffer.Graphics.FillRectangle(Brushes.White, LeftPaddle)
-
-    End Sub
-
-    Private Sub DrawEndScores()
-
-        'Did the left paddle win?
-        If Winner = WinStateEnum.LeftPaddle Then
-            'Yes, the left paddle won.
-
-            'Flash the winning score.
-            If DrawFlashingText = True Then
-
-                DrawLeftPaddleScore()
-
-            End If
-
-        Else
-            'No, the left paddle didn't win.
-
-            DrawLeftPaddleScore()
-
-        End If
-
-        'Did the right paddle win?
-        If Winner = WinStateEnum.RightPaddle Then
-            'Yes, the right paddle won.
-
-
-            'Flash the winning score.
-            If DrawFlashingText = True Then
-
-                DrawRightPaddleScore()
-
-            End If
-
-        Else
-            'No, the right paddle didn't win.
-
-            DrawRightPaddleScore()
-
-        End If
-
-    End Sub
-
-    Private Sub DrawCenterCourtLine()
-
-        Buffer.Graphics.DrawLine(CenterlinePen, CenterlineTop, CenterlineBottom)
-
-    End Sub
-
-    Private Sub DrawTitle()
-
-        Buffer.Graphics.DrawString(TitleText,
-        TitleFont, Brushes.White, TitleLocation, AlineCenter)
-
-    End Sub
-
-    Private Sub LayoutGame()
-
-        'Center the left paddle vertically in the forms client area.
-        LeftPaddle.Y = ClientSize.Height \ 2 - LeftPaddle.Height \ 2
-
-        'Center the right paddle vertically in the forms client area.
-        RightPaddle.Y = ClientSize.Height \ 2 - RightPaddle.Height \ 2
-
-        'Aline the right paddle along the right side of the form client area allow 20
-        'pixels padding.
-        RightPaddle.X = ClientSize.Width - RightPaddle.Width - 20
-
-        CenterCourtLine()
-
-        BottomWall = ClientSize.Height
-
-        TitleLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - 125)
-
-        LPadScoreLocation = New Point(ClientSize.Width \ 2 \ 2, 100)
-
-        RPadScoreLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), 100)
-
-        LayoutInstructions()
-
-    End Sub
-
-    Private Sub CenterCourtLine()
-
-        'Centers the court line in the client area of our form.
-        CenterlineTop = New Point(ClientSize.Width \ 2, 0)
-
-        CenterlineBottom = New Point(ClientSize.Width \ 2, ClientSize.Height)
-
-    End Sub
-
-    Private Sub LayoutInstructions()
-
-        Dim Location As New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) - 15)
-
-        InstructOneLocation = Location
-
-        InstructTwoLocation = Location
-
-    End Sub
-
-    Private Shared Sub PlayBounceSound()
-
-        My.Computer.Audio.Play(My.Resources.bounce, AudioPlayMode.Background)
-
-        'Used Audacity to generate tone.
-        'Frequency:600Hz  Amplitude:0.1  Duration:0.183s
-        'saved as bounce.wav.
-
-    End Sub
-
-    Private Shared Sub PlayScoreSound()
-
-        My.Computer.Audio.Play(My.Resources.score, AudioPlayMode.Background)
-
-    End Sub
-
-    Private Shared Sub PlayWinningSound()
-
-        My.Computer.Audio.Play(My.Resources.winning, AudioPlayMode.Background)
-
-    End Sub
-
-    Private Shared Function RandomNumber() As Integer
-
-        'Initialize random-number generator.
-        Randomize()
-
-        'Generate random number between 1 and 3.
-        Return CInt(Int((3 * Rnd()) + 1))
-
-    End Function
 
     Protected Overrides Sub OnPaintBackground(ByVal e As PaintEventArgs)
 
