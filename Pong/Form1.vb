@@ -371,7 +371,9 @@ Public Class Form1
 
             Try
 
+                'Did an error happen when we called joyGetPosEx?
                 If joyGetPosEx(ControllerNumber, ControllerData) = 0 Then
+                    'No errors.
 
                     UpdateDPadPosition()
 
@@ -379,29 +381,13 @@ Public Class Form1
 
                     UpdateLeftThumbstickPosition()
 
-                    'Assign Controller to Slot
-                    If AControllerID < 0 Then
-                        If BControllerID <> ControllerNumber Then
-                            AControllerID = ControllerNumber
-                        End If
-                    End If
-                    If BControllerID < 0 Then
-                        If AControllerID <> ControllerNumber Then
-                            BControllerID = ControllerNumber
-                        End If
-                    End If
+                    AssignController()
 
                 Else
-                    If AControllerID = ControllerNumber Then
+                    'Yes, we have an error.
 
-                        AControllerID = -1
+                    UnassignController()
 
-                    End If
-                    If BControllerID = ControllerNumber Then
-
-                        BControllerID = -1
-
-                    End If
                 End If
 
             Catch ex As Exception
@@ -413,6 +399,57 @@ Public Class Form1
             End Try
 
         Next
+
+    End Sub
+
+    Private Sub UnassignController()
+
+        If AControllerID = ControllerNumber Then
+
+            AControllerID = -1
+
+        End If
+
+        If BControllerID = ControllerNumber Then
+
+            BControllerID = -1
+
+        End If
+
+    End Sub
+
+    Private Sub AssignController()
+        'Assign controller a letter.
+
+        'Has a controller been assigned to A?
+        If AControllerID < 0 Then
+            'No controller been assigned to A.
+
+            'Is the controller assigned to B?
+            If BControllerID <> ControllerNumber Then
+                'No, the controller is not assigned to B.
+
+                'Assign controller to A.
+                AControllerID = ControllerNumber
+
+            End If
+
+        End If
+
+        'Has a controller been assigned to B?
+        If BControllerID < 0 Then
+            'No, a controller has not been assigned to B.
+
+            'Is the controller assigned to A?
+            If AControllerID <> ControllerNumber Then
+                'No, the controller is not assigned to A.
+
+                'Assign controller to B.
+                BControllerID = ControllerNumber
+
+            End If
+
+        End If
 
     End Sub
 
@@ -461,7 +498,6 @@ Public Class Form1
                     BControllerB = True
                 End If
             Case 4 'X / Circle button is down.
-
                 If AControllerID = ControllerNumber Then
                     AControllerStart = False
                     AControllerA = False
@@ -474,11 +510,6 @@ Public Class Form1
                     BControllerB = False
                     BControllerX = True
                 End If
-
-
-
-
-
             Case 8 'Y / Triangle button is down.
             Case 16 'Left Bumper is down.
             Case 32 'Right Bumper is down.
@@ -599,26 +630,7 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateLeftThumbstickPosition()
-        'The range on the X-axis is 0 to 65535.
         'The range on the Y-axis is 0 to 65535.
-
-        ''What position is the left thumbstick in on the X-axis?
-        'If ControllerData.dwXpos <= NeutralStart Then
-        '    'The left thumbstick is in the left position.
-
-        '    LabelXaxis.Text = "Controller: " & ControllerNumber.ToString & " Left Thumbstick: Left"
-
-        'ElseIf ControllerData.dwXpos >= NeutralEnd Then
-        '    'The left thumbstick is in the right position.
-
-        '    LabelXaxis.Text = "Controller: " & ControllerNumber.ToString & " Left Thumbstick: Right"
-
-        'Else
-        '    'The left thumbstick is in the neutral position.
-
-        '    LabelXaxis.Text = ""
-
-        'End If
 
         'What position is the left thumbstick in on the Y-axis?
         If ControllerData.dwYpos <= NeutralStart Then
