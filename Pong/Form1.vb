@@ -293,9 +293,7 @@ Public Class Form1
     Private Sub InitializeGraphicsBuffer()
 
         Context = BufferedGraphicsManager.Current
-        'Context.MaximumBuffer = New Size(Width + 1, Height + 1)
         Context.MaximumBuffer = ClientSize
-        'Buffer = Context.Allocate(CreateGraphics(), New Rectangle(0, 0, Width, Height))
         Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)
 
     End Sub
@@ -310,6 +308,8 @@ Public Class Form1
         'Release memory used by buffer.
         Buffer.Dispose()
         Buffer = Nothing
+
+        Context.MaximumBuffer = ClientSize
 
         'Create new buffer.
         Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)
