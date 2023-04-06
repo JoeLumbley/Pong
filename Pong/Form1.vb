@@ -192,7 +192,7 @@ Public Class Form1
     Private AControllerID As Integer = -1
     Private AControllerDown As Boolean = False
     Private AControllerUp As Boolean = False
-    Private AControllerNeutral As Boolean = False
+    'Private AControllerNeutral As Boolean = False
     Private AControllerLeft As Boolean = False
     Private AControllerRight As Boolean = False
     Private AControllerA As Boolean = False
@@ -205,7 +205,7 @@ Public Class Form1
     Private BControllerID As Integer = -1
     Private BControllerDown As Boolean = False
     Private BControllerUp As Boolean = False
-    Private BControllerNeutral As Boolean = False
+    'Private BControllerNeutral As Boolean = False
     Private BControllerLeft As Boolean = False
     Private BControllerRight As Boolean = False
     Private BControllerA As Boolean = False
@@ -219,11 +219,14 @@ Public Class Form1
     Private Const NeutralEnd = 43690
 
     Private ControllerData As JOYINFOEX
-
     Private ControllerNumber As Long = 0
-
-    'Private Connected(0 To 15) As Boolean
     '***************************************************************************************************
+    Private ClientCenter As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
+
+
+
+
+
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -233,21 +236,13 @@ Public Class Form1
 
     Private Sub InitializeGame()
 
-        ControllerData.dwSize = 64
-        ControllerData.dwFlags = &HFF ' All information
+        InitializeControllerData()
 
-        WindowState = FormWindowState.Maximized
-
-        Text = "Code with Joe - Pong"
-
-        SetStyle(ControlStyles.AllPaintingInWmPaint, True) ' True is better
-        SetStyle(ControlStyles.OptimizedDoubleBuffer, True) ' True is better
+        InitializeForm()
 
         LayoutInstructions()
 
-        AlineCenter.Alignment = StringAlignment.Center
-        AlineCenterMiddle.Alignment = StringAlignment.Center
-        AlineCenterMiddle.LineAlignment = StringAlignment.Center
+        InitializeStringAlinement()
 
         CenterlinePen.DashStyle = Drawing2D.DashStyle.Dash
 
@@ -255,14 +250,16 @@ Public Class Form1
 
         InitializeBall()
 
-        Context = BufferedGraphicsManager.Current
-        Context.MaximumBuffer = New Size(Width + 1, Height + 1)
-        Buffer = Context.Allocate(CreateGraphics(), New Rectangle(0, 0, Width, Height))
+        InitializeGraphicsBuffer()
 
-        Timer1.Interval = 16
+        Timer1.Interval = 16 '16ms = 1000 milliseconds \ 60 frames per second
         Timer1.Start()
 
     End Sub
+
+
+
+
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
 
@@ -301,6 +298,14 @@ Public Class Form1
                 UpdatePause()
 
         End Select
+
+    End Sub
+
+    Private Sub InitializeGraphicsBuffer()
+
+        Context = BufferedGraphicsManager.Current
+        Context.MaximumBuffer = New Size(Width + 1, Height + 1)
+        Buffer = Context.Allocate(CreateGraphics(), New Rectangle(0, 0, Width, Height))
 
     End Sub
 
@@ -1518,6 +1523,13 @@ Public Class Form1
 
     End Sub
 
+    Private Sub InitializeControllerData()
+
+        ControllerData.dwSize = 64
+        ControllerData.dwFlags = &HFF ' All information
+
+    End Sub
+
     Private Sub GetControllerData()
 
         For ControllerNumber = 0 To 15 'Up to 16 controllers
@@ -1575,41 +1587,23 @@ Public Class Form1
                 End If
             Case 1 'A / Square button is down.
                 If AControllerID = ControllerNumber Then
-                    AControllerStart = False
-                    AControllerB = False
-                    AControllerX = False
                     AControllerA = True
                 End If
                 If BControllerID = ControllerNumber Then
-                    BControllerStart = False
-                    BControllerB = False
-                    BControllerX = False
                     BControllerA = True
                 End If
             Case 2 'B / X button is down.
                 If AControllerID = ControllerNumber Then
-                    AControllerStart = False
-                    AControllerA = False
-                    AControllerX = False
                     AControllerB = True
                 End If
                 If BControllerID = ControllerNumber Then
-                    BControllerStart = False
-                    BControllerA = False
-                    BControllerX = False
                     BControllerB = True
                 End If
             Case 4 'X / Circle button is down.
                 If AControllerID = ControllerNumber Then
-                    AControllerStart = False
-                    AControllerA = False
-                    BControllerB = False
                     AControllerX = True
                 End If
                 If BControllerID = ControllerNumber Then
-                    BControllerStart = False
-                    BControllerA = False
-                    BControllerB = False
                     BControllerX = True
                 End If
             Case 8 'Y / Triangle button is down.
@@ -1618,15 +1612,9 @@ Public Class Form1
             Case 64 'Back / Left Trigger is down.
             Case 128 'Start / Right Trigger is down.
                 If AControllerID = ControllerNumber Then
-                    AControllerA = False
-                    AControllerB = False
-                    AControllerX = False
                     AControllerStart = True
                 End If
                 If BControllerID = ControllerNumber Then
-                    BControllerA = False
-                    BControllerB = False
-                    BControllerX = False
                     BControllerStart = True
                 End If
             Case 3 'A+B / Square+X buttons are down.
@@ -1650,69 +1638,57 @@ Public Class Form1
         Select Case ControllerData.dwPOV
             Case 0 '0° Up
                 If AControllerID = ControllerNumber Then
-                    AControllerNeutral = False
                     AControllerDown = False
                     AControllerUp = True
                 End If
                 If BControllerID = ControllerNumber Then
-                    BControllerNeutral = False
                     BControllerDown = False
                     BControllerUp = True
                 End If
             Case 4500 '45° Up Right
                 If AControllerID = ControllerNumber Then
-                    AControllerNeutral = False
                     AControllerDown = False
                     AControllerUp = True
                 End If
                 If BControllerID = ControllerNumber Then
-                    BControllerNeutral = False
                     BControllerDown = False
                     BControllerUp = True
                 End If
             Case 9000 '90° Right
             Case 13500 '135° Down Right
                 If AControllerID = ControllerNumber Then
-                    AControllerNeutral = False
                     AControllerUp = False
                     AControllerDown = True
                 End If
                 If BControllerID = ControllerNumber Then
-                    BControllerNeutral = False
                     BControllerUp = False
                     BControllerDown = True
                 End If
             Case 18000 '180° Down
                 If AControllerID = ControllerNumber Then
-                    AControllerNeutral = False
                     AControllerUp = False
                     AControllerDown = True
                 End If
                 If BControllerID = ControllerNumber Then
-                    BControllerNeutral = False
                     BControllerUp = False
                     BControllerDown = True
                 End If
             Case 22500 '225° Down Left
                 If AControllerID = ControllerNumber Then
-                    AControllerNeutral = False
                     AControllerUp = False
                     AControllerDown = True
                 End If
                 If BControllerID = ControllerNumber Then
-                    BControllerNeutral = False
                     BControllerUp = False
                     BControllerDown = True
                 End If
             Case 27000 '270° Left
             Case 31500 '315° Up Left
                 If AControllerID = ControllerNumber Then
-                    AControllerNeutral = False
                     AControllerDown = False
                     AControllerUp = True
                 End If
                 If BControllerID = ControllerNumber Then
-                    BControllerNeutral = False
                     BControllerDown = False
                     BControllerUp = True
                 End If
@@ -1720,12 +1696,10 @@ Public Class Form1
                 If AControllerID = ControllerNumber Then
                     AControllerUp = False
                     AControllerDown = False
-                    AControllerNeutral = True
                 End If
                 If BControllerID = ControllerNumber Then
                     BControllerUp = False
                     BControllerDown = False
-                    BControllerNeutral = True
                 End If
         End Select
 
@@ -1997,6 +1971,8 @@ Public Class Form1
 
         LayoutInstructions()
 
+        ClientCenter = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
+
     End Sub
 
     Private Sub UpdateFlashingText()
@@ -2034,10 +2010,8 @@ Public Class Form1
 
     Private Sub DrawPausedText()
 
-        Dim Location As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
-
         'Draw paused text.
-        Buffer.Graphics.DrawString("Paused", TitleFont, Brushes.White, Location, AlineCenterMiddle)
+        Buffer.Graphics.DrawString("Paused", TitleFont, Brushes.White, ClientCenter, AlineCenterMiddle)
 
     End Sub
 
@@ -2067,8 +2041,7 @@ Public Class Form1
 
     Private Sub DrawTitle()
 
-        Buffer.Graphics.DrawString(TitleText,
-        TitleFont, Brushes.White, TitleLocation, AlineCenter)
+        Buffer.Graphics.DrawString(TitleText, TitleFont, Brushes.White, TitleLocation, AlineCenter)
 
     End Sub
 
@@ -2088,6 +2061,25 @@ Public Class Form1
         InstructOneLocation = Location
 
         InstructTwoLocation = Location
+
+    End Sub
+
+    Private Sub InitializeForm()
+
+        WindowState = FormWindowState.Maximized
+
+        Text = "Pong - Code with Joe"
+
+        SetStyle(ControlStyles.AllPaintingInWmPaint, True) ' True is better
+        SetStyle(ControlStyles.OptimizedDoubleBuffer, True) ' True is better
+
+    End Sub
+
+    Private Sub InitializeStringAlinement()
+
+        AlineCenter.Alignment = StringAlignment.Center
+        AlineCenterMiddle.Alignment = StringAlignment.Center
+        AlineCenterMiddle.LineAlignment = StringAlignment.Center
 
     End Sub
 
