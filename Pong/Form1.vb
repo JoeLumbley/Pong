@@ -192,7 +192,6 @@ Public Class Form1
     Private AControllerID As Integer = -1
     Private AControllerDown As Boolean = False
     Private AControllerUp As Boolean = False
-    'Private AControllerNeutral As Boolean = False
     Private AControllerLeft As Boolean = False
     Private AControllerRight As Boolean = False
     Private AControllerA As Boolean = False
@@ -205,7 +204,6 @@ Public Class Form1
     Private BControllerID As Integer = -1
     Private BControllerDown As Boolean = False
     Private BControllerUp As Boolean = False
-    'Private BControllerNeutral As Boolean = False
     Private BControllerLeft As Boolean = False
     Private BControllerRight As Boolean = False
     Private BControllerA As Boolean = False
@@ -222,11 +220,6 @@ Public Class Form1
     Private ControllerNumber As Long = 0
     '***************************************************************************************************
     Private ClientCenter As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
-
-
-
-
-
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -256,10 +249,6 @@ Public Class Form1
         Timer1.Start()
 
     End Sub
-
-
-
-
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
 
@@ -304,8 +293,10 @@ Public Class Form1
     Private Sub InitializeGraphicsBuffer()
 
         Context = BufferedGraphicsManager.Current
-        Context.MaximumBuffer = New Size(Width + 1, Height + 1)
-        Buffer = Context.Allocate(CreateGraphics(), New Rectangle(0, 0, Width, Height))
+        'Context.MaximumBuffer = New Size(Width + 1, Height + 1)
+        Context.MaximumBuffer = ClientSize
+        'Buffer = Context.Allocate(CreateGraphics(), New Rectangle(0, 0, Width, Height))
+        Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)
 
     End Sub
 
