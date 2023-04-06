@@ -27,7 +27,6 @@
 'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
 'SOFTWARE.
 
-Imports System.Numerics
 Imports System.Runtime.InteropServices
 
 Public Class Form1
@@ -99,7 +98,6 @@ Public Class Form1
         "First player to 10 points wins." & vbCrLf & vbCrLf &
         "Pause:  Start  RTrigger  P" & vbCrLf &
         "Resume:  A  □  P"
-
     '******************************************************
 
     'Two Player Instructions Data *************************
@@ -111,8 +109,6 @@ Public Class Form1
         "First player to 10 points wins." & vbCrLf & vbCrLf &
         "Pause:  Start  RTrigger  P" & vbCrLf &
         "Resume:  A  □  P"
-
-
     '******************************************************
     Private ReadOnly InstructionsFont As New Font(FontFamily.GenericSansSerif, 13)
     Private ReadOnly AlineCenter As New StringFormat
@@ -136,8 +132,6 @@ Public Class Form1
     Private AKeyDown As Boolean = False
     Private BKeyDown As Boolean = False
     Private XKeyDown As Boolean = False
-
-
     '******************************************************
 
     'Mouse Event Data *************************************
@@ -205,12 +199,8 @@ Public Class Form1
     Private AControllerB As Boolean = False
     Private AControllerStart As Boolean = False
     Private AControllerX As Boolean = False
-
-
     Private AControllerTsUp As Boolean = False
     Private AControllerTsDown As Boolean = False
-
-
 
     Private BControllerID As Integer = -1
     Private BControllerDown As Boolean = False
@@ -315,22 +305,6 @@ Public Class Form1
 
     End Sub
 
-    Private Sub UpdatePlaying()
-
-        GetControllerData()
-
-        UpdatePaddles()
-
-        UpdateBall()
-
-        UpdateScore()
-
-        CheckforEndGame()
-
-        CheckForPause()
-
-    End Sub
-
     Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
 
         DrawGame()
@@ -357,6 +331,22 @@ Public Class Form1
             .InterpolationMode = Drawing2D.InterpolationMode.NearestNeighbor
             .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighSpeed
         End With
+
+    End Sub
+
+    Private Sub UpdatePlaying()
+
+        GetControllerData()
+
+        UpdatePaddles()
+
+        UpdateBall()
+
+        UpdateScore()
+
+        CheckforEndGame()
+
+        CheckForPause()
 
     End Sub
 
@@ -801,7 +791,6 @@ Public Class Form1
 
             End If
 
-
             If BControllerTsDown = True Then
 
                 'Move right paddle down.
@@ -901,8 +890,6 @@ Public Class Form1
 
             End If
 
-
-
         End If
 
     End Sub
@@ -940,7 +927,6 @@ Public Class Form1
             End If
 
         End If
-
 
         If AControllerTsDown = True Then
 
@@ -1960,8 +1946,6 @@ Public Class Form1
         End If
 
     End Sub
-
-
 
     Private Sub InitializePaddles()
 
