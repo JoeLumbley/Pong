@@ -61,23 +61,25 @@ Public Class Form1
 
     'Ball Data *************************
     Private Ball As Rectangle
-    Private BallSpeed As Integer
+    Private Const BallSpeed As Integer = 10
     Private BallDirection As DirectionEnum
     Private ReadOnly BallMidlineUpPen As New Pen(Color.Green, 7)
     Private ReadOnly BallMidlineDownPen As New Pen(Color.Red, 7)
+    Private BallMiddle As Integer = Ball.Y + Ball.Height \ 2
     '***********************************
 
     'Left Paddle Data *****************
     Private LeftPaddle As Rectangle
-    Private LeftPaddleSpeed As Integer
+    Private Const LeftPaddleSpeed As Integer = 10
     Private LeftPaddleScore As Integer
     Private LPadScoreLocation As Point
     Private ReadOnly LeftPaddleMidlinePen As New Pen(Color.Goldenrod, 7)
+    Private LeftPaddleMiddle As Integer = LeftPaddle.Y + LeftPaddle.Height \ 2
     '***********************************
 
     'Right Paddle Data *****************
     Private RightPaddle As Rectangle
-    Private RightPaddleSpeed As Integer
+    Private Const RightPaddleSpeed As Integer = 10
     Private RightPaddleScore As Integer
     Private RPadScoreLocation As Point
     '***********************************
@@ -85,7 +87,7 @@ Public Class Form1
     Private ReadOnly ScoreFont As New Font(FontFamily.GenericSansSerif, 75)
     Private ReadOnly AlineCenterMiddle As New StringFormat
 
-    Dim InstructStartLocation As Point
+    Private InstructStartLocation As Point
     Private ReadOnly InstructStartText As String = vbCrLf &
         "One player:  A  □   Two players:  B  X"
 
@@ -128,7 +130,6 @@ Public Class Form1
     Private OneKeyDown As Boolean = False
     Private TwoKeyDown As Boolean = False
     Private PKeyDown As Boolean = False
-
     Private AKeyDown As Boolean = False
     Private BKeyDown As Boolean = False
     Private XKeyDown As Boolean = False
@@ -159,16 +160,15 @@ Public Class Form1
     'Centerline Data *******************
     Private CenterlineTop As Point
     Private CenterlineBottom As Point
-    Private CenterlinePen As New Pen(Color.White, 7)
+    Private ReadOnly CenterlinePen As New Pen(Color.White, 7)
     '***********************************
 
-    Private LeftPaddleMiddle As Integer = LeftPaddle.Y + LeftPaddle.Height \ 2
-    Private BallMiddle As Integer = Ball.Y + Ball.Height \ 2
+    'Wall Data ***************************************
+    Private Const TopWall As Integer = 0
+    Private BottomWall As Integer = ClientSize.Height
+    '*************************************************
 
-    Const TopWall As Integer = 0
-    Dim BottomWall As Integer = ClientSize.Height
-
-    Dim DrawFlashingText As Boolean = True
+    Private DrawFlashingText As Boolean = True
 
     'Joystick Data**************************************************************************************************
     Private Declare Function joyGetPosEx Lib "winmm.dll" (ByVal uJoyID As Integer, ByRef pControllerData As JOYINFOEX) As Integer
@@ -212,7 +212,6 @@ Public Class Form1
     Private BControllerB As Boolean = False
     Private BControllerStart As Boolean = False
     Private BControllerX As Boolean = False
-
     Private BControllerTsUp As Boolean = False
     Private BControllerTsDown As Boolean = False
 
@@ -223,7 +222,7 @@ Public Class Form1
 
     Private ControllerNumber As Long = 0
 
-    Private Connected(0 To 15) As Boolean
+    'Private Connected(0 To 15) As Boolean
     '***************************************************************************************************
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -1953,13 +1952,13 @@ Public Class Form1
         LeftPaddle.Height = 100
         LeftPaddle.X = 20
         LeftPaddle.Y = ClientSize.Height \ 2 - LeftPaddle.Height \ 2 'Center vertically
-        LeftPaddleSpeed = 10
+        'LeftPaddleSpeed = 10
 
         RightPaddle.Width = 25
         RightPaddle.Height = 100
         RightPaddle.X = ClientSize.Width - RightPaddle.Width - 20 'Aline right 20 pix padding
         RightPaddle.Y = ClientSize.Height \ 2 - RightPaddle.Height \ 2 'Center vertically
-        RightPaddleSpeed = 10
+        'RightPaddleSpeed = 10
 
     End Sub
 
@@ -1970,7 +1969,7 @@ Public Class Form1
 
         PlaceBallCenterCourt()
 
-        BallSpeed = 10
+        'BallSpeed = 10
 
     End Sub
 
