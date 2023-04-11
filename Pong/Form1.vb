@@ -1517,6 +1517,7 @@ Public Class Form1
     Private Sub InitializeControllerData()
 
         ControllerData.dwSize = 64
+
         ControllerData.dwFlags = &HFF ' All information
 
     End Sub
@@ -2333,3 +2334,31 @@ Public Class Form1
 
 End Class
 
+'Learn more:
+'
+'Consuming Unmanaged DLL Functions
+'https://learn.microsoft.com/en-us/dotnet/framework/interop/consuming-unmanaged-dll-functions
+'
+'DllImportAttribute.EntryPoint Field
+'https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.dllimportattribute.entrypoint?view=net-7.0
+'
+'Passing Structures
+'https://learn.microsoft.com/en-us/dotnet/framework/interop/passing-structures
+'
+'Strings used in Structures
+'https://learn.microsoft.com/en-us/dotnet/framework/interop/default-marshalling-for-strings#strings-used-in-structures
+'
+'joyGetPosEx Function
+'https://learn.microsoft.com/en-us/windows/win32/api/joystickapi/nf-joystickapi-joygetposex
+'
+'JOYINFOEX Structure
+'https://learn.microsoft.com/en-us/windows/win32/api/joystickapi/ns-joystickapi-joyinfoex
+'
+'Multimedia Input
+'https://learn.microsoft.com/en-us/windows/win32/Multimedia/multimedia-input
+'
+'Windows Multimedia
+'https://learn.microsoft.com/en-us/windows/win32/multimedia/windows-multimedia-start-page
+'
+'Reading Input Data From Joystick in Visual Basic
+'https://social.msdn.microsoft.com/Forums/en-US/af28b35b-d756-4d87-94c6-ced882ab20a5/reading-input-data-from-joystick-in-visual-basic?forum=vbgeneral
