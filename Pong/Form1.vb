@@ -1561,7 +1561,7 @@ Public Class Form1
 
     Private Sub UpdateButtonPosition()
         'The range of buttons is 0 to 255.
-        '         XBox / PlayStation
+
         'What buttons are down?
         Select Case ControllerData.dwButtons
             Case 0 'All the buttons are up.
@@ -1918,13 +1918,11 @@ Public Class Form1
         LeftPaddle.Height = 100
         LeftPaddle.X = 20
         LeftPaddle.Y = ClientSize.Height \ 2 - LeftPaddle.Height \ 2 'Center vertically
-        'LeftPaddleSpeed = 10
 
         RightPaddle.Width = 25
         RightPaddle.Height = 100
         RightPaddle.X = ClientSize.Width - RightPaddle.Width - 20 'Aline right 20 pix padding
         RightPaddle.Y = ClientSize.Height \ 2 - RightPaddle.Height \ 2 'Center vertically
-        'RightPaddleSpeed = 10
 
     End Sub
 
@@ -1934,8 +1932,6 @@ Public Class Form1
         Ball.Height = 25
 
         PlaceBallCenterCourt()
-
-        'BallSpeed = 10
 
     End Sub
 
