@@ -27,15 +27,15 @@
 'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
 'SOFTWARE.
 
-'>>>>> Refactor <<<<< 5/20/2023
-'Change game api from multimedia input to XInput.
-'Change game instructions to Xbox controller only.
+'>>>>> Refactored <<<<< 5/20/2023
+'Changed game api from multimedia input to XInput.
+'Changed game instructions to Xbox controllers only.
+'Added controller vibration on paddle hit.
 
 'Monica is our an AI assistant.
 'https://monica.im/
 
 Imports System.Runtime.InteropServices
-Imports System.Threading
 
 Public Class Form1
 
@@ -96,30 +96,11 @@ Public Class Form1
     Private ReadOnly AlineCenterMiddle As New StringFormat
 
     Private InstructStartLocation As Point
-
-    '>>>>> Refactor <<<<<
-    'Change game instructions to Xbox controller only.
-
-    'Private ReadOnly InstructStartText As String = vbCrLf &
-    '    "One player:  A  □   Two players:  B  X"
-
     Private ReadOnly InstructStartText As String = vbCrLf &
         "One player:  A   Two players:  B"
 
     'One Player Instructions Data *************************
     Private InstructOneLocation As Point
-
-    '>>>>> Refactor <<<<<
-    'Change game instructions to Xbox controller only.
-
-    'Private Const InstructOneText As String = vbCrLf &
-    '    "Start:  B  X" & vbCrLf & vbCrLf &
-    '    "Computer plays left paddle." & vbCrLf &
-    '    "Right paddle use ↑  ↓ to move." & vbCrLf &
-    '    "First player to 10 points wins." & vbCrLf & vbCrLf &
-    '    "Pause:  Start  RTrigger  P" & vbCrLf &
-    '    "Resume:  A  □  P"
-
     Private Const InstructOneText As String = vbCrLf &
         "Start:  B" & vbCrLf & vbCrLf &
         "Computer plays left paddle." & vbCrLf &
@@ -127,23 +108,10 @@ Public Class Form1
         "First player to 10 points wins." & vbCrLf & vbCrLf &
         "Pause:  Start  P" & vbCrLf &
         "Resume:  A  P"
-
     '******************************************************
 
     'Two Player Instructions Data *************************
     Private InstructTwoLocation As Point
-
-    '>>>>> Refactor <<<<<
-    'Change game instructions to Xbox controller only.
-
-    'Private Const InstructTwoText As String = vbCrLf &
-    '    "Start:  A  □" & vbCrLf & vbCrLf &
-    '    "Left paddle use  W  S or DPad:  ↑  ↓  to move." & vbCrLf &
-    '    "Right paddle use  ↑  ↓  to move." & vbCrLf &
-    '    "First player to 10 points wins." & vbCrLf & vbCrLf &
-    '    "Pause:  Start  RTrigger  P" & vbCrLf &
-    '    "Resume:  A  □  P"
-
     Private Const InstructTwoText As String = vbCrLf &
         "Start:  A  " & vbCrLf & vbCrLf &
         "Left paddle use  W  S or  ↑  ↓  to move." & vbCrLf &
@@ -151,8 +119,6 @@ Public Class Form1
         "First player to 10 points wins." & vbCrLf & vbCrLf &
         "Pause:  Start  P" & vbCrLf &
         "Resume:  A  P"
-
-
     '******************************************************
     Private ReadOnly InstructionsFont As New Font(FontFamily.GenericSansSerif, 13)
     Private ReadOnly AlineCenter As New StringFormat
@@ -211,28 +177,6 @@ Public Class Form1
     '*************************************************
 
     Private DrawFlashingText As Boolean = True
-
-    '>>>>> Refactor <<<<<
-    'Change game api from multimedia input to XInput.
-
-    'Joystick Data**************************************************************************************************
-    'Private Declare Function joyGetPosEx Lib "winmm.dll" (ByVal uJoyID As Integer, ByRef pControllerData As JOYINFOEX) As Integer
-
-    '<StructLayout(LayoutKind.Sequential)> Public Structure JOYINFOEX
-    '    Public dwSize As Integer
-    '    Public dwFlags As Integer
-    '    Public dwXpos As Integer
-    '    Public dwYpos As Integer
-    '    Public dwZpos As Integer 'Xbox: Trigger
-    '    Public dwRpos As Integer
-    '    Public dwUpos As Integer
-    '    Public dwVpos As Integer
-    '    Public dwButtons As Integer
-    '    Public dwButtonNumber As Integer
-    '    Public dwPOV As Integer 'D-Pad
-    '    Public dwReserved1 As Integer
-    '    Public dwReserved2 As Integer
-    'End Structure
 
     <DllImport("XInput1_4.dll")>
     Private Shared Function XInputGetState(dwUserIndex As Integer, ByRef pState As XINPUT_STATE) As Integer
@@ -293,12 +237,6 @@ Public Class Form1
     Private BControllerTsUp As Boolean = False
     Private BControllerTsDown As Boolean = False
 
-    '>>>>> Refactor <<<<<
-    'Change game api from multimedia input to XInput.
-
-    'Private Const NeutralStart = 21845
-    'Private Const NeutralEnd = 43690
-
     'The start of the thumbstick neutral zone.
     Private Const NeutralStart As Integer = -16256 'Signed 32-bit (4-byte) integer range -2,147,483,648 through 2,147,483,647.
 
@@ -321,11 +259,6 @@ Public Class Form1
     End Sub
 
     Private Sub InitializeGame()
-
-        '>>>>> Refactor <<<<<
-        'Change game api from multimedia input to XInput.
-
-        'InitializeControllerData()
 
         InitializeForm()
 
@@ -1626,55 +1559,7 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub InitializeControllerData()
-
-    '>>>>> Refactor <<<<<
-    'Change game api from multimedia input to XInput.
-
-    'ControllerData.dwSize = 64
-
-    'ControllerData.dwFlags = &HFF ' All information
-
-    'End Sub
-
     Private Sub GetControllerData()
-
-        '>>>>> Refactor <<<<<
-        'Change game api from multimedia input to XInput.
-
-        'For ControllerNumber = 0 To 15 'Up to 16 controllers
-
-        '    Try
-
-        '        'Did an error happen when we called joyGetPosEx?
-        '        If joyGetPosEx(ControllerNumber, ControllerData) = 0 Then
-        '            'If XInputGetState(ControllerNumber, ControllerPosition) = 0 Then
-        '            'No errors.
-
-        '            UpdateDPadPosition()
-
-        '            UpdateButtonPosition()
-
-        '            UpdateLeftThumbstickPosition()
-
-        '            AssignController()
-
-        '        Else
-        '            'Yes, we have an error.
-
-        '            UnassignController()
-
-        '        End If
-
-        '    Catch ex As Exception
-
-        '        MsgBox(ex.ToString)
-
-        '        Exit Sub
-
-        '    End Try
-
-        'Next
 
         For ControllerNumber = 0 To 3 'Up to 4 controllers
 
@@ -1712,68 +1597,6 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateButtonPosition()
-        'The range of buttons is 0 to 255.
-
-        '>>>>> Refactor <<<<<
-        'Change game api from multimedia input to XInput.
-
-        ''What buttons are down?
-        'Select Case ControllerData.dwButtons
-        '    Case 0 'All the buttons are up.
-        '        If AControllerID = ControllerNumber Then
-        '            AControllerStart = False
-        '            AControllerA = False
-        '            AControllerB = False
-        '            AControllerX = False
-        '        End If
-        '        If BControllerID = ControllerNumber Then
-        '            BControllerStart = False
-        '            BControllerA = False
-        '            BControllerB = False
-        '            BControllerX = False
-        '        End If
-        '    Case 1 'A / Square button is down.
-        '        If AControllerID = ControllerNumber Then
-        '            AControllerA = True
-        '        End If
-        '        If BControllerID = ControllerNumber Then
-        '            BControllerA = True
-        '        End If
-        '    Case 2 'B / X button is down.
-        '        If AControllerID = ControllerNumber Then
-        '            AControllerB = True
-        '        End If
-        '        If BControllerID = ControllerNumber Then
-        '            BControllerB = True
-        '        End If
-        '    Case 4 'X / Circle button is down.
-        '        If AControllerID = ControllerNumber Then
-        '            AControllerX = True
-        '        End If
-        '        If BControllerID = ControllerNumber Then
-        '            BControllerX = True
-        '        End If
-        '    Case 8 'Y / Triangle button is down.
-        '    Case 16 'Left Bumper is down.
-        '    Case 32 'Right Bumper is down.
-        '    Case 64 'Back / Left Trigger is down.
-        '    Case 128 'Start / Right Trigger is down.
-        '        If AControllerID = ControllerNumber Then
-        '            AControllerStart = True
-        '        End If
-        '        If BControllerID = ControllerNumber Then
-        '            BControllerStart = True
-        '        End If
-        '    Case 3 'A+B / Square+X buttons are down.
-        '    Case 5 'A+X / Square+Circle buttons are down.
-        '    Case 9 'A+Y / Square+Triangle buttons are down.
-        '    Case 6 'B+X / X+Circle buttons are down.
-        '    Case 10 'B+Y / X+Triangle buttons are down.
-        '    Case 12 'X+Y / Circle+Triangle buttons are down.
-        '    Case 48 'Left Bumper+Right Bumper buttons are down.
-        '    Case 192 'Back+Start / Left Trigger+Right Trigger are down.
-        'End Select
-
         'The range of buttons is 0 to 65,535. Unsigned 16-bit (2-byte) integer.
 
         'What buttons are down?
@@ -1889,130 +1712,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub UpdateDPadPosition()
-        'The range of POV is 0 to 65535.
-        '0 through 31500 is used to represent the angle.
-        'degrees = POV \ 100  315° = 31500 \ 100
-
-        '>>>>> Refactor <<<<<
-        'Change game api from multimedia input to XInput.
-
-        ''What position is the D-Pad in?
-        'Select Case ControllerData.dwPOV
-        '    Case 0 '0° Up
-        '        If AControllerID = ControllerNumber Then
-        '            AControllerDown = False
-        '            AControllerUp = True
-        '        End If
-        '        If BControllerID = ControllerNumber Then
-        '            BControllerDown = False
-        '            BControllerUp = True
-        '        End If
-        '    Case 4500 '45° Up Right
-        '        If AControllerID = ControllerNumber Then
-        '            AControllerDown = False
-        '            AControllerUp = True
-        '        End If
-        '        If BControllerID = ControllerNumber Then
-        '            BControllerDown = False
-        '            BControllerUp = True
-        '        End If
-        '    Case 9000 '90° Right
-        '    Case 13500 '135° Down Right
-        '        If AControllerID = ControllerNumber Then
-        '            AControllerUp = False
-        '            AControllerDown = True
-        '        End If
-        '        If BControllerID = ControllerNumber Then
-        '            BControllerUp = False
-        '            BControllerDown = True
-        '        End If
-        '    Case 18000 '180° Down
-        '        If AControllerID = ControllerNumber Then
-        '            AControllerUp = False
-        '            AControllerDown = True
-        '        End If
-        '        If BControllerID = ControllerNumber Then
-        '            BControllerUp = False
-        '            BControllerDown = True
-        '        End If
-        '    Case 22500 '225° Down Left
-        '        If AControllerID = ControllerNumber Then
-        '            AControllerUp = False
-        '            AControllerDown = True
-        '        End If
-        '        If BControllerID = ControllerNumber Then
-        '            BControllerUp = False
-        '            BControllerDown = True
-        '        End If
-        '    Case 27000 '270° Left
-        '    Case 31500 '315° Up Left
-        '        If AControllerID = ControllerNumber Then
-        '            AControllerDown = False
-        '            AControllerUp = True
-        '        End If
-        '        If BControllerID = ControllerNumber Then
-        '            BControllerDown = False
-        '            BControllerUp = True
-        '        End If
-        '    Case 65535 'Neutral
-        '        If AControllerID = ControllerNumber Then
-        '            AControllerUp = False
-        '            AControllerDown = False
-        '        End If
-        '        If BControllerID = ControllerNumber Then
-        '            BControllerUp = False
-        '            BControllerDown = False
-        '        End If
-        'End Select
-
-    End Sub
-
     Private Sub UpdateLeftThumbstickPosition()
-        'The range on the Y-axis is 0 to 65535.
-
-        '>>>>> Refactor <<<<<
-        'Change game api from multimedia input to XInput.
-
-        ''What position is the left thumbstick in on the Y-axis?
-        'If ControllerData.dwYpos <= NeutralStart Then
-        '    'The left thumbstick is in the up position.
-
-        '    If AControllerID = ControllerNumber Then
-        '        AControllerTsDown = False
-        '        AControllerTsUp = True
-        '    End If
-        '    If BControllerID = ControllerNumber Then
-        '        BControllerTsDown = False
-        '        BControllerTsUp = True
-        '    End If
-
-        'ElseIf ControllerData.dwYpos >= NeutralEnd Then
-        '    'The left thumbstick is in the down position.
-
-        '    If AControllerID = ControllerNumber Then
-        '        AControllerTsUp = False
-        '        AControllerTsDown = True
-        '    End If
-        '    If BControllerID = ControllerNumber Then
-        '        BControllerTsUp = False
-        '        BControllerTsDown = True
-        '    End If
-
-        'Else
-        '    'The left thumbstick is in the neutral position.
-
-        '    If AControllerID = ControllerNumber Then
-        '        AControllerTsUp = False
-        '        AControllerTsDown = False
-        '    End If
-        '    If BControllerID = ControllerNumber Then
-        '        BControllerTsUp = False
-        '        BControllerTsDown = False
-        '    End If
-
-        'End If
-
         'The range on the X-axis is -32,768 through 32,767. Signed 16-bit (2-byte) integer.
         'The range on the Y-axis is -32,768 through 32,767. Signed 16-bit (2-byte) integer.
 
