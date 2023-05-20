@@ -1059,6 +1059,12 @@ Public Class Form1
         If LeftPaddle.IntersectsWith(Ball) Then
             'Yes, the ball hit the left paddle.
 
+            If NumberOfPlayers = 2 Then
+
+                VibrateRight(AControllerID, 25000)
+
+            End If
+
             'Push the ball to the paddles right edge.
             Ball.X = LeftPaddle.X + LeftPaddle.Width + 1
 
@@ -1074,17 +1080,21 @@ Public Class Form1
 
         If RightPaddle.IntersectsWith(Ball) Then
 
+            If NumberOfPlayers = 1 Then
+
+                VibrateRight(AControllerID, 30000)
+
+            Else
+
+                VibrateRight(BControllerID, 30000)
+
+            End If
+
             Ball.X = RightPaddle.X - (Ball.Width + 5)
 
             ApplyRightPaddleEnglishToBall()
 
             PlayBounceSound()
-
-            If NumberOfPlayers = 1 Then
-
-                VibrateRight(AControllerID, 25000)
-
-            End If
 
         Else
 
