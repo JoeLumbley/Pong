@@ -95,33 +95,64 @@ Public Class Form1
     Private ReadOnly ScoreFont As New Font(FontFamily.GenericSansSerif, 75)
     Private ReadOnly AlineCenterMiddle As New StringFormat
 
+    Private InstructStartLocation As Point
+
     '>>>>> Refactor <<<<<
     'Change game instructions to XBox controller only.
 
-    Private InstructStartLocation As Point
+    'Private ReadOnly InstructStartText As String = vbCrLf &
+    '    "One player:  A  □   Two players:  B  X"
+
     Private ReadOnly InstructStartText As String = vbCrLf &
-        "One player:  A  □   Two players:  B  X"
+        "One player:  A   Two players:  B"
 
     'One Player Instructions Data *************************
     Private InstructOneLocation As Point
+
+    '>>>>> Refactor <<<<<
+    'Change game instructions to XBox controller only.
+
+    'Private Const InstructOneText As String = vbCrLf &
+    '    "Start:  B  X" & vbCrLf & vbCrLf &
+    '    "Computer plays left paddle." & vbCrLf &
+    '    "Right paddle use ↑  ↓ to move." & vbCrLf &
+    '    "First player to 10 points wins." & vbCrLf & vbCrLf &
+    '    "Pause:  Start  RTrigger  P" & vbCrLf &
+    '    "Resume:  A  □  P"
+
     Private Const InstructOneText As String = vbCrLf &
-        "Start:  B  X" & vbCrLf & vbCrLf &
+        "Start:  B" & vbCrLf & vbCrLf &
         "Computer plays left paddle." & vbCrLf &
         "Right paddle use ↑  ↓ to move." & vbCrLf &
         "First player to 10 points wins." & vbCrLf & vbCrLf &
-        "Pause:  Start  RTrigger  P" & vbCrLf &
-        "Resume:  A  □  P"
+        "Pause:  Start  P" & vbCrLf &
+        "Resume:  A  P"
+
     '******************************************************
 
     'Two Player Instructions Data *************************
     Private InstructTwoLocation As Point
+
+    '>>>>> Refactor <<<<<
+    'Change game instructions to XBox controller only.
+
+    'Private Const InstructTwoText As String = vbCrLf &
+    '    "Start:  A  □" & vbCrLf & vbCrLf &
+    '    "Left paddle use  W  S or DPad:  ↑  ↓  to move." & vbCrLf &
+    '    "Right paddle use  ↑  ↓  to move." & vbCrLf &
+    '    "First player to 10 points wins." & vbCrLf & vbCrLf &
+    '    "Pause:  Start  RTrigger  P" & vbCrLf &
+    '    "Resume:  A  □  P"
+
     Private Const InstructTwoText As String = vbCrLf &
-        "Start:  A  □" & vbCrLf & vbCrLf &
-        "Left paddle use  W  S or DPad:  ↑  ↓  to move." & vbCrLf &
+        "Start:  A  " & vbCrLf & vbCrLf &
+        "Left paddle use  W  S or  ↑  ↓  to move." & vbCrLf &
         "Right paddle use  ↑  ↓  to move." & vbCrLf &
         "First player to 10 points wins." & vbCrLf & vbCrLf &
-        "Pause:  Start  RTrigger  P" & vbCrLf &
-        "Resume:  A  □  P"
+        "Pause:  Start  P" & vbCrLf &
+        "Resume:  A  P"
+
+
     '******************************************************
     Private ReadOnly InstructionsFont As New Font(FontFamily.GenericSansSerif, 13)
     Private ReadOnly AlineCenter As New StringFormat
