@@ -28,7 +28,7 @@
 'SOFTWARE.
 
 '>>>>> Refactored <<<<< 5/20/2023
-'Changed game api from multimedia input to XInput.
+'Changed from multimedia input to XInput.
 'Changed game instructions to Xbox controllers only.
 'Added controller vibration on paddle hit.
 
