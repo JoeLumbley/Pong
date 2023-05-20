@@ -27,6 +27,19 @@
 'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
 'SOFTWARE.
 
+
+
+
+
+'>>>>> Refactor <<<<< 5/20/2023
+'Change game api from multimedia input to XInput.
+'Change game instructions to XBox controller only.
+
+
+
+
+
+
 Imports System.Runtime.InteropServices
 
 Public Class Form1
@@ -87,6 +100,12 @@ Public Class Form1
     Private ReadOnly ScoreFont As New Font(FontFamily.GenericSansSerif, 75)
     Private ReadOnly AlineCenterMiddle As New StringFormat
 
+
+
+    '>>>>> Refactor <<<<<
+    'Change game instructions to XBox controller only.
+
+
     Private InstructStartLocation As Point
     Private ReadOnly InstructStartText As String = vbCrLf &
         "One player:  A  □   Two players:  B  X"
@@ -114,6 +133,11 @@ Public Class Form1
     '******************************************************
     Private ReadOnly InstructionsFont As New Font(FontFamily.GenericSansSerif, 13)
     Private ReadOnly AlineCenter As New StringFormat
+
+
+
+
+
 
     'Title Data *******************************************
     Private Const TitleText As String = "PONG"
@@ -170,6 +194,9 @@ Public Class Form1
 
     Private DrawFlashingText As Boolean = True
 
+    '>>>>> Refactor <<<<<
+    'Change game api from multimedia input to XInput.
+
     'Joystick Data**************************************************************************************************
     Private Declare Function joyGetPosEx Lib "winmm.dll" (ByVal uJoyID As Integer, ByRef pControllerData As JOYINFOEX) As Integer
 
@@ -188,6 +215,11 @@ Public Class Form1
         Public dwReserved1 As Integer
         Public dwReserved2 As Integer
     End Structure
+
+
+
+
+
 
     Private AControllerID As Integer = -1
     Private AControllerDown As Boolean = False
@@ -2358,3 +2390,4 @@ End Class
 '
 'Reading Input Data From Joystick in Visual Basic
 'https://social.msdn.microsoft.com/Forums/en-US/af28b35b-d756-4d87-94c6-ced882ab20a5/reading-input-data-from-joystick-in-visual-basic?forum=vbgeneral
+'
