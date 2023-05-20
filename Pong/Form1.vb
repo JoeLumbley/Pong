@@ -69,7 +69,7 @@ Public Class Form1
 
     'Ball Data *************************
     Private Ball As Rectangle
-    Private Const BallSpeed As Integer = 10
+    Private Const BallSpeed As Integer = 8
     Private BallDirection As DirectionEnum
     Private ReadOnly BallMidlineUpPen As New Pen(Color.Green, 7)
     Private ReadOnly BallMidlineDownPen As New Pen(Color.Red, 7)
@@ -78,7 +78,7 @@ Public Class Form1
 
     'Left Paddle Data *****************
     Private LeftPaddle As Rectangle
-    Private Const LeftPaddleSpeed As Integer = 10
+    Private Const LeftPaddleSpeed As Integer = 8
     Private LeftPaddleScore As Integer
     Private LPadScoreLocation As Point
     Private ReadOnly LeftPaddleMidlinePen As New Pen(Color.Goldenrod, 7)
@@ -87,7 +87,7 @@ Public Class Form1
 
     'Right Paddle Data *****************
     Private RightPaddle As Rectangle
-    Private Const RightPaddleSpeed As Integer = 10
+    Private Const RightPaddleSpeed As Integer = 8
     Private RightPaddleScore As Integer
     Private RPadScoreLocation As Point
     '***********************************
@@ -98,7 +98,7 @@ Public Class Form1
     Private InstructStartLocation As Point
 
     '>>>>> Refactor <<<<<
-    'Change game instructions to XBox controller only.
+    'Change game instructions to Xbox controller only.
 
     'Private ReadOnly InstructStartText As String = vbCrLf &
     '    "One player:  A  □   Two players:  B  X"
@@ -110,7 +110,7 @@ Public Class Form1
     Private InstructOneLocation As Point
 
     '>>>>> Refactor <<<<<
-    'Change game instructions to XBox controller only.
+    'Change game instructions to Xbox controller only.
 
     'Private Const InstructOneText As String = vbCrLf &
     '    "Start:  B  X" & vbCrLf & vbCrLf &
@@ -134,7 +134,7 @@ Public Class Form1
     Private InstructTwoLocation As Point
 
     '>>>>> Refactor <<<<<
-    'Change game instructions to XBox controller only.
+    'Change game instructions to Xbox controller only.
 
     'Private Const InstructTwoText As String = vbCrLf &
     '    "Start:  A  □" & vbCrLf & vbCrLf &
@@ -260,6 +260,15 @@ Public Class Form1
         Public sThumbRY As Short
     End Structure
 
+    <DllImport("XInput1_4.dll")>
+    Private Shared Function XInputSetState(playerIndex As Integer, ByRef vibration As XINPUT_VIBRATION) As Integer
+    End Function
+
+    Public Structure XINPUT_VIBRATION
+        Public wLeftMotorSpeed As UShort
+        Public wRightMotorSpeed As UShort
+    End Structure
+
     Private AControllerID As Integer = -1
     Private AControllerDown As Boolean = False
     Private AControllerUp As Boolean = False
@@ -300,6 +309,8 @@ Public Class Form1
     Private ControllerPosition As XINPUT_STATE
 
     Private ControllerNumber As Long = 0
+
+    Private vibration As XINPUT_VIBRATION
     '***************************************************************************************************
     Private ClientCenter As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
 
@@ -330,7 +341,7 @@ Public Class Form1
 
         InitializeGraphicsBuffer()
 
-        Timer1.Interval = 16 '16ms = 1000 milliseconds \ 60 frames per second
+        Timer1.Interval = 15 '16ms = 1000 milliseconds \ 60 frames per second
         Timer1.Start()
 
     End Sub
@@ -1068,6 +1079,12 @@ Public Class Form1
             ApplyRightPaddleEnglishToBall()
 
             PlayBounceSound()
+
+            If NumberOfPlayers = 1 Then
+
+                VibrateRight(AControllerID, 25000)
+
+            End If
 
         Else
 
@@ -2623,6 +2640,43 @@ Public Class Form1
     Protected Overrides Sub OnPaintBackground(ByVal e As PaintEventArgs)
 
         'Intentionally left blank. Do not remove.
+
+    End Sub
+
+    Private Sub VibrateRight(ByVal ControllerNumber As Integer, ByVal Speed As UShort)
+        'The range of speed is 0 through 65,535. Unsigned 16-bit (2-byte) integer.
+        'The right motor is the high-frequency rumble motor.
+
+        'Turn left motor off (set zero speed).
+        vibration.wLeftMotorSpeed = 0
+
+        'Set right motor speed.
+        vibration.wRightMotorSpeed = Speed
+
+        Vibrate(ControllerNumber)
+
+    End Sub
+
+    Private Sub Vibrate(ByVal ControllerNumber As Integer)
+
+        Try
+
+            'Turn motor on.
+            If XInputSetState(ControllerNumber, vibration) = 0 Then
+                'Success
+                'Text = XInputSetState(ControllerNumber, vibration).ToString
+            Else
+                'Fail
+                'Text = XInputSetState(ControllerNumber, vibration).ToString
+            End If
+
+        Catch ex As Exception
+
+            MsgBox(ex.ToString)
+
+            Exit Sub
+
+        End Try
 
     End Sub
 
