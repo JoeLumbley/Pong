@@ -2409,6 +2409,51 @@ End Class
 'Consuming Unmanaged DLL Functions
 'https://learn.microsoft.com/en-us/dotnet/framework/interop/consuming-unmanaged-dll-functions
 '
+'XInputGetState Function
+'https://learn.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate
+'
+'XINPUT_STATE Structure
+'https://learn.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_state
+'
+'XINPUT_GAMEPAD Structure
+'https://learn.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad
+'
+'XInputSetState Function
+'https://learn.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputsetstate
+'
+'XINPUT_VIBRATION Structure
+'https://learn.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_vibration
+'
+'Getting Started with XInput in Windows Applications
+'https://learn.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput
+'
+'XInput Game Controller APIs
+'https://learn.microsoft.com/en-us/windows/win32/api/_xinput/
+'
+'XInput Versions
+'https://learn.microsoft.com/en-us/windows/win32/xinput/xinput-versions
+'
+'Comparison of XInput and DirectInput Features
+'https://learn.microsoft.com/en-us/windows/win32/xinput/xinput-and-directinput
+'
+'Short Data Type
+'https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/data-types/short-data-type
+'
+'Byte Data Type
+'https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/data-types/byte-data-type
+'
+'UShort Data Type
+'https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/data-types/ushort-data-type
+'
+'UInteger Data Type
+'https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/data-types/uinteger-data-type
+'
+'Boolean Data Type
+'https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/data-types/boolean-data-type
+'
+'Integer Data Type
+'https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/data-types/integer-data-type
+'
 'DllImportAttribute.EntryPoint Field
 'https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.dllimportattribute.entrypoint?view=net-7.0
 '
@@ -2418,18 +2463,4 @@ End Class
 'Strings used in Structures
 'https://learn.microsoft.com/en-us/dotnet/framework/interop/default-marshalling-for-strings#strings-used-in-structures
 '
-'joyGetPosEx Function
-'https://learn.microsoft.com/en-us/windows/win32/api/joystickapi/nf-joystickapi-joygetposex
-'
-'JOYINFOEX Structure
-'https://learn.microsoft.com/en-us/windows/win32/api/joystickapi/ns-joystickapi-joyinfoex
-'
-'Multimedia Input
-'https://learn.microsoft.com/en-us/windows/win32/Multimedia/multimedia-input
-'
-'Windows Multimedia
-'https://learn.microsoft.com/en-us/windows/win32/multimedia/windows-multimedia-start-page
-'
-'Reading Input Data From Joystick in Visual Basic
-'https://social.msdn.microsoft.com/Forums/en-US/af28b35b-d756-4d87-94c6-ced882ab20a5/reading-input-data-from-joystick-in-visual-basic?forum=vbgeneral
 '
