@@ -360,7 +360,7 @@ Public Class Form1
 
     Private Sub UpdatePlaying()
 
-        GetControllerData()
+        UpdateControllerPosition()
 
         UpdatePaddles()
 
@@ -523,7 +523,7 @@ Public Class Form1
 
     Private Sub CheckForPause()
 
-        GetControllerData()
+        UpdateControllerPosition()
 
         If AControllerStart = True Or BControllerStart = True Then
 
@@ -1197,7 +1197,7 @@ Public Class Form1
 
     Private Sub UpdatePause()
 
-        GetControllerData()
+        UpdateControllerPosition()
 
         If AControllerA = True Or BControllerA = True Then
 
@@ -1217,7 +1217,7 @@ Public Class Form1
 
     Private Sub UpdateInstructions()
 
-        GetControllerData()
+        UpdateControllerPosition()
 
         If NumberOfPlayers = 1 Then
 
@@ -1269,7 +1269,7 @@ Public Class Form1
 
     Private Sub UpdateStartScreen()
 
-        GetControllerData()
+        UpdateControllerPosition()
 
         InstructStartLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) - 15)
 
@@ -1559,7 +1559,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub GetControllerData()
+    Private Sub UpdateControllerPosition()
 
         For ControllerNumber = 0 To 3 'Up to 4 controllers
 
