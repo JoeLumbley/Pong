@@ -994,7 +994,7 @@ Public Class Form1
 
             If NumberOfPlayers = 2 Then
 
-                VibrateRight(AControllerID, 25000)
+                VibrateRight(AControllerID, 30000)
 
             End If
 
