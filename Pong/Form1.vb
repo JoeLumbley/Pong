@@ -555,7 +555,7 @@ Public Class Form1
 
         Else
 
-            UpdateLeftPaddleJoystick()
+            UpdateLeftPaddleController()
 
             UpdateLeftPaddleTwoPlayer()
 
@@ -565,7 +565,7 @@ Public Class Form1
 
     Private Sub UpdateRightPaddle()
 
-        UpdateRightPaddleJoystick()
+        UpdateRightPaddleController()
 
         UpdateRightPaddleKeyboard()
 
@@ -677,6 +677,7 @@ Public Class Form1
                 LeftPaddle.Y = TopWall
 
             End If
+
         End If
 
         'Is the left player pressing the S key down?
@@ -779,138 +780,81 @@ Public Class Form1
 
     End Sub
 
-    Private Sub UpdateRightPaddleJoystick()
+    Private Sub UpdateRightPaddleController()
 
         If NumberOfPlayers = 2 Then
 
-            If BControllerDown = True Then
-
-                'Move right paddle down.
-                RightPaddle.Y += RightPaddleSpeed
-
-                'Is the right paddle below the playing field?
-                If RightPaddle.Y + RightPaddle.Height > BottomWall Then
-                    'Yes, the right paddle is below playing field.
-
-                    'Push the right paddle up and back into playing field.
-                    RightPaddle.Y = BottomWall - RightPaddle.Height
-
-                End If
-
-            End If
-
-            If BControllerUp = True Then
-
-                'Move right paddle up.
-                RightPaddle.Y -= RightPaddleSpeed
-
-                'Is the right paddle above the playing field?
-                If RightPaddle.Y < TopWall Then
-                    'Yes, the right paddle is above playing field.
-
-                    'Push the right paddle down and back into playing field.
-                    RightPaddle.Y = TopWall
-
-                End If
-
-            End If
-
-            If BControllerTsDown = True Then
-
-                'Move right paddle down.
-                RightPaddle.Y += RightPaddleSpeed
-
-                'Is the right paddle below the playing field?
-                If RightPaddle.Y + RightPaddle.Height > BottomWall Then
-                    'Yes, the right paddle is below playing field.
-
-                    'Push the right paddle up and back into playing field.
-                    RightPaddle.Y = BottomWall - RightPaddle.Height
-
-                End If
-
-            End If
-
-            If BControllerTsUp = True Then
-
-                'Move right paddle up.
-                RightPaddle.Y -= RightPaddleSpeed
-
-                'Is the right paddle above the playing field?
-                If RightPaddle.Y < TopWall Then
-                    'Yes, the right paddle is above playing field.
-
-                    'Push the right paddle down and back into playing field.
-                    RightPaddle.Y = TopWall
-
-                End If
-
-            End If
+            UpdateRightPaddleControllerTwoPlayer()
 
         Else
 
-            If AControllerDown = True Then
+            UpdateRightPaddleControllerOnePlayer()
 
-                'Move right paddle down.
-                RightPaddle.Y += RightPaddleSpeed
+        End If
 
-                'Is the right paddle below the playing field?
-                If RightPaddle.Y + RightPaddle.Height > BottomWall Then
-                    'Yes, the right paddle is below playing field.
+    End Sub
 
-                    'Push the right paddle up and back into playing field.
-                    RightPaddle.Y = BottomWall - RightPaddle.Height
+    Private Sub UpdateRightPaddleControllerOnePlayer()
 
-                End If
+        If AControllerDown = True Then
 
-            End If
+            'Move right paddle down.
+            RightPaddle.Y += RightPaddleSpeed
 
-            If AControllerUp = True Then
+            'Is the right paddle below the playing field?
+            If RightPaddle.Y + RightPaddle.Height > BottomWall Then
+                'Yes, the right paddle is below playing field.
 
-                'Move right paddle up.
-                RightPaddle.Y -= RightPaddleSpeed
-
-                'Is the right paddle above the playing field?
-                If RightPaddle.Y < TopWall Then
-                    'Yes, the right paddle is above playing field.
-
-                    'Push the right paddle down and back into playing field.
-                    RightPaddle.Y = TopWall
-
-                End If
+                'Push the right paddle up and back into playing field.
+                RightPaddle.Y = BottomWall - RightPaddle.Height
 
             End If
 
-            If AControllerTsDown = True Then
+        End If
 
-                'Move right paddle down.
-                RightPaddle.Y += RightPaddleSpeed
+        If AControllerUp = True Then
 
-                'Is the right paddle below the playing field?
-                If RightPaddle.Y + RightPaddle.Height > BottomWall Then
-                    'Yes, the right paddle is below playing field.
+            'Move right paddle up.
+            RightPaddle.Y -= RightPaddleSpeed
 
-                    'Push the right paddle up and back into playing field.
-                    RightPaddle.Y = BottomWall - RightPaddle.Height
+            'Is the right paddle above the playing field?
+            If RightPaddle.Y < TopWall Then
+                'Yes, the right paddle is above playing field.
 
-                End If
+                'Push the right paddle down and back into playing field.
+                RightPaddle.Y = TopWall
 
             End If
 
+        End If
 
-            If AControllerTsUp = True Then
+        If AControllerTsDown = True Then
 
-                'Move right paddle up.
-                RightPaddle.Y -= RightPaddleSpeed
+            'Move right paddle down.
+            RightPaddle.Y += RightPaddleSpeed
 
-                'Is the right paddle above the playing field?
-                If RightPaddle.Y < TopWall Then
-                    'Yes, the right paddle is above playing field.
+            'Is the right paddle below the playing field?
+            If RightPaddle.Y + RightPaddle.Height > BottomWall Then
+                'Yes, the right paddle is below playing field.
 
-                    'Push the right paddle down and back into playing field.
-                    RightPaddle.Y = TopWall
+                'Push the right paddle up and back into playing field.
+                RightPaddle.Y = BottomWall - RightPaddle.Height
 
-                End If
+            End If
+
+        End If
+
+        If AControllerTsUp = True Then
+
+            'Move right paddle up.
+            RightPaddle.Y -= RightPaddleSpeed
+
+            'Is the right paddle above the playing field?
+            If RightPaddle.Y < TopWall Then
+                'Yes, the right paddle is above playing field.
+
+                'Push the right paddle down and back into playing field.
+                RightPaddle.Y = TopWall
 
             End If
 
@@ -918,7 +862,75 @@ Public Class Form1
 
     End Sub
 
-    Private Sub UpdateLeftPaddleJoystick()
+    Private Sub UpdateRightPaddleControllerTwoPlayer()
+
+        If BControllerDown = True Then
+
+            'Move right paddle down.
+            RightPaddle.Y += RightPaddleSpeed
+
+            'Is the right paddle below the playing field?
+            If RightPaddle.Y + RightPaddle.Height > BottomWall Then
+                'Yes, the right paddle is below playing field.
+
+                'Push the right paddle up and back into playing field.
+                RightPaddle.Y = BottomWall - RightPaddle.Height
+
+            End If
+
+        End If
+
+        If BControllerUp = True Then
+
+            'Move right paddle up.
+            RightPaddle.Y -= RightPaddleSpeed
+
+            'Is the right paddle above the playing field?
+            If RightPaddle.Y < TopWall Then
+                'Yes, the right paddle is above playing field.
+
+                'Push the right paddle down and back into playing field.
+                RightPaddle.Y = TopWall
+
+            End If
+
+        End If
+
+        If BControllerTsDown = True Then
+
+            'Move right paddle down.
+            RightPaddle.Y += RightPaddleSpeed
+
+            'Is the right paddle below the playing field?
+            If RightPaddle.Y + RightPaddle.Height > BottomWall Then
+                'Yes, the right paddle is below playing field.
+
+                'Push the right paddle up and back into playing field.
+                RightPaddle.Y = BottomWall - RightPaddle.Height
+
+            End If
+
+        End If
+
+        If BControllerTsUp = True Then
+
+            'Move right paddle up.
+            RightPaddle.Y -= RightPaddleSpeed
+
+            'Is the right paddle above the playing field?
+            If RightPaddle.Y < TopWall Then
+                'Yes, the right paddle is above playing field.
+
+                'Push the right paddle down and back into playing field.
+                RightPaddle.Y = TopWall
+
+            End If
+
+        End If
+
+    End Sub
+
+    Private Sub UpdateLeftPaddleController()
 
         If AControllerDown = True Then
 
