@@ -238,10 +238,10 @@ Public Class Form1
     Private BControllerTsDown As Boolean = False
 
     'The start of the thumbstick neutral zone.
-    Private Const NeutralStart As Integer = -16256 'Signed 32-bit (4-byte) integer range -2,147,483,648 through 2,147,483,647.
+    Private Const NeutralStart As Short = -16256 'Signed 16-bit (2-byte) integer range -32,768 through 32,767.
 
     'The end of the thumbstick neutral zone.
-    Private Const NeutralEnd As Integer = 16256
+    Private Const NeutralEnd As Short = 16256
 
     'Private ControllerData As JOYINFOEX
     Private ControllerPosition As XINPUT_STATE
