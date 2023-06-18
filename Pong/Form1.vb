@@ -1,5 +1,5 @@
 ﻿'Pong
-'In this app we remake the classic ping pong game.
+'In this app we remake the classic ping pong game with a glow effect.
 'This version is resizable, pausable and has a computer player.
 'Supports keyboard, mouse and Xbox controllers including the vibration effect (rumble).
 'It was written in VB.NET in 2023 and is compatible with Windows 10 and 11.
