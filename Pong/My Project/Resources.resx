@@ -121,8 +121,23 @@
   <data name="bounce" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\bounce.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Bounce2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Music\Bounce2.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Hit2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Music\Hit2.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Match2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Music\Match2.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Point2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Music\Point2.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="score" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\score.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Start_Screen_Music_7___Pong" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Music\Start Screen Music 7 - Pong.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="winning" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\winning.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

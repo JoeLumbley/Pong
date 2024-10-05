@@ -70,11 +70,61 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property Bounce2() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Bounce2", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property Hit2() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Hit2", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property Match2() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Match2", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property Point2() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Point2", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
         '''</summary>
         Friend ReadOnly Property score() As System.IO.UnmanagedMemoryStream
             Get
                 Return ResourceManager.GetStream("score", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property Start_Screen_Music_7___Pong() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Start_Screen_Music_7___Pong", resourceCulture)
+                Return CType(obj,Byte())
             End Get
         End Property
         
