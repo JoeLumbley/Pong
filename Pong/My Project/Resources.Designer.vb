@@ -61,15 +61,6 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
-        '''</summary>
-        Friend ReadOnly Property bounce() As System.IO.UnmanagedMemoryStream
-            Get
-                Return ResourceManager.GetStream("bounce", resourceCulture)
-            End Get
-        End Property
-        
-        '''<summary>
         '''  Looks up a localized resource of type System.Byte[].
         '''</summary>
         Friend ReadOnly Property Bounce2() As Byte()
@@ -110,30 +101,12 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
-        '''</summary>
-        Friend ReadOnly Property score() As System.IO.UnmanagedMemoryStream
-            Get
-                Return ResourceManager.GetStream("score", resourceCulture)
-            End Get
-        End Property
-        
-        '''<summary>
         '''  Looks up a localized resource of type System.Byte[].
         '''</summary>
         Friend ReadOnly Property Start_Screen_Music_7___Pong() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("Start_Screen_Music_7___Pong", resourceCulture)
                 Return CType(obj,Byte())
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
-        '''</summary>
-        Friend ReadOnly Property winning() As System.IO.UnmanagedMemoryStream
-            Get
-                Return ResourceManager.GetStream("winning", resourceCulture)
             End Get
         End Property
     End Module
