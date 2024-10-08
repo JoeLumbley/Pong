@@ -76,8 +76,8 @@ To play Pong using your keyboard, use the following controls:
   - **S**: Move Down
 
 - **Player 2 (Right Paddle)**
-  - **Up Arrow**: Move Up
-  - **Down Arrow**: Move Down
+  - ⬆️ **Up Arrow**: Move Up
+  - ⬇️ **Down Arrow**: Move Down
 
 - **Pause/Resume Game**
   - **P**: Pause or Resume the game
