@@ -4,7 +4,7 @@
 
 Pong is a  simulation of **Table Tennis**, a recreational activity and an Olympic sport since 1988, is also known by the term 'ping-pong' or just pong.
 
-This repository is designed to help new game developers learn the fundamentals of game programming and design through a classic game remake.
+This repository is designed to help new game developers learn the fundamentals of game programming and design through a classic game.
 
 ## Features
 - **Classic Gameplay**: Experience the timeless fun of Pong with modern enhancements.
