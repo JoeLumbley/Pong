@@ -27,18 +27,27 @@ To begin, you'll need to set up your development environment and clone the repos
 
 ## 🛠️ **Set Up Your Environment**
 
+
+![014](https://github.com/user-attachments/assets/918c5027-4d82-41aa-8f64-f4f87c2d235a)
+
+
+
+
 Visual Studio is an Integrated Development Environment (IDE) created by Microsoft. 
 
 It is a powerful software development tool that provides a comprehensive set of features and tools for building a wide range of applications.
 
-This is the IDE I use to make "Pong" and I recommend that you use.
+This is the IDE I use to make P🏓NG and I recommend that you use.
+
+
+
+
+![005](https://github.com/user-attachments/assets/2c8d863d-df92-4989-b5af-1f70e503d4f9)
 
 Grab Visual Studio Community—it's free and perfect for indie devs.
 
 Install Visual Studio from here:  https://visualstudio.microsoft.com/downloads/ and include the .NET Desktop Development workload.
 
-
-![005](https://github.com/user-attachments/assets/2c8d863d-df92-4989-b5af-1f70e503d4f9)
 
 ## 🧬📦 **Clone the Repository** 
 
