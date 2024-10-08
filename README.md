@@ -52,7 +52,6 @@ Once the cloning process is complete, you will have your own local copy of the g
 
 Watch a short about cloning the repository here: https://www.youtube.com/shorts/n8bCEIdI44U
 
-![154](https://github.com/JoeLumbley/Platformer-with-Level-Editor/assets/77564255/a937ec81-c192-4dff-b4b0-badd87c07f87)
 
 
 ### **Explore and Modify:**
@@ -64,7 +63,7 @@ Get familiar with the project structure and start adding your own flair.
 Don’t forget to check out the documentation and tutorials to level up your skills.
 
 
-![072](https://github.com/JoeLumbley/Platformer-with-Level-Editor/assets/77564255/c4ae4c4c-7641-4a9f-96d5-c19805fdcc01)
+![002](https://github.com/user-attachments/assets/81672971-b1cd-4464-9b85-e6065cca758b)
 
 
 ### **Seek Community Feedback**
