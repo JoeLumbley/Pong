@@ -1,4 +1,4 @@
-# Pong
+# Pong🏓
 
 This repository is designed to help new game developers learn the fundamentals of game programming and design through a classic game remake.
 
