@@ -37,18 +37,19 @@ Install Visual Studio from here:  https://visualstudio.microsoft.com/downloads/ 
 
 ### **Clone the Repository** 
 
-1. Click the "Code" button.
-2. Copy the repository's URL.
-3. Open Visual Studio.
-4. Click "Clone a repository".
-5. Paste the repository URL into the location field.
-6. Click the "Clone" button.
+Click the "Code" button.
 
-
+Copy the repository's URL.
 
 ![004](https://github.com/user-attachments/assets/e6af64b6-28b9-4f88-876c-bec9cc5a8464)
 
+Open Visual Studio.
 
+Click "Clone a repository".
+
+Paste the repository URL into the location field.
+
+Click the "Clone" button.
 
 ![006](https://github.com/user-attachments/assets/e7e542f5-a0f6-4258-bc58-491db0a0a78d)
 
