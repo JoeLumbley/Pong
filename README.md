@@ -1,6 +1,6 @@
-# 🏓 PONG
+#  P🏓NG
 
-![007](https://github.com/user-attachments/assets/080dce96-1376-415d-89a2-9e5c313572ae)
+![011](https://github.com/user-attachments/assets/f129ad9d-270e-49a0-b833-56bad8938062)
 
 Pong is a  simulation of **Table Tennis**, a recreational activity and an Olympic sport since 1988, is also known by the term "ping-pong" or just "pong".
 
