@@ -38,8 +38,6 @@ Install Visual Studio from here:  https://visualstudio.microsoft.com/downloads/ 
 
 ### **Clone the Repository** 
 
-Follow the steps to get your local copy of the project.
-
 1. Click the "Code" button.
 2. Copy the repository's URL.
 3. Open Visual Studio.
