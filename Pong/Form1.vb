@@ -480,9 +480,9 @@ Public Class Form1
         RightPaddleMiddle = RightPaddle.Rect.Y + RightPaddle.Rect.Height \ 2
 
 
-        'Is the ball above the paddle?
+        ' Is the ball above the paddle?
         If BallMiddle < RightPaddleMiddle Then
-            'Yes, the ball is above the paddle.
+            ' Yes, the ball is above the paddle.
 
             ' Is the paddle moving down?
             If RightPaddle.Velocity.Y > 0 Then
@@ -495,7 +495,7 @@ Public Class Form1
 
             ' Is the paddle at or past the top edge of the client rectangle?
             If RightPaddle.Rect.Y <= ClientRectangle.Top Then
-                'Yes, the paddle is at or past the top edge of the client rectangle.
+                ' Yes, the paddle is at or past the top edge of the client rectangle.
 
                 ' Stop paddle movement.
                 RightPaddle.Velocity.Y = 0
@@ -516,9 +516,9 @@ Public Class Form1
 
             End If
 
-            'Is the ball below the paddle?
+            ' Is the ball below the paddle?
         ElseIf BallMiddle > RightPaddleMiddle Then
-            'Yes, the ball is below the paddle.
+            ' Yes, the ball is below the paddle.
 
             ' Is the paddle moving up?
             If RightPaddle.Velocity.Y < 0 Then
@@ -531,7 +531,7 @@ Public Class Form1
 
             ' Is the paddle at or past the bottom edge of the client rectangle?
             If RightPaddle.Rect.Y + RightPaddle.Rect.Height >= ClientRectangle.Bottom Then
-                'Yes, the paddle is at or past the bottom edge of the client rectangle.
+                ' Yes, the paddle is at or past the bottom edge of the client rectangle.
 
                 ' Stop paddle movement.
                 RightPaddle.Velocity.Y = 0
@@ -562,34 +562,34 @@ Public Class Form1
 
     Private Sub CheckforEndGame()
 
-        'Did left paddle reach winning score?
+        ' Did left paddle reach winning score?
         If LeftPaddleScore >= 10 Then
-            'Yes, left paddle did reach winning score.
+            ' Yes, left paddle did reach winning score.
 
-            'Set winner to left paddle.
+            ' Set winner to left paddle.
             Winner = WinStateEnum.LeftPaddle
 
-            'Reset the frame counter.
+            ' Reset the frame counter.
             FlashCount = 0
 
-            'Change game state to end screen.
+            ' Change game state to end screen.
             GameState = GameStateEnum.EndScreen
 
             PlayWinningSound()
 
         End If
 
-        'Did right paddle reach winning score?
+        ' Did right paddle reach winning score?
         If RightPaddleScore >= 10 Then
-            'Yes, right paddle did reach winning score.
+            ' Yes, right paddle did reach winning score.
 
-            'Set winner to right paddle.
+            ' Set winner to right paddle.
             Winner = WinStateEnum.RightPaddle
 
-            'Reset frame counter.
+            ' Reset frame counter.
             FlashCount = 0
 
-            'Change game state to end screen.
+            ' Change game state to end screen.
             GameState = GameStateEnum.EndScreen
 
             PlayWinningSound()
