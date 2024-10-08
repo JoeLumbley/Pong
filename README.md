@@ -24,7 +24,7 @@ This repository is designed to help new game developers learn the fundamentals o
 
 # Getting Started
 
-### **Set Up Your Environment**
+## **Set Up Your Environment**
 
 Visual Studio is an Integrated Development Environment (IDE) created by Microsoft. 
 
@@ -39,7 +39,7 @@ Install Visual Studio from here:  https://visualstudio.microsoft.com/downloads/ 
 
 ![005](https://github.com/user-attachments/assets/2c8d863d-df92-4989-b5af-1f70e503d4f9)
 
-### **Clone the Repository** 
+## **Clone the Repository** 
 
 Click the "Code" button.
 
