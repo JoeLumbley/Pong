@@ -50,6 +50,10 @@ Follow the steps to get your local copy of the project.
 Once the cloning process is complete, you will have your own local copy of the game that you can run and modify on your computer.
 
 
+
+
+![003](https://github.com/user-attachments/assets/8384b6b7-5bb4-4fdf-8196-42a9669e766d)
+
 Watch a short about cloning the repository here: https://www.youtube.com/shorts/n8bCEIdI44U
 
 
@@ -61,10 +65,6 @@ Get familiar with the project structure and start adding your own flair.
 ### **Use Resources**
 
 Don’t forget to check out the documentation and tutorials to level up your skills.
-
-
-![002](https://github.com/user-attachments/assets/81672971-b1cd-4464-9b85-e6065cca758b)
-
 
 ### **Seek Community Feedback**
 
