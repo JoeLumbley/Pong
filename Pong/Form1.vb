@@ -1,34 +1,49 @@
-﻿'Pong
+﻿' Pong
+
+' Pong is a simulation of Table Tennis, a recreational activity and an
+' Olympic sport since 1988 is also known by the term "ping-pong" or just "pong".
+
+' This repository is designed to help new game developers learn the fundamentals
+' of game programming and design through a classic game.
+
+' Features
 '
-'In this app we remake the classic ping pong game.
-'This version is resizable, pausable and has a computer player.
-'Supports keyboard and Xbox controllers including the vibration effect (rumble).
-'It was written in VB.NET in 2023 and is compatible with Windows 10 and 11.
-'I'm making a video to explain the code on my YouTube channel.
+' Classic Gameplay: Experience the timeless fun of Pong with modern enhancements.
 '
-'MIT License
-'Copyright(c) 2023 Joseph Lumbley
+' Keyboard and Controller Support: Play using your keyboard ⌨️ or Xbox
+' controllers 🎮 , complete with vibration feedback.
+'
+' Resizable and Pausable: Enjoy a flexible gameplay experience that can be paused
+' at any time.
+'
+' Single and Multiplayer Modes: Challenge yourself against a computer player or
+' compete with friends.
 
-'Permission Is hereby granted, free Of charge, to any person obtaining a copy
-'of this software And associated documentation files (the "Software"), to deal
-'in the Software without restriction, including without limitation the rights
-'to use, copy, modify, merge, publish, distribute, sublicense, And/Or sell
-'copies of the Software, And to permit persons to whom the Software Is
-'furnished to do so, subject to the following conditions:
+' MIT License
+' Copyright(c) 2023 Joseph W. Lumbley
 
-'The above copyright notice And this permission notice shall be included In all
-'copies Or substantial portions of the Software.
+' Permission Is hereby granted, free Of charge, to any person obtaining a copy
+' of this software And associated documentation files (the "Software"), to deal
+' in the Software without restriction, including without limitation the rights
+' to use, copy, modify, merge, publish, distribute, sublicense, And/Or sell
+' copies of the Software, And to permit persons to whom the Software Is
+' furnished to do so, subject to the following conditions:
 
-'THE SOFTWARE Is PROVIDED "AS IS", WITHOUT WARRANTY Of ANY KIND, EXPRESS Or
-'IMPLIED, INCLUDING BUT Not LIMITED To THE WARRANTIES Of MERCHANTABILITY,
-'FITNESS FOR A PARTICULAR PURPOSE And NONINFRINGEMENT. IN NO EVENT SHALL THE
-'AUTHORS Or COPYRIGHT HOLDERS BE LIABLE For ANY CLAIM, DAMAGES Or OTHER
-'LIABILITY, WHETHER In AN ACTION Of CONTRACT, TORT Or OTHERWISE, ARISING FROM,
-'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
-'SOFTWARE.
+' The above copyright notice And this permission notice shall be included In all
+' copies Or substantial portions of the Software.
 
-'Monica is our an AI assistant.
-'https://monica.im/
+' THE SOFTWARE Is PROVIDED "AS IS", WITHOUT WARRANTY Of ANY KIND, EXPRESS Or
+' IMPLIED, INCLUDING BUT Not LIMITED To THE WARRANTIES Of MERCHANTABILITY,
+' FITNESS FOR A PARTICULAR PURPOSE And NONINFRINGEMENT. IN NO EVENT SHALL THE
+' AUTHORS Or COPYRIGHT HOLDERS BE LIABLE For ANY CLAIM, DAMAGES Or OTHER
+' LIABILITY, WHETHER In AN ACTION Of CONTRACT, TORT Or OTHERWISE, ARISING FROM,
+' OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
+' SOFTWARE.
+
+' https://github.com/JoeLumbley/Pong
+
+' Monica is our an AI assistant.
+' https://monica.im/
 
 Imports System.Threading
 Imports System.Numerics
