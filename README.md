@@ -33,8 +33,8 @@ Grab Visual Studio Community—it's free and perfect for indie devs.
 
 Install Visual Studio from here:  https://visualstudio.microsoft.com/downloads/ and include the .NET Desktop Development workload.
 
-![153](https://github.com/JoeLumbley/Platformer-with-Level-Editor/assets/77564255/22a61c77-908f-4e04-9266-93f3d34ec376)
 
+![005](https://github.com/user-attachments/assets/2c8d863d-df92-4989-b5af-1f70e503d4f9)
 
 ### **Clone the Repository** 
 
