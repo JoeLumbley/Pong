@@ -1,6 +1,10 @@
-# Pong 🏓
+# 🏓 PONG
 
-This repository is designed to help new game developers learn the fundamentals of game programming and design through a classic game remake.
+![007](https://github.com/user-attachments/assets/080dce96-1376-415d-89a2-9e5c313572ae)
+
+Pong is a  simulation of **Table Tennis**, a recreational activity and an Olympic sport since 1988, is also known by the term 'ping-pong' or just pong.
+
+This repository is designed to help new game developers learn the fundamentals of game programming and design through a classic game.
 
 ## Features
 - **Classic Gameplay**: Experience the timeless fun of Pong with modern enhancements.
@@ -19,8 +23,9 @@ This repository is designed to help new game developers learn the fundamentals o
 
 
 # Getting Started
+To begin, you'll need to set up your development environment and clone the repository to get the game files. 
 
-### **Set Up Your Environment**
+## 🛠️ **Set Up Your Environment**
 
 Visual Studio is an Integrated Development Environment (IDE) created by Microsoft. 
 
@@ -35,25 +40,46 @@ Install Visual Studio from here:  https://visualstudio.microsoft.com/downloads/ 
 
 ![005](https://github.com/user-attachments/assets/2c8d863d-df92-4989-b5af-1f70e503d4f9)
 
-### **Clone the Repository** 
+## 🧬📦 **Clone the Repository** 
 
 Click the "Code" button.
 
 Copy the repository's URL.
 
-![004](https://github.com/user-attachments/assets/e6af64b6-28b9-4f88-876c-bec9cc5a8464)
+![010](https://github.com/user-attachments/assets/562269e4-ec11-4702-addb-795769eeac3c)
 
 Open Visual Studio.
 
 Click "Clone a repository".
 
+
+
+![006](https://github.com/user-attachments/assets/e7e542f5-a0f6-4258-bc58-491db0a0a78d)
+
 Paste the repository URL into the location field.
 
 Click the "Clone" button.
 
-![006](https://github.com/user-attachments/assets/e7e542f5-a0f6-4258-bc58-491db0a0a78d)
+![008](https://github.com/user-attachments/assets/fd1627da-83ab-48ed-9c3b-ffc6049add27)
 
 Once the cloning process is complete, you will have your own local copy of the game that you can run and modify on your computer.
 
 Dive into the code, experiment, and enhance the game while learning valuable programming skills!
+
+
+# ⌨️ Keyboard Controls
+
+To play using your keyboard, use the following controls:
+
+- **Player 1 ( 🏓 Left Paddle)**
+  - **W** : Move Up
+  - **S** : Move Down
+
+- **Player 2 (Right Paddle 🏓 )**
+  - **Up Arrow** ⬆️ : Move Up
+  - **Down Arrow** ⬇️ : Move Down
+
+- **Pause/Resume Game**
+  - **P** : Pause or Resume the game
+
 
