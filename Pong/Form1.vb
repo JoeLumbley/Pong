@@ -105,9 +105,10 @@ Public Class Form1
     Private RightPaddle As GameObject
 
     Private Const PingPongEmoji As String = "🏓"
-    Private ReadOnly EmojiFont As New Font("Segoe UI Emoji", 88)
+    Private ReadOnly EmojiFont As New Font("Segoe UI Emoji", 75)
+    Private EmojiLocation As New Point(ClientSize.Width \ 2 - 110, ClientSize.Height \ 2 - 125)
 
-    Private Const TitleText As String = "PONG"
+    Private Const TitleText As String = "P   NG"
     Private TitleLocation As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - 125)
     Private ReadOnly TitleFont As New Font(FontFamily.GenericSansSerif, 100)
 
@@ -1932,7 +1933,11 @@ Public Class Form1
             .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
             .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
 
+
             .DrawString(TitleText, TitleFont, Brushes.White, TitleLocation, AlineCenter)
+
+            .DrawString(PingPongEmoji, EmojiFont, Brushes.White, EmojiLocation, AlineCenter)
+
 
         End With
 
@@ -2624,6 +2629,8 @@ Public Class Form1
         InstructOneLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) + 35)
 
         InstructTwoLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) + 35)
+
+        EmojiLocation = New Point(ClientSize.Width \ 2 - 90, ClientSize.Height \ 2 - 160)
 
     End Sub
 
