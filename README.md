@@ -50,9 +50,9 @@ Follow the steps to get your local copy of the project.
 Once the cloning process is complete, you will have your own local copy of the game that you can run and modify on your computer.
 
 
+![004](https://github.com/user-attachments/assets/e6af64b6-28b9-4f88-876c-bec9cc5a8464)
 
 
-![003](https://github.com/user-attachments/assets/8384b6b7-5bb4-4fdf-8196-42a9669e766d)
 
 Watch a short about cloning the repository here: https://www.youtube.com/shorts/n8bCEIdI44U
 
