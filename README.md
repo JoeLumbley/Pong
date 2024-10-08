@@ -46,7 +46,7 @@ Click the "Code" button.
 
 Copy the repository's URL.
 
-![004](https://github.com/user-attachments/assets/e6af64b6-28b9-4f88-876c-bec9cc5a8464)
+![009](https://github.com/user-attachments/assets/c51e65d7-ddae-44f9-8f09-3485118eba1d)
 
 Open Visual Studio.
 
