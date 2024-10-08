@@ -54,20 +54,3 @@ Once the cloning process is complete, you will have your own local copy of the g
 
 
 
-Watch a short about cloning the repository here: https://www.youtube.com/shorts/n8bCEIdI44U
-
-
-
-### **Explore and Modify:**
-
-Get familiar with the project structure and start adding your own flair.
-
-### **Use Resources**
-
-Don’t forget to check out the documentation and tutorials to level up your skills.
-
-### **Seek Community Feedback**
-
-Engage with the project’s community for feedback and learning opportunities.
-
-By following these steps, you’ll gain hands-on experience, learn programming patterns, and build skills in creating interactive games! 🎮🚀
