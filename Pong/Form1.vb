@@ -2447,8 +2447,6 @@ Public Class Form1
 
         AddSound("hit", $"{Application.StartupPath}hit.mp3")
 
-        'AddSound("bounce", $"{Application.StartupPath}bounce.mp3")
-
         AddOverlapping("bounce", $"{Application.StartupPath}bounce.mp3")
 
         AddSound("point", $"{Application.StartupPath}point.mp3")
