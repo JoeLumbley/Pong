@@ -39,12 +39,15 @@ It is a powerful software development tool that provides a comprehensive set of 
 
 This is the IDE I use to make "Pong" and I recommend that you use.
 
+
+
+
+![005](https://github.com/user-attachments/assets/2c8d863d-df92-4989-b5af-1f70e503d4f9)
+
 Grab Visual Studio Community—it's free and perfect for indie devs.
 
 Install Visual Studio from here:  https://visualstudio.microsoft.com/downloads/ and include the .NET Desktop Development workload.
 
-
-![005](https://github.com/user-attachments/assets/2c8d863d-df92-4989-b5af-1f70e503d4f9)
 
 ## 🧬📦 **Clone the Repository** 
 
