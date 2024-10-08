@@ -108,9 +108,9 @@ Public Class Form1
     Private ReadOnly EmojiFont As New Font("Segoe UI Emoji", 88)
     Private EmojiLocation As New Point(ClientSize.Width \ 2 - 110, ClientSize.Height \ 2 - 125)
 
-    Private Const TitleText As String = "P    NG"
+    Private Const TitleText As String = "P🏓NG"
     Private TitleLocation As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - 125)
-    Private ReadOnly TitleFont As New Font(FontFamily.GenericSansSerif, 100)
+    Private ReadOnly TitleFont As New Font("Segoe UI Emoji", 100)
 
     Private InstructStartLocation As Point
     Private ReadOnly InstructStartText As String = vbCrLf &
@@ -129,11 +129,11 @@ Public Class Form1
     Private InstructTwoLocation As Point
     Private Const InstructTwoText As String = vbCrLf &
         "Play  A  " & vbCrLf & vbCrLf &
-        "Left versus Right " & vbCrLf &
+        "🏓Left versus Right🏓 " & vbCrLf &
         "First player to 10 points wins" & vbCrLf & vbCrLf &
         "Pause / Resume  Start  "
     '******************************************************
-    Private ReadOnly InstructionsFont As New Font(FontFamily.GenericSansSerif, 20)
+    Private ReadOnly InstructionsFont As New Font("Segoe UI Emoji", 20)
 
     Private IsBackButtonDown(0 To 3) As Boolean
 
@@ -1936,7 +1936,7 @@ Public Class Form1
 
             .DrawString(TitleText, TitleFont, Brushes.White, TitleLocation, AlineCenter)
 
-            .DrawString(PingPongEmoji, EmojiFont, Brushes.White, EmojiLocation, AlineCenter)
+            '.DrawString(PingPongEmoji, EmojiFont, Brushes.White, EmojiLocation, AlineCenter)
 
 
         End With
@@ -2630,7 +2630,7 @@ Public Class Form1
 
         InstructTwoLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) + 35)
 
-        EmojiLocation = New Point(ClientSize.Width \ 2 - 90, ClientSize.Height \ 2 - 180)
+        EmojiLocation = New Point(ClientSize.Width \ 2 - 90, ClientSize.Height \ 2 - 190)
 
     End Sub
 
