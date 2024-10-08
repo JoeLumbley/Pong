@@ -19,7 +19,6 @@ This repository is designed to help new game developers learn the fundamentals o
 
 
 # Getting Started
-Dive into the code, experiment, and enhance the game while learning valuable programming skills!
 
 ### **Set Up Your Environment**
 
@@ -45,7 +44,6 @@ Install Visual Studio from here:  https://visualstudio.microsoft.com/downloads/ 
 5. Paste the repository URL into the location field.
 6. Click the "Clone" button.
 
-Once the cloning process is complete, you will have your own local copy of the game that you can run and modify on your computer.
 
 
 ![004](https://github.com/user-attachments/assets/e6af64b6-28b9-4f88-876c-bec9cc5a8464)
@@ -53,3 +51,8 @@ Once the cloning process is complete, you will have your own local copy of the g
 
 
 ![006](https://github.com/user-attachments/assets/e7e542f5-a0f6-4258-bc58-491db0a0a78d)
+
+Once the cloning process is complete, you will have your own local copy of the game that you can run and modify on your computer.
+
+Dive into the code, experiment, and enhance the game while learning valuable programming skills!
+
