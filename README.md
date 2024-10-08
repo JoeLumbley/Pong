@@ -37,7 +37,7 @@ Visual Studio is an Integrated Development Environment (IDE) created by Microsof
 
 It is a powerful software development tool that provides a comprehensive set of features and tools for building a wide range of applications.
 
-This is the IDE I use to make "Pong" and I recommend that you use.
+This is the IDE I use to make P🏓ng and I recommend that you use.
 
 
 
