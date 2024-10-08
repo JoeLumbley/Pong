@@ -51,11 +51,15 @@ Open Visual Studio.
 
 Click "Clone a repository".
 
+
+
+![006](https://github.com/user-attachments/assets/e7e542f5-a0f6-4258-bc58-491db0a0a78d)
+
 Paste the repository URL into the location field.
 
 Click the "Clone" button.
 
-![006](https://github.com/user-attachments/assets/e7e542f5-a0f6-4258-bc58-491db0a0a78d)
+![008](https://github.com/user-attachments/assets/fd1627da-83ab-48ed-9c3b-ffc6049add27)
 
 Once the cloning process is complete, you will have your own local copy of the game that you can run and modify on your computer.
 
