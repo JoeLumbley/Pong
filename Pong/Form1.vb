@@ -86,27 +86,12 @@ Public Class Form1
 
     Private RightPaddle As GameObject
 
-
-
     Private Const PingPongEmoji As String = "🏓"
     Private ReadOnly EmojiFont As New Font("Segoe UI Emoji", 88)
-
-
-
 
     Private Const TitleText As String = "PONG"
     Private TitleLocation As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - 125)
     Private ReadOnly TitleFont As New Font(FontFamily.GenericSansSerif, 100)
-
-
-    'Private ReadOnly TitleFont As New Font("Segoe UI Emoji", 88)
-
-
-
-
-
-
-
 
     Private InstructStartLocation As Point
     Private ReadOnly InstructStartText As String = vbCrLf &
