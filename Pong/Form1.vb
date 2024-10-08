@@ -481,7 +481,7 @@ Public Class Form1
 
 
         'Is the ball above the paddle?
-        If BallMiddle < RightPaddleMiddle - 1 Then
+        If BallMiddle < RightPaddleMiddle Then
             'Yes, the ball is above the paddle.
 
             ' Is the paddle moving down?
@@ -517,7 +517,7 @@ Public Class Form1
             End If
 
             'Is the ball below the paddle?
-        ElseIf BallMiddle > RightPaddleMiddle + 1 Then
+        ElseIf BallMiddle > RightPaddleMiddle Then
             'Yes, the ball is below the paddle.
 
             ' Is the paddle moving up?
