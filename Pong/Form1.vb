@@ -1875,11 +1875,18 @@ Public Class Form1
         DrawRightPaddleScore()
 
     End Sub
+
     Private Sub DrawBackground()
 
-        Buffer.Graphics.CompositingMode = Drawing2D.CompositingMode.SourceCopy
+        With Buffer.Graphics
 
-        Buffer.Graphics.Clear(Color.Black)
+            .CompositingMode = Drawing2D.CompositingMode.SourceCopy
+            .SmoothingMode = Drawing2D.SmoothingMode.HighSpeed
+            .PixelOffsetMode = Drawing2D.PixelOffsetMode.None
+
+            .Clear(Color.Black)
+
+        End With
 
     End Sub
 
