@@ -105,10 +105,10 @@ Public Class Form1
     Private RightPaddle As GameObject
 
     Private Const PingPongEmoji As String = "🏓"
-    Private ReadOnly EmojiFont As New Font("Segoe UI Emoji", 75)
+    Private ReadOnly EmojiFont As New Font("Segoe UI Emoji", 88)
     Private EmojiLocation As New Point(ClientSize.Width \ 2 - 110, ClientSize.Height \ 2 - 125)
 
-    Private Const TitleText As String = "P   NG"
+    Private Const TitleText As String = "P    NG"
     Private TitleLocation As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - 125)
     Private ReadOnly TitleFont As New Font(FontFamily.GenericSansSerif, 100)
 
@@ -2504,7 +2504,7 @@ Public Class Form1
 
     Private Sub InitializeForm()
 
-        Text = PingPongEmoji & " PONG - Code with Joe"
+        Text = "P🏓NG - Code with Joe"
 
         SetStyle(ControlStyles.UserPaint, True)
 
@@ -2630,7 +2630,7 @@ Public Class Form1
 
         InstructTwoLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) + 35)
 
-        EmojiLocation = New Point(ClientSize.Width \ 2 - 90, ClientSize.Height \ 2 - 160)
+        EmojiLocation = New Point(ClientSize.Width \ 2 - 90, ClientSize.Height \ 2 - 180)
 
     End Sub
 
