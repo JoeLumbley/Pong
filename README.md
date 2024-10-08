@@ -1,4 +1,6 @@
-# Pong 🏓
+# 🏓 PONG
+
+![007](https://github.com/user-attachments/assets/080dce96-1376-415d-89a2-9e5c313572ae)
 
 This repository is designed to help new game developers learn the fundamentals of game programming and design through a classic game remake.
 
