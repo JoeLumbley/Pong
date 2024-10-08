@@ -66,3 +66,20 @@ Once the cloning process is complete, you will have your own local copy of the g
 
 Dive into the code, experiment, and enhance the game while learning valuable programming skills!
 
+
+# Keyboard Controls for Pong
+
+To play Pong using your keyboard, use the following controls:
+
+- **Player 1 (Left Paddle)**
+  - **W**: Move Up
+  - **S**: Move Down
+
+- **Player 2 (Right Paddle)**
+  - **Up Arrow**: Move Up
+  - **Down Arrow**: Move Down
+
+- **Pause/Resume Game**
+  - **P**: Pause or Resume the game
+
+
