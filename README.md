@@ -23,6 +23,7 @@ This repository is designed to help new game developers learn the fundamentals o
 
 
 # Getting Started
+To begin, you'll need to set up your development environment and clone the repository to get the game files. 
 
 ## **Set Up Your Environment**
 
