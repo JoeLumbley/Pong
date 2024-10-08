@@ -58,15 +58,6 @@ Public Class Form1
         RightPaddle = 2
     End Enum
 
-    Private Enum DirectionEnum
-        UpLeft = 1
-        Left = 2
-        DownLeft = 3
-        UpRight = 4
-        Right = 5
-        DownRight = 6
-    End Enum
-
     'State Data *******************************************
     Private GameState As GameStateEnum = GameStateEnum.StartScreen
     Private Serving As ServeStateEnum = ServeStateEnum.LeftPaddle
@@ -121,7 +112,6 @@ Public Class Form1
         "Pause / Resume  Start  "
     '******************************************************
     Private ReadOnly InstructionsFont As New Font(FontFamily.GenericSansSerif, 20)
-    'Private ReadOnly AlineCenter As New StringFormat
 
     Private IsBackButtonDown(0 To 3) As Boolean
 
@@ -129,12 +119,9 @@ Public Class Form1
 
     Private IsAKeyDown As Boolean = False
 
-
     'Centerline Data *******************
     Private CenterlineTop As Point
     Private CenterlineBottom As Point
-    'Private ReadOnly CenterlinePen As New Pen(Color.White, 7) With {.DashStyle = Drawing2D.DashStyle.Custom. , DashPattern = New Single() {10, 5} ' 10 units dash, 5 units space}
-
 
     Private ReadOnly CenterlinePen As New Pen(Color.White, 16) With {
                     .DashStyle = Drawing2D.DashStyle.Custom,
@@ -319,17 +306,11 @@ Public Class Form1
 
     Private FPS_Postion As New Point(0, 0)
 
-    'Private Rect As New Rectangle(0, 100, 300, 300)
-
-    'Private RectPostion As New Vector2(Rect.X, Rect.Y)
-
     Private CurrentFrame As DateTime = Now 'Get current time.
 
     Private LastFrame As DateTime = CurrentFrame 'Initialize last frame time to current time.
 
     Private DeltaTime As TimeSpan = CurrentFrame - LastFrame 'Initialize delta time to 0
-
-    'Private Velocity As Single = 100.0F
 
     Private ReadOnly AlineCenter As New StringFormat With {.Alignment = StringAlignment.Center}
 
@@ -337,8 +318,6 @@ Public Class Form1
                                                                  .LineAlignment = StringAlignment.Center}
 
     Private GameLoopCancellationToken As New CancellationTokenSource()
-
-    'Private ReadOnly CWJFont As New Font(FontFamily.GenericSansSerif, 38)
 
     Private DrawFlashingText As Boolean = True
 
@@ -559,7 +538,6 @@ Public Class Form1
 
     End Sub
 
-
     Private Sub CheckforEndGame()
 
         'Did left paddle reach winning score?
@@ -597,6 +575,7 @@ Public Class Form1
         End If
 
     End Sub
+
     Private Sub UpdateEndScreen()
 
         UpdateFlashingText()
@@ -922,6 +901,7 @@ Public Class Form1
         End Try
 
     End Sub
+
     Private Sub UpdateVibrateTimer()
 
         UpdateLeftVibrateTimer()
@@ -1421,7 +1401,6 @@ Public Class Form1
 
     End Sub
 
-
     Private Sub UpdateRightPaddleKeyboard()
 
         If UpArrowKeyDown = True Then
@@ -1453,7 +1432,6 @@ Public Class Form1
         End If
 
     End Sub
-
 
     Private Sub MoveRightPaddleUp()
 
@@ -3084,9 +3062,6 @@ Public Class Form1
     End Sub
 
 End Class
-
-
-
 
 'Learn more:
 '
