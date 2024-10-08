@@ -27,6 +27,12 @@ To begin, you'll need to set up your development environment and clone the repos
 
 ## 🛠️ **Set Up Your Environment**
 
+
+![014](https://github.com/user-attachments/assets/918c5027-4d82-41aa-8f64-f4f87c2d235a)
+
+
+
+
 Visual Studio is an Integrated Development Environment (IDE) created by Microsoft. 
 
 It is a powerful software development tool that provides a comprehensive set of features and tools for building a wide range of applications.
