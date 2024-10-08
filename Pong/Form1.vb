@@ -8,16 +8,27 @@
 
 ' Features
 '
-' Classic Gameplay: Experience the timeless fun of Pong with modern enhancements.
+'   Classic Gameplay: Experience the timeless fun of Pong with modern
+'   enhancements.
+
+'   Keyboard and Controller Support: Play using your keyboard ⌨️ or Xbox
+'   controllers 🎮 , complete with vibration feedback.
 '
-' Keyboard and Controller Support: Play using your keyboard ⌨️ or Xbox
-' controllers 🎮 , complete with vibration feedback.
+'   Resizable and Pausable: Enjoy a flexible gameplay experience that can be
+'   paused at any time.
 '
-' Resizable and Pausable: Enjoy a flexible gameplay experience that can be paused
-' at any time.
-'
-' Single and Multiplayer Modes: Challenge yourself against a computer player or
-' compete with friends.
+'   Single and Multiplayer Modes: Challenge yourself against a computer player
+'   or compete with friends.
+
+' Learning Objectives
+
+'   Understand the basics of game mechanics and physics.
+
+'   Gain hands-on experience with VB.NET and game development concepts.
+
+'   Learn how to implement user input handling, game states, and sound effects.
+
+' https://github.com/JoeLumbley/Pong
 
 ' MIT License
 ' Copyright(c) 2023 Joseph W. Lumbley
@@ -39,8 +50,6 @@
 ' LIABILITY, WHETHER In AN ACTION Of CONTRACT, TORT Or OTHERWISE, ARISING FROM,
 ' OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
 ' SOFTWARE.
-
-' https://github.com/JoeLumbley/Pong
 
 ' Monica is our an AI assistant.
 ' https://monica.im/
