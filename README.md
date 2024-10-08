@@ -2,7 +2,7 @@
 
 ![007](https://github.com/user-attachments/assets/080dce96-1376-415d-89a2-9e5c313572ae)
 
-Table tennis, a recreational activity and an Olympic sport since 1988, is also known by the term 'ping-pong' or just pong.
+Pong is a  simulation of **Table Tennis**, a recreational activity and an Olympic sport since 1988, is also known by the term 'ping-pong' or just pong.
 
 This repository is designed to help new game developers learn the fundamentals of game programming and design through a classic game remake.
 
