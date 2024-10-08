@@ -67,17 +67,11 @@ Public Class Form1
     '******************************************************
 
     Private Structure GameObject
-
         Public Position As Vector2 'A vector 2 is composed of two floating-point values called X and Y.
-
         Public Acceleration As Vector2
-
         Public Velocity As Vector2
-
         Public MaxVelocity As Vector2
-
         Public Rect As Rectangle
-
     End Structure
 
     Private Ball As GameObject
