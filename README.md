@@ -90,5 +90,18 @@ To play using your keyboard, use the following controls:
 
 - **Pause/Resume Game**
   - **P** : Pause or Resume the game
+ 
+
+
+
+# 🎮 Xbox Controllers
+
+To play using your Xbox controllers, use the following controls:
+
+  - **Thumbstick or D Pad Up** : Move Up
+  - **Thumbstick or D Pad Down** : Move Down
+
+- **Pause/Resume Game**
+  - **Start** : Pause or Resume the game
 
 
