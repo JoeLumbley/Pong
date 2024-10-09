@@ -242,7 +242,7 @@ End Function
 ```
 - This function manages sound effects, allowing sounds to be added and played during the game.
 
-### Conclusion
+
 The code is structured to handle game logic, user input, rendering, and sound management in a clear and organized manner. Each section focuses on a specific aspect of the game, making it easier to understand and modify. If you have specific sections you'd like to dive deeper into or have questions about, let me know!
 
 
