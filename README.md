@@ -114,7 +114,7 @@ To play using your Xbox controllers, use the following controls:
 
 
 
-### 1. **Imports and Class Declaration**
+##  **Imports and Class Declaration**
 ```vb
 Imports System.Threading
 Imports System.Numerics
@@ -128,7 +128,7 @@ Public Class Form1
 - The code begins by importing necessary namespaces for threading, mathematical operations (like vectors), interop services for using unmanaged code, and file handling.
 - The class `Form1` is declared, which will contain all the game logic.
 
-### 2. **Enumerations**
+##  **Enumerations**
 ```vb
 Private Enum GameStateEnum
     StartScreen = 0
@@ -141,7 +141,7 @@ End Enum
 ```
 - `GameStateEnum` defines different states of the game (e.g., Start Screen, Playing, End Screen).
 
-### 3. **Game Object Structure**
+##  **Game Object Structure**
 ```vb
 Private Structure GameObject
     Public Position As Vector2
@@ -153,7 +153,7 @@ End Structure
 ```
 - `GameObject` structure is defined to represent game entities like the ball and paddles. It includes properties for position, acceleration, velocity, maximum velocity, and the rectangle that represents its dimensions.
 
-### 4. **Game State Variables**
+##  **Game State Variables**
 ```vb
 Private GameState As GameStateEnum = GameStateEnum.StartScreen
 Private Serving As ServeStateEnum = ServeStateEnum.LeftPaddle
@@ -163,7 +163,7 @@ Private NumberOfPlayers As Integer = 2
 ```
 - These variables track the current game state, which paddle is serving, the speed of the serve, the winner, and the number of players.
 
-### 5. **Game Loop**
+##  **Game Loop**
 ```vb
 Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
     UpdateGame()
@@ -172,7 +172,7 @@ End Sub
 ```
 - This subroutine is called at regular intervals (set by a timer). It updates the game state and refreshes the display.
 
-### 6. **Update Game Logic**
+##  **Update Game Logic**
 ```vb
 Private Sub UpdateGame()
     Select Case GameState
@@ -190,7 +190,7 @@ End Sub
 ```
 - The `UpdateGame` method uses a `Select Case` statement to determine what actions to take based on the current game state. It handles input, updates game objects, and checks for game conditions.
 
-### 7. **Input Handling**
+##  **Input Handling**
 ```vb
 Private Sub UpdateLeftPaddleKeyboard()
     If WKeyDown = True Then MoveLeftPaddleUp()
@@ -200,7 +200,7 @@ End Sub
 ```
 - This method checks if specific keys are pressed (W/S for the left paddle) and moves the paddle accordingly.
 
-### 8. **Collision Detection**
+##  **Collision Detection**
 ```vb
 Private Sub CheckForPaddleHits()
     If Ball.Rect.IntersectsWith(LeftPaddle.Rect) Then
@@ -213,7 +213,7 @@ End Sub
 ```
 - This method checks if the ball intersects with either paddle, handling the logic for bouncing the ball back and updating its velocity.
 
-### 9. **Game State Transitions**
+##  **Game State Transitions**
 ```vb
 Private Sub CheckforEndGame()
     If LeftPaddleScore >= 10 Then
@@ -225,7 +225,7 @@ End Sub
 ```
 - This method checks if a player has reached the winning score and transitions the game state to the end screen if so.
 
-### 10. **Rendering Graphics**
+##  **Rendering Graphics**
 ```vb
 Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
     DrawGame()
@@ -234,7 +234,7 @@ End Sub
 ```
 - This method is responsible for rendering the game graphics. It calls the `DrawGame` method to draw all game elements and then renders the buffer to the screen.
 
-### 11. **Sound Management**
+##  **Sound Management**
 ```vb
 Private Function AddSound(SoundName As String, FilePath As String) As Boolean
     ...
