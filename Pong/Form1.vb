@@ -129,7 +129,7 @@ Public Class Form1
     Private InstructTwoLocation As Point
     Private Const InstructTwoText As String = vbCrLf &
         "Play  A  " & vbCrLf & vbCrLf &
-        "🏓 Left versus Right 🏓 " & vbCrLf &
+        "🏓 Left Paddle vs Right Paddle 🏓" & vbCrLf &
         "First player to 10 points wins 🏆" & vbCrLf & vbCrLf &
         "Pause / Resume  Start  "
     '******************************************************
