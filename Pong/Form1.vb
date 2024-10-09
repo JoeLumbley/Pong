@@ -1,6 +1,6 @@
-﻿' Pong
+﻿' P🏓NG
 
-' Pong is a simulation of Table Tennis, a recreational activity and an
+' P🏓NG is a simulation of Table Tennis, a recreational activity and an
 ' Olympic sport since 1988 is also known by the term "ping-pong" or just "pong".
 
 ' This repository is designed to help new game developers learn the fundamentals
@@ -8,7 +8,7 @@
 
 ' Features
 '
-'   Classic Gameplay: Experience the timeless fun of Pong with modern
+'   Classic Gameplay: Experience the timeless fun of ping-pong with modern
 '   enhancements.
 
 '   Keyboard and Controller Support: Play using your keyboard ⌨️ or Xbox
