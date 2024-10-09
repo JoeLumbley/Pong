@@ -120,8 +120,8 @@ Public Class Form1
     Private InstructOneLocation As Point
     Private Const InstructOneText As String = vbCrLf &
         "Play  A" & vbCrLf & vbCrLf &
-        "You are the left paddle" & vbCrLf &
-        "Beat the computer to 10 points to win" & vbCrLf & vbCrLf &
+        "You are the 🏓 left paddle" & vbCrLf &
+        "Beat the computer to 10 points to win 🏆" & vbCrLf & vbCrLf &
         "Pause / Resume  Start "
     '******************************************************
 
@@ -129,8 +129,8 @@ Public Class Form1
     Private InstructTwoLocation As Point
     Private Const InstructTwoText As String = vbCrLf &
         "Play  A  " & vbCrLf & vbCrLf &
-        "🏓Left versus Right🏓 " & vbCrLf &
-        "First player to 10 points wins" & vbCrLf & vbCrLf &
+        "🏓 Left versus Right 🏓 " & vbCrLf &
+        "First player to 10 points wins 🏆" & vbCrLf & vbCrLf &
         "Pause / Resume  Start  "
     '******************************************************
     Private ReadOnly InstructionsFont As New Font("Segoe UI Emoji", 20)
