@@ -168,8 +168,11 @@ Private NumberOfPlayers As Integer = 2
 ##  **Game Loop**
 ```vb
 Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+
     UpdateGame()
+
     Refresh()
+
 End Sub
 ```
 - This subroutine is called at regular intervals (set by a timer). It updates the game state and refreshes the display.
