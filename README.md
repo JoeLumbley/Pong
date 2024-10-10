@@ -19,7 +19,7 @@ This repository is designed to help new game developers learn the fundamentals o
 
 
 
-
+---
 
 
 # Getting Started
@@ -75,6 +75,7 @@ Once the cloning process is complete, you will have your own local copy of the g
 
 Dive into the code, experiment, and enhance the game while learning valuable programming skills!
 
+---
 
 # ⌨️ Keyboard Controls
 
@@ -97,7 +98,7 @@ To play using your keyboard, use the following controls:
 # 🎮 Xbox Controllers
 
 To play using your Xbox controllers, use the following controls:
-
+- **🏓 Paddle Movement 🏓**
   - **Thumbstick or D Pad Up** : Move Up
   - **Thumbstick or D Pad Down** : Move Down
 
@@ -106,7 +107,7 @@ To play using your Xbox controllers, use the following controls:
  
 
 
-
+---
 
 
 # 📄 Code Walk Through
@@ -133,12 +134,12 @@ Public Class Form1
 ##  **Enumerations**
 ```vb
 Private Enum GameStateEnum
-    StartScreen = 0
-    Instructions = 1
-    Serve = 2
-    Playing = 3
-    EndScreen = 4
-    Pause = 5
+    StartScreen
+    Instructions
+    Serve
+    Playing
+    EndScreen
+    Pause
 End Enum
 ```
 - `GameStateEnum` defines different states of the game (e.g., Start Screen, Playing, End Screen).
@@ -168,37 +169,85 @@ Private NumberOfPlayers As Integer = 2
 ##  **Game Loop**
 ```vb
 Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+
     UpdateGame()
+
     Refresh()
+
 End Sub
 ```
 - This subroutine is called at regular intervals (set by a timer). It updates the game state and refreshes the display.
 
 ##  **Update Game Logic**
 ```vb
-Private Sub UpdateGame()
-    Select Case GameState
-        Case GameStateEnum.Playing
-            UpdateControllerData()
-            UpdateLeftPaddleKeyboard()
-            ...
-        Case GameStateEnum.StartScreen
-            UpdateStartScreenKeyboard()
-            ...
-        Case GameStateEnum.EndScreen
-            UpdateEndScreen()
-    End Select
-End Sub
+    Private Sub UpdateGame()
+
+        Select Case GameState
+
+            Case GameStateEnum.Playing
+
+                UpdatePlaying()
+
+            Case GameStateEnum.StartScreen
+
+                UpdateStartScreen()
+
+            Case GameStateEnum.Instructions
+
+                UpdateInstructions()
+
+            Case GameStateEnum.Serve
+
+                UpdateServe()
+
+            Case GameStateEnum.Pause
+
+                UpdatePause()
+
+            Case GameStateEnum.EndScreen
+
+                UpdateEndScreen()
+
+        End Select
+
+    End Sub
+
 ```
 - The `UpdateGame` method uses a `Select Case` statement to determine what actions to take based on the current game state. It handles input, updates game objects, and checks for game conditions.
 
 ##  **Input Handling**
 ```vb
-Private Sub UpdateLeftPaddleKeyboard()
-    If WKeyDown = True Then MoveLeftPaddleUp()
-    ElseIf SKeyDown = True Then MoveLeftPaddleDown()
-    ...
-End Sub
+    Private Sub UpdateLeftPaddleKeyboard()
+
+        If WKeyDown Then
+
+            MoveLeftPaddleUp()
+
+        ElseIf SKeyDown Then
+
+            MoveLeftPaddleDown()
+
+        Else
+
+            If Not Connected(0) Then
+
+                DecelerateLeftPaddle()
+
+                If ApplyLeftPaddleEnglish Then
+
+                    ApplyLeftPaddleEnglish = False
+
+                    'Send ball to the right.
+                    Ball.Velocity.X = ServSpeed
+                    Ball.Velocity.Y = 0
+
+                End If
+
+            End If
+
+        End If
+
+    End Sub
 ```
 - This method checks if specific keys are pressed (W/S for the left paddle) and moves the paddle accordingly.
 
