@@ -194,6 +194,10 @@ Public Class Form1
     Private PKeyDown As Boolean = False
     Private IsPKeyDown As Boolean = False
 
+    Private BackspaceKeyDown As Boolean = False
+    Private IsBackspaceKeyDown As Boolean = False
+
+
     Private AKeyDown As Boolean = False
     Private BKeyDown As Boolean = False
     Private XKeyDown As Boolean = False
@@ -1755,6 +1759,22 @@ Public Class Form1
 
         End If
 
+        If BackspaceKeyDown Then
+
+            If Not IsBackspaceKeyDown Then
+
+                IsBackspaceKeyDown = True
+
+                ResetGame()
+
+            End If
+
+        Else
+
+            IsBackspaceKeyDown = False
+
+        End If
+
     End Sub
 
     Private Sub UpdateInstructions()
@@ -3086,6 +3106,10 @@ Public Class Form1
 
                 XKeyDown = True
 
+            Case Keys.Back
+
+                BackspaceKeyDown = True
+
         End Select
 
     End Sub
@@ -3150,6 +3174,10 @@ Public Class Form1
             Case Keys.X
 
                 XKeyDown = False
+
+            Case Keys.Back
+
+                BackspaceKeyDown = False
 
         End Select
 
