@@ -237,22 +237,69 @@ End Sub
 - This method is responsible for rendering the game graphics. It calls the `DrawGame` method to draw all game elements and then renders the buffer to the screen.
 
 ##  **Sound Management**
+
+- **Loading Sounds**: The game loads sound files from specified paths and associates them with names for easy reference.
+- **Playing Sounds**: Functions are provided to play specific sounds at appropriate game events (e.g., ball hits, scoring).
+- **Volume Control**: The volume of sounds can be adjusted, allowing for a customizable audio experience.
+- **Looping Sounds**: Background music can be looped to create an immersive atmosphere.
+
+
+
 ```vb
 Private Function AddSound(SoundName As String, FilePath As String) As Boolean
-    ...
+
+    If Not String.IsNullOrWhiteSpace(SoundName) AndAlso IO.File.Exists(FilePath) Then
+
+        Dim CommandOpen As String = $"open ""{FilePath}"" alias {SoundName}"
+
+        Dim ReturnString As New StringBuilder(128)
+
+        If mciSendStringW(CommandOpen, ReturnString, 0, IntPtr.Zero) = 0 Then
+
+            Array.Resize(Sounds, Sounds.Length + 1)
+
+            Sounds(Sounds.Length - 1) = SoundName
+
+            Return True
+
+        End If
+
+    End If
+
+    Return False
+
+End Function
+
+Private Function PlaySound(SoundName As String) As Boolean
+
+    If Sounds IsNot Nothing AndAlso Sounds.Contains(SoundName) Then
+
+        Dim CommandSeekToStart As String = $"seek {SoundName} to start"
+
+        Dim ReturnString As New StringBuilder(128)
+
+        mciSendStringW(CommandSeekToStart, ReturnString, 0, IntPtr.Zero)
+
+        Dim CommandPlay As String = $"play {SoundName} notify"
+
+        If mciSendStringW(CommandPlay, ReturnString, 0, Me.Handle) = 0 Then
+
+            Return True
+
+        End If
+
+    End If
+
+    Return False
+
 End Function
 ```
+
 - This function manages sound effects, allowing sounds to be added and played during the game.
+  
 ---
 
 The code is structured to handle game logic, user input, rendering, and sound management in a clear and organized manner. Each section focuses on a specific aspect of the game, making it easier to understand and modify. If you have specific sections you'd like to dive deeper into or have questions about, let me know!
-
-
-
-
-
-
-
 
 
 
