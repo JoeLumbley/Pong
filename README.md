@@ -213,11 +213,37 @@ End Sub
 
 ##  **Input Handling**
 ```vb
-Private Sub UpdateLeftPaddleKeyboard()
-    If WKeyDown = True Then MoveLeftPaddleUp()
-    ElseIf SKeyDown = True Then MoveLeftPaddleDown()
-    ...
-End Sub
+    Private Sub UpdateLeftPaddleKeyboard()
+
+        If WKeyDown = True Then
+
+            MoveLeftPaddleUp()
+
+        ElseIf SKeyDown = True Then
+
+            MoveLeftPaddleDown()
+
+        Else
+
+            If Not Connected(0) Then
+
+                DecelerateLeftPaddle()
+
+                If ApplyLeftPaddleEnglish Then
+
+                    ApplyLeftPaddleEnglish = False
+
+                    'Send ball to the right.
+                    Ball.Velocity.X = ServSpeed
+                    Ball.Velocity.Y = 0
+
+                End If
+
+            End If
+
+        End If
+
+    End Sub
 ```
 - This method checks if specific keys are pressed (W/S for the left paddle) and moves the paddle accordingly.
 
