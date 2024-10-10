@@ -361,35 +361,11 @@ Public Class Form1
 
             Case GameStateEnum.StartScreen
 
-                UpdateControllerData()
-
-                UpdateStartScreenKeyboard()
-
-                UpdateDeltaTime()
-
                 UpdateStartScreen()
-
-                UpdateBallMovement()
-
-                CheckForWallBounce()
-
-                CheckForWallBounceXaxis()
 
             Case GameStateEnum.Instructions
 
-                UpdateControllerData()
-
-                UpdateInstructionsScreenKeyboard()
-
-                UpdateDeltaTime()
-
-                UpdateBallMovement()
-
-                CheckForWallBounce()
-
-                CheckForWallBounceXaxis()
-
-                'UpdateInstructions()
+                UpdateInstructions()
 
             Case GameStateEnum.Serve
 
@@ -397,25 +373,7 @@ Public Class Form1
 
             Case GameStateEnum.Pause
 
-                If PKeyDown Then
-
-                    If Not IsPKeyDown Then
-
-                        IsPKeyDown = True
-
-                        LastFrame = Now
-
-                        GameState = GameStateEnum.Playing
-
-                    End If
-
-                Else
-
-                    IsPKeyDown = False
-
-                End If
-
-                'UpdatePause()
+                UpdatePause()
 
             Case GameStateEnum.EndScreen
 
@@ -1720,7 +1678,41 @@ Public Class Form1
 
     End Sub
 
+    Private Sub UpdatePause()
+
+        If PKeyDown Then
+
+            If Not IsPKeyDown Then
+
+                IsPKeyDown = True
+
+                LastFrame = Now
+
+                GameState = GameStateEnum.Playing
+
+            End If
+
+        Else
+
+            IsPKeyDown = False
+
+        End If
+
+    End Sub
+
     Private Sub UpdateInstructions()
+
+        UpdateControllerData()
+
+        UpdateInstructionsScreenKeyboard()
+
+        UpdateDeltaTime()
+
+        UpdateBallMovement()
+
+        CheckForWallBounce()
+
+        CheckForWallBounceXaxis()
 
     End Sub
 
@@ -1917,6 +1909,18 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateStartScreen()
+
+        UpdateControllerData()
+
+        UpdateStartScreenKeyboard()
+
+        UpdateDeltaTime()
+
+        UpdateBallMovement()
+
+        CheckForWallBounce()
+
+        CheckForWallBounceXaxis()
 
     End Sub
 
