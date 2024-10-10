@@ -2443,13 +2443,6 @@ Public Class Form1
 
                 End If
 
-
-
-
-
-
-
-
             Case GameStateEnum.EndScreen
 
         End Select
