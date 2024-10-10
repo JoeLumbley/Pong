@@ -137,6 +137,9 @@ Public Class Form1
 
     Private IsBackButtonDown(0 To 3) As Boolean
 
+    Private IsStartButtonDown(0 To 3) As Boolean
+
+
     Private IsAButtonDown(0 To 3) As Boolean
 
     Private IsAKeyDown As Boolean = False
@@ -347,7 +350,7 @@ Public Class Form1
 
         UpdateGame()
 
-        Refresh()
+        Refresh() 'Calls OnPaint Sub
 
     End Sub
 
@@ -378,6 +381,58 @@ Public Class Form1
             Case GameStateEnum.EndScreen
 
                 UpdateEndScreen()
+
+        End Select
+
+    End Sub
+
+    Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
+
+        DrawGame()
+
+        'Show buffer on form.
+        Buffer.Render(e.Graphics)
+
+        'Release memory used by buffer.
+        Buffer.Dispose()
+        Buffer = Nothing
+
+        'Create new buffer.
+        Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)
+
+        UpdateFrameCounter()
+
+    End Sub
+
+    Private Sub DrawGame()
+
+        DrawBackground()
+
+        Select Case GameState
+
+            Case GameStateEnum.Playing
+
+                DrawPlaying()
+
+            Case GameStateEnum.StartScreen
+
+                DrawStartScreen()
+
+            Case GameStateEnum.Instructions
+
+                DrawInstructions()
+
+            Case GameStateEnum.Serve
+
+                DrawServe()
+
+            Case GameStateEnum.Pause
+
+                DrawPauseScreen()
+
+            Case GameStateEnum.EndScreen
+
+                DrawEndScreen()
 
         End Select
 
@@ -1680,6 +1735,8 @@ Public Class Form1
 
     Private Sub UpdatePause()
 
+        UpdateControllerData()
+
         If PKeyDown Then
 
             If Not IsPKeyDown Then
@@ -1713,62 +1770,6 @@ Public Class Form1
         CheckForWallBounce()
 
         CheckForWallBounceXaxis()
-
-    End Sub
-
-    Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
-
-        DrawGame()
-
-        'Show buffer on form.
-        Buffer.Render(e.Graphics)
-
-        'Release memory used by buffer.
-        Buffer.Dispose()
-        Buffer = Nothing
-
-        'Create new buffer.
-        Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)
-
-        UpdateFrameCounter()
-
-    End Sub
-
-    Private Sub DrawGame()
-
-        DrawBackground()
-
-        Select Case GameState
-
-            Case GameStateEnum.Playing
-
-                DrawPlaying()
-
-            Case GameStateEnum.StartScreen
-
-                DrawBall()
-
-                DrawStartScreen()
-
-            Case GameStateEnum.Instructions
-
-                DrawBall()
-
-                DrawInstructions()
-
-            Case GameStateEnum.Serve
-
-                DrawServe()
-
-            Case GameStateEnum.Pause
-
-                DrawPauseScreen()
-
-            Case GameStateEnum.EndScreen
-
-                DrawEndScreen()
-
-        End Select
 
     End Sub
 
@@ -1926,6 +1927,8 @@ Public Class Form1
 
     Private Sub DrawStartScreen()
 
+        DrawBall()
+
         DrawTitle()
 
         DrawStartScreenInstructions()
@@ -2006,17 +2009,17 @@ Public Class Form1
 
     Private Sub DrawInstructions()
 
-        If NumberOfPlayers = 1 Then
+        DrawBall()
 
-            DrawTitle()
+        DrawTitle()
+
+        If NumberOfPlayers = 1 Then
 
             'Draw one player instructions.
             Buffer.Graphics.DrawString(InstructOneText,
             InstructionsFont, Brushes.White, InstructOneLocation, AlineCenter)
 
         Else
-
-            DrawTitle()
 
             'Draw two player instructions.
             Buffer.Graphics.DrawString(InstructTwoText,
@@ -2386,9 +2389,43 @@ Public Class Form1
 
             Case GameStateEnum.Playing
 
+                If StartButtonPressed Then
+
+                    If Not IsStartButtonDown(ControllerNumber) Then
+
+                        IsStartButtonDown(ControllerNumber) = True
+
+                        GameState = GameStateEnum.Pause
+
+                    End If
+
+                Else
+
+                    IsStartButtonDown(ControllerNumber) = False
+
+                End If
+
             Case GameStateEnum.Serve
 
             Case GameStateEnum.Pause
+
+                If StartButtonPressed Then
+
+                    If Not IsStartButtonDown(ControllerNumber) Then
+
+                        IsStartButtonDown(ControllerNumber) = True
+
+                        LastFrame = Now
+
+                        GameState = GameStateEnum.Playing
+
+                    End If
+
+                Else
+
+                    IsStartButtonDown(ControllerNumber) = False
+
+                End If
 
             Case GameStateEnum.EndScreen
 
