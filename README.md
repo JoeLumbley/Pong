@@ -93,6 +93,7 @@ To play using your keyboard, use the following controls:
   - **P** : Pause or Resume the game
  
 
+---
 
 
 # 🎮 Xbox Controllers
@@ -104,6 +105,7 @@ To play using your Xbox controllers, use the following controls:
 
 - **Pause/Resume Game**
   - **Start** : Pause or Resume the game
+  - **Back** : From pause screen Resets the game
  
 
 
