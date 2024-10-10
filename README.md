@@ -176,19 +176,38 @@ End Sub
 
 ##  **Update Game Logic**
 ```vb
-Private Sub UpdateGame()
-    Select Case GameState
-        Case GameStateEnum.Playing
-            UpdateControllerData()
-            UpdateLeftPaddleKeyboard()
-            ...
-        Case GameStateEnum.StartScreen
-            UpdateStartScreenKeyboard()
-            ...
-        Case GameStateEnum.EndScreen
-            UpdateEndScreen()
-    End Select
-End Sub
+    Private Sub UpdateGame()
+
+        Select Case GameState
+
+            Case GameStateEnum.Playing
+
+                UpdatePlaying()
+
+            Case GameStateEnum.StartScreen
+
+                UpdateStartScreen()
+
+            Case GameStateEnum.Instructions
+
+                UpdateInstructions()
+
+            Case GameStateEnum.Serve
+
+                UpdateServe()
+
+            Case GameStateEnum.Pause
+
+                UpdatePause()
+
+            Case GameStateEnum.EndScreen
+
+                UpdateEndScreen()
+
+        End Select
+
+    End Sub
+
 ```
 - The `UpdateGame` method uses a `Select Case` statement to determine what actions to take based on the current game state. It handles input, updates game objects, and checks for game conditions.
 
