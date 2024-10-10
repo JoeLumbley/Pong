@@ -1964,11 +1964,7 @@ Public Class Form1
             .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
             .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
 
-
             .DrawString(TitleText, TitleFont, Brushes.White, TitleLocation, AlineCenter)
-
-            '.DrawString(PingPongEmoji, EmojiFont, Brushes.White, EmojiLocation, AlineCenter)
-
 
         End With
 
