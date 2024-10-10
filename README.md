@@ -215,11 +215,11 @@ End Sub
 ```vb
     Private Sub UpdateLeftPaddleKeyboard()
 
-        If WKeyDown = True Then
+        If WKeyDown Then
 
             MoveLeftPaddleUp()
 
-        ElseIf SKeyDown = True Then
+        ElseIf SKeyDown Then
 
             MoveLeftPaddleDown()
 
