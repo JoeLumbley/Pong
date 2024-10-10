@@ -97,7 +97,7 @@ To play using your keyboard, use the following controls:
 # 🎮 Xbox Controllers
 
 To play using your Xbox controllers, use the following controls:
-
+- **🏓 Paddle Movement 🏓**
   - **Thumbstick or D Pad Up** : Move Up
   - **Thumbstick or D Pad Down** : Move Down
 
