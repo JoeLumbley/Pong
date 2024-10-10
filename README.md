@@ -133,12 +133,12 @@ Public Class Form1
 ##  **Enumerations**
 ```vb
 Private Enum GameStateEnum
-    StartScreen = 0
-    Instructions = 1
-    Serve = 2
-    Playing = 3
-    EndScreen = 4
-    Pause = 5
+    StartScreen
+    Instructions
+    Serve
+    Playing
+    EndScreen
+    Pause
 End Enum
 ```
 - `GameStateEnum` defines different states of the game (e.g., Start Screen, Playing, End Screen).
