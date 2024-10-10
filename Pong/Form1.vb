@@ -64,22 +64,22 @@ Imports System.IO
 Public Class Form1
 
     Private Enum GameStateEnum
-        StartScreen = 0
-        Instructions = 1
-        Serve = 2
-        Playing = 3
-        EndScreen = 4
-        Pause = 5
+        StartScreen
+        Instructions
+        Serve
+        Playing
+        EndScreen
+        Pause
     End Enum
 
     Private Enum ServeStateEnum
-        LeftPaddle = 1
-        RightPaddle = 2
+        LeftPaddle
+        RightPaddle
     End Enum
 
     Private Enum WinStateEnum
-        LeftPaddle = 1
-        RightPaddle = 2
+        LeftPaddle
+        RightPaddle
     End Enum
 
     'State Data *******************************************
@@ -1410,11 +1410,11 @@ Public Class Form1
 
     Private Sub UpdateLeftPaddleKeyboard()
 
-        If WKeyDown = True Then
+        If WKeyDown Then
 
             MoveLeftPaddleUp()
 
-        ElseIf SKeyDown = True Then
+        ElseIf SKeyDown Then
 
             MoveLeftPaddleDown()
 
@@ -2426,6 +2426,32 @@ Public Class Form1
                     IsStartButtonDown(ControllerNumber) = False
 
                 End If
+
+
+
+
+                If BackButtonPressed Then
+
+                    If Not IsBackButtonDown(ControllerNumber) Then
+
+                        IsBackButtonDown(ControllerNumber) = True
+
+                        ResetGame()
+
+                    End If
+
+                Else
+
+                    IsBackButtonDown(ControllerNumber) = False
+
+                End If
+
+
+
+
+
+
+
 
             Case GameStateEnum.EndScreen
 
