@@ -357,53 +357,7 @@ Public Class Form1
 
             Case GameStateEnum.Playing
 
-                UpdateControllerData()
-
-                UpdateLeftPaddleKeyboard()
-
-                If PKeyDown Then
-
-                    If Not IsPKeyDown Then
-
-                        IsPKeyDown = True
-
-                        GameState = GameStateEnum.Pause
-
-                    End If
-
-                Else
-
-                    IsPKeyDown = False
-
-                End If
-
-                If NumberOfPlayers = 1 Then
-
-                    UpdateComputerPlayer()
-
-                Else
-
-                    UpdateRightPaddleKeyboard()
-
-                End If
-
-                UpdateDeltaTime()
-
-                UpdateBallMovement()
-
-                UpdatePaddleMovement()
-
-                CheckForPaddleHits()
-
-                CheckForWallBounce()
-
-                UpdateScore()
-
-                CheckforEndGame()
-
-                UpdateVibrateTimer()
-
-                'UpdatePlaying()
+                UpdatePlaying()
 
             Case GameStateEnum.StartScreen
 
@@ -468,6 +422,56 @@ Public Class Form1
                 UpdateEndScreen()
 
         End Select
+
+    End Sub
+
+    Private Sub UpdatePlaying()
+
+        UpdateControllerData()
+
+        UpdateLeftPaddleKeyboard()
+
+        If PKeyDown Then
+
+            If Not IsPKeyDown Then
+
+                IsPKeyDown = True
+
+                GameState = GameStateEnum.Pause
+
+            End If
+
+        Else
+
+            IsPKeyDown = False
+
+        End If
+
+        If NumberOfPlayers = 1 Then
+
+            UpdateComputerPlayer()
+
+        Else
+
+            UpdateRightPaddleKeyboard()
+
+        End If
+
+        UpdateDeltaTime()
+
+        UpdateBallMovement()
+
+        UpdatePaddleMovement()
+
+        CheckForPaddleHits()
+
+        CheckForWallBounce()
+
+        UpdateScore()
+
+        CheckforEndGame()
+
+        UpdateVibrateTimer()
 
     End Sub
 
