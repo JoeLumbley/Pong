@@ -2427,9 +2427,6 @@ Public Class Form1
 
                 End If
 
-
-
-
                 If BackButtonPressed Then
 
                     If Not IsBackButtonDown(ControllerNumber) Then
