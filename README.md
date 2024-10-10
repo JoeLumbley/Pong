@@ -19,7 +19,7 @@ This repository is designed to help new game developers learn the fundamentals o
 
 
 
-
+---
 
 
 # Getting Started
@@ -75,6 +75,7 @@ Once the cloning process is complete, you will have your own local copy of the g
 
 Dive into the code, experiment, and enhance the game while learning valuable programming skills!
 
+---
 
 # ⌨️ Keyboard Controls
 
@@ -106,7 +107,7 @@ To play using your Xbox controllers, use the following controls:
  
 
 
-
+---
 
 
 # 📄 Code Walk Through
