@@ -85,7 +85,7 @@ Public Class Form1
     Private Serving As ServeStateEnum = ServeStateEnum.LeftPaddle
     Private ServSpeed As Single = 500
     Private Winner As WinStateEnum = WinStateEnum.LeftPaddle
-    Private NumberOfPlayers As Integer = 2
+    Private NumberOfPlayers As Integer = 1
     '******************************************************
 
     Private Structure GameObject
