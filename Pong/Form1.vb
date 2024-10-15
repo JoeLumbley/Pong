@@ -1,6 +1,4 @@
-﻿' P🏓NG
-
-' P🏓NG is a simulation of Table Tennis, a recreational activity and an
+﻿' P🏓NG is a simulation of Table Tennis, a recreational activity and an
 ' Olympic sport since 1988 is also known by the term "ping-pong" or just "pong".
 
 ' This repository is designed to help new game developers learn the fundamentals
@@ -456,6 +454,8 @@ Public Class Form1
 
                 GameState = GameStateEnum.Pause
 
+                PlayPauseSound()
+
             End If
 
         Else
@@ -686,6 +686,14 @@ Public Class Form1
         PlaySound("winning")
 
     End Sub
+
+    Private Sub PlayPauseSound()
+
+
+        LoopSound("pause")
+
+    End Sub
+
 
     Private Sub MovePointerOffScreen()
         'Move mouse pointer off screen.
@@ -1751,6 +1759,8 @@ Public Class Form1
 
                 GameState = GameStateEnum.Playing
 
+                PauseSound("pause")
+
             End If
 
         Else
@@ -2413,6 +2423,8 @@ Public Class Form1
 
                         GameState = GameStateEnum.Pause
 
+                        PlayPauseSound()
+
                     End If
 
                 Else
@@ -2434,6 +2446,8 @@ Public Class Form1
                         LastFrame = Now
 
                         GameState = GameStateEnum.Playing
+
+                        PauseSound("pause")
 
                     End If
 
@@ -2557,6 +2571,9 @@ Public Class Form1
         SetVolume("point", 400)
 
         AddSound("winning", $"{Application.StartupPath}winning.mp3")
+
+        AddSound("pause", $"{Application.StartupPath}pause.mp3")
+
 
         LayoutTitleAndInstructions()
 
@@ -3035,6 +3052,14 @@ Public Class Form1
         If Not IO.File.Exists(FilePath) Then
 
             IO.File.WriteAllBytes(FilePath, My.Resources.Match2)
+
+        End If
+
+        FilePath = Path.Combine(Application.StartupPath, "pause.mp3")
+
+        If Not IO.File.Exists(FilePath) Then
+
+            IO.File.WriteAllBytes(FilePath, My.Resources.PauseMusic2)
 
         End If
 

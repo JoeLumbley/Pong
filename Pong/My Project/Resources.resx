@@ -127,6 +127,9 @@
   <data name="Match2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Music\Match2.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="PauseMusic2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Music\PauseMusic2.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="Point2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Music\Point2.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
