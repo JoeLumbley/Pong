@@ -101,8 +101,8 @@ To play using your keyboard, use the following controls:
 
 To play using your Xbox controllers, use the following controls:
 - **🏓 Paddle Movement 🏓**
-  - **Thumbstick or D Pad Up** : Move Up
-  - **Thumbstick or D Pad Down** : Move Down
+  - **Thumbstick Up** or **DPad Up** : Move Up
+  - **Thumbstick Down** or **DPad Down** : Move Down
 
 - **Pause/Resume Game**
   - **Start** : **Pause** or **Resume** the game
