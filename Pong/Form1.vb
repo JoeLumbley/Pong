@@ -2372,11 +2372,47 @@ Public Class Form1
 
             Case GameStateEnum.StartScreen
 
+                'If StartButtonPressed Then
+
+                '    GameState = GameStateEnum.Instructions
+
+                'End If
+
+
+
+
                 If StartButtonPressed Then
 
-                    GameState = GameStateEnum.Instructions
+                    If Not IsStartButtonDown(ControllerNumber) Then
+
+                        IsStartButtonDown(ControllerNumber) = True
+
+                        GameState = GameStateEnum.Instructions
+
+                        MovePointerOffScreen()
+
+                    End If
+
+                Else
+
+                    IsStartButtonDown(ControllerNumber) = False
 
                 End If
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 If BackButtonPressed Then
 
@@ -2411,6 +2447,39 @@ Public Class Form1
                     IsBackButtonDown(ControllerNumber) = False
 
                 End If
+
+
+
+
+
+                If StartButtonPressed Then
+
+                    If Not IsStartButtonDown(ControllerNumber) Then
+
+                        IsStartButtonDown(ControllerNumber) = True
+
+                        If IsPlaying("startscreenmusic") = True Then
+
+                            PauseSound("startscreenmusic")
+
+                        End If
+
+                        GameState = GameStateEnum.Serve
+
+                        MovePointerOffScreen()
+
+
+                    End If
+
+                Else
+
+                    IsStartButtonDown(ControllerNumber) = False
+
+                End If
+
+
+
+
 
             Case GameStateEnum.Playing
 
@@ -2463,6 +2532,8 @@ Public Class Form1
                         IsBackButtonDown(ControllerNumber) = True
 
                         ResetGame()
+
+                        PauseSound("pause")
 
                     End If
 
