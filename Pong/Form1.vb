@@ -1789,11 +1789,11 @@ Public Class Form1
 
     Private Sub DecelerateLeftPaddle()
 
-        'Is the pointer moving up?
+        'Is the paddle moving up?
         If LeftPaddle.Velocity.Y < 0 Then
-            'Yes, the pointer is moving up.
+            'Yes, the paddle is moving up.
 
-            'Decelerate pointer.
+            'Decelerate paddle.
             LeftPaddle.Velocity.Y += LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
 
             'Limit decelerate to zero speed.
@@ -1801,11 +1801,11 @@ Public Class Form1
 
         End If
 
-        'Is the pointer moving down?
+        'Is the paddle moving down?
         If LeftPaddle.Velocity.Y > 0 Then
-            'Yes, the pointer is moving down.
+            'Yes, the paddle is moving down.
 
-            'Decelerate pointer.
+            'Decelerate paddle.
             LeftPaddle.Velocity.Y += -LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
 
             'Limit decelerate to zero speed.
@@ -1817,11 +1817,11 @@ Public Class Form1
 
     Private Sub DecelerateRightPaddle()
 
-        'Is the pointer moving up?
+        'Is the paddle moving up?
         If RightPaddle.Velocity.Y < 0 Then
-            'Yes, the pointer is moving up.
+            'Yes, the paddle is moving up.
 
-            'Decelerate pointer.
+            'Decelerate paddle.
             RightPaddle.Velocity.Y += RightPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
 
             'Limit decelerate to zero speed.
@@ -1829,11 +1829,11 @@ Public Class Form1
 
         End If
 
-        'Is the pointer moving down?
+        'Is the paddle moving down?
         If RightPaddle.Velocity.Y > 0 Then
-            'Yes, the pointer is moving down.
+            'Yes, the paddle is moving down.
 
-            'Decelerate pointer.
+            'Decelerate paddle.
             RightPaddle.Velocity.Y += -RightPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
 
             'Limit decelerate to zero speed.
