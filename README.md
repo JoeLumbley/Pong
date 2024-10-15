@@ -109,7 +109,7 @@ To play using your Xbox controllers, use the following controls:
   - **Back** : From pause screen **Resets** the game
  
 
-![015](https://github.com/user-attachments/assets/7c851d2e-cea4-4c3f-ae26-ba829b1dabf3)
+![016](https://github.com/user-attachments/assets/5eea8eb5-35f0-4e9c-a54c-539550b5c06d)
 
 ---
 
