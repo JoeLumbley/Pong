@@ -325,7 +325,61 @@ Let's break it down step by step so it's easy to understand.
 
 ##  **Sound Management**
 
+```vb
+Private Function AddSound(SoundName As String, FilePath As String) As Boolean
+
+    If Not String.IsNullOrWhiteSpace(SoundName) AndAlso IO.File.Exists(FilePath) Then
+
+        Dim CommandOpen As String = $"open ""{FilePath}"" alias {SoundName}"
+
+        Dim ReturnString As New StringBuilder(128)
+
+        If mciSendStringW(CommandOpen, ReturnString, 0, IntPtr.Zero) = 0 Then
+
+            Array.Resize(Sounds, Sounds.Length + 1)
+
+            Sounds(Sounds.Length - 1) = SoundName
+
+            Return True
+
+        End If
+
+    End If
+
+    Return False
+
+End Function
+
+```
+
 - **Loading Sounds**: The game loads sound files from specified paths and associates them with names for easy reference.
+
+```Private Function AddSound(SoundName As String, FilePath As String) As Boolean```: This line defines a function named ```AddSound```. It takes two parameters: ```SoundName``` and ```FilePath```. The function returns a Boolean value (```True``` or ```False```).
+
+```If Not String.IsNullOrWhiteSpace(SoundName) AndAlso IO.File.Exists(FilePath) Then```: This line checks if ```SoundName``` is not empty and if the file at ```FilePath``` exists.
+
+```Dim CommandOpen As String = $"open ""{FilePath}"" alias {SoundName}"```: This line creates a command string to open the sound file with a specific alias name.
+
+```Dim ReturnString As New StringBuilder(128)```: This line creates a new StringBuilder object with a capacity of 128 characters to store the response from the command.
+
+```If mciSendStringW(CommandOpen, ReturnString, 0, IntPtr.Zero) = 0 Then```: This line sends the command to open the sound file. If the command is successful (returns 0), it proceeds to the next steps.
+
+```Array.Resize(Sounds, Sounds.Length + 1)```: This line resizes the ```Sounds``` array to accommodate one more element.
+
+```Sounds(Sounds.Length - 1) = SoundName```: This line adds the ```SoundName``` to the last position of the ```Sounds``` array.
+
+```Return True```: This line returns ```True```, indicating that the sound was successfully added.
+
+```End If```: This line marks the end of the ```If``` block.
+
+```Return False```: This line returns ```False``` if the sound could not be added.
+
+```End Function```: This line marks the end of the function.
+
+This function checks if the sound file exists, opens it, and adds it to an array of sounds for your game. If any step fails, it returns ```False```. 
+
+
+
 - **Playing Sounds**: Functions are provided to play specific sounds at appropriate game events (e.g., ball hits, scoring).
 - **Volume Control**: The volume of sounds can be adjusted, allowing for a customizable audio experience.
 - **Looping Sounds**: Background music can be looped to create an immersive atmosphere.
