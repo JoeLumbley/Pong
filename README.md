@@ -90,8 +90,8 @@ To play using your keyboard, use the following controls:
   - **Down Arrow** ⬇️ : Move Down
 
 - **Pause/Resume Game**
-  - **P** : Pause or Resume the game
-  - **Backspace** : From pause screen Resets the game
+  - **Pause** : Pause or Resume the game
+  - **Escape** : From pause screen Resets the game
  
 
 ---
