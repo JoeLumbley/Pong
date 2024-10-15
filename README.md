@@ -281,10 +281,24 @@ End Sub
 
 ##  **Rendering Graphics**
 ```vb
-Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
-    DrawGame()
-    Buffer.Render(e.Graphics)
-End Sub
+    Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
+
+        DrawGame()
+
+        'Show buffer on form.
+        Buffer.Render(e.Graphics)
+
+        'Release memory used by buffer.
+        Buffer.Dispose()
+        Buffer = Nothing
+
+        'Create new buffer.
+        Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)
+
+        UpdateFrameCounter()
+
+    End Sub
+
 ```
 - This method is responsible for rendering the game graphics. It calls the `DrawGame` method to draw all game elements and then renders the buffer to the screen.
 
