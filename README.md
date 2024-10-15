@@ -90,8 +90,8 @@ To play using your keyboard, use the following controls:
   - **Down Arrow** ⬇️ : Move Down
 
 - **Pause/Resume Game**
-  - **Pause** : Pause or Resume the game
-  - **Escape** : From pause screen Resets the game
+  - **Pause** : **Pause** or **Resume** the game
+  - **Escape** : From pause screen **Resets** the game
  
 
 ---
@@ -105,8 +105,8 @@ To play using your Xbox controllers, use the following controls:
   - **Thumbstick or D Pad Down** : Move Down
 
 - **Pause/Resume Game**
-  - **Start** : Pause or Resume the game
-  - **Back** : From pause screen Resets the game
+  - **Start** : **Pause** or **Resume** the game
+  - **Back** : From pause screen **Resets** the game
  
 
 
