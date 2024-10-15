@@ -206,6 +206,13 @@ Public Class Form1
     Private AKeyDown As Boolean = False
     Private BKeyDown As Boolean = False
     Private XKeyDown As Boolean = False
+    Private IsXKeyDown As Boolean = False
+
+    Private EscKeyDown As Boolean = False
+    Private IsEscKeyDown As Boolean = False
+
+
+
     '******************************************************
 
     <DllImport("XInput1_4.dll")>
@@ -1405,6 +1412,44 @@ Public Class Form1
 
         End If
 
+        If EscKeyDown Then
+
+            If Not IsEscKeyDown Then
+
+                IsEscKeyDown = True
+
+                MovePointerCenterScreen()
+
+                Application.Exit()
+
+            End If
+
+        Else
+
+            IsEscKeyDown = False
+
+        End If
+
+
+        If XKeyDown Then
+
+            If Not IsXKeyDown Then
+
+                IsXKeyDown = True
+
+                MovePointerCenterScreen()
+
+                Application.Exit()
+
+            End If
+
+        Else
+
+            IsXKeyDown = False
+
+        End If
+
+
     End Sub
 
     Private Sub UpdateInstructionsScreenKeyboard()
@@ -1432,6 +1477,44 @@ Public Class Form1
             IsAKeyDown = False
 
         End If
+
+        If EscKeyDown Then
+
+            If Not IsEscKeyDown Then
+
+                IsEscKeyDown = True
+
+                GameState = GameStateEnum.StartScreen
+
+                MovePointerOffScreen()
+
+            End If
+
+        Else
+
+            IsEscKeyDown = False
+
+        End If
+
+        If XKeyDown Then
+
+            If Not IsXKeyDown Then
+
+                IsXKeyDown = True
+
+                GameState = GameStateEnum.StartScreen
+
+                MovePointerOffScreen()
+
+            End If
+
+        Else
+
+            IsXKeyDown = False
+
+        End If
+
+
 
     End Sub
 
@@ -1792,6 +1875,10 @@ Public Class Form1
 
                 ResetGame()
 
+                PauseSound("pause")
+
+                MovePointerOffScreen()
+
             End If
 
         Else
@@ -1800,7 +1887,51 @@ Public Class Form1
 
         End If
 
+        If EscKeyDown Then
+
+            If Not IsEscKeyDown Then
+
+                IsEscKeyDown = True
+
+                ResetGame()
+
+                PauseSound("pause")
+
+                MovePointerOffScreen()
+
+            End If
+
+        Else
+
+            IsEscKeyDown = False
+
+        End If
+
+
+        If XKeyDown Then
+
+            If Not IsxKeyDown Then
+
+                IsxKeyDown = True
+
+                ResetGame()
+
+                PauseSound("pause")
+
+                MovePointerOffScreen()
+
+            End If
+
+        Else
+
+            IsXKeyDown = False
+
+        End If
+
+
+
     End Sub
+
 
     Private Sub UpdateInstructions()
 
@@ -3242,6 +3373,11 @@ Public Class Form1
 
                 BackspaceKeyDown = True
 
+            Case Keys.Escape
+
+                EscKeyDown = True
+
+
         End Select
 
     End Sub
@@ -3310,6 +3446,11 @@ Public Class Form1
             Case Keys.Back
 
                 BackspaceKeyDown = False
+
+            Case Keys.Escape
+
+                EscKeyDown = False
+
 
         End Select
 
