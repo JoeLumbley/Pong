@@ -302,6 +302,27 @@ End Sub
 ```
 - This method is responsible for rendering the game graphics. It calls the `DrawGame` method to draw all game elements and then renders the buffer to the screen.
 
+Let's break it down step by step so it's easy to understand.
+
+```Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)```: This line starts the OnPaint method, which is responsible for painting the game's graphics. Overrides means it replaces the base class's OnPaint method. e is a PaintEventArgs object that gives you access to the graphics object.
+
+```DrawGame()```: This line calls a method named DrawGame. This method contains the logic for drawing all the game elements like paddles, balls, and scores.
+
+Buffer.Render(e.Graphics): This line tells the game to display the image from a buffer (a temporary storage) onto the screen using e.Graphics.
+
+Buffer.Dispose(): This line frees up memory used by the buffer. It's a cleanup step to ensure your program doesn’t use more memory than it needs.
+
+Buffer = Nothing: This line sets the buffer to Nothing (null), ensuring it’s completely reset and no longer in use.
+
+Buffer = Context.Allocate(CreateGraphics(), ClientRectangle): This line creates a new buffer. Context.Allocate sets up the buffer to match the size of the game's window (ClientRectangle).
+
+UpdateFrameCounter(): This line updates a counter that keeps track of how many frames have been displayed. It's useful for performance monitoring or displaying the frame rate.
+
+
+
+
+
+
 ##  **Sound Management**
 
 - **Loading Sounds**: The game loads sound files from specified paths and associates them with names for easy reference.
