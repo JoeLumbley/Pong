@@ -380,37 +380,12 @@ This function checks if the sound file exists, opens it, and adds it to an array
 
 
 
-- **Playing Sounds**: Functions are provided to play specific sounds at appropriate game events (e.g., ball hits, scoring).
 - **Volume Control**: The volume of sounds can be adjusted, allowing for a customizable audio experience.
 - **Looping Sounds**: Background music can be looped to create an immersive atmosphere.
 
 
 
 ```vb
-Private Function AddSound(SoundName As String, FilePath As String) As Boolean
-
-    If Not String.IsNullOrWhiteSpace(SoundName) AndAlso IO.File.Exists(FilePath) Then
-
-        Dim CommandOpen As String = $"open ""{FilePath}"" alias {SoundName}"
-
-        Dim ReturnString As New StringBuilder(128)
-
-        If mciSendStringW(CommandOpen, ReturnString, 0, IntPtr.Zero) = 0 Then
-
-            Array.Resize(Sounds, Sounds.Length + 1)
-
-            Sounds(Sounds.Length - 1) = SoundName
-
-            Return True
-
-        End If
-
-    End If
-
-    Return False
-
-End Function
-
 Private Function PlaySound(SoundName As String) As Boolean
 
     If Sounds IsNot Nothing AndAlso Sounds.Contains(SoundName) Then
@@ -435,6 +410,8 @@ Private Function PlaySound(SoundName As String) As Boolean
 
 End Function
 ```
+- **Playing Sounds**: Functions are provided to play specific sounds at appropriate game events (e.g., ball hits, scoring).
+
 
 - This function manages sound effects, allowing sounds to be added and played during the game.
   
