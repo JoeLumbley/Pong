@@ -2395,6 +2395,27 @@ Public Class Form1
 
             Case GameStateEnum.Pause
 
+                If XButtonPressed Then
+
+                    If Not IsXButtonDown(controllerNumber) Then
+
+                        IsXButtonDown(controllerNumber) = True
+
+                        ResetGame()
+
+                        PauseSound("pause")
+
+                        MovePointerOffScreen()
+
+                    End If
+
+                Else
+
+                    IsXButtonDown(controllerNumber) = False
+
+                End If
+
+
             Case GameStateEnum.EndScreen
 
         End Select
@@ -2458,6 +2479,9 @@ Public Class Form1
                         IsBackButtonDown(ControllerNumber) = True
 
                         GameState = GameStateEnum.StartScreen
+
+                        MovePointerOffScreen()
+
 
                     End If
 
