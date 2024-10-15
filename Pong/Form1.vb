@@ -709,6 +709,15 @@ Public Class Form1
 
     End Sub
 
+    Private Sub MovePointerCenterScreen()
+        'Move mouse pointer off screen.
+
+        Cursor.Position = New Point(Screen.PrimaryScreen.WorkingArea.Right \ 2,
+                                    Screen.PrimaryScreen.WorkingArea.Height \ 2)
+
+    End Sub
+
+
     Private Sub UpdateServe()
 
         LeftPaddle.Position.Y = (ClientSize.Height \ 2) - (LeftPaddle.Rect.Height \ 2)
@@ -2341,6 +2350,8 @@ Public Class Form1
 
                         IsXButtonDown(controllerNumber) = True
 
+                        MovePointerCenterScreen()
+
                         Application.Exit()
 
                     End If
@@ -2426,6 +2437,8 @@ Public Class Form1
 
                         IsBackButtonDown(ControllerNumber) = True
 
+                        MovePointerCenterScreen()
+
                         Application.Exit()
 
                     End If
@@ -2489,6 +2502,8 @@ Public Class Form1
 
                         GameState = GameStateEnum.Pause
 
+                        MovePointerOffScreen()
+
                         PlayPauseSound()
 
                     End If
@@ -2513,6 +2528,8 @@ Public Class Form1
 
                         GameState = GameStateEnum.Playing
 
+                        MovePointerOffScreen()
+
                         PauseSound("pause")
 
                     End If
@@ -2532,6 +2549,8 @@ Public Class Form1
                         ResetGame()
 
                         PauseSound("pause")
+
+                        MovePointerOffScreen()
 
                     End If
 
