@@ -137,17 +137,11 @@ Public Class Form1
 
     Private IsStartButtonDown(0 To 3) As Boolean
 
-
     Private IsAButtonDown(0 To 3) As Boolean
 
     Private IsAKeyDown As Boolean = False
 
-
-
     Private IsXButtonDown(0 To 3) As Boolean
-
-
-
 
     'Centerline Data *******************
     Private CenterlineTop As Point
@@ -202,7 +196,6 @@ Public Class Form1
     Private BackspaceKeyDown As Boolean = False
     Private IsBackspaceKeyDown As Boolean = False
 
-
     Private AKeyDown As Boolean = False
     Private BKeyDown As Boolean = False
     Private XKeyDown As Boolean = False
@@ -210,8 +203,6 @@ Public Class Form1
 
     Private EscKeyDown As Boolean = False
     Private IsEscKeyDown As Boolean = False
-
-
 
     '******************************************************
 
@@ -702,11 +693,9 @@ Public Class Form1
 
     Private Sub PlayPauseSound()
 
-
         LoopSound("pause")
 
     End Sub
-
 
     Private Sub MovePointerOffScreen()
         'Move mouse pointer off screen.
@@ -723,7 +712,6 @@ Public Class Form1
                                     Screen.PrimaryScreen.WorkingArea.Height \ 2)
 
     End Sub
-
 
     Private Sub UpdateServe()
 
@@ -1430,7 +1418,6 @@ Public Class Form1
 
         End If
 
-
         If XKeyDown Then
 
             If Not IsXKeyDown Then
@@ -1448,7 +1435,6 @@ Public Class Form1
             IsXKeyDown = False
 
         End If
-
 
     End Sub
 
@@ -1513,8 +1499,6 @@ Public Class Form1
             IsXKeyDown = False
 
         End If
-
-
 
     End Sub
 
