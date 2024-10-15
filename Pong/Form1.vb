@@ -111,24 +111,24 @@ Public Class Form1
     Private ReadOnly TitleFont As New Font("Segoe UI Emoji", 100)
 
     Private InstructStartLocation As Point
-    Private ReadOnly InstructStartText As String = vbCrLf &
+    Private ReadOnly InstructStartText As String = Environment.NewLine &
         "One player  A   Two players  B"
 
     'One Player Instructions Data *************************
     Private InstructOneLocation As Point
-    Private Const InstructOneText As String = vbCrLf &
-        "Play  A" & vbCrLf & vbCrLf &
-        "You are the 🏓 left paddle" & vbCrLf &
-        "Beat the computer to 10 points to win 🏆" & vbCrLf & vbCrLf &
+    Private Shared ReadOnly InstructOneText As String = Environment.NewLine &
+        "Play  A" & Environment.NewLine & Environment.NewLine &
+        "You are the 🏓 left paddle" & Environment.NewLine &
+        "Beat the computer to 10 points to win 🏆" & Environment.NewLine & Environment.NewLine &
         "Pause / Resume  Start "
     '******************************************************
 
     'Two Player Instructions Data *************************
     Private InstructTwoLocation As Point
-    Private Const InstructTwoText As String = vbCrLf &
-        "Play  A  " & vbCrLf & vbCrLf &
-        "🏓 Left Paddle vs Right Paddle 🏓" & vbCrLf &
-        "First player to 10 points wins 🏆" & vbCrLf & vbCrLf &
+    Private Shared ReadOnly InstructTwoText As String = Environment.NewLine &
+        "Play  A  " & Environment.NewLine & Environment.NewLine &
+        "🏓 Left Paddle vs Right Paddle 🏓" & Environment.NewLine &
+        "First player to 10 points wins 🏆" & Environment.NewLine & Environment.NewLine &
         "Pause / Resume  Start  "
     '******************************************************
     Private ReadOnly InstructionsFont As New Font("Segoe UI Emoji", 20)
@@ -1960,6 +1960,8 @@ Public Class Form1
 
                 DrawLeftPaddleScore()
 
+                DrawLeftPaddleTrophy()
+
             End If
 
         Else
@@ -1977,6 +1979,8 @@ Public Class Form1
             If DrawFlashingText = True Then
 
                 DrawRightPaddleScore()
+
+                DrawRightPaddleTrophy()
 
             End If
 
@@ -2219,6 +2223,49 @@ Public Class Form1
         End With
 
     End Sub
+
+
+    Private Sub DrawRightPaddleTrophy()
+
+        With Buffer.Graphics
+
+            .CompositingMode = Drawing2D.CompositingMode.SourceOver
+            .TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
+            .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+            .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
+
+            Dim Location As Point = RPadScoreLocation
+            Location.Y += 250
+
+            Buffer.Graphics.DrawString("🏆", TitleFont, Brushes.White, Location, AlineCenterMiddle)
+
+        End With
+
+    End Sub
+
+
+
+    Private Sub DrawLeftPaddleTrophy()
+
+        With Buffer.Graphics
+
+            .CompositingMode = Drawing2D.CompositingMode.SourceOver
+            .TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
+            .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+            .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
+
+
+            Dim Location As Point = LPadScoreLocation
+            Location.Y += 250
+
+            Buffer.Graphics.DrawString("🏆", TitleFont, Brushes.White, Location, AlineCenterMiddle)
+
+        End With
+
+    End Sub
+
+
+
 
     Private Sub DrawLeftPaddleScore()
 
