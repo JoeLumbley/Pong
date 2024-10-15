@@ -1907,7 +1907,6 @@ Public Class Form1
 
         End If
 
-
         If XKeyDown Then
 
             If Not IsxKeyDown Then
@@ -1928,10 +1927,7 @@ Public Class Form1
 
         End If
 
-
-
     End Sub
-
 
     Private Sub UpdateInstructions()
 
