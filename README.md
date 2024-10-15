@@ -308,15 +308,15 @@ Let's break it down step by step so it's easy to understand.
 
 ```DrawGame()```: This line calls a method named DrawGame. This method contains the logic for drawing all the game elements like paddles, balls, and scores.
 
-Buffer.Render(e.Graphics): This line tells the game to display the image from a buffer (a temporary storage) onto the screen using e.Graphics.
+```Buffer.Render(e.Graphics)```: This line tells the game to display the image from a buffer (a temporary storage) onto the screen using e.Graphics.
 
-Buffer.Dispose(): This line frees up memory used by the buffer. It's a cleanup step to ensure your program doesn’t use more memory than it needs.
+```Buffer.Dispose()```: This line frees up memory used by the buffer. It's a cleanup step to ensure your program doesn’t use more memory than it needs.
 
-Buffer = Nothing: This line sets the buffer to Nothing (null), ensuring it’s completely reset and no longer in use.
+```Buffer = Nothing```: This line sets the buffer to Nothing (null), ensuring it’s completely reset and no longer in use.
 
-Buffer = Context.Allocate(CreateGraphics(), ClientRectangle): This line creates a new buffer. Context.Allocate sets up the buffer to match the size of the game's window (ClientRectangle).
+```Buffer = Context.Allocate(CreateGraphics()```, ClientRectangle): This line creates a new buffer. Context.Allocate sets up the buffer to match the size of the game's window (ClientRectangle).
 
-UpdateFrameCounter(): This line updates a counter that keeps track of how many frames have been displayed. It's useful for performance monitoring or displaying the frame rate.
+```UpdateFrameCounter()```: This line updates a counter that keeps track of how many frames have been displayed. It's useful for performance monitoring or displaying the frame rate.
 
 
 
