@@ -304,7 +304,7 @@ End Sub
 
 Let's break it down step by step so it's easy to understand.
 
-```Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)```: This line starts the ```OnPaint``` method, which is responsible for painting the game's graphics. ```Overrides``` means it replaces the base class's OnPaint method. ```e``` is a PaintEventArgs object that gives you access to the graphics object.
+```Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)```: This line starts the ```OnPaint``` method, which is responsible for painting the game's graphics. ```Overrides``` means it replaces the base class's ```OnPaint``` method. ```e``` is a PaintEventArgs object that gives you access to the graphics object.
 
 ```DrawGame()```: This line calls a method named ```DrawGame```. This method contains the logic for drawing all the game elements like paddles, balls, and scores.
 
