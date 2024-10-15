@@ -500,7 +500,6 @@ Public Class Form1
 
         RightPaddleMiddle = RightPaddle.Rect.Y + RightPaddle.Rect.Height \ 2
 
-
         ' Is the ball above the paddle?
         If BallMiddle < RightPaddleMiddle Then
             ' Yes, the ball is above the paddle.
