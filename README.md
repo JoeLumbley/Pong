@@ -303,7 +303,7 @@ End Sub
 ```
 - This method is responsible for rendering the game graphics. It calls the `DrawGame` method to draw all game elements and then renders the buffer to the screen.
 
-Let's break it down step by step so it's easy to understand.
+
 
 ```Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)```: This line starts the ```OnPaint``` method, which is responsible for painting the game's graphics. ```Overrides``` means it replaces the base class's ```OnPaint``` method. ```e``` is a PaintEventArgs object that gives you access to the graphics object.
 
