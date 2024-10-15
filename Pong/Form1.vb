@@ -142,6 +142,13 @@ Public Class Form1
 
     Private IsAKeyDown As Boolean = False
 
+
+
+    Private IsXButtonDown(0 To 3) As Boolean
+
+
+
+
     'Centerline Data *******************
     Private CenterlineTop As Point
     Private CenterlineBottom As Point
@@ -2327,6 +2334,23 @@ Public Class Form1
                     MovePointerOffScreen()
 
                 End If
+
+                If XButtonPressed Then
+
+                    If Not IsxButtonDown(controllerNumber) Then
+
+                        IsXButtonDown(controllerNumber) = True
+
+                        Application.Exit()
+
+                    End If
+
+                Else
+
+                    IsXButtonDown(controllerNumber) = False
+
+                End If
+
 
             Case GameStateEnum.Instructions
 
