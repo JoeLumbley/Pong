@@ -204,6 +204,10 @@ Public Class Form1
     Private EscKeyDown As Boolean = False
     Private IsEscKeyDown As Boolean = False
 
+    Private PauseKeyDown As Boolean = False
+    Private IsPauseKeyDown As Boolean = False
+
+
     '******************************************************
 
     <DllImport("XInput1_4.dll")>
@@ -468,6 +472,25 @@ Public Class Form1
             IsPKeyDown = False
 
         End If
+
+        If PauseKeyDown Then
+
+            If Not IsPauseKeyDown Then
+
+                IsPauseKeyDown = True
+
+                GameState = GameStateEnum.Pause
+
+                PlayPauseSound()
+
+            End If
+
+        Else
+
+            IsPauseKeyDown = False
+
+        End If
+
 
         If NumberOfPlayers = 1 Then
 
@@ -1850,6 +1873,28 @@ Public Class Form1
             IsPKeyDown = False
 
         End If
+
+
+        If PauseKeyDown Then
+
+            If Not IsPauseKeyDown Then
+
+                IsPauseKeyDown = True
+
+                LastFrame = Now
+
+                GameState = GameStateEnum.Playing
+
+                PauseSound("pause")
+
+            End If
+
+        Else
+
+            IsPauseKeyDown = False
+
+        End If
+
 
         If BackspaceKeyDown Then
 
@@ -3404,6 +3449,10 @@ Public Class Form1
 
                 EscKeyDown = True
 
+            Case Keys.Pause
+
+                PauseKeyDown = True
+
 
         End Select
 
@@ -3456,6 +3505,7 @@ Public Class Form1
                 TwoKeyDown = False
 
             Case Keys.P
+
                 PKeyDown = False
 
             Case Keys.A
@@ -3478,6 +3528,9 @@ Public Class Form1
 
                 EscKeyDown = False
 
+            Case Keys.Pause
+
+                PauseKeyDown = False
 
         End Select
 
