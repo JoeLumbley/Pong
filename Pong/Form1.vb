@@ -2378,9 +2378,6 @@ Public Class Form1
 
                 'End If
 
-
-
-
                 If StartButtonPressed Then
 
                     If Not IsStartButtonDown(ControllerNumber) Then
@@ -2398,21 +2395,6 @@ Public Class Form1
                     IsStartButtonDown(ControllerNumber) = False
 
                 End If
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 If BackButtonPressed Then
 
@@ -2448,10 +2430,6 @@ Public Class Form1
 
                 End If
 
-
-
-
-
                 If StartButtonPressed Then
 
                     If Not IsStartButtonDown(ControllerNumber) Then
@@ -2476,10 +2454,6 @@ Public Class Form1
                     IsStartButtonDown(ControllerNumber) = False
 
                 End If
-
-
-
-
 
             Case GameStateEnum.Playing
 
