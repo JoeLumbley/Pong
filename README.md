@@ -104,6 +104,9 @@ To play using your keyboard, use the following controls:
 
 ---
 
+[Getting Started](#getting-started)  |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
 
 # 🎮 Xbox Controllers
 
