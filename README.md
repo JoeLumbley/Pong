@@ -80,7 +80,7 @@ Dive into the code, experiment, and enhance the game while learning valuable pro
 
 ---
 
-[Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+[Getting Started](#getting-started) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
 
 ---
 
