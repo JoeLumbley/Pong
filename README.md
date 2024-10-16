@@ -331,6 +331,8 @@ End Sub
 
 All these steps together create a comprehensive check for collisions between the ball and the left paddle and apply appropriate responses like stopping the ball, playing sounds, and updating positions. 
 
+ 
+---
 
 ```vb
      Private Sub CheckForRightPaddleHits()
@@ -396,9 +398,12 @@ All these steps together create a comprehensive check for collisions between the
 
 ```DoComputerPlayerEnglish()```: Calls a method for the computer player’s spin if there isn’t a second player.
 
+---
+
+[Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
 
 
-
+---
 
 ##  **Game State Transitions**
 ```vb
