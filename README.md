@@ -80,6 +80,11 @@ Dive into the code, experiment, and enhance the game while learning valuable pro
 
 ---
 
+[Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
+
+
 # ⌨️ Keyboard Controls
 
 To play using your keyboard, use the following controls:
@@ -113,6 +118,10 @@ To play using your Xbox controllers, use the following controls:
  
 
 ![016](https://github.com/user-attachments/assets/5eea8eb5-35f0-4e9c-a54c-539550b5c06d)
+
+---
+
+[Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
 
 ---
 
@@ -584,6 +593,10 @@ The code is structured to handle game logic, user input, rendering, and sound ma
 
 
 
+---
 
+[Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
 
 
