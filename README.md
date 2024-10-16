@@ -20,7 +20,7 @@ This repository is designed to help new game developers learn the fundamentals o
 
 ---
 
-[Imports and class declaration](#imports-and-class-declaration)
+[Keyboard Controls](#%EF%B8%8F-keyboard-controls))
 
 ---
 
