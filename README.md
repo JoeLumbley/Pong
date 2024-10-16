@@ -135,9 +135,12 @@ We'll explore key areas such as game mechanics, user input handling, collision d
 
 ---
 
-[Imports and Class Declaration](#%EF%B8%8F-keyboard-controls) 
+[Imports and Class Declaration](#%EF%B8%8F-keyboard-controls)
+
 [Enumerations](#-xbox-controllers) 
+
 [Game Object Structure](#-code-walk-through) 
+
 [Top](#png)
 
 ---
