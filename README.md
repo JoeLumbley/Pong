@@ -20,7 +20,7 @@ This repository is designed to help new game developers learn the fundamentals o
 
 ---
 
-[Keyboard Controls](#%EF%B8%8F-keyboard-controls) [XBox Controls](#%EF%B8%8F-keyboard-controls)
+[Keyboard Controls](#%EF%B8%8F-keyboard-controls) [XBox Controls](#-xbox-controllers)
 
 ---
 
