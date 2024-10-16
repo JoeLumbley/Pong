@@ -145,7 +145,7 @@ We'll explore key areas such as game mechanics, user input handling, collision d
 
 [Game Loop](#game-loop)
 
-[Update Game Logic](#game-object-structure) 
+[Update Game Logic](#update-game-logic) 
 
 
 ---
