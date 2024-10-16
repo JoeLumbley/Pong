@@ -279,6 +279,12 @@ End Sub
 ```
 - This method checks if specific keys are pressed (W/S for the left paddle) and moves the paddle accordingly.
 
+---
+
+[Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
+
 ##  **Collision Detection**
 ```vb
  Private Sub CheckForLeftPaddleHits()
