@@ -18,6 +18,9 @@ This repository is designed to help new game developers learn the fundamentals o
 - Learn how to implement user input handling, game states, and sound effects.
 
 
+---
+
+[Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
 
 ---
 
@@ -77,21 +80,26 @@ Dive into the code, experiment, and enhance the game while learning valuable pro
 
 ---
 
+[Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
+
+
 # ⌨️ Keyboard Controls
 
 To play using your keyboard, use the following controls:
 
-- **Player 1 ( 🏓 Left Paddle)**
+- **Player 1 ( 🏓 Left Paddle )**
   - **W** : Move Up
   - **S** : Move Down
 
-- **Player 2 (Right Paddle 🏓 )**
+- **Player 2 ( Right Paddle 🏓 )**
   - **Up Arrow** ⬆️ : Move Up
   - **Down Arrow** ⬇️ : Move Down
 
 - **Pause/Resume Game**
-  - **P** : Pause or Resume the game
-  - **Backspace** : From pause screen Resets the game
+  - **Pause** : **Pause** or **Resume** the game
+  - **Escape** : From pause screen **Resets** the game
  
 
 ---
@@ -101,14 +109,19 @@ To play using your keyboard, use the following controls:
 
 To play using your Xbox controllers, use the following controls:
 - **🏓 Paddle Movement 🏓**
-  - **Thumbstick or D Pad Up** : Move Up
-  - **Thumbstick or D Pad Down** : Move Down
+  - **Thumbstick Up** or **DPad Up** : Move Up
+  - **Thumbstick Down** or **DPad Down** : Move Down
 
 - **Pause/Resume Game**
-  - **Start** : Pause or Resume the game
-  - **Back** : From pause screen Resets the game
+  - **Start** : **Pause** or **Resume** the game
+  - **Back** : From pause screen **Resets** the game
  
 
+![016](https://github.com/user-attachments/assets/5eea8eb5-35f0-4e9c-a54c-539550b5c06d)
+
+---
+
+[Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
 
 ---
 
@@ -119,6 +132,18 @@ To play using your Xbox controllers, use the following controls:
 Here, we'll take a deep dive into the game's code and architecture, guiding you through the essential components that make up this classic table tennis simulation. Whether you're a beginner looking to understand the fundamentals of game programming or an experienced developer seeking to enhance your skills, this walkthrough will provide you with valuable insights.
 
 We'll explore key areas such as game mechanics, user input handling, collision detection, and rendering graphics. Each section will break down the code into manageable parts, explaining the purpose and functionality behind them. By the end of this walkthrough, you'll have a solid understanding of how to create and modify a game like P🏓NG, empowering you to implement your own ideas and features. Let’s get started!
+
+---
+
+[Imports and Class Declaration](#imports-and-class-declaration)
+
+[Enumerations](#enumerations)
+
+[Game Object Structure](#game-object-structure) 
+
+[Top](#png)
+
+---
 
 ##  **Imports and Class Declaration**
 ```vb
@@ -256,16 +281,173 @@ End Sub
 
 ##  **Collision Detection**
 ```vb
-Private Sub CheckForPaddleHits()
-    If Ball.Rect.IntersectsWith(LeftPaddle.Rect) Then
-        ...
-    End If
-    If Ball.Rect.IntersectsWith(RightPaddle.Rect) Then
-        ...
-    End If
-End Sub
+    Private Sub CheckForPaddleHits()
+
+        If Ball.Rect.IntersectsWith(LeftPaddle.Rect) Then
+
+            PlaySound("hit")
+
+            Ball.Velocity.X = 0
+            Ball.Velocity.Y = 0
+
+            'Push the ball to the paddles right edge.
+            Ball.Rect.X = LeftPaddle.Rect.X + LeftPaddle.Rect.Width + 5
+
+            Ball.Position.X = Ball.Rect.X
+
+            ApplyLeftPaddleEnglish = True
+
+            VibrateLeft(0, 42000)
+
+        End If
+
+        If Ball.Rect.IntersectsWith(RightPaddle.Rect) Then
+
+            PlaySound("hit")
+
+            Ball.Velocity.X = 0
+            Ball.Velocity.Y = 0
+
+            Ball.Rect.X = RightPaddle.Rect.X - (Ball.Rect.Width + 5)
+
+            Ball.Position.X = Ball.Rect.X
+
+            If NumberOfPlayers = 2 Then
+
+                ApplyRightPaddleEnglish = True
+
+                VibrateLeft(1, 42000)
+
+            Else
+                'For the computer player random english.
+                'This makes the game more interesting.
+
+                Select Case RandomNumber()
+
+                    Case 1
+                        'Send ball up and to the left.
+
+                        Ball.Velocity.X = -ServSpeed
+                        Ball.Velocity.Y = -ServSpeed
+
+                    Case 2
+                        'Send ball to the left.
+
+                        Ball.Velocity.X = -ServSpeed
+                        Ball.Velocity.Y = 0
+
+                    Case 3
+                        'Send ball down and to the left.
+
+                        Ball.Velocity.X = -ServSpeed
+                        Ball.Velocity.Y = ServSpeed
+
+                End Select
+
+            End If
+
+        End If
+
+    End Sub
+
 ```
 - This method checks if the ball intersects with either paddle, handling the logic for bouncing the ball back and updating its velocity.
+
+
+
+### Code Breakdown
+
+ **```Private Sub CheckForPaddleHits()```**: This line starts a new method called ```CheckForPaddleHits```. "Private" means this method can only be used within the same class. "Sub" indicates that this method does not return a value.
+
+ **```If Ball.Rect.IntersectsWith(LeftPaddle.Rect) Then```**: This line checks if the ball's rectangle (its position and size) overlaps with the left paddle's rectangle. If they do intersect, the code inside the ```If``` block will run.
+
+ **```PlaySound("hit")```**: This line plays a sound effect called "hit". It provides audio feedback when the ball hits the paddle.
+
+
+ **```Ball.Velocity.X = 0```** and **```Ball.Velocity.Y = 0```**: These lines stop the ball's movement by setting its horizontal (X) and vertical (Y) speeds to zero.
+
+
+ **```Ball.Rect.X = LeftPaddle.Rect.X + LeftPaddle.Rect.Width + 5```**: This sets the ball's position to the right edge of the left paddle, plus an extra 5 pixels to create some space.
+
+
+ **```Ball.Position.X = Ball.Rect.X```**: This updates the ball's position to match the new rectangle position. It ensures that the ball's visual representation is in the correct spot.
+
+
+ **```ApplyLeftPaddleEnglish = True```**: This line sets a flag to indicate that the ball should have some spin (English) applied when it moves after hitting the left paddle.
+
+
+ **```VibrateLeft(0, 42000)```**: This command triggers a vibration effect on the left paddle controller ```0``` to enhance the player’s experience.
+
+
+ **```End If```**: This marks the end of the first ```If``` statement.
+
+
+ **```If Ball.Rect.IntersectsWith(RightPaddle.Rect) Then```**: This checks if the ball intersects with the right paddle. If it does, the following code will execute.
+
+
+ **```PlaySound("hit")```**: Similar to before, this plays the "hit" sound effect when the ball hits the right paddle.
+
+
+ **```Ball.Velocity.X = 0```** and **```Ball.Velocity.Y = 0```**: Again, this stops the ball's movement.
+
+
+ **```Ball.Rect.X = RightPaddle.Rect.X - (Ball.Rect.Width + 5)```**: This moves the ball to the left of the right paddle, ensuring there’s a 5-pixel gap.
+
+
+ **```Ball.Position.X = Ball.Rect.X```**: This updates the ball's position to match the new rectangle position.
+
+
+ **```If NumberOfPlayers = 2 Then```**: This checks if there are two players in the game. If so, the following code will execute.
+
+
+ **```ApplyRightPaddleEnglish = True```**: This sets a flag to apply spin (English) to the ball after it hits the right paddle.
+
+
+ **```VibrateLeft(1, 42000)```**: This vibrates the right paddle controller ```1``` to provide feedback.
+
+
+ **```Else```**: This indicates that if there are not two players, the following code will run instead.
+
+
+ **```Select Case RandomNumber()```**: This starts a selection process based on a random number generated by the ```RandomNumber()``` function.
+
+```vb
+                Case 1
+                    Ball.Velocity.X = -ServSpeed
+                    Ball.Velocity.Y = -ServSpeed
+```
+ **```Case 1```**: If the random number is 1, the ball will move up and to the left by setting its X and Y velocities to negative values (indicating left and upward movement).
+
+```vb
+                Case 2
+                    Ball.Velocity.X = -ServSpeed
+                    Ball.Velocity.Y = 0
+```
+ **```Case 2```**: If the random number is 2, the ball will move directly to the left (negative X velocity) without any vertical movement (Y velocity is zero).
+
+```vb
+                Case 3
+                    Ball.Velocity.X = -ServSpeed
+                    Ball.Velocity.Y = ServSpeed
+```
+ **```Case 3```**: If the random number is 3, the ball will move down and to the left (negative X velocity and positive Y velocity).
+
+
+ **```End Select```**: This marks the end of the selection process.
+
+
+ **```End If```**: This marks the end of the second ```If``` statement.
+
+
+ **```End If```**: This marks the end of the first ```If``` statement checking for the right paddle.
+
+ **```End Sub```**: This marks the end of the ```CheckForPaddleHits``` method.
+
+
+This method checks if the ball hits either paddle and handles the interaction by stopping the ball, moving it to the correct position, playing a sound, and applying spin or random movement based on the game conditions. It enhances the gameplay experience by providing feedback through sound and vibration.
+
+
+
 
 ##  **Game State Transitions**
 ```vb
@@ -302,7 +484,7 @@ End Sub
 ```
 - This method is responsible for rendering the game graphics. It calls the `DrawGame` method to draw all game elements and then renders the buffer to the screen.
 
-Let's break it down step by step so it's easy to understand.
+
 
 ```Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)```: This line starts the ```OnPaint``` method, which is responsible for painting the game's graphics. ```Overrides``` means it replaces the base class's ```OnPaint``` method. ```e``` is a PaintEventArgs object that gives you access to the graphics object.
 
@@ -423,6 +605,10 @@ The code is structured to handle game logic, user input, rendering, and sound ma
 
 
 
+---
 
+[Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
 
 
