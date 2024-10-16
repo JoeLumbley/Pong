@@ -141,7 +141,12 @@ We'll explore key areas such as game mechanics, user input handling, collision d
 
 [Game Object Structure](#game-object-structure) 
 
-[Top](#png)
+[Game State Variables](#imports-and-class-declaration)
+
+[Game Loop](#enumerations)
+
+[Update Game Logic](#game-object-structure) 
+
 
 ---
 
