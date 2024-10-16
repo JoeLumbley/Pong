@@ -121,7 +121,7 @@ To play using your Xbox controllers, use the following controls:
 
 ---
 
-[Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+[Getting Started](#-code-walk-through) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Top](#png)
 
 ---
 
