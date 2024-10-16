@@ -343,6 +343,34 @@ End Sub
     End Sub
 ```
 - This method checks if specific keys are pressed (W/S for the left paddle) and moves the paddle accordingly.
+  
+### Code Breakdown
+
+
+```Private Sub UpdateLeftPaddleKeyboard()```: This line defines a private subroutine named ```UpdateLeftPaddleKeyboard```. It's responsible for updating the movement of the left paddle based on keyboard input.
+
+```If WKeyDown Then```: Checks if the ```W``` key is pressed. If true, it calls MoveLeftPaddleUp() to move the left paddle up.
+
+```ElseIf SKeyDown Then```: If the ```W``` key is not pressed, it checks if the ```S``` key is pressed. If true, it calls MoveLeftPaddleDown() to move the left paddle down.
+
+```Else```: If neither the ```W``` key nor the ```S``` key is pressed, it goes into this block.
+
+```If Not Connected(0) Then```: Checks if the first controller is not connected. If true, it proceeds with the following steps.
+
+```DecelerateLeftPaddle()```: Calls a function to slow down the left paddle.
+
+```If ApplyLeftPaddleEnglish Then```: Checks if the flag to apply spin (English) to the ball is set. If true, it proceeds with the following steps.
+
+```ApplyLeftPaddleEnglish = False```: Resets the flag for applying spin.
+
+```Ball.Velocity.X = ServSpeed```: Sets the ball's horizontal velocity to a serving speed.
+
+```Ball.Velocity.Y = 0```: Sets the ball's vertical velocity to 0, ensuring it moves straight.
+
+This subroutine effectively manages the left paddle’s movement based on keyboard input, including handling cases where the controller isn't connected. 
+
+
+
 
 ---
 
