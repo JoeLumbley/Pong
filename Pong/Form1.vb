@@ -878,29 +878,13 @@ Public Class Form1
 
     Private Sub CheckForPaddleHits()
 
-        ' Did the ball hit the left paddle?
-        If Ball.Rect.IntersectsWith(LeftPaddle.Rect) Then
-            ' Yes, the ball did hit the left paddle.
+        CheckForLeftPaddleHits()
 
-            PlaySound("hit")
+        CheckForRightPaddleHits()
 
-            ' Stop the ball's movement.
-            Ball.Velocity.X = 0
-            Ball.Velocity.Y = 0
+    End Sub
 
-            ' Set the ball's position to the right edge of the left paddle, plus an extra 5 pixels.
-            Ball.Rect.X = LeftPaddle.Rect.X + LeftPaddle.Rect.Width + 5
-
-            ' Update the ball's position to match the new rectangle position.
-            Ball.Position.X = Ball.Rect.X
-
-            ' Set a flag to indicate that the ball should have some spin (English) applied.
-            ApplyLeftPaddleEnglish = True
-
-            '  Trigger a vibration effect on the left side of the left paddle controller "0".
-            VibrateLeft(0, 42000)
-
-        End If
+    Private Sub CheckForRightPaddleHits()
 
         ' Did the ball hit the right paddle?
         If Ball.Rect.IntersectsWith(RightPaddle.Rect) Then
@@ -925,38 +909,71 @@ Public Class Form1
                 ' Set a flag to indicate that the ball should have some spin (English) applied.
                 ApplyRightPaddleEnglish = True
 
-                '  Trigger a vibration effect on the left side of the right paddle controller "1".
+                ' Trigger a vibration effect on the left side of the right paddle controller "1".
                 VibrateLeft(1, 42000)
 
             Else
                 ' No, the number of players is not two.
 
-                ' Computer Player English
-                ' For the computer player we use random english.
-                ' This makes the game more interesting.
-                Select Case RandomNumber()
-
-                    Case 1
-
-                        'Send ball up and to the left.
-                        Ball.Velocity.X = -ServSpeed
-                        Ball.Velocity.Y = -ServSpeed
-
-                    Case 2
-
-                        'Send ball to the left.
-                        Ball.Velocity.X = -ServSpeed
-                        Ball.Velocity.Y = 0
-
-                    Case 3
-
-                        'Send ball down and to the left.
-                        Ball.Velocity.X = -ServSpeed
-                        Ball.Velocity.Y = ServSpeed
-
-                End Select
+                DoComputerPlayerEnglish()
 
             End If
+
+        End If
+
+    End Sub
+
+    Private Sub DoComputerPlayerEnglish()
+        ' For the computer player we use random english.
+        ' This makes the game more interesting.
+
+        Select Case RandomNumber()
+
+            Case 1
+
+                ' Send ball up and to the left.
+                Ball.Velocity.X = -ServSpeed
+                Ball.Velocity.Y = -ServSpeed
+
+            Case 2
+
+                ' Send ball to the left.
+                Ball.Velocity.X = -ServSpeed
+                Ball.Velocity.Y = 0
+
+            Case 3
+
+                ' Send ball down and to the left.
+                Ball.Velocity.X = -ServSpeed
+                Ball.Velocity.Y = ServSpeed
+
+        End Select
+
+    End Sub
+
+    Private Sub CheckForLeftPaddleHits()
+
+        ' Did the ball hit the left paddle?
+        If Ball.Rect.IntersectsWith(LeftPaddle.Rect) Then
+            ' Yes, the ball did hit the left paddle.
+
+            PlaySound("hit")
+
+            ' Stop the ball's movement.
+            Ball.Velocity.X = 0
+            Ball.Velocity.Y = 0
+
+            ' Set the ball's position to the right edge of the left paddle, plus an extra 5 pixels.
+            Ball.Rect.X = LeftPaddle.Rect.X + LeftPaddle.Rect.Width + 5
+
+            ' Update the ball's position to match the new rectangle position.
+            Ball.Position.X = Ball.Rect.X
+
+            ' Set a flag to indicate that the ball should have some spin (English) applied.
+            ApplyLeftPaddleEnglish = True
+
+            ' Trigger a vibration effect on the left side of the left paddle controller "0".
+            VibrateLeft(0, 42000)
 
         End If
 
