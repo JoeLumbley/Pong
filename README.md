@@ -332,8 +332,69 @@ End Sub
 All these steps together create a comprehensive check for collisions between the ball and the left paddle and apply appropriate responses like stopping the ball, playing sounds, and updating positions. 
 
 
+```vb
+     Private Sub CheckForRightPaddleHits()
 
+        ' Did the ball hit the right paddle?
+        If Ball.Rect.IntersectsWith(RightPaddle.Rect) Then
+            ' Yes, the ball did hit the right paddle.
 
+            PlaySound("hit")
+
+            ' Stop the ball's movement.
+            Ball.Velocity.X = 0
+            Ball.Velocity.Y = 0
+
+            ' Moves the ball to the left of the right paddle, ensuring there’s a 5-pixel gap.
+            Ball.Rect.X = RightPaddle.Rect.X - (Ball.Rect.Width + 5)
+
+            ' Update the ball's position to match the new rectangle position.
+            Ball.Position.X = Ball.Rect.X
+
+            ' Is the number of players two?
+            If NumberOfPlayers = 2 Then
+                ' Yes, the number of players is two.
+
+                ' Set a flag to indicate that the ball should have some spin (English) applied.
+                ApplyRightPaddleEnglish = True
+
+                ' Trigger a vibration effect on the left side of the right paddle controller "1".
+                VibrateLeft(1, 42000)
+
+            Else
+                ' No, the number of players is not two.
+
+                DoComputerPlayerEnglish()
+
+            End If
+
+        End If
+
+    End Sub
+```
+- This method checks if the ball intersects with the right paddle, handling the logic for bouncing the ball back and updating its velocity.
+
+### Code Breakdown
+
+```Private Sub CheckForRightPaddleHits()```: Starts a subroutine to check if the ball hits the right paddle.
+
+```If Ball.Rect.IntersectsWith(RightPaddle.Rect) Then```: Checks if the ball’s rectangle intersects with the right paddle’s rectangle.
+
+```PlaySound("hit")```: Plays the sound named "hit" when the ball hits the paddle.
+
+```Ball.Velocity.X = 0``` and ```Ball.Velocity.Y = 0```: Stops the ball's movement by setting its horizontal and vertical velocity to 0.
+
+```Ball.Rect.X = RightPaddle.Rect.X - (Ball.Rect.Width + 5)```: Moves the ball to the left of the right paddle, leaving a 5-pixel gap.
+
+```Ball.Position.X = Ball.Rect.X```: Updates the ball’s position to match the new rectangle position.
+
+```If NumberOfPlayers = 2 Then```: Checks if there are two players.
+
+```ApplyRightPaddleEnglish = True```: Sets a flag to apply spin (English) to the ball.
+
+```VibrateLeft(1, 42000)```: Triggers a vibration effect on the right paddle’s controller.
+
+```DoComputerPlayerEnglish()```: Calls a method for the computer player’s spin if there isn’t a second player.
 
 
 
