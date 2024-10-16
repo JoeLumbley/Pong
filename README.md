@@ -143,7 +143,7 @@ We'll explore key areas such as game mechanics, user input handling, collision d
 
 [Game State Variables](#game-state-variables)
 
-[Game Loop](#enumerations)
+[Game Loop](#game-loop)
 
 [Update Game Logic](#game-object-structure) 
 
