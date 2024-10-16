@@ -166,6 +166,12 @@ Public Class Form1
 ```
 - The code begins by importing necessary namespaces for threading, mathematical operations (like vectors), interop services for using unmanaged code, and file handling.
 - The class `Form1` is declared, which will contain all the game logic.
+- 
+---
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Top](#png)
+
+---
 
 ##  **Enumerations**
 ```vb
@@ -180,6 +186,15 @@ End Enum
 ```
 - `GameStateEnum` defines different states of the game (e.g., Start Screen, Playing, End Screen).
 
+
+---
+
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
+
+
 ##  **Game Object Structure**
 ```vb
 Private Structure GameObject
@@ -192,6 +207,14 @@ End Structure
 ```
 - `GameObject` structure is defined to represent game entities like the ball and paddles. It includes properties for position, acceleration, velocity, maximum velocity, and the rectangle that represents its dimensions.
 
+
+---
+
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
+
 ##  **Game State Variables**
 ```vb
 Private GameState As GameStateEnum = GameStateEnum.StartScreen
@@ -201,6 +224,15 @@ Private Winner As WinStateEnum = WinStateEnum.LeftPaddle
 Private NumberOfPlayers As Integer = 2
 ```
 - These variables track the current game state, which paddle is serving, the speed of the serve, the winner, and the number of players.
+
+
+
+---
+
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
 
 ##  **Game Loop**
 ```vb
@@ -213,6 +245,14 @@ Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
 End Sub
 ```
 - This subroutine is called at regular intervals (set by a timer). It updates the game state and refreshes the display.
+
+
+---
+
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
 
 ##  **Update Game Logic**
 ```vb
@@ -250,6 +290,14 @@ End Sub
 
 ```
 - The `UpdateGame` method uses a `Select Case` statement to determine what actions to take based on the current game state. It handles input, updates game objects, and checks for game conditions.
+
+
+---
+
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
 
 ##  **Input Handling**
 ```vb
@@ -432,6 +480,14 @@ End Sub
 ```
 - This method checks if a player has reached the winning score and transitions the game state to the end screen if so.
 
+
+---
+
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
+
 ##  **Rendering Graphics**
 ```vb
     Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
@@ -474,6 +530,12 @@ End Sub
 
 
 
+---
+
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
 
 
 ##  **Sound Management**
@@ -578,7 +640,8 @@ The code is structured to handle game logic, user input, rendering, and sound ma
 
 ---
 
-[Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
 
 ---
 
