@@ -349,9 +349,9 @@ End Sub
 
 ```Private Sub UpdateLeftPaddleKeyboard()```: This line defines a private subroutine named ```UpdateLeftPaddleKeyboard```. It's responsible for updating the movement of the left paddle based on keyboard input.
 
-```If WKeyDown Then```: Checks if the ```W``` key is pressed. If true, it calls MoveLeftPaddleUp() to move the left paddle up.
+```If WKeyDown Then```: Checks if the ```W``` key is pressed. If true, it calls ```MoveLeftPaddleUp()``` to move the left paddle up.
 
-```ElseIf SKeyDown Then```: If the ```W``` key is not pressed, it checks if the ```S``` key is pressed. If true, it calls MoveLeftPaddleDown() to move the left paddle down.
+```ElseIf SKeyDown Then```: If the ```W``` key is not pressed, it checks if the ```S``` key is pressed. If true, it calls ```MoveLeftPaddleDown()``` to move the left paddle down.
 
 ```Else```: If neither the ```W``` key nor the ```S``` key is pressed, it goes into this block.
 
