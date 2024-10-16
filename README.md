@@ -281,75 +281,33 @@ End Sub
 
 ##  **Collision Detection**
 ```vb
-    Private Sub CheckForPaddleHits()
+ Private Sub CheckForLeftPaddleHits()
 
-        If Ball.Rect.IntersectsWith(LeftPaddle.Rect) Then
+     ' Did the ball hit the left paddle?
+     If Ball.Rect.IntersectsWith(LeftPaddle.Rect) Then
+         ' Yes, the ball did hit the left paddle.
 
-            PlaySound("hit")
+         PlaySound("hit")
 
-            Ball.Velocity.X = 0
-            Ball.Velocity.Y = 0
+         ' Stop the ball's movement.
+         Ball.Velocity.X = 0
+         Ball.Velocity.Y = 0
 
-            'Push the ball to the paddles right edge.
-            Ball.Rect.X = LeftPaddle.Rect.X + LeftPaddle.Rect.Width + 5
+         ' Set the ball's position to the right edge of the left paddle, plus an extra 5 pixels.
+         Ball.Rect.X = LeftPaddle.Rect.X + LeftPaddle.Rect.Width + 5
 
-            Ball.Position.X = Ball.Rect.X
+         ' Update the ball's position to match the new rectangle position.
+         Ball.Position.X = Ball.Rect.X
 
-            ApplyLeftPaddleEnglish = True
+         ' Set a flag to indicate that the ball should have some spin (English) applied.
+         ApplyLeftPaddleEnglish = True
 
-            VibrateLeft(0, 42000)
+         ' Trigger a vibration effect on the left side of the left paddle controller "0".
+         VibrateLeft(0, 42000)
 
-        End If
+     End If
 
-        If Ball.Rect.IntersectsWith(RightPaddle.Rect) Then
-
-            PlaySound("hit")
-
-            Ball.Velocity.X = 0
-            Ball.Velocity.Y = 0
-
-            Ball.Rect.X = RightPaddle.Rect.X - (Ball.Rect.Width + 5)
-
-            Ball.Position.X = Ball.Rect.X
-
-            If NumberOfPlayers = 2 Then
-
-                ApplyRightPaddleEnglish = True
-
-                VibrateLeft(1, 42000)
-
-            Else
-                'For the computer player random english.
-                'This makes the game more interesting.
-
-                Select Case RandomNumber()
-
-                    Case 1
-                        'Send ball up and to the left.
-
-                        Ball.Velocity.X = -ServSpeed
-                        Ball.Velocity.Y = -ServSpeed
-
-                    Case 2
-                        'Send ball to the left.
-
-                        Ball.Velocity.X = -ServSpeed
-                        Ball.Velocity.Y = 0
-
-                    Case 3
-                        'Send ball down and to the left.
-
-                        Ball.Velocity.X = -ServSpeed
-                        Ball.Velocity.Y = ServSpeed
-
-                End Select
-
-            End If
-
-        End If
-
-    End Sub
-
+ End Sub
 ```
 - This method checks if the ball intersects with either paddle, handling the logic for bouncing the ball back and updating its velocity.
 
