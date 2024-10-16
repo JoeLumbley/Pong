@@ -166,7 +166,7 @@ Public Class Form1
 ```
 - The code begins by importing necessary namespaces for threading, mathematical operations (like vectors), interop services for using unmanaged code, and file handling.
 - The class `Form1` is declared, which will contain all the game logic.
-- 
+  
 ---
 
 [Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Top](#png)
