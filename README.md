@@ -139,7 +139,7 @@ We'll explore key areas such as game mechanics, user input handling, collision d
 
 [Enumerations](#enumerations)
 
-[Game Object Structure](#-code-walk-through) 
+[Game Object Structure](#game-object-structure) 
 
 [Top](#png)
 
