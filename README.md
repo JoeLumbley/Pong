@@ -133,6 +133,15 @@ Here, we'll take a deep dive into the game's code and architecture, guiding you 
 
 We'll explore key areas such as game mechanics, user input handling, collision detection, and rendering graphics. Each section will break down the code into manageable parts, explaining the purpose and functionality behind them. By the end of this walkthrough, you'll have a solid understanding of how to create and modify a game like P🏓NG, empowering you to implement your own ideas and features. Let’s get started!
 
+---
+
+[Imports and Class Declaration](#%EF%B8%8F-keyboard-controls) 
+[Enumerations](#-xbox-controllers) 
+[Game Object Structure](#-code-walk-through) 
+[Top](#png)
+
+---
+
 ##  **Imports and Class Declaration**
 ```vb
 Imports System.Threading
