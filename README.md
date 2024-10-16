@@ -376,7 +376,7 @@ End Sub
  **```ApplyLeftPaddleEnglish = True```**: This line sets a flag to indicate that the ball should have some spin (English) applied when it moves after hitting the left paddle.
 
 
- **```VibrateLeft(0, 42000)```**: This command triggers a vibration effect on the left controller to enhance the player’s experience.
+ **```VibrateLeft(0, 42000)```**: This command triggers a vibration effect on the left paddle controller ```0``` to enhance the player’s experience.
 
 
  **```End If```**: This marks the end of the first ```If``` statement.
@@ -403,7 +403,7 @@ End Sub
  **```ApplyRightPaddleEnglish = True```**: This sets a flag to apply spin (English) to the ball after it hits the right paddle.
 
 
- **```VibrateLeft(1, 42000)```**: This vibrates the right controller to provide feedback.
+ **```VibrateLeft(1, 42000)```**: This vibrates the right paddle controller ```1``` to provide feedback.
 
 
  **```Else```**: This indicates that if there are not two players, the following code will run instead.
