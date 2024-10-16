@@ -150,15 +150,15 @@ We'll explore key areas such as game mechanics, user input handling, collision d
 
 [Update Game Logic](#update-game-logic) 
 
-[Input Handling](#imports-and-class-declaration)
+[Input Handling](#input-handling)
 
-[Collision Detection](#enumerations)
+[Collision Detection](#collision-detection)
 
-[Game State Transitions](#game-object-structure) 
+[Game State Transitions](#game-state-transitions) 
 
-[Rendering Graphics](#game-state-variables)
+[Rendering Graphics](#rendering-graphics)
 
-[Sound Management](#game-loop)
+[Sound Management](#sound-management)
 
 ---
 
