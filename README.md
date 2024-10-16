@@ -18,6 +18,9 @@ This repository is designed to help new game developers learn the fundamentals o
 - Learn how to implement user input handling, game states, and sound effects.
 
 
+---
+
+[Imports and class declaration](#imports-and-class-declaration)
 
 ---
 
