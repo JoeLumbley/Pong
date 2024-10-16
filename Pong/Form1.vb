@@ -878,62 +878,79 @@ Public Class Form1
 
     Private Sub CheckForPaddleHits()
 
+        ' Did the ball hit the left paddle?
         If Ball.Rect.IntersectsWith(LeftPaddle.Rect) Then
+            ' Yes, the ball did hit the left paddle.
 
             PlaySound("hit")
 
+            ' Stop the ball's movement.
             Ball.Velocity.X = 0
             Ball.Velocity.Y = 0
 
-            'Push the ball to the paddles right edge.
+            ' Set the ball's position to the right edge of the left paddle, plus an extra 5 pixels.
             Ball.Rect.X = LeftPaddle.Rect.X + LeftPaddle.Rect.Width + 5
 
+            ' Update the ball's position to match the new rectangle position.
             Ball.Position.X = Ball.Rect.X
 
+            ' Set a flag to indicate that the ball should have some spin (English) applied.
             ApplyLeftPaddleEnglish = True
 
+            '  Trigger a vibration effect on the left side of the left paddle controller "0".
             VibrateLeft(0, 42000)
 
         End If
 
+        ' Did the ball hit the right paddle?
         If Ball.Rect.IntersectsWith(RightPaddle.Rect) Then
+            ' Yes, the ball did hit the right paddle.
 
             PlaySound("hit")
 
+            ' Stop the ball's movement.
             Ball.Velocity.X = 0
             Ball.Velocity.Y = 0
 
+            ' Moves the ball to the left of the right paddle, ensuring there’s a 5-pixel gap.
             Ball.Rect.X = RightPaddle.Rect.X - (Ball.Rect.Width + 5)
 
+            ' Update the ball's position to match the new rectangle position.
             Ball.Position.X = Ball.Rect.X
 
+            ' Is the number of players two?
             If NumberOfPlayers = 2 Then
+                ' Yes, the number of players is two.
 
+                ' Set a flag to indicate that the ball should have some spin (English) applied.
                 ApplyRightPaddleEnglish = True
 
+                '  Trigger a vibration effect on the left side of the right paddle controller "1".
                 VibrateLeft(1, 42000)
 
             Else
-                'For the computer player random english.
-                'This makes the game more interesting.
+                ' No, the number of players is not two.
 
+                ' Computer Player English
+                ' For the computer player we use random english.
+                ' This makes the game more interesting.
                 Select Case RandomNumber()
 
                     Case 1
-                        'Send ball up and to the left.
 
+                        'Send ball up and to the left.
                         Ball.Velocity.X = -ServSpeed
                         Ball.Velocity.Y = -ServSpeed
 
                     Case 2
-                        'Send ball to the left.
 
+                        'Send ball to the left.
                         Ball.Velocity.X = -ServSpeed
                         Ball.Velocity.Y = 0
 
                     Case 3
-                        'Send ball down and to the left.
 
+                        'Send ball down and to the left.
                         Ball.Velocity.X = -ServSpeed
                         Ball.Velocity.Y = ServSpeed
 
