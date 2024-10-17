@@ -631,9 +631,8 @@ End Function
 This function checks if the sound file exists, opens it, and adds it to an array of sounds for your game. If any step fails, it returns ```False```. 
 
 
+---
 
-- **Volume Control**: The volume of sounds can be adjusted, allowing for a customizable audio experience.
-- **Looping Sounds**: Background music can be looped to create an immersive atmosphere.
 
 
 
@@ -662,14 +661,12 @@ Private Function PlaySound(SoundName As String) As Boolean
 
 End Function
 ```
-- **Playing Sounds**: Functions are provided to play specific sounds at appropriate game events (e.g., ball hits, scoring).
+- **Playing Sounds**: This function is provided to play specific sounds at appropriate game events (e.g., ball hits, scoring).
 
 
-- This function manages sound effects, allowing sounds to be added and played during the game.
-  
----
+- **Volume Control**: The volume of sounds can be adjusted, allowing for a customizable audio experience.
+- **Looping Sounds**: Background music can be looped to create an immersive atmosphere.
 
-The code is structured to handle game logic, user input, rendering, and sound management in a clear and organized manner. Each section focuses on a specific aspect of the game, making it easier to understand and modify. If you have specific sections you'd like to dive deeper into or have questions about, let me know!
 
 
 
