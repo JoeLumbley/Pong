@@ -565,7 +565,7 @@ All these steps together create a comprehensive check for collisions between the
 
 `Winner = WinStateEnum.LeftPaddle`: If the left paddle has reached the winning score, it sets the winner to the left paddle.
 
-`FlashCount = 0`: Resets the frame counter, probably for some end game animation.
+`FlashCount = 0`: Resets the frame counter, for the end game animation.
 
 `GameState = GameStateEnum.EndScreen`: Changes the game state to the end screen, where the end game events are handled.
 
