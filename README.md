@@ -255,7 +255,13 @@ End Sub
 ```
 - This subroutine is called at regular intervals (set by a timer). It updates the game state and refreshes the display.
 
+```Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick```: This subroutine is executed at regular intervals, controlled by a timer named Timer1. The Tick event is triggered by the timer at specified intervals. sender is the source of the event, and e is the event data.
 
+```UpdateGame()```: This line calls the UpdateGame method, which contains the logic for updating the game's state. This might include moving paddles, updating scores, checking for collisions, etc.
+
+Refresh(): This line refreshes the display, causing the form to redraw its contents. It ensures that any changes made by UpdateGame are visually updated on the screen.
+
+This subroutine keeps the game running smoothly by continuously updating the game state and refreshing the display at regular intervals. Essentially, it's the heartbeat of your game loop.
 ---
 
 
