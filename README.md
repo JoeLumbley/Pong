@@ -515,15 +515,73 @@ All these steps together create a comprehensive check for collisions between the
 
 ##  **Game State Transitions**
 ```vb
-Private Sub CheckforEndGame()
-    If LeftPaddleScore >= 10 Then
-        Winner = WinStateEnum.LeftPaddle
-        GameState = GameStateEnum.EndScreen
-    End If
-    ...
-End Sub
+    Private Sub CheckforEndGame()
+
+        ' Did left paddle reach winning score?
+        If LeftPaddleScore >= 10 Then
+            ' Yes, left paddle did reach winning score.
+
+            ' Set winner to left paddle.
+            Winner = WinStateEnum.LeftPaddle
+
+            ' Reset the frame counter.
+            FlashCount = 0
+
+            ' Change game state to end screen.
+            GameState = GameStateEnum.EndScreen
+
+            PlayWinningSound()
+
+        End If
+
+        ' Did right paddle reach winning score?
+        If RightPaddleScore >= 10 Then
+            ' Yes, right paddle did reach winning score.
+
+            ' Set winner to right paddle.
+            Winner = WinStateEnum.RightPaddle
+
+            ' Reset frame counter.
+            FlashCount = 0
+
+            ' Change game state to end screen.
+            GameState = GameStateEnum.EndScreen
+
+            PlayWinningSound()
+
+        End If
+
+    End Sub
+
 ```
 - This method checks if a player has reached the winning score and transitions the game state to the end screen if so.
+
+### Code Breakdown
+
+
+`Private Sub CheckforEndGame()`: This defines a private subroutine named `CheckforEndGame`. It’s responsible for checking if any player has reached the winning score.
+
+`If LeftPaddleScore >= 10 Then`: Checks if the left paddle’s score is 10 or more.
+
+`Winner = WinStateEnum.LeftPaddle`: If the left paddle has reached the winning score, it sets the winner to the left paddle.
+
+`FlashCount = 0`: Resets the frame counter, probably for some end game animation.
+
+`GameState = GameStateEnum.EndScreen`: Changes the game state to the end screen, where the end game events are handled.
+
+`PlayWinningSound()`: Plays a sound to celebrate the win.
+
+`If RightPaddleScore >= 10 Then`: Similarly checks if the right paddle has reached the winning score.
+
+`Winner = WinStateEnum.RightPaddle`: Sets the winner to the right paddle if it has reached the winning score.
+
+`FlashCount = 0`: Resets the frame counter again.
+
+`GameState = GameStateEnum.EndScreen`: Changes the game state to the end screen.
+
+`PlayWinningSound()`: Plays the winning sound.
+
+This method ensures the game transitions smoothly to the end screen when either player reaches the winning score. 
 
 
 ---
