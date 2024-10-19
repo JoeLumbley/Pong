@@ -80,7 +80,7 @@ Dive into the code, experiment, and enhance the game while learning valuable pro
 
 ---
 
-[Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+[Getting Started](#getting-started) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
 
 ---
 
@@ -104,6 +104,9 @@ To play using your keyboard, use the following controls:
 
 ---
 
+[Getting Started](#getting-started)  |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
 
 # 🎮 Xbox Controllers
 
@@ -121,7 +124,7 @@ To play using your Xbox controllers, use the following controls:
 
 ---
 
-[Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Top](#png)
 
 ---
 
@@ -141,7 +144,21 @@ We'll explore key areas such as game mechanics, user input handling, collision d
 
 [Game Object Structure](#game-object-structure) 
 
-[Top](#png)
+[Game State Variables](#game-state-variables)
+
+[Game Loop](#game-loop)
+
+[Update Game Logic](#update-game-logic) 
+
+[Input Handling](#input-handling)
+
+[Collision Detection](#collision-detection)
+
+[Game State Transitions](#game-state-transitions) 
+
+[Rendering Graphics](#rendering-graphics)
+
+[Sound Management](#sound-management)
 
 ---
 
@@ -158,6 +175,12 @@ Public Class Form1
 ```
 - The code begins by importing necessary namespaces for threading, mathematical operations (like vectors), interop services for using unmanaged code, and file handling.
 - The class `Form1` is declared, which will contain all the game logic.
+  
+---
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
 
 ##  **Enumerations**
 ```vb
@@ -172,6 +195,15 @@ End Enum
 ```
 - `GameStateEnum` defines different states of the game (e.g., Start Screen, Playing, End Screen).
 
+
+---
+
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
+
+
 ##  **Game Object Structure**
 ```vb
 Private Structure GameObject
@@ -184,6 +216,14 @@ End Structure
 ```
 - `GameObject` structure is defined to represent game entities like the ball and paddles. It includes properties for position, acceleration, velocity, maximum velocity, and the rectangle that represents its dimensions.
 
+
+---
+
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
+
 ##  **Game State Variables**
 ```vb
 Private GameState As GameStateEnum = GameStateEnum.StartScreen
@@ -193,6 +233,15 @@ Private Winner As WinStateEnum = WinStateEnum.LeftPaddle
 Private NumberOfPlayers As Integer = 2
 ```
 - These variables track the current game state, which paddle is serving, the speed of the serve, the winner, and the number of players.
+
+
+
+---
+
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
 
 ##  **Game Loop**
 ```vb
@@ -205,6 +254,24 @@ Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
 End Sub
 ```
 - This subroutine is called at regular intervals (set by a timer). It updates the game state and refreshes the display.
+
+### Code Breakdown
+
+`Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick`: This subroutine is executed at regular intervals, controlled by a timer named `Timer1`. The `Tick` event is triggered by the timer at specified intervals. `sender` is the source of the event, and `e` is the event data.
+
+`UpdateGame()`: This line calls the `UpdateGame` method, which contains the logic for updating the game's state. This might include moving paddles, updating scores, checking for collisions, etc.
+
+`Refresh()`: This line refreshes the display, causing the form to redraw its contents. It ensures that any changes made by `UpdateGame` are visually updated on the screen.
+
+
+This subroutine keeps the game running smoothly by continuously updating the game state and refreshing the display at regular intervals. Essentially, it's the heartbeat of your game loop.
+
+---
+
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
 
 ##  **Update Game Logic**
 ```vb
@@ -243,6 +310,14 @@ End Sub
 ```
 - The `UpdateGame` method uses a `Select Case` statement to determine what actions to take based on the current game state. It handles input, updates game objects, and checks for game conditions.
 
+
+---
+
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
+
 ##  **Input Handling**
 ```vb
     Private Sub UpdateLeftPaddleKeyboard()
@@ -278,188 +353,245 @@ End Sub
     End Sub
 ```
 - This method checks if specific keys are pressed (W/S for the left paddle) and moves the paddle accordingly.
+  
+### Code Breakdown
+
+
+```Private Sub UpdateLeftPaddleKeyboard()```: This line defines a private subroutine named ```UpdateLeftPaddleKeyboard```. It's responsible for updating the movement of the left paddle based on keyboard input.
+
+```If WKeyDown Then```: Checks if the ```W``` key is pressed. If true, it calls ```MoveLeftPaddleUp()``` to move the left paddle up.
+
+```ElseIf SKeyDown Then```: If the ```W``` key is not pressed, it checks if the ```S``` key is pressed. If true, it calls ```MoveLeftPaddleDown()``` to move the left paddle down.
+
+```Else```: If neither the ```W``` key nor the ```S``` key is pressed, it goes into this block.
+
+```If Not Connected(0) Then```: Checks if the first controller is not connected. If true, it proceeds with the following steps.
+
+```DecelerateLeftPaddle()```: Calls a function to slow down the left paddle.
+
+```If ApplyLeftPaddleEnglish Then```: Checks if the flag to apply spin (English) to the ball is set. If true, it proceeds with the following steps.
+
+```ApplyLeftPaddleEnglish = False```: Resets the flag for applying spin.
+
+```Ball.Velocity.X = ServSpeed```: Sets the ball's horizontal velocity to a serving speed.
+
+```Ball.Velocity.Y = 0```: Sets the ball's vertical velocity to 0, ensuring it moves straight.
+
+This subroutine effectively manages the left paddle’s movement based on keyboard input, including handling cases where the controller isn't connected. 
+
+
+
+
+---
+
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
 
 ##  **Collision Detection**
 ```vb
-    Private Sub CheckForPaddleHits()
+ Private Sub CheckForLeftPaddleHits()
 
-        If Ball.Rect.IntersectsWith(LeftPaddle.Rect) Then
+     ' Did the ball hit the left paddle?
+     If Ball.Rect.IntersectsWith(LeftPaddle.Rect) Then
+         ' Yes, the ball did hit the left paddle.
 
-            PlaySound("hit")
+         PlaySound("hit")
 
-            Ball.Velocity.X = 0
-            Ball.Velocity.Y = 0
+         ' Stop the ball's movement.
+         Ball.Velocity.X = 0
+         Ball.Velocity.Y = 0
 
-            'Push the ball to the paddles right edge.
-            Ball.Rect.X = LeftPaddle.Rect.X + LeftPaddle.Rect.Width + 5
+         ' Set the ball's position to the right edge of the left paddle, plus an extra 5 pixels.
+         Ball.Rect.X = LeftPaddle.Rect.X + LeftPaddle.Rect.Width + 5
 
-            Ball.Position.X = Ball.Rect.X
+         ' Update the ball's position to match the new rectangle position.
+         Ball.Position.X = Ball.Rect.X
 
-            ApplyLeftPaddleEnglish = True
+         ' Set a flag to indicate that the ball should have some spin (English) applied.
+         ApplyLeftPaddleEnglish = True
 
-            VibrateLeft(0, 42000)
+         ' Trigger a vibration effect on the left side of the left paddle controller "0".
+         VibrateLeft(0, 42000)
 
-        End If
+     End If
 
+ End Sub
+```
+- This method checks if the ball intersects with the left paddle, handling the logic for bouncing the ball back and updating its velocity.
+
+### Code Breakdown
+
+```Private Sub CheckForLeftPaddleHits()```: This line starts a subroutine called CheckForLeftPaddleHits. It's a private subroutine, so it's only accessible within the current module or class.
+
+```If Ball.Rect.IntersectsWith(LeftPaddle.Rect) Then```: This line checks if the ball's rectangle intersects with the left paddle's rectangle. Essentially, it checks if the ball has hit the left paddle.
+
+```PlaySound("hit")```: If the ball hits the left paddle, this line plays a sound named "hit" to provide audio feedback.
+
+```Ball.Velocity.X = 0``` and ```Ball.Velocity.Y = 0```: These lines stop the ball's movement by setting its horizontal and vertical velocity to 0.
+
+```Ball.Rect.X = LeftPaddle.Rect.X + LeftPaddle.Rect.Width + 5```: This line sets the ball's position to the right edge of the left paddle, plus an additional 5 pixels, to ensure the ball doesn't overlap the paddle.
+
+```Ball.Position.X = Ball.Rect.X```: This line updates the ball's position to match the new rectangle position, keeping everything in sync.
+
+```ApplyLeftPaddleEnglish = True```: This line sets a flag indicating that the ball should have some spin (English) applied, possibly affecting its movement after hitting the paddle.
+
+```VibrateLeft(0, 42000)```: This line triggers a vibration effect on the left side of the left paddle controller, adding a tactile response to the hit.
+
+All these steps together create a comprehensive check for collisions between the ball and the left paddle and apply appropriate responses like stopping the ball, playing sounds, and updating positions. 
+
+ 
+---
+
+```vb
+     Private Sub CheckForRightPaddleHits()
+
+        ' Did the ball hit the right paddle?
         If Ball.Rect.IntersectsWith(RightPaddle.Rect) Then
+            ' Yes, the ball did hit the right paddle.
 
             PlaySound("hit")
 
+            ' Stop the ball's movement.
             Ball.Velocity.X = 0
             Ball.Velocity.Y = 0
 
+            ' Moves the ball to the left of the right paddle, ensuring there’s a 5-pixel gap.
             Ball.Rect.X = RightPaddle.Rect.X - (Ball.Rect.Width + 5)
 
+            ' Update the ball's position to match the new rectangle position.
             Ball.Position.X = Ball.Rect.X
 
+            ' Is the number of players two?
             If NumberOfPlayers = 2 Then
+                ' Yes, the number of players is two.
 
+                ' Set a flag to indicate that the ball should have some spin (English) applied.
                 ApplyRightPaddleEnglish = True
 
+                ' Trigger a vibration effect on the left side of the right paddle controller "1".
                 VibrateLeft(1, 42000)
 
             Else
-                'For the computer player random english.
-                'This makes the game more interesting.
+                ' No, the number of players is not two.
 
-                Select Case RandomNumber()
-
-                    Case 1
-                        'Send ball up and to the left.
-
-                        Ball.Velocity.X = -ServSpeed
-                        Ball.Velocity.Y = -ServSpeed
-
-                    Case 2
-                        'Send ball to the left.
-
-                        Ball.Velocity.X = -ServSpeed
-                        Ball.Velocity.Y = 0
-
-                    Case 3
-                        'Send ball down and to the left.
-
-                        Ball.Velocity.X = -ServSpeed
-                        Ball.Velocity.Y = ServSpeed
-
-                End Select
+                DoComputerPlayerEnglish()
 
             End If
 
         End If
 
     End Sub
-
 ```
-- This method checks if the ball intersects with either paddle, handling the logic for bouncing the ball back and updating its velocity.
-
-
+- This method checks if the ball intersects with the right paddle, handling the logic for bouncing the ball back and updating its velocity.
 
 ### Code Breakdown
 
- **```Private Sub CheckForPaddleHits()```**: This line starts a new method called ```CheckForPaddleHits```. "Private" means this method can only be used within the same class. "Sub" indicates that this method does not return a value.
+```Private Sub CheckForRightPaddleHits()```: Starts a subroutine to check if the ball hits the right paddle.
 
- **```If Ball.Rect.IntersectsWith(LeftPaddle.Rect) Then```**: This line checks if the ball's rectangle (its position and size) overlaps with the left paddle's rectangle. If they do intersect, the code inside the ```If``` block will run.
+```If Ball.Rect.IntersectsWith(RightPaddle.Rect) Then```: Checks if the ball’s rectangle intersects with the right paddle’s rectangle.
 
- **```PlaySound("hit")```**: This line plays a sound effect called "hit". It provides audio feedback when the ball hits the paddle.
+```PlaySound("hit")```: Plays the sound named "hit" when the ball hits the paddle.
 
+```Ball.Velocity.X = 0``` and ```Ball.Velocity.Y = 0```: Stops the ball's movement by setting its horizontal and vertical velocity to 0.
 
- **```Ball.Velocity.X = 0```** and **```Ball.Velocity.Y = 0```**: These lines stop the ball's movement by setting its horizontal (X) and vertical (Y) speeds to zero.
+```Ball.Rect.X = RightPaddle.Rect.X - (Ball.Rect.Width + 5)```: Moves the ball to the left of the right paddle, leaving a 5-pixel gap.
 
+```Ball.Position.X = Ball.Rect.X```: Updates the ball’s position to match the new rectangle position.
 
- **```Ball.Rect.X = LeftPaddle.Rect.X + LeftPaddle.Rect.Width + 5```**: This sets the ball's position to the right edge of the left paddle, plus an extra 5 pixels to create some space.
+```If NumberOfPlayers = 2 Then```: Checks if there are two players.
 
+```ApplyRightPaddleEnglish = True```: Sets a flag to apply spin (English) to the ball.
 
- **```Ball.Position.X = Ball.Rect.X```**: This updates the ball's position to match the new rectangle position. It ensures that the ball's visual representation is in the correct spot.
+```VibrateLeft(1, 42000)```: Triggers a vibration effect on the right paddle’s controller.
 
+```DoComputerPlayerEnglish()```: Calls a method for the computer player’s spin if there isn’t a second player.
 
- **```ApplyLeftPaddleEnglish = True```**: This line sets a flag to indicate that the ball should have some spin (English) applied when it moves after hitting the left paddle.
+---
 
-
- **```VibrateLeft(0, 42000)```**: This command triggers a vibration effect on the left paddle controller ```0``` to enhance the player’s experience.
-
-
- **```End If```**: This marks the end of the first ```If``` statement.
-
-
- **```If Ball.Rect.IntersectsWith(RightPaddle.Rect) Then```**: This checks if the ball intersects with the right paddle. If it does, the following code will execute.
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
 
 
- **```PlaySound("hit")```**: Similar to before, this plays the "hit" sound effect when the ball hits the right paddle.
-
-
- **```Ball.Velocity.X = 0```** and **```Ball.Velocity.Y = 0```**: Again, this stops the ball's movement.
-
-
- **```Ball.Rect.X = RightPaddle.Rect.X - (Ball.Rect.Width + 5)```**: This moves the ball to the left of the right paddle, ensuring there’s a 5-pixel gap.
-
-
- **```Ball.Position.X = Ball.Rect.X```**: This updates the ball's position to match the new rectangle position.
-
-
- **```If NumberOfPlayers = 2 Then```**: This checks if there are two players in the game. If so, the following code will execute.
-
-
- **```ApplyRightPaddleEnglish = True```**: This sets a flag to apply spin (English) to the ball after it hits the right paddle.
-
-
- **```VibrateLeft(1, 42000)```**: This vibrates the right paddle controller ```1``` to provide feedback.
-
-
- **```Else```**: This indicates that if there are not two players, the following code will run instead.
-
-
- **```Select Case RandomNumber()```**: This starts a selection process based on a random number generated by the ```RandomNumber()``` function.
-
-```vb
-                Case 1
-                    Ball.Velocity.X = -ServSpeed
-                    Ball.Velocity.Y = -ServSpeed
-```
- **```Case 1```**: If the random number is 1, the ball will move up and to the left by setting its X and Y velocities to negative values (indicating left and upward movement).
-
-```vb
-                Case 2
-                    Ball.Velocity.X = -ServSpeed
-                    Ball.Velocity.Y = 0
-```
- **```Case 2```**: If the random number is 2, the ball will move directly to the left (negative X velocity) without any vertical movement (Y velocity is zero).
-
-```vb
-                Case 3
-                    Ball.Velocity.X = -ServSpeed
-                    Ball.Velocity.Y = ServSpeed
-```
- **```Case 3```**: If the random number is 3, the ball will move down and to the left (negative X velocity and positive Y velocity).
-
-
- **```End Select```**: This marks the end of the selection process.
-
-
- **```End If```**: This marks the end of the second ```If``` statement.
-
-
- **```End If```**: This marks the end of the first ```If``` statement checking for the right paddle.
-
- **```End Sub```**: This marks the end of the ```CheckForPaddleHits``` method.
-
-
-This method checks if the ball hits either paddle and handles the interaction by stopping the ball, moving it to the correct position, playing a sound, and applying spin or random movement based on the game conditions. It enhances the gameplay experience by providing feedback through sound and vibration.
-
-
-
+---
 
 ##  **Game State Transitions**
 ```vb
-Private Sub CheckforEndGame()
-    If LeftPaddleScore >= 10 Then
-        Winner = WinStateEnum.LeftPaddle
-        GameState = GameStateEnum.EndScreen
-    End If
-    ...
-End Sub
+    Private Sub CheckforEndGame()
+
+        ' Did left paddle reach winning score?
+        If LeftPaddleScore >= 10 Then
+            ' Yes, left paddle did reach winning score.
+
+            ' Set winner to left paddle.
+            Winner = WinStateEnum.LeftPaddle
+
+            ' Reset the frame counter.
+            FlashCount = 0
+
+            ' Change game state to end screen.
+            GameState = GameStateEnum.EndScreen
+
+            PlayWinningSound()
+
+        End If
+
+        ' Did right paddle reach winning score?
+        If RightPaddleScore >= 10 Then
+            ' Yes, right paddle did reach winning score.
+
+            ' Set winner to right paddle.
+            Winner = WinStateEnum.RightPaddle
+
+            ' Reset frame counter.
+            FlashCount = 0
+
+            ' Change game state to end screen.
+            GameState = GameStateEnum.EndScreen
+
+            PlayWinningSound()
+
+        End If
+
+    End Sub
+
 ```
 - This method checks if a player has reached the winning score and transitions the game state to the end screen if so.
+
+### Code Breakdown
+
+
+`Private Sub CheckforEndGame()`: This defines a private subroutine named `CheckforEndGame`. It’s responsible for checking if any player has reached the winning score.
+
+`If LeftPaddleScore >= 10 Then`: Checks if the left paddle’s score is 10 or more.
+
+`Winner = WinStateEnum.LeftPaddle`: If the left paddle has reached the winning score, it sets the winner to the left paddle.
+
+`FlashCount = 0`: Resets the frame counter, for the end game animation.
+
+`GameState = GameStateEnum.EndScreen`: Changes the game state to the end screen, where the end game events are handled.
+
+`PlayWinningSound()`: Plays a sound to celebrate the win.
+
+`If RightPaddleScore >= 10 Then`: Similarly checks if the right paddle has reached the winning score.
+
+`Winner = WinStateEnum.RightPaddle`: Sets the winner to the right paddle if it has reached the winning score.
+
+`FlashCount = 0`: Resets the frame counter again.
+
+`GameState = GameStateEnum.EndScreen`: Changes the game state to the end screen.
+
+`PlayWinningSound()`: Plays the winning sound.
+
+This method ensures the game transitions smoothly to the end screen when either player reaches the winning score. 
+
+
+---
+
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
 
 ##  **Rendering Graphics**
 ```vb
@@ -484,25 +616,32 @@ End Sub
 ```
 - This method is responsible for rendering the game graphics. It calls the `DrawGame` method to draw all game elements and then renders the buffer to the screen.
 
+### Code Breakdown
 
 
-```Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)```: This line starts the ```OnPaint``` method, which is responsible for painting the game's graphics. ```Overrides``` means it replaces the base class's ```OnPaint``` method. ```e``` is a PaintEventArgs object that gives you access to the graphics object.
+`Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)`: This line starts the `OnPaint` method, which is responsible for painting the game's graphics. `Overrides` means it replaces the base class's `OnPaint` method. `e` is a PaintEventArgs object that gives you access to the graphics object.
 
-```DrawGame()```: This line calls a method named ```DrawGame```. This method contains the logic for drawing all the game elements like paddles, balls, and scores.
+`DrawGame()`: This line calls a method named `DrawGame`. This method contains the logic for drawing all the game elements like paddles, balls, and scores.
 
-```Buffer.Render(e.Graphics)```: This line tells the game to display the image from a buffer (a temporary storage) onto the screen using ```e.Graphics```.
+`Buffer.Render(e.Graphics)`: This line tells the game to display the image from a buffer (a temporary storage) onto the screen using `e.Graphics`.
 
-```Buffer.Dispose()```: This line frees up memory used by the buffer. It's a cleanup step to ensure your program doesn’t use more memory than it needs.
+`Buffer.Dispose()`: This line frees up memory used by the buffer. It's a cleanup step to ensure your program doesn’t use more memory than it needs.
 
-```Buffer = Nothing```: This line sets the buffer to ```Nothing``` (null), ensuring it’s completely reset and no longer in use.
+`Buffer = Nothing`: This line sets the buffer to `Nothing` (null), ensuring it’s completely reset and no longer in use.
 
-```Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)```: This line creates a new buffer. ```Context.Allocate``` sets up the buffer to match the size of the game's window (```ClientRectangle```).
+`Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)`: This line creates a new buffer. `Context.Allocate` sets up the buffer to match the size of the game's window (`ClientRectangle`).
 
-```UpdateFrameCounter()```: This line updates a counter that keeps track of how many frames have been displayed. It's useful for performance monitoring or displaying the frame rate.
-
-
+`UpdateFrameCounter()`: This line updates a counter that keeps track of how many frames have been displayed. It's useful for performance monitoring or displaying the frame rate.
 
 
+
+
+---
+
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
 
 
 ##  **Sound Management**
@@ -536,34 +675,36 @@ End Function
 
 - **Loading Sounds**: The game loads sound files from specified paths and associates them with names for easy reference.
 
-```Private Function AddSound(SoundName As String, FilePath As String) As Boolean```: This line defines a function named ```AddSound```. It takes two parameters: ```SoundName``` and ```FilePath```. The function returns a Boolean value (```True``` or ```False```).
-
-```If Not String.IsNullOrWhiteSpace(SoundName) AndAlso IO.File.Exists(FilePath) Then```: This line checks if ```SoundName``` is not empty and if the file at ```FilePath``` exists.
-
-```Dim CommandOpen As String = $"open ""{FilePath}"" alias {SoundName}"```: This line creates a command string to open the sound file with a specific alias name.
-
-```Dim ReturnString As New StringBuilder(128)```: This line creates a new StringBuilder object with a capacity of 128 characters to store the response from the command.
-
-```If mciSendStringW(CommandOpen, ReturnString, 0, IntPtr.Zero) = 0 Then```: This line sends the command to open the sound file. If the command is successful (returns 0), it proceeds to the next steps.
-
-```Array.Resize(Sounds, Sounds.Length + 1)```: This line resizes the ```Sounds``` array to accommodate one more element.
-
-```Sounds(Sounds.Length - 1) = SoundName```: This line adds the ```SoundName``` to the last position of the ```Sounds``` array.
-
-```Return True```: This line returns ```True```, indicating that the sound was successfully added.
-
-```End If```: This line marks the end of the ```If``` block.
-
-```Return False```: This line returns ```False``` if the sound could not be added.
-
-```End Function```: This line marks the end of the function.
-
-This function checks if the sound file exists, opens it, and adds it to an array of sounds for your game. If any step fails, it returns ```False```. 
+### Code Breakdown
 
 
+`Private Function AddSound(SoundName As String, FilePath As String) As Boolean`: This line defines a function named `AddSound`. It takes two parameters: `SoundName` and `FilePath`. The function returns a Boolean value (`True` or `False`).
 
-- **Volume Control**: The volume of sounds can be adjusted, allowing for a customizable audio experience.
-- **Looping Sounds**: Background music can be looped to create an immersive atmosphere.
+`If Not String.IsNullOrWhiteSpace(SoundName) AndAlso IO.File.Exists(FilePath) Then`: This line checks if `SoundName` is not empty and if the file at `FilePath` exists.
+
+`Dim CommandOpen As String = $"open ""{FilePath}"" alias {SoundName}"`: This line creates a command string to open the sound file with a specific alias name.
+
+`Dim ReturnString As New StringBuilder(128)`: This line creates a new StringBuilder object with a capacity of 128 characters to store the response from the command.
+
+`If mciSendStringW(CommandOpen, ReturnString, 0, IntPtr.Zero) = 0 Then`: This line sends the command to open the sound file. If the command is successful (returns 0), it proceeds to the next steps.
+
+`Array.Resize(Sounds, Sounds.Length + 1)`: This line resizes the `Sounds` array to accommodate one more element.
+
+`Sounds(Sounds.Length - 1) = SoundName`: This line adds the `SoundName` to the last position of the `Sounds` array.
+
+`Return True`: This line returns `True`, indicating that the sound was successfully added.
+
+`End If`: This line marks the end of the `If` block.
+
+`Return False`: This line returns `False` if the sound could not be added.
+
+`End Function`: This line marks the end of the function.
+
+This function checks if the sound file exists, opens it, and adds it to an array of sounds for your game. If any step fails, it returns `False`. 
+
+
+---
+
 
 
 
@@ -592,14 +733,12 @@ Private Function PlaySound(SoundName As String) As Boolean
 
 End Function
 ```
-- **Playing Sounds**: Functions are provided to play specific sounds at appropriate game events (e.g., ball hits, scoring).
+- **Playing Sounds**: This function is provided to play specific sounds at appropriate game events (e.g., ball hits, scoring).
 
 
-- This function manages sound effects, allowing sounds to be added and played during the game.
-  
----
+- **Volume Control**: The volume of sounds can be adjusted, allowing for a customizable audio experience.
+- **Looping Sounds**: Background music can be looped to create an immersive atmosphere.
 
-The code is structured to handle game logic, user input, rendering, and sound management in a clear and organized manner. Each section focuses on a specific aspect of the game, making it easier to understand and modify. If you have specific sections you'd like to dive deeper into or have questions about, let me know!
 
 
 
@@ -607,7 +746,8 @@ The code is structured to handle game logic, user input, rendering, and sound ma
 
 ---
 
-[Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+[Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
 
 ---
 
