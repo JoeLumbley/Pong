@@ -2621,6 +2621,29 @@ Public Class Form1
 
                 End If
 
+
+
+
+
+                If XButtonPressed Then
+
+                    If Not IsXButtonDown(ControllerNumber) Then
+
+                        IsXButtonDown(ControllerNumber) = True
+
+                        GameState = GameStateEnum.StartScreen
+
+                        MovePointerOffScreen()
+
+                    End If
+
+                Else
+
+                    IsXButtonDown(ControllerNumber) = False
+
+                End If
+
+
             Case GameStateEnum.Playing
 
             Case GameStateEnum.Serve
