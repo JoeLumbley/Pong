@@ -81,7 +81,7 @@ Public Class Form1
     End Enum
 
     'State Data *******************************************
-    Private GameState As GameStateEnum = GameStateEnum.EndScreen
+    Private GameState As GameStateEnum = GameStateEnum.StartScreen
     Private Serving As ServeStateEnum = ServeStateEnum.LeftPaddle
     Private ServSpeed As Single = 500
     Private Winner As WinStateEnum = WinStateEnum.LeftPaddle
