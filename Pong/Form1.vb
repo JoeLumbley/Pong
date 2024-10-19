@@ -2322,8 +2322,6 @@ Public Class Form1
 
     End Sub
 
-
-
     Private Sub DrawLeftPaddleTrophy()
 
         With Buffer.Graphics
@@ -2342,9 +2340,6 @@ Public Class Form1
         End With
 
     End Sub
-
-
-
 
     Private Sub DrawLeftPaddleScore()
 
