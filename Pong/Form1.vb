@@ -81,7 +81,7 @@ Public Class Form1
     End Enum
 
     'State Data *******************************************
-    Private GameState As GameStateEnum = GameStateEnum.StartScreen
+    Private GameState As GameStateEnum = GameStateEnum.EndScreen
     Private Serving As ServeStateEnum = ServeStateEnum.LeftPaddle
     Private ServSpeed As Single = 500
     Private Winner As WinStateEnum = WinStateEnum.LeftPaddle
@@ -2314,7 +2314,7 @@ Public Class Form1
             .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
 
             Dim Location As Point = RPadScoreLocation
-            Location.Y += 250
+            Location.Y += ClientSize.Height \ 2 - 100
 
             Buffer.Graphics.DrawString("🏆", TitleFont, Brushes.White, Location, AlineCenterMiddle)
 
@@ -2335,7 +2335,7 @@ Public Class Form1
 
 
             Dim Location As Point = LPadScoreLocation
-            Location.Y += 250
+            Location.Y += ClientSize.Height \ 2 - 100
 
             Buffer.Graphics.DrawString("🏆", TitleFont, Brushes.White, Location, AlineCenterMiddle)
 
