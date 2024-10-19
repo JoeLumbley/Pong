@@ -2660,12 +2660,6 @@ Public Class Form1
 
             Case GameStateEnum.StartScreen
 
-                'If StartButtonPressed Then
-
-                '    GameState = GameStateEnum.Instructions
-
-                'End If
-
                 If StartButtonPressed Then
 
                     If Not IsStartButtonDown(ControllerNumber) Then
@@ -2714,7 +2708,6 @@ Public Class Form1
 
                         MovePointerOffScreen()
 
-
                     End If
 
                 Else
@@ -2738,7 +2731,6 @@ Public Class Form1
                         GameState = GameStateEnum.Serve
 
                         MovePointerOffScreen()
-
 
                     End If
 
