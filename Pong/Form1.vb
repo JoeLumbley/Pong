@@ -2444,9 +2444,9 @@ Public Class Form1
         ' Every second check for connected controllers.
         If ElapsedTime.TotalSeconds >= 1 Then
 
-            For controllerNumber As Integer = 0 To 3 ' Up to 4 controllers
+            For ControllerNumber As Integer = 0 To 3 ' Up to 4 controllers
 
-                Connected(controllerNumber) = IsControllerConnected(controllerNumber)
+                Connected(ControllerNumber) = IsControllerConnected(ControllerNumber)
 
             Next
 
@@ -2454,11 +2454,11 @@ Public Class Form1
 
         End If
 
-        For controllerNumber As Integer = 0 To 3
+        For ControllerNumber As Integer = 0 To 3
 
-            If Connected(controllerNumber) Then
+            If Connected(ControllerNumber) Then
 
-                UpdateControllerState(controllerNumber)
+                UpdateControllerState(ControllerNumber)
 
             End If
 
@@ -2466,17 +2466,17 @@ Public Class Form1
 
     End Sub
 
-    Private Sub UpdateControllerState(controllerNumber As Integer)
+    Private Sub UpdateControllerState(ControllerNumber As Integer)
 
         Try
 
-            XInputGetState(controllerNumber, ControllerPosition)
+            XInputGetState(ControllerNumber, ControllerPosition)
 
-            UpdateButtonPosition(controllerNumber)
+            UpdateButtonPosition(ControllerNumber)
 
-            UpdateLeftThumbstickPosition(controllerNumber)
+            UpdateLeftThumbstickPosition(ControllerNumber)
 
-            UpdateRightThumbstickPosition(controllerNumber)
+            UpdateRightThumbstickPosition(ControllerNumber)
 
             'UpdateLeftTriggerPosition(controllerNumber)
 
@@ -2491,7 +2491,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub UpdateButtonPosition(CID As Integer)
+    Private Sub UpdateButtonPosition(ControllerNumber As Integer)
         ' The range of buttons is 0 to 65,535. Unsigned 16-bit (2-byte) integer.
 
         DPadUpPressed = (ControllerPosition.Gamepad.wButtons And DPadUp) <> 0
@@ -2522,7 +2522,7 @@ Public Class Form1
 
         YButtonPressed = (ControllerPosition.Gamepad.wButtons And YButton) <> 0
 
-        DoButtonLogic(CID)
+        DoButtonLogic(ControllerNumber)
 
     End Sub
 
@@ -2540,7 +2540,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DoLetterButtonLogic(controllerNumber As Integer)
+    Private Sub DoLetterButtonLogic(ControllerNumber As Integer)
 
         Select Case GameState
 
@@ -2548,9 +2548,9 @@ Public Class Form1
 
                 If AButtonPressed Then
 
-                    If Not IsAButtonDown(controllerNumber) Then
+                    If Not IsAButtonDown(ControllerNumber) Then
 
-                        IsAButtonDown(controllerNumber) = True
+                        IsAButtonDown(ControllerNumber) = True
 
                         NumberOfPlayers = 1
 
@@ -2562,7 +2562,7 @@ Public Class Form1
 
                 Else
 
-                    IsAButtonDown(controllerNumber) = False
+                    IsAButtonDown(ControllerNumber) = False
 
                 End If
 
@@ -2578,9 +2578,9 @@ Public Class Form1
 
                 If XButtonPressed Then
 
-                    If Not IsxButtonDown(controllerNumber) Then
+                    If Not IsXButtonDown(ControllerNumber) Then
 
-                        IsXButtonDown(controllerNumber) = True
+                        IsXButtonDown(ControllerNumber) = True
 
                         MovePointerCenterScreen()
 
@@ -2590,7 +2590,7 @@ Public Class Form1
 
                 Else
 
-                    IsXButtonDown(controllerNumber) = False
+                    IsXButtonDown(ControllerNumber) = False
 
                 End If
 
@@ -2599,9 +2599,9 @@ Public Class Form1
 
                 If AButtonPressed Then
 
-                    If Not IsAButtonDown(controllerNumber) Then
+                    If Not IsAButtonDown(ControllerNumber) Then
 
-                        IsAButtonDown(controllerNumber) = True
+                        IsAButtonDown(ControllerNumber) = True
 
                         If IsPlaying("startscreenmusic") = True Then
 
@@ -2617,7 +2617,7 @@ Public Class Form1
 
                 Else
 
-                    IsAButtonDown(controllerNumber) = False
+                    IsAButtonDown(ControllerNumber) = False
 
                 End If
 
@@ -2629,9 +2629,9 @@ Public Class Form1
 
                 If XButtonPressed Then
 
-                    If Not IsXButtonDown(controllerNumber) Then
+                    If Not IsXButtonDown(ControllerNumber) Then
 
-                        IsXButtonDown(controllerNumber) = True
+                        IsXButtonDown(ControllerNumber) = True
 
                         ResetGame()
 
@@ -2643,7 +2643,7 @@ Public Class Form1
 
                 Else
 
-                    IsXButtonDown(controllerNumber) = False
+                    IsXButtonDown(ControllerNumber) = False
 
                 End If
 
@@ -2814,11 +2814,11 @@ Public Class Form1
 
     End Sub
 
-    Private Function IsControllerConnected(controllerNumber As Integer) As Boolean
+    Private Function IsControllerConnected(ControllerNumber As Integer) As Boolean
 
         Try
 
-            Return XInputGetState(controllerNumber, ControllerPosition) = 0 ' 0 means the controller is connected.
+            Return XInputGetState(ControllerNumber, ControllerPosition) = 0 ' 0 means the controller is connected.
             ' Anything else (a non-zero value) means the controller is not connected.
 
         Catch ex As Exception
