@@ -162,6 +162,10 @@ Public Class Form1
     Private RightPaddleScore As Integer
     Private RPadScoreLocation As Point
 
+    Private RPadTrophyLocation As Point
+    Private LPadTrophyLocation As Point
+
+
     Private ReadOnly ScoreFont As New Font(FontFamily.GenericSansSerif, 75)
 
     Private IsConThumbRYNeutral(0 To 3) As Boolean
@@ -652,7 +656,7 @@ Public Class Form1
 
         EndScreenCounter += 1
 
-        If EndScreenCounter >= 300 Then
+        If EndScreenCounter >= 500 Then
 
             ResetGame()
 
@@ -687,8 +691,8 @@ Public Class Form1
         'Advance the frame counter.
         FlashCount += 1
 
-        'Draw text for 20 frames.
-        If FlashCount <= 20 Then
+        'Draw text for 60 frames.
+        If FlashCount <= 60 Then
 
             DrawFlashingText = True
 
@@ -698,8 +702,8 @@ Public Class Form1
 
         End If
 
-        'Dont draw text for the next 20 frames.
-        If FlashCount >= 40 Then
+        'Dont draw text for the next 60 frames.
+        If FlashCount >= 120 Then
 
             'Repete
             FlashCount = 0
@@ -2313,10 +2317,10 @@ Public Class Form1
             .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
             .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
 
-            Dim Location As Point = RPadScoreLocation
-            Location.Y += ClientSize.Height \ 2 - 100
+            'RPadTrophyLocation = RPadScoreLocation
+            'RPadTrophyLocation.Y += ClientSize.Height \ 2 - 100
 
-            Buffer.Graphics.DrawString("🏆", TitleFont, Brushes.White, Location, AlineCenterMiddle)
+            Buffer.Graphics.DrawString("🏆", TitleFont, Brushes.White, RPadTrophyLocation, AlineCenterMiddle)
 
         End With
 
@@ -2332,10 +2336,10 @@ Public Class Form1
             .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
 
 
-            Dim Location As Point = LPadScoreLocation
-            Location.Y += ClientSize.Height \ 2 - 100
+            'Dim Location As Point = LPadScoreLocation
+            'Location.Y += ClientSize.Height \ 2 - 100
 
-            Buffer.Graphics.DrawString("🏆", TitleFont, Brushes.White, Location, AlineCenterMiddle)
+            Buffer.Graphics.DrawString("🏆", TitleFont, Brushes.White, LPadTrophyLocation, AlineCenterMiddle)
 
         End With
 
@@ -3063,7 +3067,17 @@ Public Class Form1
 
         LPadScoreLocation = New Point(ClientSize.Width \ 2 \ 2, 100)
 
+        LPadTrophyLocation = New Point(ClientSize.Width \ 2 \ 2, ClientSize.Height \ 2 - 0)
+
+
         RPadScoreLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), 100)
+
+        RPadTrophyLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), ClientSize.Height \ 2 - 100)
+
+
+
+
+
 
         ClientCenter = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
 
