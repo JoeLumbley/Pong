@@ -752,4 +752,20 @@ End Function
 
 ---
 
+---
 
+## A Special Thanks
+
+A heartfelt thank you to my son, Joey, for his invaluable help in developing P🏓NG. This project is a testament to our teamwork and shared passion for coding!
+
+---
+
+## Join the Conversation
+
+I invite all players and developers to share their experiences, thoughts, and feedback on P🏓NG. Your insights are essential for making this project even better. Let’s collaborate and create something amazing together!
+
+You can explore my work and projects on my GitHub: [github.com/JoeLumbley](https://github.com/JoeLumbley) and check out my tutorials on my YouTube channel: [youtube.com/@codewithjoe6074](https://youtube.com/@codewithjoe6074).
+
+---
+
+Happy coding!
