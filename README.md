@@ -3,6 +3,7 @@
 ![011](https://github.com/user-attachments/assets/f129ad9d-270e-49a0-b833-56bad8938062)
 
 P🏓NG is a  simulation of **Table Tennis**, a recreational activity and an Olympic sport since 1988, is also known by the term "ping-pong" or just "pong".
+This project is special to me as it was developed with my son, Joey, making it a true father-and-son collaboration.
 
 This repository is designed to help new game developers learn the fundamentals of game programming and design through a classic game.
 
