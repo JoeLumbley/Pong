@@ -3,6 +3,7 @@
 ![011](https://github.com/user-attachments/assets/f129ad9d-270e-49a0-b833-56bad8938062)
 
 P🏓NG is a  simulation of **Table Tennis**, a recreational activity and an Olympic sport since 1988, is also known by the term "ping-pong" or just "pong".
+This project is special to me as it was developed with my son, Joey, making it a true father-and-son collaboration.
 
 This repository is designed to help new game developers learn the fundamentals of game programming and design through a classic game.
 
@@ -749,6 +750,22 @@ End Function
 
 [Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
 
+
 ---
 
+## A Special Thanks
 
+A heartfelt thank you to my son, Joey, for his invaluable help in developing P🏓NG. This project is a testament to our teamwork and shared passion for coding!
+![017](https://github.com/user-attachments/assets/60c0154a-93ad-43fa-a268-c1e0f0839411)
+
+---
+
+## Join the Conversation
+
+I invite all players and developers to share their experiences, thoughts, and feedback on P🏓NG. Your insights are essential for making this project even better. Let’s collaborate and create something amazing together!
+
+You can explore my work and projects on my GitHub: [github.com/JoeLumbley](https://github.com/JoeLumbley) and check out my tutorials on my YouTube channel: [youtube.com/@codewithjoe6074](https://youtube.com/@codewithjoe6074).
+
+---
+
+Happy coding!
