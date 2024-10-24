@@ -257,7 +257,7 @@ Private NumberOfPlayers As Integer = 2
 
 The game loop is a critical component of the P🏓NG game, ensuring that the game runs smoothly and updates in real-time. It consists of two main subroutines: `UpdateGame` and `DrawGame`.
 
- **UpdateGame**: This subroutine is called at regular intervals to update the game's state. It processes input, updates game objects, checks for collisions, and transitions between game states. The loop continuously calls this function to ensure that the game responds to player actions and progresses logically.
+ **UpdateGame**: This subroutine is called at regular intervals to update the game's state. It processes input, updates game objects, checks for collisions, and transitions between game states. The loop continuously calls this subroutine to ensure that the game responds to player actions and progresses logically.
 
    ```vb
    Private Sub UpdateGame()
