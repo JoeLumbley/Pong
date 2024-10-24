@@ -3078,7 +3078,7 @@ Public Class Form1
 
         RPadScoreLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), 100)
 
-        RPadTrophyLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), ClientSize.Height \ 2 - 100)
+        RPadTrophyLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), ClientSize.Height \ 2 - 0)
 
 
 
