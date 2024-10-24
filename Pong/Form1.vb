@@ -467,6 +467,8 @@ Public Class Form1
 
                 GameState = GameStateEnum.Pause
 
+                MovePointerOffScreen()
+
                 PlayPauseSound()
 
             End If
@@ -484,6 +486,8 @@ Public Class Form1
                 IsPauseKeyDown = True
 
                 GameState = GameStateEnum.Pause
+
+                MovePointerOffScreen()
 
                 PlayPauseSound()
 
@@ -1902,6 +1906,8 @@ Public Class Form1
 
                 GameState = GameStateEnum.Playing
 
+                MovePointerOffScreen()
+
                 PauseSound("pause")
 
             End If
@@ -1922,6 +1928,8 @@ Public Class Form1
                 LastFrame = Now
 
                 GameState = GameStateEnum.Playing
+
+                MovePointerOffScreen()
 
                 PauseSound("pause")
 
