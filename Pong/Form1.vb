@@ -165,7 +165,6 @@ Public Class Form1
     Private RPadTrophyLocation As Point
     Private LPadTrophyLocation As Point
 
-
     Private ReadOnly ScoreFont As New Font(FontFamily.GenericSansSerif, 75)
 
     Private IsConThumbRYNeutral(0 To 3) As Boolean
@@ -210,7 +209,6 @@ Public Class Form1
 
     Private PauseKeyDown As Boolean = False
     Private IsPauseKeyDown As Boolean = False
-
 
     '******************************************************
 
