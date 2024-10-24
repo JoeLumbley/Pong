@@ -276,6 +276,60 @@ End Sub
 
 This subroutine keeps the game running smoothly by continuously updating the game state and refreshing the display at regular intervals. Essentially, it's the heartbeat of your game loop.
 
+
+
+
+
+
+
+
+
+### Game Loop
+
+The game loop is a critical component of the P🏓NG game, ensuring that the game runs smoothly and updates in real-time. It consists of two main functions: `UpdateGame` and `DrawGame`.
+
+1. **UpdateGame**: This function is called at regular intervals to update the game's state. It processes input, updates game objects, checks for collisions, and transitions between game states. The loop continuously calls this function to ensure that the game responds to player actions and progresses logically.
+
+   ```vb
+   Private Sub UpdateGame()
+       Select Case GameState
+           Case GameStateEnum.Playing
+               UpdatePlaying()
+           Case GameStateEnum.StartScreen
+               UpdateStartScreen()
+           Case GameStateEnum.Instructions
+               UpdateInstructions()
+           Case GameStateEnum.Serve
+               UpdateServe()
+           Case GameStateEnum.Pause
+               UpdatePause()
+           Case GameStateEnum.EndScreen
+               UpdateEndScreen()
+       End Select
+   End Sub
+   ```
+
+2. **DrawGame**: This function handles rendering the game's graphics. It draws all the game elements, such as paddles, the ball, and scores, onto the screen. The `DrawGame` function is called after `UpdateGame` to ensure that the latest game state is displayed.
+
+   ```vb
+   Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
+       DrawGame() ' Draw all game elements
+       Buffer.Render(e.Graphics) ' Show buffer on form
+       Buffer.Dispose() ' Release memory used by buffer
+       Buffer = Nothing ' Create new buffer
+       Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)
+       UpdateFrameCounter() ' Update frame counter
+   End Sub
+   ```
+
+3. **Repetition**: The game loop continuously repeats the `UpdateGame` and `DrawGame` functions to maintain a seamless gameplay experience. This repetition ensures that the game remains responsive to user inputs and provides a fluid visual experience.
+
+By effectively managing the game loop, P🏓NG achieves smooth gameplay and a responsive user experience.
+
+
+
+
+
 ---
 
 
