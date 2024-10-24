@@ -254,37 +254,6 @@ Private NumberOfPlayers As Integer = 2
 ---
 
 ##  **Game Loop**
-```vb
-Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-
-    UpdateGame()
-
-    Refresh()
-
-End Sub
-```
-- This subroutine is called at regular intervals (set by a timer). It updates the game state and refreshes the display.
-
-### Code Breakdown
-
-`Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick`: This subroutine is executed at regular intervals, controlled by a timer named `Timer1`. The `Tick` event is triggered by the timer at specified intervals. `sender` is the source of the event, and `e` is the event data.
-
-`UpdateGame()`: This line calls the `UpdateGame` method, which contains the logic for updating the game's state. This might include moving paddles, updating scores, checking for collisions, etc.
-
-`Refresh()`: This line refreshes the display, causing the form to redraw its contents. It ensures that any changes made by `UpdateGame` are visually updated on the screen.
-
-
-This subroutine keeps the game running smoothly by continuously updating the game state and refreshing the display at regular intervals. Essentially, it's the heartbeat of your game loop.
-
-
-
-
-
-
-
-
-
-### Game Loop
 
 The game loop is a critical component of the P🏓NG game, ensuring that the game runs smoothly and updates in real-time. It consists of two main functions: `UpdateGame` and `DrawGame`.
 
@@ -323,6 +292,37 @@ The game loop is a critical component of the P🏓NG game, ensuring that the gam
    ```
 
 3. **Repetition**: The game loop continuously repeats the `UpdateGame` and `DrawGame` functions to maintain a seamless gameplay experience. This repetition ensures that the game remains responsive to user inputs and provides a fluid visual experience.
+
+```vb
+Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+
+    UpdateGame()
+
+    Refresh()
+
+End Sub
+```
+- This subroutine is called at regular intervals (set by a timer). It updates the game state and refreshes the display.
+
+### Code Breakdown
+
+`Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick`: This subroutine is executed at regular intervals, controlled by a timer named `Timer1`. The `Tick` event is triggered by the timer at specified intervals. `sender` is the source of the event, and `e` is the event data.
+
+`UpdateGame()`: This line calls the `UpdateGame` method, which contains the logic for updating the game's state. This might include moving paddles, updating scores, checking for collisions, etc.
+
+`Refresh()`: This line refreshes the display, causing the form to redraw its contents. It ensures that any changes made by `UpdateGame` are visually updated on the screen.
+
+
+This subroutine keeps the game running smoothly by continuously updating the game state and refreshing the display at regular intervals. Essentially, it's the heartbeat of your game loop.
+
+
+
+
+
+
+
+
+
 
 By effectively managing the game loop, P🏓NG achieves smooth gameplay and a responsive user experience.
 
