@@ -255,9 +255,9 @@ Private NumberOfPlayers As Integer = 2
 
 ##  **Game Loop**
 
-The game loop is a critical component of the P🏓NG game, ensuring that the game runs smoothly and updates in real-time. It consists of two main functions: `UpdateGame` and `DrawGame`.
+The game loop is a critical component of the P🏓NG game, ensuring that the game runs smoothly and updates in real-time. It consists of two main subroutines: `UpdateGame` and `DrawGame`.
 
-1. **UpdateGame**: This function is called at regular intervals to update the game's state. It processes input, updates game objects, checks for collisions, and transitions between game states. The loop continuously calls this function to ensure that the game responds to player actions and progresses logically.
+1. **UpdateGame**: This subroutine is called at regular intervals to update the game's state. It processes input, updates game objects, checks for collisions, and transitions between game states. The loop continuously calls this function to ensure that the game responds to player actions and progresses logically.
 
    ```vb
    Private Sub UpdateGame()
@@ -278,7 +278,7 @@ The game loop is a critical component of the P🏓NG game, ensuring that the gam
    End Sub
    ```
 
-2. **DrawGame**: This function handles rendering the game's graphics. It draws all the game elements, such as paddles, the ball, and scores, onto the screen. The `DrawGame` function is called after `UpdateGame` to ensure that the latest game state is displayed.
+2. **DrawGame**: This subroutine handles rendering the game's graphics. It draws all the game elements, such as paddles, the ball, and scores, onto the screen. The `DrawGame` subroutine is called after `UpdateGame` to ensure that the latest game state is displayed.
 
    ```vb
    Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
@@ -291,7 +291,7 @@ The game loop is a critical component of the P🏓NG game, ensuring that the gam
    End Sub
    ```
 
-3. **Repetition**: The game loop continuously repeats the `UpdateGame` and `DrawGame` functions to maintain a seamless gameplay experience. This repetition ensures that the game remains responsive to user inputs and provides a fluid visual experience.
+3. **Repetition**: The game loop continuously repeats the `UpdateGame` and `DrawGame` subroutines to maintain a seamless gameplay experience. This repetition ensures that the game remains responsive to user inputs and provides a fluid visual experience.
 
 ```vb
 Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
