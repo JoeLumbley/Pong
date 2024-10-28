@@ -1600,7 +1600,6 @@ Public Class Form1
 
             End If
 
-            Debug.Print("Paddle Stop")
 
         End If
 
@@ -1857,6 +1856,8 @@ Public Class Form1
             'Limit decelerate to zero speed.
             If LeftPaddle.Velocity.Y > 0 Then LeftPaddle.Velocity.Y = 0 'Zero speed.
 
+            Debug.Print("Paddle Stop")
+
         End If
 
         'Is the paddle moving down?
@@ -1868,6 +1869,8 @@ Public Class Form1
 
             'Limit decelerate to zero speed.
             If LeftPaddle.Velocity.Y < 0 Then LeftPaddle.Velocity.Y = 0 'Zero speed.
+
+            Debug.Print("Paddle Stop")
 
         End If
 
