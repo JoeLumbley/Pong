@@ -259,6 +259,9 @@ Public Class Form1
 
     Private ConnectionStart As Date = Now
 
+    Private LastKeyDown As Date = Now
+
+
     Private Const DPadUp As Integer = 1
     Private Const DPadDown As Integer = 2
 
@@ -1571,9 +1574,13 @@ Public Class Form1
 
             MoveLeftPaddleUp()
 
+            Debug.Print("Paddle Up")
+
         ElseIf SKeyDown Then
 
             MoveLeftPaddleDown()
+
+            Debug.Print("Paddle Down")
 
         Else
 
@@ -1592,6 +1599,8 @@ Public Class Form1
                 End If
 
             End If
+
+            Debug.Print("Paddle Stop")
 
         End If
 
@@ -1744,6 +1753,8 @@ Public Class Form1
     End Sub
 
     Private Sub MoveLeftPaddleUp()
+
+
 
         'Is the paddle moving down?
         If LeftPaddle.Velocity.Y > 0 Then
@@ -3445,7 +3456,18 @@ Public Class Form1
 
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
 
-        DoKeyDown(e)
+        Dim ElapsedTime As TimeSpan = Now - LastKeyDown
+
+        ' Every 50 milliseconds check for keydown.
+        If ElapsedTime.TotalMilliseconds >= 50 Then
+
+            DoKeyDown(e)
+
+            LastKeyDown = DateTime.Now
+
+        End If
+
+        e.Handled = True
 
     End Sub
 
