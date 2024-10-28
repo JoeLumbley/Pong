@@ -3539,7 +3539,6 @@ Public Class Form1
 
                 PauseKeyDown = True
 
-
         End Select
 
     End Sub
