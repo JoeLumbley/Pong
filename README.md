@@ -5,6 +5,8 @@
 P🏓NG is a  simulation of **Table Tennis**, a recreational activity and an Olympic sport since 1988, is also known by the term "ping-pong" or just "pong".
 This project is special to me as it was developed with my son, Joey, making it a true father-and-son collaboration.
 
+
+
 This repository is designed to help new game developers learn the fundamentals of game programming and design through a classic game.
 
 ## Features
@@ -17,6 +19,13 @@ This repository is designed to help new game developers learn the fundamentals o
 - Understand the basics of game mechanics and physics.
 - Gain hands-on experience with VB.NET and game development concepts.
 - Learn how to implement user input handling, game states, and sound effects.
+
+---
+
+![019](https://github.com/user-attachments/assets/4ec46822-d239-4e7b-91be-209baa982017)
+
+
+https://youtube.com/shorts/_W-7EHnru2w?si=H6w0GIQnZGHYtB_t
 
 
 ---
@@ -245,6 +254,45 @@ Private NumberOfPlayers As Integer = 2
 ---
 
 ##  **Game Loop**
+
+The game loop is a critical component of the P🏓NG game, ensuring that the game runs smoothly and updates in real-time. It consists of two main subroutines: **`UpdateGame`** and **`DrawGame`**.
+
+- **UpdateGame**: This subroutine is called at regular intervals to update the game's state. It processes input, updates game objects, checks for collisions, and transitions between game states. The loop continuously calls this subroutine to ensure that the game responds to player actions and progresses logically.
+
+   ```vb
+   Private Sub UpdateGame()
+       Select Case GameState
+           Case GameStateEnum.Playing
+               UpdatePlaying()
+           Case GameStateEnum.StartScreen
+               UpdateStartScreen()
+           Case GameStateEnum.Instructions
+               UpdateInstructions()
+           Case GameStateEnum.Serve
+               UpdateServe()
+           Case GameStateEnum.Pause
+               UpdatePause()
+           Case GameStateEnum.EndScreen
+               UpdateEndScreen()
+       End Select
+   End Sub
+   ```
+
+- **DrawGame**: This subroutine handles rendering the game's graphics. It draws all the game elements, such as paddles, the ball, and scores, onto the screen. The `DrawGame` subroutine is called after `UpdateGame` to ensure that the latest game state is displayed.
+
+   ```vb
+   Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
+       DrawGame() ' Draw all game elements
+       Buffer.Render(e.Graphics) ' Show buffer on form
+       Buffer.Dispose() ' Release memory used by buffer
+       Buffer = Nothing ' Create new buffer
+       Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)
+       UpdateFrameCounter() ' Update frame counter
+   End Sub
+   ```
+
+- **Repeat**: The game loop continuously repeats the `UpdateGame` and `DrawGame` subroutines to maintain a seamless gameplay experience. This repetition ensures that the game remains responsive to user inputs and provides a fluid visual experience.
+
 ```vb
 Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
 
@@ -266,6 +314,21 @@ End Sub
 
 
 This subroutine keeps the game running smoothly by continuously updating the game state and refreshing the display at regular intervals. Essentially, it's the heartbeat of your game loop.
+
+
+
+
+
+
+
+
+
+
+By effectively managing the game loop, P🏓NG achieves smooth gameplay and a responsive user experience.
+
+
+
+
 
 ---
 
