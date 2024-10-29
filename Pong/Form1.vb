@@ -1763,11 +1763,6 @@ Public Class Form1
 
         End If
 
-
-
-
-
-
         ' Has the paddle reached the top of the client area?
         If LeftPaddle.Rect.Top <= ClientRectangle.Top Then
             ' Yes, the paddle has reached the top of the client area.
@@ -1823,16 +1818,6 @@ Public Class Form1
 
         End If
 
-
-
-
-
-
-
-
-
-
-
         If ApplyLeftPaddleEnglish Then
 
             ApplyLeftPaddleEnglish = False
@@ -1847,10 +1832,6 @@ Public Class Form1
 
     End Sub
 
-
-
-
-
     Private Sub MoveLeftPaddleDown()
 
         'Is the paddle moving up?
@@ -1864,31 +1845,9 @@ Public Class Form1
 
         End If
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         ' Has the paddle reached the bottom of the client area?
         If LeftPaddle.Rect.Bottom >= ClientRectangle.Bottom Then
             ' Yes, the paddle has reached the bottom of the client area.
-
 
             ' Is the paddle moving down?
             If LeftPaddle.Velocity.Y > 0 Then
@@ -1899,7 +1858,6 @@ Public Class Form1
                 Debug.Print("Left Paddle Stop")
 
             End If
-
 
             ' Is the paddle passed the bottom of the client area.
             If LeftPaddle.Rect.Bottom > ClientRectangle.Bottom Then
@@ -1915,25 +1873,8 @@ Public Class Form1
 
             End If
 
-
-
-
-            'LeftPaddle.Rect.Y = ClientRectangle.Bottom - LeftPaddle.Rect.Height
-
-            'LeftPaddle.Velocity.Y = 0
-
-
-
-
-
-
-
         Else
             ' No, the paddle has not reached the bottom of the client area.
-
-
-
-
 
             ' Has the paddle reached or exceeded max velocity?
             If Not LeftPaddle.Velocity.Y >= LeftPaddle.MaxVelocity.Y Then
@@ -1957,35 +1898,7 @@ Public Class Form1
 
             End If
 
-
-
-
-
-
-
-
-            'LeftPaddle.Velocity.Y += LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds
-
-            ''Limit paddle velocity to the max.
-            'If LeftPaddle.Velocity.Y > LeftPaddle.MaxVelocity.Y Then LeftPaddle.Velocity.Y = LeftPaddle.MaxVelocity.Y
-
         End If
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         If ApplyLeftPaddleEnglish Then
 
@@ -1996,7 +1909,6 @@ Public Class Form1
             Ball.Velocity.Y = ServSpeed
 
             Debug.Print("Left Paddle Send Ball Down Right")
-
 
         End If
 
@@ -2023,10 +1935,6 @@ Public Class Form1
         If LeftPaddle.Velocity.Y < 0 Then
             'Yes, the paddle is moving up.
 
-            '' Has the paddle exceeded zero speed?
-            'If Not LeftPaddle.Velocity.Y > 0 Then
-            '    'No, the paddle has not exceeded zero speed.
-
             ' Decelerate paddle.
             LeftPaddle.Velocity.Y += LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
 
@@ -2041,32 +1949,11 @@ Public Class Form1
 
             End If
 
-
-            'End If
-
-            ''Decelerate paddle.
-            'LeftPaddle.Velocity.Y += LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
-
-            ''Limit decelerate to zero speed.
-            'If LeftPaddle.Velocity.Y > 0 Then LeftPaddle.Velocity.Y = 0 'Zero speed.
-
-
         End If
 
         'Is the paddle moving down?
         If LeftPaddle.Velocity.Y > 0 Then
             'Yes, the paddle is moving down.
-
-            '' Has the paddle exceeded zero speed?
-            'If LeftPaddle.Velocity.Y < 0 Then
-            '    'Yes, the paddle has exceeded zero speed.
-
-            '    ' Stop the paddle.
-            '    LeftPaddle.Velocity.Y = 0 ' Zero speed.
-
-            '    Debug.Print("Left Paddle STOP")
-
-            'Else
 
             ' Decelerate paddle.
             LeftPaddle.Velocity.Y += -LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
@@ -2082,27 +1969,9 @@ Public Class Form1
 
             End If
 
-            ''Limit decelerate to zero speed.
-            'If LeftPaddle.Velocity.Y < 0 Then LeftPaddle.Velocity.Y = 0 'Zero speed.
-
-            'End If
-
-
-            ''Decelerate paddle.
-            'LeftPaddle.Velocity.Y += -LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
-
-            ''Limit decelerate to zero speed.
-            'If LeftPaddle.Velocity.Y < 0 Then LeftPaddle.Velocity.Y = 0 'Zero speed.
-
-            'Debug.Print("Paddle Slowing")
-
         End If
 
     End Sub
-
-
-
-
 
     Private Sub DecelerateRightPaddle()
 
