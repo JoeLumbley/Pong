@@ -1838,7 +1838,7 @@ Public Class Form1
             .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
             .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
 
-            Buffer.Graphics.DrawString("CPU", InstructionsFont, Brushes.White, ClientSize.Width - (ClientSize.Width \ 4), 20, AlineCenterMiddle)
+            .DrawString("CPU", InstructionsFont, Brushes.White, ClientSize.Width - (ClientSize.Width \ 4), 20, AlineCenterMiddle)
 
         End With
 
