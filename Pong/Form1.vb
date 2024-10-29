@@ -1306,6 +1306,8 @@ Public Class Form1
                 Ball.Velocity.X = ServSpeed
                 Ball.Velocity.Y = 0
 
+                Debug.Print("Left Paddle Send Ball Right")
+
             End If
 
         End If
@@ -1759,7 +1761,7 @@ Public Class Form1
             ' Stop move before changing direction.
             LeftPaddle.Velocity.Y = 0 ' Zero speed.
 
-            Debug.Print("Left Paddle Stop")
+            Debug.Print($"Left Paddle Stop {LeftPaddle.Velocity.Y}")
 
         End If
 
@@ -1773,7 +1775,7 @@ Public Class Form1
                 ' Stop the paddle.
                 LeftPaddle.Velocity.Y = 0
 
-                Debug.Print("Left Paddle Stop")
+                Debug.Print($"Left Paddle Stop {LeftPaddle.Velocity.Y}")
 
             End If
 
@@ -1841,7 +1843,7 @@ Public Class Form1
             'Stop move before changing direction.
             LeftPaddle.Velocity.Y = 0 ' Zero speed.
 
-            Debug.Print("Left Paddle Stop")
+            Debug.Print($"Left Paddle Stop {LeftPaddle.Velocity.Y}")
 
         End If
 
@@ -1855,7 +1857,7 @@ Public Class Form1
                 ' Stop the paddle.
                 LeftPaddle.Velocity.Y = 0
 
-                Debug.Print("Left Paddle Stop")
+                Debug.Print($"Left Paddle Stop {LeftPaddle.Velocity.Y}")
 
             End If
 
@@ -1883,7 +1885,7 @@ Public Class Form1
                 ' Send paddle down.
                 LeftPaddle.Velocity.Y += LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds
 
-                Debug.Print("Left Paddle Down")
+                Debug.Print($"Left Paddle Down {LeftPaddle.Velocity.Y}")
 
                 ' Has the paddle exceeded max velocity?
                 If LeftPaddle.Velocity.Y > LeftPaddle.MaxVelocity.Y Then
@@ -1892,7 +1894,7 @@ Public Class Form1
                     ' Limit paddle velocity to the max.
                     LeftPaddle.Velocity.Y = LeftPaddle.MaxVelocity.Y
 
-                    Debug.Print("Left Paddle Max Velocity")
+                    Debug.Print($"Left Paddle Max Velocity {LeftPaddle.Velocity.Y}")
 
                 End If
 
