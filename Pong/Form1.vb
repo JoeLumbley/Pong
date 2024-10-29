@@ -1579,8 +1579,6 @@ Public Class Form1
 
             MoveLeftPaddleDown()
 
-            Debug.Print("Paddle Down")
-
         Else
 
             If Not Connected(0) Then
@@ -1594,6 +1592,8 @@ Public Class Form1
                     'Send ball to the right.
                     Ball.Velocity.X = ServSpeed
                     Ball.Velocity.Y = 0
+
+                    Debug.Print("Left Paddle Send Ball Right")
 
                 End If
 
@@ -1757,11 +1757,16 @@ Public Class Form1
             ' Yes, the paddle is moving down.
 
             ' Stop move before changing direction.
-            LeftPaddle.Velocity.Y = 0 'Zero speed.
+            LeftPaddle.Velocity.Y = 0 ' Zero speed.
 
             Debug.Print("Left Paddle Stop")
 
         End If
+
+
+
+
+
 
         ' Has the paddle reached the top of the client area?
         If LeftPaddle.Rect.Top <= ClientRectangle.Top Then
@@ -1777,9 +1782,11 @@ Public Class Form1
 
             End If
 
+            ' Is the paddle passed the top of the client area.
             If LeftPaddle.Rect.Top < ClientRectangle.Top Then
+                ' Yes, the paddle is passed the top of the client area.
 
-                ' Limit paddle movement to the client area.
+                ' Aline paddle to the top of the client area.
                 LeftPaddle.Rect.Y = ClientRectangle.Top
 
                 ' Snyc paddle position.
@@ -1793,8 +1800,13 @@ Public Class Form1
             ' No, the paddle has not reached the top of the client area.
 
             ' Has the paddle reached or exceeded max velocity?
-            If LeftPaddle.Velocity.Y <= -LeftPaddle.MaxVelocity.Y Then
-                'Yes, the paddle has reached or exceeded max velocity.
+            If Not LeftPaddle.Velocity.Y <= -LeftPaddle.MaxVelocity.Y Then
+                ' No, the paddle has not reached or exceeded max velocity.
+
+                ' Send paddle up.
+                LeftPaddle.Velocity.Y -= LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds
+
+                Debug.Print($"Left Paddle Up {LeftPaddle.Velocity.Y}")
 
                 ' Has the paddle exceeded max velocity?
                 If LeftPaddle.Velocity.Y < -LeftPaddle.MaxVelocity.Y Then
@@ -1803,21 +1815,23 @@ Public Class Form1
                     ' Limit paddle velocity to the max.
                     LeftPaddle.Velocity.Y = -LeftPaddle.MaxVelocity.Y
 
-                    Debug.Print("Left Paddle Limit Velocity")
+                    Debug.Print($"Left Paddle Max Velocity {LeftPaddle.Velocity.Y}")
 
                 End If
-
-            Else
-                'No, the paddle has not reached or exceeded max velocity.
-
-                ' Send paddle up.
-                LeftPaddle.Velocity.Y -= LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds
-
-                Debug.Print("Left Paddle Up")
 
             End If
 
         End If
+
+
+
+
+
+
+
+
+
+
 
         If ApplyLeftPaddleEnglish Then
 
@@ -1827,11 +1841,12 @@ Public Class Form1
             Ball.Velocity.X = ServSpeed
             Ball.Velocity.Y = -ServSpeed
 
-            Debug.Print("Send Ball Up and to the Right")
+            Debug.Print("Left Paddle Send Ball Up Right")
 
         End If
 
     End Sub
+
 
 
 
@@ -1843,24 +1858,134 @@ Public Class Form1
             'Yes, the paddle is moving up.
 
             'Stop move before changing direction.
-            LeftPaddle.Velocity.Y = 0 'Zero speed.
+            LeftPaddle.Velocity.Y = 0 ' Zero speed.
+
+            Debug.Print("Left Paddle Stop")
 
         End If
 
-        If LeftPaddle.Rect.Y + LeftPaddle.Rect.Height >= ClientRectangle.Bottom Then
 
-            LeftPaddle.Rect.Y = ClientRectangle.Bottom - LeftPaddle.Rect.Height
 
-            LeftPaddle.Velocity.Y = 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        ' Has the paddle reached the bottom of the client area?
+        If LeftPaddle.Rect.Bottom >= ClientRectangle.Bottom Then
+            ' Yes, the paddle has reached the bottom of the client area.
+
+
+            ' Is the paddle moving down?
+            If LeftPaddle.Velocity.Y > 0 Then
+
+                ' Stop the paddle.
+                LeftPaddle.Velocity.Y = 0
+
+                Debug.Print("Left Paddle Stop")
+
+            End If
+
+
+            ' Is the paddle passed the bottom of the client area.
+            If LeftPaddle.Rect.Bottom > ClientRectangle.Bottom Then
+                ' Yes, the paddle is passed the bottom of the client area.
+
+                ' Aline paddle to the bottom of the client area.
+                LeftPaddle.Rect.Y = ClientRectangle.Bottom - LeftPaddle.Rect.Height
+
+                ' Snyc paddle position.
+                LeftPaddle.Position.Y = LeftPaddle.Rect.Y
+
+                Debug.Print("Left Paddle Aline Bottom")
+
+            End If
+
+
+
+
+            'LeftPaddle.Rect.Y = ClientRectangle.Bottom - LeftPaddle.Rect.Height
+
+            'LeftPaddle.Velocity.Y = 0
+
+
+
+
+
+
 
         Else
+            ' No, the paddle has not reached the bottom of the client area.
 
-            LeftPaddle.Velocity.Y += LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds
 
-            'Limit paddle velocity to the max.
-            If LeftPaddle.Velocity.Y > LeftPaddle.MaxVelocity.Y Then LeftPaddle.Velocity.Y = LeftPaddle.MaxVelocity.Y
+
+
+
+            ' Has the paddle reached or exceeded max velocity?
+            If Not LeftPaddle.Velocity.Y >= LeftPaddle.MaxVelocity.Y Then
+                ' No, the paddle has not reached or exceeded max velocity.
+
+                ' Send paddle down.
+                LeftPaddle.Velocity.Y += LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds
+
+                Debug.Print("Left Paddle Down")
+
+                ' Has the paddle exceeded max velocity?
+                If LeftPaddle.Velocity.Y > LeftPaddle.MaxVelocity.Y Then
+                    ' Yes, the paddle has exceeded max velocity.
+
+                    ' Limit paddle velocity to the max.
+                    LeftPaddle.Velocity.Y = LeftPaddle.MaxVelocity.Y
+
+                    Debug.Print("Left Paddle Max Velocity")
+
+                End If
+
+            End If
+
+
+
+
+
+
+
+
+            'LeftPaddle.Velocity.Y += LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds
+
+            ''Limit paddle velocity to the max.
+            'If LeftPaddle.Velocity.Y > LeftPaddle.MaxVelocity.Y Then LeftPaddle.Velocity.Y = LeftPaddle.MaxVelocity.Y
 
         End If
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         If ApplyLeftPaddleEnglish Then
 
@@ -1869,6 +1994,9 @@ Public Class Form1
             'Send ball down and to the right.
             Ball.Velocity.X = ServSpeed
             Ball.Velocity.Y = ServSpeed
+
+            Debug.Print("Left Paddle Send Ball Down Right")
+
 
         End If
 
@@ -1895,13 +2023,33 @@ Public Class Form1
         If LeftPaddle.Velocity.Y < 0 Then
             'Yes, the paddle is moving up.
 
-            'Decelerate paddle.
+            '' Has the paddle exceeded zero speed?
+            'If Not LeftPaddle.Velocity.Y > 0 Then
+            '    'No, the paddle has not exceeded zero speed.
+
+            ' Decelerate paddle.
             LeftPaddle.Velocity.Y += LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
 
-            'Limit decelerate to zero speed.
-            If LeftPaddle.Velocity.Y > 0 Then LeftPaddle.Velocity.Y = 0 'Zero speed.
+            Debug.Print($"Left Paddle Slowing {LeftPaddle.Velocity.Y}")
 
-            Debug.Print("Paddle Slowing")
+            ' Limit decelerate to zero speed.
+            If LeftPaddle.Velocity.Y > 0 Then
+
+                LeftPaddle.Velocity.Y = 0 ' Zero speed.
+
+                Debug.Print($"Left Paddle Stop {LeftPaddle.Velocity.Y}")
+
+            End If
+
+
+            'End If
+
+            ''Decelerate paddle.
+            'LeftPaddle.Velocity.Y += LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
+
+            ''Limit decelerate to zero speed.
+            'If LeftPaddle.Velocity.Y > 0 Then LeftPaddle.Velocity.Y = 0 'Zero speed.
+
 
         End If
 
@@ -1909,17 +2057,52 @@ Public Class Form1
         If LeftPaddle.Velocity.Y > 0 Then
             'Yes, the paddle is moving down.
 
-            'Decelerate paddle.
+            '' Has the paddle exceeded zero speed?
+            'If LeftPaddle.Velocity.Y < 0 Then
+            '    'Yes, the paddle has exceeded zero speed.
+
+            '    ' Stop the paddle.
+            '    LeftPaddle.Velocity.Y = 0 ' Zero speed.
+
+            '    Debug.Print("Left Paddle STOP")
+
+            'Else
+
+            ' Decelerate paddle.
             LeftPaddle.Velocity.Y += -LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
 
-            'Limit decelerate to zero speed.
-            If LeftPaddle.Velocity.Y < 0 Then LeftPaddle.Velocity.Y = 0 'Zero speed.
+            Debug.Print($"Paddle Slowing {LeftPaddle.Velocity.Y}")
 
-            Debug.Print("Paddle Slowing")
+            ' Limit decelerate to zero speed.
+            If LeftPaddle.Velocity.Y < 0 Then
+
+                LeftPaddle.Velocity.Y = 0 ' Zero speed.
+
+                Debug.Print($"Left Paddle Stop {LeftPaddle.Velocity.Y}")
+
+            End If
+
+            ''Limit decelerate to zero speed.
+            'If LeftPaddle.Velocity.Y < 0 Then LeftPaddle.Velocity.Y = 0 'Zero speed.
+
+            'End If
+
+
+            ''Decelerate paddle.
+            'LeftPaddle.Velocity.Y += -LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
+
+            ''Limit decelerate to zero speed.
+            'If LeftPaddle.Velocity.Y < 0 Then LeftPaddle.Velocity.Y = 0 'Zero speed.
+
+            'Debug.Print("Paddle Slowing")
 
         End If
 
     End Sub
+
+
+
+
 
     Private Sub DecelerateRightPaddle()
 
