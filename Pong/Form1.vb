@@ -1909,7 +1909,7 @@ Public Class Form1
                 ' Limit paddle velocity to the max.
                 LeftPaddle.Velocity.Y = LeftPaddle.MaxVelocity.Y
 
-                Debug.Print($"Left Paddle Max Velocity {LeftPaddle.Velocity.Y}")
+                Debug.Print($"Left Paddle Down Max Velocity {LeftPaddle.Velocity.Y}")
 
             Else
                 ' No, the potential new velocity does not exceed the max velocity.
