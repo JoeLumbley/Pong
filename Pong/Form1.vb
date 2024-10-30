@@ -1849,62 +1849,6 @@ Public Class Form1
 
         MoveLeftPaddleDownCheckBottomBoundary()
 
-
-        '' Has the paddle reached the bottom of the client area?
-        'If LeftPaddle.Rect.Bottom >= ClientRectangle.Bottom Then
-        '    ' Yes, the paddle has reached the bottom of the client area.
-
-        '    ' Is the paddle moving down?
-        '    If LeftPaddle.Velocity.Y > 0 Then
-
-        '        ' Stop the paddle.
-        '        LeftPaddle.Velocity.Y = 0
-
-        '        Debug.Print($"Left Paddle Stop {LeftPaddle.Velocity.Y}")
-
-        '    End If
-
-        '    ' Is the paddle passed the bottom of the client area.
-        '    If LeftPaddle.Rect.Bottom > ClientRectangle.Bottom Then
-        '        ' Yes, the paddle is passed the bottom of the client area.
-
-        '        ' Aline paddle to the bottom of the client area.
-        '        LeftPaddle.Rect.Y = ClientRectangle.Bottom - LeftPaddle.Rect.Height
-
-        '        ' Sync paddle position.
-        '        LeftPaddle.Position.Y = LeftPaddle.Rect.Y
-
-        '        Debug.Print("Left Paddle Aline Bottom")
-
-        '    End If
-
-        'Else
-        '    ' No, the paddle has not reached or exceeded the bottom of the client area.
-
-        '    ' Has the paddle reached or exceeded max velocity?
-        '    If Not LeftPaddle.Velocity.Y >= LeftPaddle.MaxVelocity.Y Then
-        '        ' No, the paddle has not reached or exceeded max velocity.
-
-        '        ' Send paddle down.
-        '        LeftPaddle.Velocity.Y += LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds
-
-        '        Debug.Print($"Left Paddle Down {LeftPaddle.Velocity.Y}")
-
-        '        ' Has the paddle exceeded max velocity?
-        '        If LeftPaddle.Velocity.Y > LeftPaddle.MaxVelocity.Y Then
-        '            ' Yes, the paddle has exceeded max velocity.
-
-        '            ' Limit paddle velocity to the max.
-        '            LeftPaddle.Velocity.Y = LeftPaddle.MaxVelocity.Y
-
-        '            Debug.Print($"Left Paddle Max Velocity {LeftPaddle.Velocity.Y}")
-
-        '        End If
-
-        '    End If
-
-        'End If
-
         If ApplyLeftPaddleEnglish Then
 
             ApplyLeftPaddleEnglish = False
