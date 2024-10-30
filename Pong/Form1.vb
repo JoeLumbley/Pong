@@ -1836,11 +1836,11 @@ Public Class Form1
 
     Private Sub MoveLeftPaddleDown()
 
-        'Is the paddle moving up?
+        ' Is the paddle moving up?
         If LeftPaddle.Velocity.Y < 0 Then
-            'Yes, the paddle is moving up.
+            ' Yes, the paddle is moving up.
 
-            'Stop move before changing direction.
+            ' Stop move before changing direction.
             LeftPaddle.Velocity.Y = 0 ' Zero speed.
 
             Debug.Print($"Left Paddle Stop {LeftPaddle.Velocity.Y}")
@@ -1853,7 +1853,7 @@ Public Class Form1
 
             ApplyLeftPaddleEnglish = False
 
-            'Send ball down and to the right.
+            ' Send ball down and to the right.
             Ball.Velocity.X = ServSpeed
             Ball.Velocity.Y = ServSpeed
 
