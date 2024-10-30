@@ -35,6 +35,7 @@ Partial Class Form1
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(1258, 664)
         Name = "Form1"
+        StartPosition = FormStartPosition.CenterScreen
         Text = "Form1"
         WindowState = FormWindowState.Maximized
         ResumeLayout(False)
