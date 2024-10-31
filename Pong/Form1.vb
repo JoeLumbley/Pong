@@ -1874,7 +1874,6 @@ Public Class Form1
             ' No, the paddle has not reached or exceeded max velocity.
             ' No, the paddle has not reached or exceeded the top of the client area.
 
-
             ' Calculate potential new velocity
             Dim newVelocityY As Double = LeftPaddle.Velocity.Y - (LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds)
 
@@ -1890,27 +1889,12 @@ Public Class Form1
             Else
                 ' No, the potential new velocity does not exceed the max velocity.
 
-                ' Send paddle down.
+                ' Send paddle up.
                 LeftPaddle.Velocity.Y = newVelocityY
 
                 Debug.Print($"Left Paddle Up-- Velocity {LeftPaddle.Velocity.Y}")
 
             End If
-
-
-            '' Send the paddle up.
-            'LeftPaddle.Velocity.Y -= LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds
-
-            'Debug.Print($"Left Paddle Up-- Velocity {LeftPaddle.Velocity.Y}")
-
-            '' Limit velocity to max if exceeded.
-            'If LeftPaddle.Velocity.Y < -LeftPaddle.MaxVelocity.Y Then
-
-            '    LeftPaddle.Velocity.Y = -LeftPaddle.MaxVelocity.Y
-
-            '    Debug.Print($"Left Paddle Up-- Velocity {LeftPaddle.Velocity.Y} -Max-")
-
-            'End If
 
         End If
 
