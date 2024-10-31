@@ -2008,60 +2008,19 @@ Public Class Form1
 
     Private Sub DecelerateLeftPaddle()
 
-        'Is the paddle moving up?
+        ' Is the paddle moving up?
         If LeftPaddle.Velocity.Y < 0 Then
-            'Yes, the paddle is moving up.
+            ' Yes, the paddle is moving up.
 
             ' Calculate potential new velocity
             Dim newVelocityY As Double = LeftPaddle.Velocity.Y + (LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds)
 
             ' Does the potential new velocity exceed zero speed?
             If newVelocityY > 0 Then
-                ' Yes, the potential new velocity does exceed the max velocity.
-
-                ' Limit paddle decelerate to zero speed.
-                LeftPaddle.Velocity.Y = 0
-
-                Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
-
-            Else
-                ' No, the potential new velocity does not exceed the max velocity.
-
-                ' Decelerate paddle.
-                LeftPaddle.Velocity.Y = newVelocityY
-
-                Debug.Print($"Left Paddle DCel Velocity {LeftPaddle.Velocity.Y}")
-
-            End If
-
-            '' Decelerate paddle.
-            'LeftPaddle.Velocity.Y += LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
-
-            'Debug.Print($"Left Paddle DCel Velocity {LeftPaddle.Velocity.Y}")
-
-            '' Limit decelerate to zero speed.
-            'If LeftPaddle.Velocity.Y > 0 Then
-
-            '    LeftPaddle.Velocity.Y = 0 ' Zero speed.
-
-            '    Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
-
-            'End If
-
-        End If
-
-        'Is the paddle moving down?
-        If LeftPaddle.Velocity.Y > 0 Then
-            'Yes, the paddle is moving down.
-
-            ' Calculate potential new velocity
-            Dim newVelocityY As Double = LeftPaddle.Velocity.Y + (-LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds)
-
-            ' Does the potential new velocity exceed zero speed?
-            If newVelocityY < 0 Then
                 ' Yes, the potential new velocity does exceed zero speed.
 
                 ' Limit paddle decelerate to zero speed.
+                ' This prevents the paddle from reversing direction.
                 LeftPaddle.Velocity.Y = 0
 
                 Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
@@ -2076,19 +2035,34 @@ Public Class Form1
 
             End If
 
-            '' Decelerate paddle.
-            'LeftPaddle.Velocity.Y += -LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
+        End If
 
-            'Debug.Print($"Left Paddle DCel Velocity {LeftPaddle.Velocity.Y}")
+        ' Is the paddle moving down?
+        If LeftPaddle.Velocity.Y > 0 Then
+            ' Yes, the paddle is moving down.
 
-            '' Limit decelerate to zero speed.
-            'If LeftPaddle.Velocity.Y < 0 Then
+            ' Calculate potential new velocity
+            Dim newVelocityY As Double = LeftPaddle.Velocity.Y + (-LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds)
 
-            '    LeftPaddle.Velocity.Y = 0 ' Zero speed.
+            ' Does the potential new velocity exceed zero speed?
+            If newVelocityY < 0 Then
+                ' Yes, the potential new velocity does exceed zero speed.
 
-            '    Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
+                ' Limit paddle decelerate to zero speed.
+                ' This prevents the paddle from reversing direction.
+                LeftPaddle.Velocity.Y = 0
 
-            'End If
+                Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
+
+            Else
+                ' No, the potential new velocity does not exceed zero speed.
+
+                ' Decelerate paddle.
+                LeftPaddle.Velocity.Y = newVelocityY
+
+                Debug.Print($"Left Paddle DCel Velocity {LeftPaddle.Velocity.Y}")
+
+            End If
 
         End If
 
