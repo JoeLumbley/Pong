@@ -1838,7 +1838,6 @@ Public Class Form1
 
     End Sub
 
-
     Private Sub MoveLeftPaddleUpCheckTopBoundary()
 
         ' Check if the paddle has reached or exceeded the top of the client area.
@@ -1853,22 +1852,6 @@ Public Class Form1
 
             End If
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             ' Is the paddle passed the top of the client area.
             If LeftPaddle.Rect.Top < ClientRectangle.Top Then
                 ' Yes, the paddle is passed the top of the client area.
@@ -1882,31 +1865,6 @@ Public Class Form1
                 Debug.Print("Left Paddle Aline Top")
 
             End If
-
-
-
-            '' Align the paddle to the top of the client area.
-            'LeftPaddle.Rect.Y = ClientRectangle.Top
-
-            'LeftPaddle.Position.Y = LeftPaddle.Rect.Y
-
-            'Debug.Print("Left Paddle Align Top")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         ElseIf LeftPaddle.Velocity.Y > -LeftPaddle.MaxVelocity.Y Then
 
@@ -1927,8 +1885,6 @@ Public Class Form1
         End If
 
     End Sub
-
-
 
     Private Sub MoveLeftPaddleDown()
 
