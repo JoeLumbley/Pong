@@ -1761,7 +1761,7 @@ Public Class Form1
             ' Stop move before changing direction.
             LeftPaddle.Velocity.Y = 0 ' Zero speed.
 
-            Debug.Print($"Left Paddle Stop {LeftPaddle.Velocity.Y}")
+            Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
 
         End If
 
@@ -1849,16 +1849,64 @@ Public Class Form1
 
                 LeftPaddle.Velocity.Y = 0
 
-                Debug.Print($"Left Paddle Stop {LeftPaddle.Velocity.Y}")
+                Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
 
             End If
 
-            ' Align the paddle to the top of the client area.
-            LeftPaddle.Rect.Y = ClientRectangle.Top
 
-            LeftPaddle.Position.Y = LeftPaddle.Rect.Y
 
-            Debug.Print("Left Paddle Align Top")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            ' Is the paddle passed the top of the client area.
+            If LeftPaddle.Rect.Top < ClientRectangle.Top Then
+                ' Yes, the paddle is passed the top of the client area.
+
+                ' Aline paddle to the top of the client area.
+                LeftPaddle.Rect.Y = ClientRectangle.Top
+
+                ' Snyc paddle position.
+                LeftPaddle.Position.Y = LeftPaddle.Rect.Y
+
+                Debug.Print("Left Paddle Aline Top")
+
+            End If
+
+
+
+            '' Align the paddle to the top of the client area.
+            'LeftPaddle.Rect.Y = ClientRectangle.Top
+
+            'LeftPaddle.Position.Y = LeftPaddle.Rect.Y
+
+            'Debug.Print("Left Paddle Align Top")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         ElseIf LeftPaddle.Velocity.Y > -LeftPaddle.MaxVelocity.Y Then
 
@@ -1891,7 +1939,7 @@ Public Class Form1
             ' Stop move before changing direction.
             LeftPaddle.Velocity.Y = 0 ' Zero speed.
 
-            Debug.Print($"Left Paddle Stop {LeftPaddle.Velocity.Y}")
+            Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
 
         End If
 
