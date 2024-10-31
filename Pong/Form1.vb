@@ -2059,7 +2059,7 @@ Public Class Form1
 
             ' Does the potential new velocity exceed zero speed?
             If newVelocityY < 0 Then
-                ' Yes, the potential new velocity does exceed the max velocity.
+                ' Yes, the potential new velocity does exceed zero speed.
 
                 ' Limit paddle decelerate to zero speed.
                 LeftPaddle.Velocity.Y = 0
@@ -2067,7 +2067,7 @@ Public Class Form1
                 Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
 
             Else
-                ' No, the potential new velocity does not exceed the max velocity.
+                ' No, the potential new velocity does not exceed zero speed.
 
                 ' Decelerate paddle.
                 LeftPaddle.Velocity.Y = newVelocityY
