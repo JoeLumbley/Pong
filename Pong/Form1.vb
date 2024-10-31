@@ -1840,12 +1840,15 @@ Public Class Form1
 
     Private Sub MoveLeftPaddleUpCheckTopBoundary()
 
-        ' Check if the paddle has reached or exceeded the top of the client area.
+        ' Has the paddle reached or exceeded the top of the client area?
         If LeftPaddle.Rect.Top <= ClientRectangle.Top Then
+            ' Yes, the paddle has reached the top of the client area.
 
-            ' Paddle is moving up.
+            ' Is the paddle moving up?
             If LeftPaddle.Velocity.Y < 0 Then
+                'Yes, the paddle is moving up.
 
+                ' Stop the paddle.
                 LeftPaddle.Velocity.Y = 0
 
                 Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
@@ -1866,21 +1869,48 @@ Public Class Form1
 
             End If
 
+            ' Has the paddle reached or exceeded max velocity?
         ElseIf LeftPaddle.Velocity.Y > -LeftPaddle.MaxVelocity.Y Then
+            ' No, the paddle has not reached or exceeded max velocity.
+            ' No, the paddle has not reached or exceeded the top of the client area.
 
-            ' Send the paddle up.
-            LeftPaddle.Velocity.Y -= LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds
 
-            Debug.Print($"Left Paddle Up-- Velocity {LeftPaddle.Velocity.Y}")
+            ' Calculate potential new velocity
+            Dim newVelocityY As Double = LeftPaddle.Velocity.Y - (LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds)
 
-            ' Limit velocity to max if exceeded.
-            If LeftPaddle.Velocity.Y < -LeftPaddle.MaxVelocity.Y Then
+            ' Does the potential new velocity exceed the max velocity?
+            If newVelocityY < -LeftPaddle.MaxVelocity.Y Then
+                ' Yes, the potential new velocity does exceed the max velocity.
 
+                ' Limit paddle velocity to the max.
                 LeftPaddle.Velocity.Y = -LeftPaddle.MaxVelocity.Y
 
                 Debug.Print($"Left Paddle Up-- Velocity {LeftPaddle.Velocity.Y} -Max-")
 
+            Else
+                ' No, the potential new velocity does not exceed the max velocity.
+
+                ' Send paddle down.
+                LeftPaddle.Velocity.Y = newVelocityY
+
+                Debug.Print($"Left Paddle Up-- Velocity {LeftPaddle.Velocity.Y}")
+
             End If
+
+
+            '' Send the paddle up.
+            'LeftPaddle.Velocity.Y -= LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds
+
+            'Debug.Print($"Left Paddle Up-- Velocity {LeftPaddle.Velocity.Y}")
+
+            '' Limit velocity to max if exceeded.
+            'If LeftPaddle.Velocity.Y < -LeftPaddle.MaxVelocity.Y Then
+
+            '    LeftPaddle.Velocity.Y = -LeftPaddle.MaxVelocity.Y
+
+            '    Debug.Print($"Left Paddle Up-- Velocity {LeftPaddle.Velocity.Y} -Max-")
+
+            'End If
 
         End If
 
