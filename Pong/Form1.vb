@@ -2034,7 +2034,6 @@ Public Class Form1
 
             End If
 
-
             '' Decelerate paddle.
             'LeftPaddle.Velocity.Y += LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
 
@@ -2054,10 +2053,6 @@ Public Class Form1
         'Is the paddle moving down?
         If LeftPaddle.Velocity.Y > 0 Then
             'Yes, the paddle is moving down.
-
-
-
-
 
             ' Calculate potential new velocity
             Dim newVelocityY As Double = LeftPaddle.Velocity.Y + (-LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds)
@@ -2080,13 +2075,6 @@ Public Class Form1
                 Debug.Print($"Left Paddle DCel Velocity {LeftPaddle.Velocity.Y}")
 
             End If
-
-
-
-
-
-
-
 
             '' Decelerate paddle.
             'LeftPaddle.Velocity.Y += -LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
