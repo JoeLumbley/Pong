@@ -3260,11 +3260,7 @@ Public Class Form1
 
         End If
 
-        If GameState = GameStateEnum.StartScreen OrElse GameState = GameStateEnum.Instructions Then
-
-            LayoutTitleAndInstructions()
-
-        End If
+        LayoutTitleAndInstructions()
 
         CenterCourtLine()
 
@@ -3741,6 +3737,8 @@ Public Class Form1
     Private Sub Form1_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
 
         DoKeyUp(e)
+
+        e.Handled = True
 
     End Sub
 
