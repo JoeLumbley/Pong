@@ -3277,15 +3277,9 @@ Public Class Form1
 
         LPadTrophyLocation = New Point(ClientSize.Width \ 2 \ 2, ClientSize.Height \ 2 - 0)
 
-
         RPadScoreLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), 100)
 
         RPadTrophyLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), ClientSize.Height \ 2 - 0)
-
-
-
-
-
 
         ClientCenter = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
 
