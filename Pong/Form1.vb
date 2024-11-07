@@ -1765,64 +1765,7 @@ Public Class Form1
 
         End If
 
-
-        MoveLeftPaddleUpCheckTopBoundary()
-
-
-        '' Has the paddle reached or exceeded the top of the client area?
-        'If LeftPaddle.Rect.Top <= ClientRectangle.Top Then
-        '    ' Yes, the paddle has reached the top of the client area.
-
-        '    ' Is the paddle moving up?
-        '    If LeftPaddle.Velocity.Y < 0 Then
-
-        '        ' Stop the paddle.
-        '        LeftPaddle.Velocity.Y = 0 ' Zero speed.
-
-        '        Debug.Print($"Left Paddle Stop {LeftPaddle.Velocity.Y}")
-
-        '    End If
-
-        '    ' Is the paddle passed the top of the client area.
-        '    If LeftPaddle.Rect.Top < ClientRectangle.Top Then
-        '        ' Yes, the paddle is passed the top of the client area.
-
-        '        ' Aline paddle to the top of the client area.
-        '        LeftPaddle.Rect.Y = ClientRectangle.Top
-
-        '        ' Snyc paddle position.
-        '        LeftPaddle.Position.Y = LeftPaddle.Rect.Y
-
-        '        Debug.Print("Left Paddle Aline Top")
-
-        '    End If
-
-        'Else
-        '    ' No, the paddle has not reached or exceeded the top of the client area.
-
-        '    ' Has the paddle reached or exceeded max velocity?
-        '    If Not LeftPaddle.Velocity.Y <= -LeftPaddle.MaxVelocity.Y Then
-        '        ' No, the paddle has not reached or exceeded max velocity.
-
-        '        ' Send paddle up.
-        '        LeftPaddle.Velocity.Y -= LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds
-
-        '        Debug.Print($"Left Paddle Up-- Velocity {LeftPaddle.Velocity.Y}")
-
-        '        ' Has the paddle exceeded max velocity?
-        '        If LeftPaddle.Velocity.Y < -LeftPaddle.MaxVelocity.Y Then
-        '            ' Yes, the paddle has exceeded max velocity.
-
-        '            ' Limit paddle velocity to the max.
-        '            LeftPaddle.Velocity.Y = -LeftPaddle.MaxVelocity.Y
-
-        '            Debug.Print($"Left Paddle Up-- Velocity {LeftPaddle.Velocity.Y} -Max-")
-
-        '        End If
-
-        '    End If
-
-        'End If
+        MoveLeftPaddleUpCheckTopBoundaryMaxVelocity()
 
         If ApplyLeftPaddleEnglish Then
 
@@ -1838,7 +1781,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub MoveLeftPaddleUpCheckTopBoundary()
+    Private Sub MoveLeftPaddleUpCheckTopBoundaryMaxVelocity()
 
         ' Has the paddle reached or exceeded the top of the client area?
         If LeftPaddle.Rect.Top <= ClientRectangle.Top Then
@@ -2070,26 +2013,26 @@ Public Class Form1
 
     Private Sub DecelerateRightPaddle()
 
-        'Is the paddle moving up?
+        ' Is the paddle moving up?
         If RightPaddle.Velocity.Y < 0 Then
-            'Yes, the paddle is moving up.
+            ' Yes, the paddle is moving up.
 
-            'Decelerate paddle.
+            ' Decelerate paddle.
             RightPaddle.Velocity.Y += RightPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
 
-            'Limit decelerate to zero speed.
+            ' Limit decelerate to zero speed.
             If RightPaddle.Velocity.Y > 0 Then RightPaddle.Velocity.Y = 0 'Zero speed.
 
         End If
 
-        'Is the paddle moving down?
+        ' Is the paddle moving down?
         If RightPaddle.Velocity.Y > 0 Then
-            'Yes, the paddle is moving down.
+            ' Yes, the paddle is moving down.
 
-            'Decelerate paddle.
+            ' Decelerate paddle.
             RightPaddle.Velocity.Y += -RightPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
 
-            'Limit decelerate to zero speed.
+            ' Limit decelerate to zero speed.
             If RightPaddle.Velocity.Y < 0 Then RightPaddle.Velocity.Y = 0 'Zero speed.
 
         End If
@@ -2122,7 +2065,6 @@ Public Class Form1
 
         End If
 
-
         If PauseKeyDown Then
 
             If Not IsPauseKeyDown Then
@@ -2144,7 +2086,6 @@ Public Class Form1
             IsPauseKeyDown = False
 
         End If
-
 
         If BackspaceKeyDown Then
 
@@ -2322,7 +2263,7 @@ Public Class Form1
             .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
 
             'Draw paused text.
-            Buffer.Graphics.DrawString("Paused", TitleFont, Brushes.White, ClientCenter, AlineCenterMiddle)
+            .DrawString("Paused", TitleFont, Brushes.White, ClientCenter, AlineCenterMiddle)
 
         End With
 
@@ -2513,12 +2454,11 @@ Public Class Form1
             .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
             .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
 
-            Buffer.Graphics.DrawString(RightPaddleScore, ScoreFont, Brushes.White, RPadScoreLocation, AlineCenterMiddle)
+            .DrawString(RightPaddleScore, ScoreFont, Brushes.White, RPadScoreLocation, AlineCenterMiddle)
 
         End With
 
     End Sub
-
 
     Private Sub DrawRightPaddleTrophy()
 
@@ -2529,10 +2469,7 @@ Public Class Form1
             .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
             .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
 
-            'RPadTrophyLocation = RPadScoreLocation
-            'RPadTrophyLocation.Y += ClientSize.Height \ 2 - 100
-
-            Buffer.Graphics.DrawString("🏆", TitleFont, Brushes.White, RPadTrophyLocation, AlineCenterMiddle)
+            .DrawString("🏆", TitleFont, Brushes.White, RPadTrophyLocation, AlineCenterMiddle)
 
         End With
 
@@ -2547,11 +2484,7 @@ Public Class Form1
             .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
             .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
 
-
-            'Dim Location As Point = LPadScoreLocation
-            'Location.Y += ClientSize.Height \ 2 - 100
-
-            Buffer.Graphics.DrawString("🏆", TitleFont, Brushes.White, LPadTrophyLocation, AlineCenterMiddle)
+            .DrawString("🏆", TitleFont, Brushes.White, LPadTrophyLocation, AlineCenterMiddle)
 
         End With
 
@@ -2566,7 +2499,7 @@ Public Class Form1
             .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
             .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
 
-            Buffer.Graphics.DrawString(LeftPaddleScore, ScoreFont, Brushes.White, LPadScoreLocation, AlineCenterMiddle)
+            .DrawString(LeftPaddleScore, ScoreFont, Brushes.White, LPadScoreLocation, AlineCenterMiddle)
 
         End With
 
@@ -2610,7 +2543,7 @@ Public Class Form1
             .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
 
             'Draw frames per second display.
-            Buffer.Graphics.DrawString(FPS.ToString & " FPS", FPSFont, Brushes.MediumOrchid, FPS_Postion)
+            .DrawString(FPS.ToString & " FPS", FPSFont, Brushes.MediumOrchid, FPS_Postion)
 
         End With
 
@@ -2810,7 +2743,6 @@ Public Class Form1
 
                 End If
 
-
             Case GameStateEnum.Instructions
 
                 If AButtonPressed Then
@@ -2836,10 +2768,6 @@ Public Class Form1
                     IsAButtonDown(ControllerNumber) = False
 
                 End If
-
-
-
-
 
                 If XButtonPressed Then
 
