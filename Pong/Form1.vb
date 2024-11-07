@@ -2859,7 +2859,6 @@ Public Class Form1
 
                 End If
 
-
             Case GameStateEnum.Playing
 
             Case GameStateEnum.Serve
@@ -3148,7 +3147,6 @@ Public Class Form1
 
         AddSound("pause", $"{Application.StartupPath}pause.mp3")
 
-
         LayoutTitleAndInstructions()
 
         Timer1.Interval = 15
@@ -3164,6 +3162,7 @@ Public Class Form1
         PlayOverlapping("bounce")
 
     End Sub
+
     Private Sub PlayPointSound()
 
         PlaySound("point")
