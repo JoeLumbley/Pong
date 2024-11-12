@@ -404,17 +404,26 @@ Public Class Form1
 
     Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
 
+
+        ' Allocate the buffer if it hasn't been allocated yet
+        If Buffer Is Nothing Then
+
+            Buffer = Context.Allocate(e.Graphics, ClientRectangle)
+
+        End If
+
+
         DrawGame()
 
         'Show buffer on form.
         Buffer.Render(e.Graphics)
 
-        'Release memory used by buffer.
-        Buffer.Dispose()
-        Buffer = Nothing
+        ''Release memory used by buffer.
+        'Buffer.Dispose()
+        'Buffer = Nothing
 
-        'Create new buffer.
-        Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)
+        ''Create new buffer.
+        'Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)
 
         UpdateFrameCounter()
 
@@ -3209,6 +3218,20 @@ Public Class Form1
         RPadTrophyLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), ClientSize.Height \ 2 - 0)
 
         ClientCenter = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
+
+
+        ' Dispose of the existing buffer
+        If Buffer IsNot Nothing Then
+
+            Buffer.Dispose()
+
+            Buffer = Nothing ' Set to Nothing to avoid using a disposed object
+
+        End If
+
+        ' The buffer will be reallocated in OnPaint
+
+
 
     End Sub
 
