@@ -3219,7 +3219,6 @@ Public Class Form1
 
         ClientCenter = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
 
-
         ' Dispose of the existing buffer
         If Buffer IsNot Nothing Then
 
@@ -3230,8 +3229,6 @@ Public Class Form1
         End If
 
         ' The buffer will be reallocated in OnPaint
-
-
 
     End Sub
 
