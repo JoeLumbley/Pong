@@ -3099,7 +3099,7 @@ Public Class Form1
 
     Private Sub InitializeForm()
 
-        Text = "P🏓NG - Code with Joe"
+        CenterToScreen()
 
         SetStyle(ControlStyles.UserPaint, True)
 
@@ -3107,7 +3107,9 @@ Public Class Form1
 
         SetStyle(ControlStyles.AllPaintingInWmPaint, True)
 
-        Me.WindowState = FormWindowState.Maximized
+        Text = "P🏓NG - Code with Joe"
+
+        WindowState = FormWindowState.Maximized
 
     End Sub
 
