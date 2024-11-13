@@ -404,7 +404,6 @@ Public Class Form1
 
     Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
 
-
         ' Allocate the buffer if it hasn't been allocated yet
         If Buffer Is Nothing Then
 
@@ -412,18 +411,10 @@ Public Class Form1
 
         End If
 
-
         DrawGame()
 
-        'Show buffer on form.
+        ' Show buffer on form.
         Buffer.Render(e.Graphics)
-
-        ''Release memory used by buffer.
-        'Buffer.Dispose()
-        'Buffer = Nothing
-
-        ''Create new buffer.
-        'Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)
 
         UpdateFrameCounter()
 
