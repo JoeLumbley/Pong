@@ -3114,20 +3114,20 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateDeltaTime()
-        'Delta time (Δt) is the elapsed time since the last frame.
+        ' Delta time (Δt) is the elapsed time since the last frame.
 
         CurrentFrame = Now
 
-        DeltaTime = CurrentFrame - LastFrame 'Calculate delta time
+        DeltaTime = CurrentFrame - LastFrame ' Calculate delta time
 
-        LastFrame = CurrentFrame 'Update last frame time
+        LastFrame = CurrentFrame ' Update last frame time
 
     End Sub
 
     Private Sub UpdateLeftPaddleMovement()
 
-        LeftPaddle.Position.Y += LeftPaddle.Velocity.Y * DeltaTime.TotalSeconds 'Δs = V * Δt
-        'Displacement = Velocity x Delta Time
+        LeftPaddle.Position.Y += LeftPaddle.Velocity.Y * DeltaTime.TotalSeconds ' Δs = V * Δt
+        ' Displacement = Velocity x Delta Time
 
         LeftPaddle.Rect.Y = Math.Round(LeftPaddle.Position.Y)
 
@@ -3135,8 +3135,8 @@ Public Class Form1
 
     Private Sub UpdateRightPaddleMovement()
 
-        RightPaddle.Position.Y += RightPaddle.Velocity.Y * DeltaTime.TotalSeconds 'Δs = V * Δt
-        'Displacement = Velocity x Delta Time
+        RightPaddle.Position.Y += RightPaddle.Velocity.Y * DeltaTime.TotalSeconds ' Δs = V * Δt
+        ' Displacement = Velocity x Delta Time
 
         RightPaddle.Rect.Y = Math.Round(RightPaddle.Position.Y)
 
@@ -3144,13 +3144,13 @@ Public Class Form1
 
     Private Sub InitializeBuffer()
 
-        'Set context to the context of this app.
+        ' Set context to the context of this app.
         Context = BufferedGraphicsManager.Current
 
-        'Set buffer size to the primary working area.
+        ' Set buffer size to the primary working area.
         Context.MaximumBuffer = Screen.PrimaryScreen.WorkingArea.Size
 
-        'Create buffer.
+        ' Create buffer.
         Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)
 
     End Sub
@@ -3199,7 +3199,7 @@ Public Class Form1
         RightPaddle.Position.X = ClientSize.Width - RightPaddle.Rect.Width - 20 'Aline right 20 pix padding
         RightPaddle.Rect.X = RightPaddle.Position.X
 
-        'Place the FPS display at the bottom of the client area.
+        ' Place the FPS display at the bottom of the client area.
         FPS_Postion.Y = ClientRectangle.Bottom - 75
 
         LPadScoreLocation = New Point(ClientSize.Width \ 2 \ 2, 100)
