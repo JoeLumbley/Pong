@@ -366,7 +366,7 @@ Public Class Form1
 
         UpdateGame()
 
-        Refresh() 'Calls OnPaint Sub
+        Invalidate() 'Calls OnPaint Sub
 
     End Sub
 
@@ -415,6 +415,8 @@ Public Class Form1
 
         ' Show buffer on form.
         Buffer.Render(e.Graphics)
+
+        MyBase.OnPaint(e)
 
         UpdateFrameCounter()
 
@@ -3101,11 +3103,9 @@ Public Class Form1
 
         CenterToScreen()
 
+        SetStyle(ControlStyles.OptimizedDoubleBuffer Or ControlStyles.AllPaintingInWmPaint, True)
+
         SetStyle(ControlStyles.UserPaint, True)
-
-        SetStyle(ControlStyles.OptimizedDoubleBuffer, True)
-
-        SetStyle(ControlStyles.AllPaintingInWmPaint, True)
 
         Text = "P🏓NG - Code with Joe"
 
