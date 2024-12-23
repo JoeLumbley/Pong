@@ -22,10 +22,7 @@ This repository is designed to help new game developers learn the fundamentals o
 
 ---
 
-![019](https://github.com/user-attachments/assets/4ec46822-d239-4e7b-91be-209baa982017)
 
-
-https://youtube.com/shorts/_W-7EHnru2w?si=H6w0GIQnZGHYtB_t
 
 
 ---
@@ -813,6 +810,12 @@ End Function
 
 [Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
 
+
+---
+
+![019](https://github.com/user-attachments/assets/4ec46822-d239-4e7b-91be-209baa982017)
+
+https://youtube.com/shorts/_W-7EHnru2w?si=H6w0GIQnZGHYtB_t
 
 ---
 
