@@ -510,7 +510,7 @@ Public Class Form1
 
     Private Sub DrawGame(g As Graphics)
 
-        'DrawBackground(g)
+        DrawBackground(g)
 
         Select Case GameState
 
@@ -2371,29 +2371,11 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub DrawBackground()
-
-    '    With Buffer.Graphics
-
-    '        .CompositingMode = Drawing2D.CompositingMode.SourceCopy
-    '        .SmoothingMode = Drawing2D.SmoothingMode.HighSpeed
-    '        .PixelOffsetMode = Drawing2D.PixelOffsetMode.None
-
-    '        .Clear(Color.Black)
-
-    '    End With
-
-    'End Sub
-
     Private Sub DrawBackground(g As Graphics)
-
 
         g.Clear(Color.Black)
 
-
-
     End Sub
-
 
     Private Sub UpdateStartScreen()
 
