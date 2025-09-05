@@ -332,8 +332,6 @@ Public Class Form1
 
     Private Context As New BufferedGraphicsContext
 
-    'Private Buffer As BufferedGraphics
-
     Private FrameCount As Integer = 0
 
     Private StartTime As DateTime = Now 'Get current time.
@@ -388,11 +386,6 @@ Public Class Form1
     End Sub
 
     Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
-
-        e.Graphics.CompositingMode = Drawing2D.CompositingMode.SourceOver
-        e.Graphics.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
-        e.Graphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-        e.Graphics.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
 
         DrawGame(e.Graphics)
 
@@ -509,6 +502,11 @@ Public Class Form1
     End Sub
 
     Private Sub DrawGame(g As Graphics)
+
+        g.CompositingMode = Drawing2D.CompositingMode.SourceOver
+        g.CompositingQuality = Drawing2D.CompositingQuality.HighQuality
+        g.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
+        g.SmoothingMode = Drawing2D.SmoothingMode.None
 
         DrawBackground(g)
 
@@ -2403,54 +2401,17 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub DrawTitle()
-
-    '    With Buffer.Graphics
-
-    '        .CompositingMode = Drawing2D.CompositingMode.SourceOver
-    '        .TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
-    '        .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-    '        .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
-
-    '        .DrawString(TitleText, TitleFont, Brushes.White, TitleLocation, AlineCenter)
-
-    '    End With
-
-    'End Sub
-
-
-
     Private Sub DrawTitle(g As Graphics)
 
         g.DrawString(TitleText, TitleFont, Brushes.White, TitleLocation, AlineCenter)
 
-
     End Sub
-
-
-    'Private Sub DrawStartScreenInstructions()
-
-    '    With Buffer.Graphics
-
-    '        .CompositingMode = Drawing2D.CompositingMode.SourceOver
-    '        .TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
-    '        .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-    '        .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
-
-    '        .DrawString(InstructStartText, InstructionsFont, Brushes.White, InstructStartLocation, AlineCenter)
-
-    '    End With
-
-    'End Sub
 
     Private Sub DrawStartScreenInstructions(g As Graphics)
 
-
         g.DrawString(InstructStartText, InstructionsFont, Brushes.White, InstructStartLocation, AlineCenter)
 
-
     End Sub
-
 
     Private Sub UpdateBallMovement()
 
@@ -2522,6 +2483,10 @@ Public Class Form1
 
         DrawBall(g)
 
+        'g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+        'g.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
+
+
         If NumberOfPlayers = 1 Then
 
             DrawComputerPlayerIdentifier(g)
@@ -2536,56 +2501,21 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub DrawRightPaddleScore()
-
-    '    With Buffer.Graphics
-
-    '        .CompositingMode = Drawing2D.CompositingMode.SourceOver
-    '        .TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
-    '        .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-    '        .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
-
-    '        .DrawString(RightPaddleScore, ScoreFont, Brushes.White, RPadScoreLocation, AlineCenterMiddle)
-
-    '    End With
-
-    'End Sub
-
-
     Private Sub DrawRightPaddleScore(g As Graphics)
 
         g.DrawString(RightPaddleScore, ScoreFont, Brushes.White, RPadScoreLocation, AlineCenterMiddle)
 
     End Sub
 
-
     Private Sub DrawRightPaddleTrophy(g As Graphics)
 
-        'With Buffer.Graphics
-
-        '    .CompositingMode = Drawing2D.CompositingMode.SourceOver
-        '    .TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
-        '    .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-        '    .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
-
         g.DrawString("🏆", TitleFont, Brushes.White, RPadTrophyLocation, AlineCenterMiddle)
-
-        'End With
 
     End Sub
 
     Private Sub DrawLeftPaddleTrophy(g As Graphics)
 
-        'With Buffer.Graphics
-
-        '    .CompositingMode = Drawing2D.CompositingMode.SourceOver
-        '    .TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
-        '    .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-        '    .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
-
         g.DrawString("🏆", TitleFont, Brushes.White, LPadTrophyLocation, AlineCenterMiddle)
-
-        'End With
 
     End Sub
 
@@ -2593,22 +2523,17 @@ Public Class Form1
 
         g.DrawString(LeftPaddleScore, ScoreFont, Brushes.White, LPadScoreLocation, AlineCenterMiddle)
 
-
     End Sub
 
     Private Sub DrawRightPaddle(g As Graphics)
 
-
         g.FillRectangle(Brushes.White, RightPaddle.Rect)
-
 
     End Sub
 
     Private Sub DrawLeftPaddle(g As Graphics)
 
-
         g.FillRectangle(Brushes.White, LeftPaddle.Rect)
-
 
     End Sub
 
@@ -2616,14 +2541,11 @@ Public Class Form1
 
         g.DrawString(FPS.ToString & " FPS", FPSFont, Brushes.MediumOrchid, FPS_Postion)
 
-
     End Sub
 
     Private Sub DrawCenterCourtLine(g As Graphics)
 
-
         g.DrawLine(CenterlinePen, CenterlineTop, CenterlineBottom)
-
 
     End Sub
 
@@ -2636,28 +2558,11 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub DrawBall()
-
-    '    With Buffer.Graphics
-
-    '        .CompositingMode = Drawing2D.CompositingMode.SourceCopy
-    '        .SmoothingMode = Drawing2D.SmoothingMode.HighSpeed
-    '        .PixelOffsetMode = Drawing2D.PixelOffsetMode.None
-
-    '        .FillRectangle(Brushes.White, Ball.Rect)
-
-    '    End With
-
-    'End Sub
-
     Private Sub DrawBall(g As Graphics)
-
 
         g.FillRectangle(Brushes.White, Ball.Rect)
 
-
     End Sub
-
 
     Private Sub UpdateControllerData()
 
@@ -3208,19 +3113,6 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub InitializeBuffer()
-
-    '    ' Set context to the context of this app.
-    '    Context = BufferedGraphicsManager.Current
-
-    '    ' Set buffer size to the primary working area.
-    '    Context.MaximumBuffer = Screen.PrimaryScreen.WorkingArea.Size
-
-    '    ' Create buffer.
-    '    Buffer = Context.Allocate(CreateGraphics(), ClientRectangle)
-
-    'End Sub
-
     Private Sub UpdateFrameCounter()
 
         TimeElapsed = Now.Subtract(StartTime)
@@ -3243,7 +3135,6 @@ Public Class Form1
 
     End Sub
 
-
     Private Sub LayoutTitleAndInstructions()
 
         TitleLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - 175)
@@ -3260,8 +3151,6 @@ Public Class Form1
         EmojiLocation = New Point(ClientSize.Width \ 2 - 90, ClientSize.Height \ 2 - 190)
 
     End Sub
-
-
 
     Private Function AddSound(SoundName As String, FilePath As String) As Boolean
 
@@ -3586,7 +3475,6 @@ Public Class Form1
 
     End Sub
 
-
     Private Sub DoKeyDown(e As KeyEventArgs)
 
         Select Case e.KeyCode
@@ -3658,7 +3546,6 @@ Public Class Form1
         End Select
 
     End Sub
-
 
     Private Sub DoKeyUp(e As KeyEventArgs)
 
