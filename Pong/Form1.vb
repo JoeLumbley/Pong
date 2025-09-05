@@ -2483,10 +2483,6 @@ Public Class Form1
 
         DrawBall(g)
 
-        'g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-        'g.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
-
-
         If NumberOfPlayers = 1 Then
 
             DrawComputerPlayerIdentifier(g)
@@ -3026,8 +3022,6 @@ Public Class Form1
 
         InitializeForm()
 
-        'InitializeBuffer()
-
         CreateSoundFileFromResource()
 
         AddSound("startscreenmusic", $"{Application.StartupPath}startscreenmusic.mp3")
@@ -3049,10 +3043,6 @@ Public Class Form1
         AddSound("pause", $"{Application.StartupPath}pause.mp3")
 
         LayoutTitleAndInstructions()
-
-        'Timer1.Interval = 15
-
-        'Timer1.Enabled = True
 
         MovePointerOffScreen()
 
