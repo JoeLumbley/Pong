@@ -359,19 +359,9 @@ Public Class Form1
     Private ReadOnly AlineCenterMiddle As New StringFormat With {.Alignment = StringAlignment.Center,
                                                                  .LineAlignment = StringAlignment.Center}
 
-    'Private GameLoopCancellationToken As New CancellationTokenSource()
-
     Private DrawFlashingText As Boolean = True
 
     Private gameTimer As Timer
-
-
-
-    'Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-    '    InitializeApp()
-
-    'End Sub
 
     Public Sub New()
 
@@ -397,15 +387,20 @@ Public Class Form1
 
     End Sub
 
+    Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
 
+        e.Graphics.CompositingMode = Drawing2D.CompositingMode.SourceOver
+        e.Graphics.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
+        e.Graphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+        e.Graphics.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
 
-    'Private Sub Timer1_Tick(sender As Object, e As EventArgs)
+        DrawGame(e.Graphics)
 
-    '    UpdateGame()
+        MyBase.OnPaint(e)
 
-    '    Invalidate() 'Calls OnPaint Sub
+        UpdateFrameCounter()
 
-    'End Sub
+    End Sub
 
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
 
@@ -424,7 +419,6 @@ Public Class Form1
 
     End Sub
 
-
     Private Sub Form1_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
 
         DoKeyUp(e)
@@ -435,24 +429,15 @@ Public Class Form1
 
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
 
-        'GameLoopCancellationToken.Cancel(True)
-
         CloseSounds()
 
     End Sub
 
-    'Protected Overrides Sub OnPaintBackground(ByVal e As PaintEventArgs)
+    Protected Overrides Sub OnPaintBackground(ByVal e As PaintEventArgs)
 
-    '    'Intentionally left blank. Do not remove.
+        'Intentionally left blank. Do not remove.
 
-    'End Sub
-
-
-
-
-
-
-
+    End Sub
 
     Private Sub Form1_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
 
@@ -489,25 +474,7 @@ Public Class Form1
 
         ClientCenter = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
 
-        '' Dispose of the existing buffer
-        'If Buffer IsNot Nothing Then
-
-        '    Buffer.Dispose()
-
-        '    Buffer = Nothing ' Set to Nothing to avoid using a disposed object
-
-        'End If
-
-        ' The buffer will be reallocated in OnPaint
-
     End Sub
-
-
-
-
-
-
-
 
     Private Sub UpdateGame()
 
@@ -538,32 +505,6 @@ Public Class Form1
                 UpdateEndScreen()
 
         End Select
-
-    End Sub
-
-    Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
-
-        '' Allocate the buffer if it hasn't been allocated yet
-        'If Buffer Is Nothing Then
-
-        '    Buffer = Context.Allocate(e.Graphics, ClientRectangle)
-
-        'End If
-
-        e.Graphics.CompositingMode = Drawing2D.CompositingMode.SourceOver
-        e.Graphics.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
-        e.Graphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-        e.Graphics.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
-
-
-        DrawGame(e.Graphics)
-
-        '' Show buffer on form.
-        'Buffer.Render(e.Graphics)
-
-        MyBase.OnPaint(e)
-
-        UpdateFrameCounter()
 
     End Sub
 
