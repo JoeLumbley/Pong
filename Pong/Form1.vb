@@ -52,7 +52,6 @@
 ' Monica is our an AI assistant.
 ' https://monica.im/
 
-'Imports System.Threading
 Imports System.Numerics
 Imports System.ComponentModel
 Imports System.Runtime.InteropServices
@@ -262,7 +261,6 @@ Public Class Form1
 
     Private LastKeyDown As Date = Now
 
-
     Private Const DPadUp As Integer = 1
     Private Const DPadDown As Integer = 2
 
@@ -434,6 +432,7 @@ Public Class Form1
 
     Private Sub Form1_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
 
+        ' Pause the game if the window is minimized.
         If WindowState = FormWindowState.Minimized Then
 
             If GameState = GameStateEnum.Playing Then
@@ -824,7 +823,7 @@ Public Class Form1
     End Sub
 
     Private Sub MovePointerCenterScreen()
-        'Move mouse pointer off screen.
+        'Move mouse pointer center screen.
 
         Cursor.Position = New Point(Screen.PrimaryScreen.WorkingArea.Right \ 2,
                                     Screen.PrimaryScreen.WorkingArea.Height \ 2)
@@ -2024,7 +2023,6 @@ Public Class Form1
 
         g.DrawString("CPU", InstructionsFont, Brushes.White, ClientSize.Width - (ClientSize.Width \ 4), 20, AlineCenterMiddle)
 
-
     End Sub
 
     Private Sub DecelerateLeftPaddle()
@@ -2333,17 +2331,8 @@ Public Class Form1
 
     Private Sub DrawPausedText(g As Graphics)
 
-        'With Buffer.Graphics
-
-        '    .CompositingMode = Drawing2D.CompositingMode.SourceOver
-        '    .TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
-        '    .SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-        '    .PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
-
         '    'Draw paused text.
         g.DrawString("Paused", TitleFont, Brushes.White, ClientCenter, AlineCenterMiddle)
-
-        'End With
 
     End Sub
 
@@ -2977,7 +2966,6 @@ Public Class Form1
         MsgBox(ex.ToString()) ' Display the exception message in a message box.
 
     End Sub
-
 
     Private Sub InitializeApp()
 
