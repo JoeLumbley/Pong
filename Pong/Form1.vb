@@ -49,8 +49,6 @@
 ' OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
 ' SOFTWARE.
 
-' Monica is our an AI assistant.
-' https://monica.im/
 
 Imports System.Numerics
 Imports System.ComponentModel
@@ -3659,3 +3657,11 @@ End Class
 'https://learn.microsoft.com/en-us/dotnet/framework/interop/default-marshalling-for-strings#strings-used-in-structures
 '
 '
+
+' Monica is our an AI assistant.
+' https://monica.im/
+' She is helping me write better code and learn new things.
+
+' Copilot is another AI assistant.
+' https://copilot.github.com/
+' It is also helping me write better code and learn new things.
