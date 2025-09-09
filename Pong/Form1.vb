@@ -56,9 +56,6 @@ Imports System.Runtime.InteropServices
 Imports System.Text
 Imports System.IO
 
-
-
-
 Public Structure XboxControllers
 
     <DllImport("XInput1_4.dll")>
@@ -906,18 +903,7 @@ Public Structure XboxControllers
 
 End Structure
 
-
-
-
-
-
-
-
 Public Class Form1
-    Inherits Form
-
-
-
 
     Private Controllers As XboxControllers
 
@@ -1071,114 +1057,8 @@ Public Class Form1
     Private PauseKeyDown As Boolean = False
     Private IsPauseKeyDown As Boolean = False
 
-    '******************************************************
-
-    '<DllImport("XInput1_4.dll")>
-    'Private Shared Function XInputGetState(dwUserIndex As Integer, ByRef pState As XINPUT_STATE) As Integer
-    'End Function
-
-    '' XInput1_4.dll seems to be the current version
-    '' XInput9_1_0.dll is maintained primarily for backward compatibility. 
-
-    '<StructLayout(LayoutKind.Explicit)>
-    'Public Structure XINPUT_STATE
-    '    <FieldOffset(0)>
-    '    Public dwPacketNumber As UInteger ' Unsigned 32-bit (4-byte) integer range 0 through 4,294,967,295.
-    '    <FieldOffset(4)>
-    '    Public Gamepad As XINPUT_GAMEPAD
-    'End Structure
-
-    '<StructLayout(LayoutKind.Sequential)>
-    'Public Structure XINPUT_GAMEPAD
-    '    Public wButtons As UShort ' Unsigned 16-bit (2-byte) integer range 0 through 65,535.
-    '    Public bLeftTrigger As Byte ' Unsigned 8-bit (1-byte) integer range 0 through 255.
-    '    Public bRightTrigger As Byte
-    '    Public sThumbLX As Short ' Signed 16-bit (2-byte) integer range -32,768 through 32,767.
-    '    Public sThumbLY As Short
-    '    Public sThumbRX As Short
-    '    Public sThumbRY As Short
-
-    'End Structure
-
-    'Private ControllerPosition As XINPUT_STATE
-
-    '' Set the start of the thumbstick neutral zone to 1/2 over.
-    'Private Const NeutralStart As Short = -16384 '-16,384 = -32,768 / 2
-    '' The thumbstick position must be more than 1/2 over the neutral start to register as moved.
-    '' A short is a signed 16-bit (2-byte) integer range -32,768 through 32,767. This gives us 65,536 values.
-
-    '' Set the end of the thumbstick neutral zone to 1/2 over.
-    'Private Const NeutralEnd As Short = 16384 '16,383.5 = 32,767 / 2
-    '' The thumbstick position must be more than 1/2 over the neutral end to register as moved.
-
-    '' Set the trigger threshold to 1/4 pull.
-    'Private Const TriggerThreshold As Byte = 64 '64 = 256 / 4
-    '' The trigger position must be greater than the trigger threshold to register as pulled.
-    '' A byte is a unsigned 8-bit (1-byte) integer range 0 through 255. This gives us 256 values.
-
-    'Private ReadOnly Connected(0 To 3) As Boolean
-
-    'Private ConnectionStart As Date = Now
 
     Private LastKeyDown As Date = Now
-
-    'Private Const DPadUp As Integer = 1
-    'Private Const DPadDown As Integer = 2
-
-    'Private Const DPadLeft As Integer = 4
-    'Private Const DPadRight As Integer = 8
-
-    'Private Const StartButton As Integer = 16
-    'Private Const BackButton As Integer = 32
-
-    'Private Const LeftStickButton As Integer = 64
-    'Private Const RightStickButton As Integer = 128
-
-    'Private Const LeftBumperButton As Integer = 256
-    'Private Const RightBumperButton As Integer = 512
-
-    'Private Const AButton As Integer = 4096
-    'Private Const BButton As Integer = 8192
-    'Private Const XButton As Integer = 16384
-    'Private Const YButton As Integer = 32768
-
-    'Private DPadUpPressed As Boolean = False
-    'Private DPadDownPressed As Boolean = False
-    'Private DPadLeftPressed As Boolean = False
-    'Private DPadRightPressed As Boolean = False
-
-    'Private StartButtonPressed As Boolean = False
-    'Private BackButtonPressed As Boolean = False
-
-    'Private LeftStickButtonPressed As Boolean = False
-    'Private RightStickButtonPressed As Boolean = False
-
-    'Private LeftBumperButtonPressed As Boolean = False
-    'Private RightBumperButtonPressed As Boolean = False
-
-    'Private AButtonPressed As Boolean = False
-    'Private BButtonPressed As Boolean = False
-    'Private XButtonPressed As Boolean = False
-    'Private YButtonPressed As Boolean = False
-
-    '<DllImport("XInput1_4.dll")>
-    'Private Shared Function XInputSetState(playerIndex As Integer, ByRef vibration As XINPUT_VIBRATION) As Integer
-    'End Function
-
-    'Public Structure XINPUT_VIBRATION
-    '    Public wLeftMotorSpeed As UShort
-    '    Public wRightMotorSpeed As UShort
-    'End Structure
-
-    'Private Vibration As XINPUT_VIBRATION
-
-    'Private LeftVibrateStart(0 To 3) As Date
-
-    'Private RightVibrateStart(0 To 3) As Date
-
-    'Private IsLeftVibrating(0 To 3) As Boolean
-
-    'Private IsRightVibrating(0 To 3) As Boolean
 
 
     <DllImport("winmm.dll", EntryPoint:="mciSendStringW")>
@@ -1219,24 +1099,6 @@ Public Class Form1
     Private DrawFlashingText As Boolean = True
 
     Private gameTimer As Timer
-
-    'Public Sub New()
-
-    '    'InitializeComponent()
-
-    '    InitializeApp()
-
-    '    Controllers.Initialize()
-
-    '    gameTimer = New Timer()
-
-    '    AddHandler gameTimer.Tick, AddressOf OnGameTick
-
-    '    gameTimer.Interval = 15
-
-    '    gameTimer.Start()
-
-    'End Sub
 
     Public Sub New()
         InitializeComponent()
@@ -1417,35 +1279,9 @@ Public Class Form1
 
     Private Sub UpdatePlaying()
 
-        'UpdateControllerData()
-
         Controllers.Update()
 
         HandleControllerInput()
-
-
-        'For ControllerNumber As Integer = 0 To 3
-
-        '    If Controllers.Connected(ControllerNumber) Then
-
-        '        'UpdateControllerState(ControllerNumber)
-
-        '        DoButtonLogic(ControllerNumber)
-        '        UpdateLeftThumbstickPosition(ControllerNumber)
-        '        UpdateRightThumbstickPosition(ControllerNumber)
-
-        '    End If
-
-        'Next
-
-
-        'DoButtonLogic(0)
-        ''DoButtonLogic(1)
-
-        ''UpdateLeftThumbstickPositionControllerZero()
-        'UpdateLeftThumbstickPosition(0)
-        ''UpdateRightThumbstickPositionControllerZero()
-        'UpdateRightThumbstickPosition(0)
 
         UpdateLeftPaddleKeyboard()
 
@@ -1513,8 +1349,6 @@ Public Class Form1
         UpdateScore()
 
         CheckforEndGame()
-
-        'UpdateVibrateTimer()
 
     End Sub
 
@@ -1977,109 +1811,6 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub VibrateLeft(CID As Integer, Speed As UShort)
-    '    ' The range of speed is 0 through 65,535. Unsigned 16-bit (2-byte) integer.
-    '    ' The left motor is the low-frequency rumble motor.
-
-    '    ' Set left motor speed.
-    '    Vibration.wLeftMotorSpeed = Speed
-
-    '    SendVibrationMotorCommand(CID)
-
-    '    LeftVibrateStart(CID) = Now
-
-    '    IsLeftVibrating(CID) = True
-
-    'End Sub
-
-    'Private Sub SendVibrationMotorCommand(ControllerID As Integer)
-    '    ' Sends vibration motor speed command to the specified controller.
-
-    '    Try
-
-    '        ' Send motor speed command to the specified controller.
-    '        If XInputSetState(ControllerID, Vibration) = 0 Then
-    '            ' The motor speed was set. Success.
-
-    '        Else
-    '            ' The motor speed was not set. Fail.
-    '            ' You can log or handle the failure here if needed.
-    '            ' Example: Console.WriteLine(XInputSetState(ControllerID, Vibration).ToString())
-
-    '        End If
-
-    '    Catch ex As Exception
-
-    '        DisplayError(ex)
-
-    '        Exit Sub
-
-    '    End Try
-
-    'End Sub
-
-    'Private Sub UpdateVibrateTimer()
-
-    '    UpdateLeftVibrateTimer()
-
-    '    UpdateRightVibrateTimer()
-
-    'End Sub
-
-    'Private Sub UpdateLeftVibrateTimer()
-
-    '    For Each IsConVibrating In IsLeftVibrating
-
-    '        Dim Index As Integer = Array.IndexOf(IsLeftVibrating, IsConVibrating)
-
-    '        If Index <> -1 AndAlso IsConVibrating = True Then
-
-    '            Dim ElapsedTime As TimeSpan = Now - LeftVibrateStart(Index)
-
-    '            If ElapsedTime.TotalMilliseconds >= 250 Then
-
-    '                IsLeftVibrating(Index) = False
-
-    '                ' Turn left motor off (set zero speed).
-    '                Vibration.wLeftMotorSpeed = 0
-
-    '                SendVibrationMotorCommand(Index)
-
-    '            End If
-
-    '        End If
-
-    '    Next
-
-    'End Sub
-
-    'Private Sub UpdateRightVibrateTimer()
-
-    '    For Each IsConVibrating In IsRightVibrating
-
-    '        Dim Index As Integer = Array.IndexOf(IsRightVibrating, IsConVibrating)
-
-    '        If Index <> -1 AndAlso IsConVibrating = True Then
-
-    '            Dim ElapsedTime As TimeSpan = Now - RightVibrateStart(Index)
-
-    '            If ElapsedTime.TotalMilliseconds >= 250 Then
-
-    '                IsRightVibrating(Index) = False
-
-    '                ' Turn right motor off (set zero speed).
-    '                Vibration.wRightMotorSpeed = 0
-
-    '                SendVibrationMotorCommand(Index)
-
-    '            End If
-
-    '        End If
-
-    '    Next
-
-    'End Sub
-
     Private Sub LimitPaddleMovement()
 
         LimitLeftPaddleMovement()
@@ -2301,13 +2032,9 @@ Public Class Form1
 
         End If
 
-
-
     End Sub
 
     Private Sub UpdateRightThumbstickPosition(ControllerNumber As Integer)
-        ' The range on the X-axis is -32,768 through 32,767. Signed 16-bit (2-byte) integer.
-        ' The range on the Y-axis is -32,768 through 32,767. Signed 16-bit (2-byte) integer.
 
         If ControllerNumber = 0 Then
 
@@ -2329,29 +2056,6 @@ Public Class Form1
 
     Private Sub UpdateRightThumbstickPositionControllerOne()
 
-        '' What position is the right thumbstick in on the Y-axis?
-        'If ControllerPosition.Gamepad.sThumbRY <= NeutralStart Then
-        '    ' The right thumbstick is in the down position.
-
-        '    IsConThumbRYNeutral(1) = False
-
-        '    MoveRightPaddleDown()
-
-        'ElseIf ControllerPosition.Gamepad.sThumbRY >= NeutralEnd Then
-        '    ' The right thumbstick is in the up position.
-
-        '    IsConThumbRYNeutral(1) = False
-
-        '    MoveRightPaddleUp()
-
-        'Else
-        '    ' The right thumbstick is in the neutral position.
-
-        '    IsConThumbRYNeutral(1) = True
-
-        'End If
-
-
         If Controllers.RightThumbstickDown(1) Then
             MoveRightPaddleDown()
         ElseIf Controllers.RightThumbstickUp(1) Then
@@ -2362,40 +2066,15 @@ Public Class Form1
 
     Private Sub UpdateRightThumbstickPositionControllerZero()
 
-        '' What position is the right thumbstick in on the Y-axis?
-        'If ControllerPosition.Gamepad.sThumbRY <= NeutralStart Then
-        '    ' The right thumbstick is in the down position.
-
-        '    IsConThumbRYNeutral(0) = False
-
-        '    MoveLeftPaddleDown()
-
-        'ElseIf ControllerPosition.Gamepad.sThumbRY >= NeutralEnd Then
-        '    ' The right thumbstick is in the up position.
-
-        '    IsConThumbRYNeutral(0) = False
-
-        '    MoveLeftPaddleUp()
-
-        'Else
-        '    ' The right thumbstick is in the neutral position.
-
-        '    IsConThumbRYNeutral(0) = True
-
-        'End If
-
         If Controllers.RightThumbstickDown(0) Then
             MoveLeftPaddleDown()
         ElseIf Controllers.RightThumbstickUp(0) Then
             MoveLeftPaddleUp()
         End If
 
-
     End Sub
 
     Private Sub UpdateLeftThumbstickPosition(ControllerNumber As Integer)
-        ' The range on the X-axis is -32,768 through 32,767. Signed 16-bit (2-byte) integer.
-        ' The range on the Y-axis is -32,768 through 32,767. Signed 16-bit (2-byte) integer.
 
         If ControllerNumber = 0 Then
 
@@ -2416,29 +2095,6 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateLeftThumbstickPositionControllerOne()
-
-        '' What position is the left thumbstick in on the Y-axis?
-        'If ControllerPosition.Gamepad.sThumbLY <= NeutralStart Then
-        '    ' The left thumbstick is in the down position.
-
-        '    IsConThumbLYNeutral(1) = False
-
-        '    MoveRightPaddleDown()
-
-        'ElseIf ControllerPosition.Gamepad.sThumbLY >= NeutralEnd Then
-        '    ' The left thumbstick is in the up position.
-
-        '    IsConThumbLYNeutral(1) = False
-
-        '    MoveRightPaddleUp()
-
-        'Else
-        '    ' The left thumbstick is in the neutral position.
-
-        '    IsConThumbLYNeutral(1) = True
-
-        'End If
-
 
         If Controllers.LeftThumbstickDown(1) Then
             MoveRightPaddleDown()
@@ -2740,34 +2396,11 @@ Public Class Form1
 
     Private Sub UpdateLeftThumbstickPositionControllerZero()
 
-        '' What position is the left thumbstick in on the Y-axis?
-        'If ControllerPosition.Gamepad.sThumbLY <= NeutralStart Then
-        '    ' The left thumbstick is in the down position.
-
-        '    IsConThumbLYNeutral(0) = False
-
-        '    MoveLeftPaddleDown()
-
-        'ElseIf ControllerPosition.Gamepad.sThumbLY >= NeutralEnd Then
-        '    ' The left thumbstick is in the up position.
-
-        '    IsConThumbLYNeutral(0) = False
-
-        '    MoveLeftPaddleUp()
-
-        'Else
-        '    ' The left thumbstick is in the neutral position.
-
-        '    IsConThumbLYNeutral(0) = True
-
-        'End If
-
         If Controllers.LeftThumbstickDown(0) Then
             MoveLeftPaddleDown()
         ElseIf Controllers.LeftThumbstickUp(0) Then
             MoveLeftPaddleUp()
         End If
-
 
     End Sub
 
@@ -3051,29 +2684,9 @@ Public Class Form1
 
     Private Sub UpdatePause()
 
-        'UpdateControllerData()
         Controllers.Update()
 
         HandleControllerInput()
-
-        'For ControllerNumber As Integer = 0 To 3
-
-        '    If Controllers.Connected(ControllerNumber) Then
-
-        '        'UpdateControllerState(ControllerNumber)
-
-        '        DoButtonLogic(ControllerNumber)
-        '        UpdateLeftThumbstickPosition(ControllerNumber)
-        '        UpdateRightThumbstickPosition(ControllerNumber)
-
-        '    End If
-
-        'Next
-
-        'DoButtonLogic(0)
-        'DoButtonLogic(1)
-
-
 
         If PKeyDown Then
 
@@ -3183,30 +2796,9 @@ Public Class Form1
 
     Private Sub UpdateInstructions()
 
-        'UpdateControllerData()
-
         Controllers.Update()
 
         HandleControllerInput()
-
-
-        'For ControllerNumber As Integer = 0 To 3
-
-        '    If Controllers.Connected(ControllerNumber) Then
-
-        '        'UpdateControllerState(ControllerNumber)
-
-        '        DoButtonLogic(ControllerNumber)
-        '        UpdateLeftThumbstickPosition(ControllerNumber)
-        '        UpdateRightThumbstickPosition(ControllerNumber)
-
-        '    End If
-
-        'Next
-
-        'DoButtonLogic(0)
-        ' DoButtonLogic(1)
-
 
         UpdateInstructionsScreenKeyboard()
 
@@ -3310,7 +2902,6 @@ Public Class Form1
 
     Private Sub DrawPausedText(g As Graphics)
 
-        '    'Draw paused text.
         g.DrawString("Paused", TitleFont, Brushes.White, ClientCenter, AlineCenterMiddle)
 
     End Sub
@@ -3391,7 +2982,6 @@ Public Class Form1
 
         g.DrawString(statusText1, New Font(FontFamily.GenericSansSerif, 13), statusBrush1, New PointF(0, 25),
              New StringFormat() With {.Alignment = StringAlignment.Near})
-
 
         DrawBall(g)
 
