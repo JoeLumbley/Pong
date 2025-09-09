@@ -1421,19 +1421,22 @@ Public Class Form1
 
         Controllers.Update()
 
-        For ControllerNumber As Integer = 0 To 3
+        HandleControllerInput()
 
-            If Controllers.Connected(ControllerNumber) Then
 
-                'UpdateControllerState(ControllerNumber)
+        'For ControllerNumber As Integer = 0 To 3
 
-                DoButtonLogic(ControllerNumber)
-                UpdateLeftThumbstickPosition(ControllerNumber)
-                UpdateRightThumbstickPosition(ControllerNumber)
+        '    If Controllers.Connected(ControllerNumber) Then
 
-            End If
+        '        'UpdateControllerState(ControllerNumber)
 
-        Next
+        '        DoButtonLogic(ControllerNumber)
+        '        UpdateLeftThumbstickPosition(ControllerNumber)
+        '        UpdateRightThumbstickPosition(ControllerNumber)
+
+        '    End If
+
+        'Next
 
 
         'DoButtonLogic(0)
@@ -3051,20 +3054,21 @@ Public Class Form1
         'UpdateControllerData()
         Controllers.Update()
 
+        HandleControllerInput()
 
-        For ControllerNumber As Integer = 0 To 3
+        'For ControllerNumber As Integer = 0 To 3
 
-            If Controllers.Connected(ControllerNumber) Then
+        '    If Controllers.Connected(ControllerNumber) Then
 
-                'UpdateControllerState(ControllerNumber)
+        '        'UpdateControllerState(ControllerNumber)
 
-                DoButtonLogic(ControllerNumber)
-                UpdateLeftThumbstickPosition(ControllerNumber)
-                UpdateRightThumbstickPosition(ControllerNumber)
+        '        DoButtonLogic(ControllerNumber)
+        '        UpdateLeftThumbstickPosition(ControllerNumber)
+        '        UpdateRightThumbstickPosition(ControllerNumber)
 
-            End If
+        '    End If
 
-        Next
+        'Next
 
         'DoButtonLogic(0)
         'DoButtonLogic(1)
@@ -3183,19 +3187,22 @@ Public Class Form1
 
         Controllers.Update()
 
-        For ControllerNumber As Integer = 0 To 3
+        HandleControllerInput()
 
-            If Controllers.Connected(ControllerNumber) Then
 
-                'UpdateControllerState(ControllerNumber)
+        'For ControllerNumber As Integer = 0 To 3
 
-                DoButtonLogic(ControllerNumber)
-                UpdateLeftThumbstickPosition(ControllerNumber)
-                UpdateRightThumbstickPosition(ControllerNumber)
+        '    If Controllers.Connected(ControllerNumber) Then
 
-            End If
+        '        'UpdateControllerState(ControllerNumber)
 
-        Next
+        '        DoButtonLogic(ControllerNumber)
+        '        UpdateLeftThumbstickPosition(ControllerNumber)
+        '        UpdateRightThumbstickPosition(ControllerNumber)
+
+        '    End If
+
+        'Next
 
         'DoButtonLogic(0)
         ' DoButtonLogic(1)
@@ -3338,26 +3345,9 @@ Public Class Form1
 
     Private Sub UpdateStartScreen()
 
-        'UpdateControllerData()
-
         Controllers.Update()
 
-        For ControllerNumber As Integer = 0 To 3
-
-            If Controllers.Connected(ControllerNumber) Then
-
-                'UpdateControllerState(ControllerNumber)
-
-                DoButtonLogic(ControllerNumber)
-                UpdateLeftThumbstickPosition(ControllerNumber)
-                UpdateRightThumbstickPosition(ControllerNumber)
-
-            End If
-
-        Next
-
-        'DoButtonLogic(0)
-        '   DoButtonLogic(1)
+        HandleControllerInput()
 
         UpdateStartScreenKeyboard()
 
@@ -3369,6 +3359,22 @@ Public Class Form1
 
         CheckForWallBounceXaxis()
 
+    End Sub
+
+    Private Sub HandleControllerInput()
+        ' Respond to input from each connected controller.
+
+        For ControllerNumber As Integer = 0 To 3
+
+            If Controllers.Connected(ControllerNumber) Then
+
+                DoButtonLogic(ControllerNumber)
+                UpdateLeftThumbstickPosition(ControllerNumber)
+                UpdateRightThumbstickPosition(ControllerNumber)
+
+            End If
+
+        Next
     End Sub
 
     Private Sub DrawStartScreen(g As Graphics)
