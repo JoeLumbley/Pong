@@ -1014,9 +1014,6 @@ Public Class Form1
 
     Private ReadOnly ScoreFont As New Font(FontFamily.GenericSansSerif, 75)
 
-    'Private IsConThumbRYNeutral(0 To 3) As Boolean
-    'Private IsConThumbLYNeutral(0 To 3) As Boolean
-
     Private ClientCenter As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
 
     Private ApplyLeftPaddleEnglish As Boolean = False
