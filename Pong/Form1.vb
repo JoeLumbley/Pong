@@ -3375,11 +3375,10 @@ Public Class Form1
             End If
 
         Next
+
     End Sub
 
     Private Sub DrawStartScreen(g As Graphics)
-
-        'g.DrawString({If Controllers.Connected(0),}, TitleFont, Brushes.White, New PointF(0, 0), New StringFormat() With {.Alignment = StringAlignment.Near})
 
         Dim statusText As String = If(Controllers.Connected(0), "Controller 0 Connected", "Controller 0 Not Connected")
         Dim statusBrush As Brush = If(Controllers.Connected(0), Brushes.Lime, Brushes.Tomato)
