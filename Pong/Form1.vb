@@ -1369,7 +1369,7 @@ Public Class Form1
         If LeftPaddleGoalIndicatorTimer > 0 Then
 
             If LeftPaddleGoalIndicatorFade > 0 Then
-                LeftPaddleGoalIndicatorFade -= 0.4 * CInt(DeltaTime.TotalMilliseconds)
+                LeftPaddleGoalIndicatorFade -= CInt(0.4 * DeltaTime.TotalMilliseconds)
             End If
 
             If LeftPaddleGoalIndicatorFade < 0 Then
@@ -1394,7 +1394,7 @@ Public Class Form1
         If RightPaddleGoalIndicatorTimer > 0 Then
 
             If RightPaddleGoalIndicatorFade > 0 Then
-                RightPaddleGoalIndicatorFade -= 0.4 * CInt(DeltaTime.TotalMilliseconds)
+                RightPaddleGoalIndicatorFade -= CInt(0.4 * DeltaTime.TotalMilliseconds)
             End If
 
             If RightPaddleGoalIndicatorFade < 0 Then
