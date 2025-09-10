@@ -1,24 +1,21 @@
 #  P🏓NG
 
+**P🏓NG** is designed to help new game developers grasp fundamental programming concepts and design principles through an engaging and interactive experience. The game features classic gameplay mechanics, supports keyboard and Xbox controller inputs, and allows for both single-player and multiplayer modes. 
+
+
 ![011](https://github.com/user-attachments/assets/f129ad9d-270e-49a0-b833-56bad8938062)
 
-P🏓NG is a  simulation of **Table Tennis**, a recreational activity and an Olympic sport since 1988, is also known by the term "ping-pong" or just "pong".
-This project is special to me as it was developed with my son, Joey, making it a true father-and-son collaboration.
 
+### Key Features
+- **Classic Gameplay**: Experience the timeless fun of ping-pong with modern enhancements, including smooth animations and responsive controls.
+- **Keyboard and Controller Support**: Play using your keyboard or Xbox controllers, complete with vibration feedback for an immersive experience.
+- **Resizable and Pausable**: Enjoy a flexible gameplay experience that can be paused at any time, allowing players to take breaks without losing progress.
+- **Single and Multiplayer Modes**: Challenge yourself against a computer player or compete with friends, making the game versatile for different play styles.
 
-
-This repository is designed to help new game developers learn the fundamentals of game programming and design through a classic game.
-
-## Features
-- **Classic Gameplay**: Experience the timeless fun of pong with modern enhancements.
-- **Keyboard and Controller Support**: Play using your keyboard ⌨️ or Xbox controllers 🎮 , complete with vibration feedback.
-- **Resizable and Pausable**: Enjoy a flexible gameplay experience that can be paused at any time.
-- **Single and Multiplayer Modes**: Challenge yourself against a computer player or compete with friends.
-
-## Learning Objectives
-- Understand the basics of game mechanics and physics.
-- Gain hands-on experience with VB.NET and game development concepts.
-- Learn how to implement user input handling, game states, and sound effects.
+### Learning Objectives
+- Understand the basics of game mechanics and physics, including how to simulate movement and collisions.
+- Gain hands-on experience with VB.NET and game development concepts, such as state management and event handling.
+- Learn how to implement user input handling, game states, sound effects, and graphical rendering.
 
 ---
 
@@ -138,21 +135,6 @@ To play using your Xbox controllers, use the following controls:
 # 📄 Code Walk Through
 
 In this comprehensive walkthrough, we will explore the code structure and functionality of the **P🏓NG** game, a classic table tennis simulation. This guide aims to provide a detailed understanding of game programming concepts, from architecture to implementation. Whether you're a novice or an experienced developer, this walkthrough will deepen your knowledge and inspire you to create your own games.
-
-### Overview of P🏓NG
-
-**P🏓NG** is designed to help new game developers grasp fundamental programming concepts and design principles through an engaging and interactive experience. The game features classic gameplay mechanics, supports keyboard and Xbox controller inputs, and allows for both single-player and multiplayer modes. 
-
-### Key Features
-- **Classic Gameplay**: Experience the timeless fun of ping-pong with modern enhancements, including smooth animations and responsive controls.
-- **Keyboard and Controller Support**: Play using your keyboard or Xbox controllers, complete with vibration feedback for an immersive experience.
-- **Resizable and Pausable**: Enjoy a flexible gameplay experience that can be paused at any time, allowing players to take breaks without losing progress.
-- **Single and Multiplayer Modes**: Challenge yourself against a computer player or compete with friends, making the game versatile for different play styles.
-
-### Learning Objectives
-- Understand the basics of game mechanics and physics, including how to simulate movement and collisions.
-- Gain hands-on experience with VB.NET and game development concepts, such as state management and event handling.
-- Learn how to implement user input handling, game states, sound effects, and graphical rendering.
 
 ---
 
