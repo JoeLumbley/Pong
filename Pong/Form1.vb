@@ -1056,7 +1056,6 @@ Public Class Form1
     Private PauseKeyDown As Boolean = False
     Private IsPauseKeyDown As Boolean = False
 
-
     Private LastKeyDown As Date = Now
 
 
