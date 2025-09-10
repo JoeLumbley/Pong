@@ -1363,16 +1363,11 @@ Public Class Form1
 
         UpdateGoalIndicator()
 
-
     End Sub
 
     Private Sub UpdateGoalIndicator()
 
         If RightPaddleGoalIndicatorTimer > 0 Then
-
-            'If RightPaddleGoalIndicatorBrush IsNot Brushes.Lime Then
-            '    RightPaddleGoalIndicatorBrush = Brushes.Lime
-            'End If
 
             If RightPaddleGoalIndicatorFade > 0 Then
                 RightPaddleGoalIndicatorFade -= 0.4 * CInt(DeltaTime.TotalMilliseconds)
@@ -1396,10 +1391,6 @@ Public Class Form1
 
         If LeftPaddleGoalIndicatorTimer > 0 Then
 
-            'If LeftPaddleGoalIndicatorBrush IsNot Brushes.Red Then
-            '    LeftPaddleGoalIndicatorBrush = Brushes.Red
-            'End If
-
             If LeftPaddleGoalIndicatorFade > 0 Then
                 LeftPaddleGoalIndicatorFade -= 0.4 * CInt(DeltaTime.TotalMilliseconds)
             End If
@@ -1420,7 +1411,6 @@ Public Class Form1
             LeftPaddleGoalIndicatorTimer = 0
 
         End If
-
 
     End Sub
 
@@ -2894,9 +2884,7 @@ Public Class Form1
 
     Private Sub DrawEndScreen(g As Graphics)
 
-        g.FillRectangle(RightPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Left, ClientRectangle.Top, 32, ClientSize.Height))
-        g.FillRectangle(LeftPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Right - 32, ClientRectangle.Top, 32, ClientSize.Height))
-
+        DrawGoalIndicators(g)
 
         DrawCenterCourtLine(g)
 
@@ -2915,6 +2903,15 @@ Public Class Form1
         DrawEndScores(g)
 
         UpdateGoalIndicator()
+
+    End Sub
+
+    Private Sub DrawGoalIndicators(g As Graphics)
+        'Draw goal zone indicators.
+
+        g.FillRectangle(RightPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Left, ClientRectangle.Top, 32, ClientSize.Height))
+
+        g.FillRectangle(LeftPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Right - 32, ClientRectangle.Top, 32, ClientSize.Height))
 
     End Sub
 
@@ -3151,16 +3148,7 @@ Public Class Form1
 
     Private Sub DrawPlaying(g As Graphics)
 
-        'TODO
-        ' DrawRightPaddleGoalIndicator
-        ' RightPaddleGoalIndicatorBrush
-        ' RightPaddleGoalIndicatorRect
-        '
-        g.FillRectangle(RightPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Left, ClientRectangle.Top, 32, ClientSize.Height))
-        ' DrawLeftPaddleGoalIndicator
-        ' LeftPaddleGoalIndicatorBrush
-        ' LeftPaddleGoalIndicatorRect
-        g.FillRectangle(LeftPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Right - 32, ClientRectangle.Top, 32, ClientSize.Height))
+        DrawGoalIndicators(g)
 
         DrawCenterCourtLine(g)
 
