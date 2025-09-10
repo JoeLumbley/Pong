@@ -1110,18 +1110,9 @@ Public Class Form1
 
     Public Sub New()
         InitializeComponent()
+
         InitializeApp()
-        Controllers.Initialize()
-        SetupGameTimer()
 
-        Debug.Print($"Running...")
-
-    End Sub
-
-    Private Sub SetupGameTimer()
-        gameTimer = New Timer() With {.Interval = 15}
-        AddHandler gameTimer.Tick, AddressOf OnGameTick
-        gameTimer.Start()
     End Sub
 
     Private Sub OnGameTick(sender As Object, e As EventArgs)
@@ -1134,9 +1125,9 @@ Public Class Form1
 
     Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
 
-        DrawGame(e.Graphics)
-
         MyBase.OnPaint(e)
+
+        DrawGame(e.Graphics)
 
         UpdateFrameCounter()
 
@@ -3629,30 +3620,6 @@ Public Class Form1
 
     End Sub
 
-    'Private Function IsControllerConnected(ControllerNumber As Integer) As Boolean
-
-    '    Try
-
-    '        Return XInputGetState(ControllerNumber, ControllerPosition) = 0 ' 0 means the controller is connected.
-    '        ' Anything else (a non-zero value) means the controller is not connected.
-
-    '    Catch ex As Exception
-    '        ' Something went wrong (An exception occured).
-
-    '        DisplayError(ex)
-
-    '        Return False
-
-    '    End Try
-
-    'End Function
-
-    'Private Sub DisplayError(ex As Exception)
-
-    '    MsgBox(ex.ToString()) ' Display the exception message in a message box.
-
-    'End Sub
-
     Private Sub InitializeApp()
 
         Ball.Rect.Width = 32
@@ -3719,6 +3686,22 @@ Public Class Form1
         LayoutTitleAndInstructions()
 
         MovePointerOffScreen()
+
+        Controllers.Initialize()
+
+        SetupGameTimer()
+
+        Debug.Print($"Initialization Complete")
+
+    End Sub
+
+    Private Sub SetupGameTimer()
+
+        gameTimer = New Timer() With {.Interval = 15}
+
+        AddHandler gameTimer.Tick, AddressOf OnGameTick
+
+        gameTimer.Start()
 
     End Sub
 
