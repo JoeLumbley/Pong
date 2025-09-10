@@ -257,7 +257,7 @@ Public Structure XboxControllers
         LeftStick = New Boolean(0 To 3) {}
         RightStick = New Boolean(0 To 3) {}
 
-        TimeToVibe = 1000 'ms
+        TimeToVibe = 400 'ms
 
         LeftVibrateStart = New Date(0 To 3) {}
         RightVibrateStart = New Date(0 To 3) {}
@@ -1243,7 +1243,7 @@ Public Class Form1
     Private Sub DrawGame(g As Graphics)
 
         g.CompositingMode = Drawing2D.CompositingMode.SourceOver
-        g.CompositingQuality = Drawing2D.CompositingQuality.HighQuality
+        g.CompositingQuality = Drawing2D.CompositingQuality.HighSpeed
         g.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
         g.SmoothingMode = Drawing2D.SmoothingMode.None
 
