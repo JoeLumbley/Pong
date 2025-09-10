@@ -1352,12 +1352,45 @@ Public Class Form1
 
         CheckforEndGame()
 
-        UpdateGoalIndicator()
+        UpdateGoalIndicators()
 
     End Sub
 
-    Private Sub UpdateGoalIndicator()
+    Private Sub UpdateGoalIndicators()
 
+        UpdateRightPaddleGoalIndicator()
+
+        UpdateLeftPaddleGoalIndicator()
+
+    End Sub
+
+    Private Sub UpdateLeftPaddleGoalIndicator()
+
+        If LeftPaddleGoalIndicatorTimer > 0 Then
+
+            If LeftPaddleGoalIndicatorFade > 0 Then
+                LeftPaddleGoalIndicatorFade -= 0.4 * CInt(DeltaTime.TotalMilliseconds)
+            End If
+
+            If LeftPaddleGoalIndicatorFade < 0 Then
+                LeftPaddleGoalIndicatorFade = 0
+            End If
+
+            LeftPaddleGoalIndicatorBrush = New SolidBrush(Color.FromArgb(LeftPaddleGoalIndicatorFade, 0, 255, 0))
+
+            LeftPaddleGoalIndicatorTimer -= DeltaTime.TotalMilliseconds
+
+        Else
+
+            LeftPaddleGoalIndicatorBrush = Brushes.Transparent
+
+            LeftPaddleGoalIndicatorTimer = 0
+
+        End If
+
+    End Sub
+
+    Private Sub UpdateRightPaddleGoalIndicator()
         If RightPaddleGoalIndicatorTimer > 0 Then
 
             If RightPaddleGoalIndicatorFade > 0 Then
@@ -1379,30 +1412,6 @@ Public Class Form1
             RightPaddleGoalIndicatorTimer = 0
 
         End If
-
-        If LeftPaddleGoalIndicatorTimer > 0 Then
-
-            If LeftPaddleGoalIndicatorFade > 0 Then
-                LeftPaddleGoalIndicatorFade -= 0.4 * CInt(DeltaTime.TotalMilliseconds)
-            End If
-
-            If LeftPaddleGoalIndicatorFade < 0 Then
-                LeftPaddleGoalIndicatorFade = 0
-            End If
-
-            LeftPaddleGoalIndicatorBrush = New SolidBrush(Color.FromArgb(LeftPaddleGoalIndicatorFade, 0, 255, 0))
-
-
-            LeftPaddleGoalIndicatorTimer -= DeltaTime.TotalMilliseconds
-
-        Else
-
-            LeftPaddleGoalIndicatorBrush = Brushes.Transparent
-
-            LeftPaddleGoalIndicatorTimer = 0
-
-        End If
-
     End Sub
 
     Private Sub UpdateComputerPlayer()
@@ -1567,12 +1576,12 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateFlashingText()
-        'This algorithm controls the rate of flash for text.
+        ' This algorithm controls the rate of flash for text.
 
-        'Advance the frame counter.
+        ' Advance the frame counter.
         FlashCount += 1
 
-        'Draw text for 60 frames.
+        ' Draw text for 60 frames.
         If FlashCount <= 60 Then
 
             DrawFlashingText = True
@@ -1583,10 +1592,10 @@ Public Class Form1
 
         End If
 
-        'Dont draw text for the next 60 frames.
+        ' Dont draw text for the next 60 frames.
         If FlashCount >= 120 Then
 
-            'Repete
+            ' Repete
             FlashCount = 0
 
         End If
@@ -1606,7 +1615,7 @@ Public Class Form1
     End Sub
 
     Private Sub MovePointerOffScreen()
-        'Move mouse pointer off screen.
+        ' Move mouse pointer off screen.
 
         Cursor.Position = New Point(Screen.PrimaryScreen.WorkingArea.Right,
                                     Screen.PrimaryScreen.WorkingArea.Height \ 2)
@@ -1614,7 +1623,7 @@ Public Class Form1
     End Sub
 
     Private Sub MovePointerCenterScreen()
-        'Move mouse pointer center screen.
+        ' Move mouse pointer center screen.
 
         Cursor.Position = New Point(Screen.PrimaryScreen.WorkingArea.Right \ 2,
                                     Screen.PrimaryScreen.WorkingArea.Height \ 2)
@@ -1651,19 +1660,19 @@ Public Class Form1
 
             Case 1
 
-                'Send ball up and to the right.
+                ' Send ball up and to the right.
                 Ball.Velocity.X = ServSpeed
                 Ball.Velocity.Y = -ServSpeed
 
             Case 2
 
-                'Send ball to the right.
+                ' Send ball to the right.
                 Ball.Velocity.X = ServSpeed
                 Ball.Velocity.Y = 0
 
             Case 3
 
-                'Send ball down and to the right.
+                ' Send ball down and to the right.
                 Ball.Velocity.X = ServSpeed
                 Ball.Velocity.Y = ServSpeed
 
@@ -1677,19 +1686,19 @@ Public Class Form1
 
             Case 1
 
-                'Send ball up and to the left.
+                ' Send ball up and to the left.
                 Ball.Velocity.X = -ServSpeed
                 Ball.Velocity.Y = -ServSpeed
 
             Case 2
 
-                'Send ball to the left.
+                ' Send ball to the left.
                 Ball.Velocity.X = -ServSpeed
                 Ball.Velocity.Y = 0
 
             Case 3
 
-                'Send ball down and to the left.
+                ' Send ball down and to the left.
                 Ball.Velocity.X = -ServSpeed
                 Ball.Velocity.Y = ServSpeed
 
@@ -1698,10 +1707,10 @@ Public Class Form1
     End Sub
     Private Shared Function RandomNumber() As Integer
 
-        'Initialize random-number generator.
+        ' Initialize random-number generator.
         Randomize()
 
-        'Generate random number between 1 and 3.
+        ' Generate random number between 1 and 3.
         Return CInt(Int((3 * Rnd()) + 1))
 
     End Function
@@ -1725,44 +1734,44 @@ Public Class Form1
 
     Private Sub UpdateScore()
 
-        'Did ball enter left goal zone?
+        ' Did ball enter left goal zone?
         If Ball.Rect.X < 0 Then
-            'Yes, ball entered left goal zone.
+            ' Yes, ball entered left goal zone.
 
             PlayPointSound()
             'TODO
             RightPaddleGoalIndicatorTimer = 1000
             RightPaddleGoalIndicatorFade = 255
 
-            'Award point to right paddle.
+            ' Award point to right paddle.
             RightPaddleScore += 1
 
-            'Change possession of ball to right paddle.
+            ' Change possession of ball to right paddle.
             Serving = ServeStateEnum.RightPaddle
 
-            'Change game state to serve.
+            ' Change game state to serve.
             GameState = GameStateEnum.Serve
 
         End If
 
-        'Did ball enter right goal zone?
+        ' Did ball enter right goal zone?
         If Ball.Rect.X + Ball.Rect.Width > ClientSize.Width Then
-            'Yes, ball entered goal zone.
+            ' Yes, ball entered goal zone.
 
             PlayPointSound()
-            'TODO
+            ' TODO
 
             LeftPaddleGoalIndicatorTimer = 1000
             LeftPaddleGoalIndicatorFade = 255
 
 
-            'Award a point to left paddle.
+            ' Award a point to left paddle.
             LeftPaddleScore += 1
 
-            'Change possession of ball to left paddle.
+            ' Change possession of ball to left paddle.
             Serving = ServeStateEnum.LeftPaddle
 
-            'Change game state to serve.
+            ' Change game state to serve.
             GameState = GameStateEnum.Serve
 
         End If
@@ -2893,7 +2902,7 @@ Public Class Form1
 
         DrawEndScores(g)
 
-        UpdateGoalIndicator()
+        UpdateGoalIndicators()
 
     End Sub
 
@@ -3225,95 +3234,6 @@ Public Class Form1
         g.FillRectangle(Brushes.White, Ball.Rect)
 
     End Sub
-
-    'Private Sub UpdateControllerData()
-
-    '    Dim ElapsedTime As TimeSpan = Now - ConnectionStart
-
-    '    ' Every second check for connected controllers.
-    '    If ElapsedTime.TotalSeconds >= 1 Then
-
-    '        For ControllerNumber As Integer = 0 To 3 ' Up to 4 controllers
-
-    '            Connected(ControllerNumber) = IsControllerConnected(ControllerNumber)
-
-    '        Next
-
-    '        ConnectionStart = DateTime.Now
-
-    '    End If
-
-    '    For ControllerNumber As Integer = 0 To 3
-
-    '        If Connected(ControllerNumber) Then
-
-    '            UpdateControllerState(ControllerNumber)
-
-    '        End If
-
-    '    Next
-
-    'End Sub
-
-    'Private Sub UpdateControllerState(ControllerNumber As Integer)
-
-    '    Try
-
-    '        XInputGetState(ControllerNumber, ControllerPosition)
-
-    '        UpdateButtonPosition(ControllerNumber)
-
-    '        UpdateLeftThumbstickPosition(ControllerNumber)
-
-    '        UpdateRightThumbstickPosition(ControllerNumber)
-
-    '        'UpdateLeftTriggerPosition(controllerNumber)
-
-    '        'UpdateRightTriggerPosition(controllerNumber)
-
-    '    Catch ex As Exception
-    '        ' Something went wrong (An exception occurred).
-
-    '        DisplayError(ex)
-
-    '    End Try
-
-    'End Sub
-
-    'Private Sub UpdateButtonPosition(ControllerNumber As Integer)
-    '    ' The range of buttons is 0 to 65,535. Unsigned 16-bit (2-byte) integer.
-
-    '    DPadUpPressed = (ControllerPosition.Gamepad.wButtons And DPadUp) <> 0
-
-    '    DPadDownPressed = (ControllerPosition.Gamepad.wButtons And DPadDown) <> 0
-
-    '    DPadLeftPressed = (ControllerPosition.Gamepad.wButtons And DPadLeft) <> 0
-
-    '    DPadRightPressed = (ControllerPosition.Gamepad.wButtons And DPadRight) <> 0
-
-    '    StartButtonPressed = (ControllerPosition.Gamepad.wButtons And StartButton) <> 0
-
-    '    BackButtonPressed = (ControllerPosition.Gamepad.wButtons And BackButton) <> 0
-
-    '    LeftStickButtonPressed = (ControllerPosition.Gamepad.wButtons And LeftStickButton) <> 0
-
-    '    RightStickButtonPressed = (ControllerPosition.Gamepad.wButtons And RightStickButton) <> 0
-
-    '    LeftBumperButtonPressed = (ControllerPosition.Gamepad.wButtons And LeftBumperButton) <> 0
-
-    '    RightBumperButtonPressed = (ControllerPosition.Gamepad.wButtons And RightBumperButton) <> 0
-
-    '    AButtonPressed = (ControllerPosition.Gamepad.wButtons And AButton) <> 0
-
-    '    BButtonPressed = (ControllerPosition.Gamepad.wButtons And BButton) <> 0
-
-    '    XButtonPressed = (ControllerPosition.Gamepad.wButtons And XButton) <> 0
-
-    '    YButtonPressed = (ControllerPosition.Gamepad.wButtons And YButton) <> 0
-
-    '    DoButtonLogic(ControllerNumber)
-
-    'End Sub
 
     Private Sub DoButtonLogic(ControllerNumber As Integer)
 
