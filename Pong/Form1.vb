@@ -1099,6 +1099,15 @@ Public Class Form1
 
     Private gameTimer As Timer
 
+    Private RightPaddleGoalIndicatorTimer As Integer = 0
+    Private LeftPaddleGoalIndicatorTimer As Integer = 0
+
+    Private RightPaddleGoalIndicatorBrush As SolidBrush = Brushes.Transparent
+    Private LeftPaddleGoalIndicatorBrush As SolidBrush = Brushes.Transparent
+
+    Private RightPaddleGoalIndicatorFade As Integer = 0
+    Private LeftPaddleGoalIndicatorFade As Integer = 0
+
     Public Sub New()
         InitializeComponent()
         InitializeApp()
@@ -1243,7 +1252,7 @@ Public Class Form1
     Private Sub DrawGame(g As Graphics)
 
         g.CompositingMode = Drawing2D.CompositingMode.SourceOver
-        g.CompositingQuality = Drawing2D.CompositingQuality.HighSpeed
+        g.CompositingQuality = Drawing2D.CompositingQuality.HighQuality
         g.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
         g.SmoothingMode = Drawing2D.SmoothingMode.None
 
@@ -1351,6 +1360,67 @@ Public Class Form1
         UpdateScore()
 
         CheckforEndGame()
+
+        UpdateGoalIndicator()
+
+
+    End Sub
+
+    Private Sub UpdateGoalIndicator()
+
+        If RightPaddleGoalIndicatorTimer > 0 Then
+
+            'If RightPaddleGoalIndicatorBrush IsNot Brushes.Lime Then
+            '    RightPaddleGoalIndicatorBrush = Brushes.Lime
+            'End If
+
+            If RightPaddleGoalIndicatorFade > 0 Then
+                RightPaddleGoalIndicatorFade -= 0.4 * CInt(DeltaTime.TotalMilliseconds)
+            End If
+
+            If RightPaddleGoalIndicatorFade < 0 Then
+                RightPaddleGoalIndicatorFade = 0
+            End If
+
+            RightPaddleGoalIndicatorBrush = New SolidBrush(Color.FromArgb(RightPaddleGoalIndicatorFade, 0, 255, 0))
+
+            RightPaddleGoalIndicatorTimer -= DeltaTime.TotalMilliseconds
+
+        Else
+
+            RightPaddleGoalIndicatorBrush = Brushes.Transparent
+
+            RightPaddleGoalIndicatorTimer = 0
+
+        End If
+
+        If LeftPaddleGoalIndicatorTimer > 0 Then
+
+            'If LeftPaddleGoalIndicatorBrush IsNot Brushes.Red Then
+            '    LeftPaddleGoalIndicatorBrush = Brushes.Red
+            'End If
+
+            If LeftPaddleGoalIndicatorFade > 0 Then
+                LeftPaddleGoalIndicatorFade -= 0.4 * CInt(DeltaTime.TotalMilliseconds)
+            End If
+
+            If LeftPaddleGoalIndicatorFade < 0 Then
+                LeftPaddleGoalIndicatorFade = 0
+            End If
+
+            LeftPaddleGoalIndicatorBrush = New SolidBrush(Color.FromArgb(LeftPaddleGoalIndicatorFade, 0, 255, 0))
+
+
+            LeftPaddleGoalIndicatorTimer -= DeltaTime.TotalMilliseconds
+
+        Else
+
+            LeftPaddleGoalIndicatorBrush = Brushes.Transparent
+
+            LeftPaddleGoalIndicatorTimer = 0
+
+        End If
+
 
     End Sub
 
@@ -1679,6 +1749,9 @@ Public Class Form1
             'Yes, ball entered left goal zone.
 
             PlayPointSound()
+            'TODO
+            RightPaddleGoalIndicatorTimer = 1000
+            RightPaddleGoalIndicatorFade = 255
 
             'Award point to right paddle.
             RightPaddleScore += 1
@@ -1696,6 +1769,11 @@ Public Class Form1
             'Yes, ball entered goal zone.
 
             PlayPointSound()
+            'TODO
+
+            LeftPaddleGoalIndicatorTimer = 1000
+            LeftPaddleGoalIndicatorFade = 255
+
 
             'Award a point to left paddle.
             LeftPaddleScore += 1
@@ -2816,6 +2894,10 @@ Public Class Form1
 
     Private Sub DrawEndScreen(g As Graphics)
 
+        g.FillRectangle(RightPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Left, ClientRectangle.Top, 32, ClientSize.Height))
+        g.FillRectangle(LeftPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Right - 32, ClientRectangle.Top, 32, ClientSize.Height))
+
+
         DrawCenterCourtLine(g)
 
         DrawLeftPaddle(g)
@@ -2831,6 +2913,8 @@ Public Class Form1
         End If
 
         DrawEndScores(g)
+
+        UpdateGoalIndicator()
 
     End Sub
 
@@ -3066,6 +3150,17 @@ Public Class Form1
     End Sub
 
     Private Sub DrawPlaying(g As Graphics)
+
+        'TODO
+        ' DrawRightPaddleGoalIndicator
+        ' RightPaddleGoalIndicatorBrush
+        ' RightPaddleGoalIndicatorRect
+        '
+        g.FillRectangle(RightPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Left, ClientRectangle.Top, 32, ClientSize.Height))
+        ' DrawLeftPaddleGoalIndicator
+        ' LeftPaddleGoalIndicatorBrush
+        ' LeftPaddleGoalIndicatorRect
+        g.FillRectangle(LeftPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Right - 32, ClientRectangle.Top, 32, ClientSize.Height))
 
         DrawCenterCourtLine(g)
 
