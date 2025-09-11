@@ -1107,6 +1107,15 @@ Public Class Form1
     Private RightPaddleGoalIndicatorFade As Integer = 0
     Private LeftPaddleGoalIndicatorFade As Integer = 0
 
+
+    Private RightPaddleGoalIndicatorRect As Rectangle
+    Private LeftPaddleGoalIndicatorRect As Rectangle
+
+    Private RightPaddleGoalIndicatorExpand As Integer = 0
+    Private LeftPaddleGoalIndicatorExpand As Integer = 0
+
+
+
     Public Sub New()
         InitializeComponent()
 
@@ -1379,11 +1388,19 @@ Public Class Form1
 
             LeftPaddleGoalIndicatorTimer -= DeltaTime.TotalMilliseconds
 
+            LeftPaddleGoalIndicatorExpand += CInt(0.2 * DeltaTime.TotalMilliseconds)
+
+            LeftPaddleGoalIndicatorRect = New Rectangle(ClientRectangle.Right - LeftPaddleGoalIndicatorExpand, ClientRectangle.Top, LeftPaddleGoalIndicatorExpand, ClientSize.Height)
+
         Else
 
             LeftPaddleGoalIndicatorBrush = Brushes.Transparent
 
             LeftPaddleGoalIndicatorTimer = 0
+
+            LeftPaddleGoalIndicatorExpand = 32
+
+            LeftPaddleGoalIndicatorRect = New Rectangle(ClientRectangle.Right - 32, ClientRectangle.Top, 32, ClientSize.Height)
 
         End If
 
@@ -1404,13 +1421,23 @@ Public Class Form1
 
             RightPaddleGoalIndicatorTimer -= DeltaTime.TotalMilliseconds
 
+            RightPaddleGoalIndicatorExpand += CInt(0.2 * DeltaTime.TotalMilliseconds)
+
+            RightPaddleGoalIndicatorRect = New Rectangle(ClientRectangle.Left, ClientRectangle.Top, RightPaddleGoalIndicatorExpand, ClientSize.Height)
+
         Else
 
             RightPaddleGoalIndicatorBrush = Brushes.Transparent
 
             RightPaddleGoalIndicatorTimer = 0
 
+            RightPaddleGoalIndicatorExpand = 32
+
+            RightPaddleGoalIndicatorRect = New Rectangle(ClientRectangle.Left, ClientRectangle.Top, 32, ClientSize.Height)
+
         End If
+
+
     End Sub
 
     Private Sub UpdateComputerPlayer()
@@ -2908,9 +2935,14 @@ Public Class Form1
     Private Sub DrawGoalIndicators(g As Graphics)
         'Draw goal zone indicators.
 
-        g.FillRectangle(RightPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Left, ClientRectangle.Top, 32, ClientSize.Height))
+        'g.FillRectangle(RightPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Left, ClientRectangle.Top, 32, ClientSize.Height))
 
-        g.FillRectangle(LeftPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Right - 32, ClientRectangle.Top, 32, ClientSize.Height))
+        'g.FillRectangle(LeftPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Right - 32, ClientRectangle.Top, 32, ClientSize.Height))
+
+        g.FillRectangle(RightPaddleGoalIndicatorBrush, RightPaddleGoalIndicatorRect)
+
+        g.FillRectangle(LeftPaddleGoalIndicatorBrush, LeftPaddleGoalIndicatorRect)
+
 
     End Sub
 
