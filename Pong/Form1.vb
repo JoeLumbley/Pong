@@ -1388,7 +1388,7 @@ Public Class Form1
 
             LeftPaddleGoalIndicatorTimer -= DeltaTime.TotalMilliseconds
 
-            LeftPaddleGoalIndicatorExpand += CInt(0.2 * DeltaTime.TotalMilliseconds)
+            LeftPaddleGoalIndicatorExpand += CInt(0.1 * DeltaTime.TotalMilliseconds)
 
             LeftPaddleGoalIndicatorRect = New Rectangle(ClientRectangle.Right - LeftPaddleGoalIndicatorExpand, ClientRectangle.Top, LeftPaddleGoalIndicatorExpand, ClientSize.Height)
 
@@ -1421,7 +1421,7 @@ Public Class Form1
 
             RightPaddleGoalIndicatorTimer -= DeltaTime.TotalMilliseconds
 
-            RightPaddleGoalIndicatorExpand += CInt(0.2 * DeltaTime.TotalMilliseconds)
+            RightPaddleGoalIndicatorExpand += CInt(0.1 * DeltaTime.TotalMilliseconds)
 
             RightPaddleGoalIndicatorRect = New Rectangle(ClientRectangle.Left, ClientRectangle.Top, RightPaddleGoalIndicatorExpand, ClientSize.Height)
 
