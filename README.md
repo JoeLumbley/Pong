@@ -2,8 +2,8 @@
 
 **P🏓NG** is designed to help new game developers grasp fundamental programming concepts and design principles through an engaging and interactive experience. The game features classic gameplay mechanics, supports keyboard and Xbox controller inputs, and allows for both single-player and multiplayer modes. 
 
+<img width="1920" height="1080" alt="020" src="https://github.com/user-attachments/assets/6d3a28f0-9260-4f62-9cd5-68a33bc49f23" />
 
-![011](https://github.com/user-attachments/assets/f129ad9d-270e-49a0-b833-56bad8938062)
 
 
 ### Key Features
