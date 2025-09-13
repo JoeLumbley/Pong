@@ -18,6 +18,8 @@
 - Learn how to implement user input handling, game states, sound effects, and graphical rendering.
 
 ---
+<img width="1920" height="1080" alt="021" src="https://github.com/user-attachments/assets/c739c9b4-c91b-45f7-91b1-221e240e9227" />
+
 
 https://youtu.be/ppUMmJLlsDg?si=HlilqN7ddzhGwYtN
 
