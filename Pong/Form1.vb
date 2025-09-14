@@ -905,9 +905,266 @@ Public Structure XboxControllers
 
 End Structure
 
+Public Structure AudioPlayer
+
+    <DllImport("winmm.dll", EntryPoint:="mciSendStringW")>
+    Private Shared Function mciSendStringW(<MarshalAs(UnmanagedType.LPWStr)> ByVal lpszCommand As String,
+                                           <MarshalAs(UnmanagedType.LPWStr)> ByVal lpszReturnString As StringBuilder,
+                                           ByVal cchReturn As UInteger, ByVal hwndCallback As IntPtr) As Integer
+    End Function
+
+    Private Sounds() As String
+
+    Public Function AddSound(SoundName As String, FilePath As String) As Boolean
+
+        ' Do we have a name and does the file exist?
+        If Not String.IsNullOrWhiteSpace(SoundName) AndAlso IO.File.Exists(FilePath) Then
+            ' Yes, we have a name and the file exists.
+
+            Dim CommandOpen As String = $"open ""{FilePath}"" alias {SoundName}"
+
+            ' Do we have sounds?
+            If Sounds Is Nothing Then
+                ' No we do not have sounds.
+
+                ' Did the sound file open?
+                If SendMciCommand(CommandOpen, IntPtr.Zero) Then
+                    ' Yes, the sound file did open.
+
+                    ' Start the Sounds array with the sound.
+                    ReDim Sounds(0)
+
+                    Sounds(0) = SoundName
+
+                    Return True ' The sound was added.
+
+                End If
+
+                ' Is the sound in the array already?
+            ElseIf Not Sounds.Contains(SoundName) Then
+                ' Yes we have sounds and no the sound is not in the array.
+
+                ' Did the sound file open?
+                If SendMciCommand(CommandOpen, IntPtr.Zero) Then
+                    ' Yes, the sound file did open.
+
+                    ' Add the sound to the Sounds array.
+                    Array.Resize(Sounds, Sounds.Length + 1)
+
+                    Sounds(Sounds.Length - 1) = SoundName
+
+                    Return True ' The sound was added.
+
+                End If
+
+            End If
+
+        End If
+
+        Debug.Print($"{SoundName} not added to sounds.")
+
+        Return False ' The sound was not added.
+
+    End Function
+
+    Public Function SetVolume(SoundName As String, Level As Integer) As Boolean
+
+        ' Do we have sounds and is the sound in the array and is the level in the valid range?
+        If Sounds IsNot Nothing AndAlso Sounds.Contains(SoundName) AndAlso Level >= 0 AndAlso Level <= 1000 Then
+            ' We have sounds and the sound is in the array and the level is in range.
+
+            Dim CommandVolume As String = $"setaudio {SoundName} volume to {Level}"
+
+            Return SendMciCommand(CommandVolume, IntPtr.Zero) ' The volume was set.
+
+        End If
+
+        Debug.Print($"{SoundName} volume not set.")
+
+        Return False ' The volume was not set.
+
+    End Function
+
+    Public Function LoopSound(SoundName As String) As Boolean
+
+        ' Do we have sounds and is the sound in the array?
+        If Sounds IsNot Nothing AndAlso Sounds.Contains(SoundName) Then
+            ' We have sounds and the sound is in the array.
+
+            Dim CommandSeekToStart As String = $"seek {SoundName} to start"
+
+            Dim CommandPlayRepeat As String = $"play {SoundName} repeat"
+
+            Return SendMciCommand(CommandSeekToStart, IntPtr.Zero) AndAlso
+                   SendMciCommand(CommandPlayRepeat, IntPtr.Zero) ' The sound is looping.
+
+        End If
+
+        Debug.Print($"{SoundName} not looping.")
+
+        Return False ' The sound is not looping.
+
+    End Function
+
+    Public Function PlaySound(SoundName As String) As Boolean
+
+        ' Do we have sounds and is the sound in the array?
+        If Sounds IsNot Nothing AndAlso Sounds.Contains(SoundName) Then
+            ' We have sounds and the sound is in the array.
+
+            Dim CommandSeekToStart As String = $"seek {SoundName} to start"
+
+            Dim CommandPlay As String = $"play {SoundName} notify"
+
+            Return SendMciCommand(CommandSeekToStart, IntPtr.Zero) AndAlso
+                   SendMciCommand(CommandPlay, IntPtr.Zero) ' The sound is playing.
+
+        End If
+
+        Debug.Print($"{SoundName} not playing.")
+
+        Return False ' The sound is not playing.
+
+    End Function
+
+    Public Function PauseSound(SoundName As String) As Boolean
+
+        ' Do we have sounds and is the sound in the array?
+        If Sounds IsNot Nothing AndAlso Sounds.Contains(SoundName) Then
+            ' We have sounds and the sound is in the array.
+
+            Dim CommandPause As String = $"pause {SoundName} notify"
+
+            Return SendMciCommand(CommandPause, IntPtr.Zero) ' The sound is paused.
+
+        End If
+
+        Debug.Print($"{SoundName} not paused.")
+
+        Return False ' The sound is not paused.
+
+    End Function
+
+    Public Function IsPlaying(SoundName As String) As Boolean
+
+        Return GetStatus(SoundName, "mode") = "playing"
+
+    End Function
+
+    Public Sub AddOverlapping(SoundName As String, FilePath As String)
+
+        For Each Suffix As String In {"A", "B", "C", "D", "E", "F", "G", "H",
+                                      "I", "J", "K", "L", "M", "N", "O", "P",
+                                      "Q", "R", "S", "T", "U", "V", "W", "X"}
+
+            AddSound(SoundName & Suffix, FilePath)
+
+        Next
+
+    End Sub
+
+    Public Sub PlayOverlapping(SoundName As String)
+
+        For Each Suffix As String In {"A", "B", "C", "D", "E", "F", "G", "H",
+                                      "I", "J", "K", "L", "M", "N", "O", "P",
+                                      "Q", "R", "S", "T", "U", "V", "W", "X"}
+
+            If Not IsPlaying(SoundName & Suffix) Then
+
+                PlaySound(SoundName & Suffix)
+
+                Exit Sub
+
+            End If
+
+        Next
+
+    End Sub
+
+    Public Sub SetVolumeOverlapping(SoundName As String, Level As Integer)
+
+        For Each Suffix As String In {"A", "B", "C", "D", "E", "F", "G", "H",
+                                      "I", "J", "K", "L", "M", "N", "O", "P",
+                                      "Q", "R", "S", "T", "U", "V", "W", "X"}
+
+            SetVolume(SoundName & Suffix, Level)
+
+        Next
+
+    End Sub
+
+    Private Function SendMciCommand(command As String, hwndCallback As IntPtr) As Boolean
+
+        Dim ReturnString As New StringBuilder(128)
+
+        Try
+
+            Return mciSendStringW(command, ReturnString, 0, hwndCallback) = 0
+
+        Catch ex As Exception
+
+            Debug.Print($"Error sending MCI command: {command} | {ex.Message}")
+
+            Return False
+
+        End Try
+
+    End Function
+
+    Private Function GetStatus(SoundName As String, StatusType As String) As String
+
+        Try
+
+            ' Do we have sounds and is the sound in the array?
+            If Sounds IsNot Nothing AndAlso Sounds.Contains(SoundName) Then
+                ' We have sounds and the sound is in the array.
+
+                Dim CommandStatus As String = $"status {SoundName} {StatusType}"
+
+                Dim StatusReturn As New StringBuilder(128)
+
+                mciSendStringW(CommandStatus, StatusReturn, 128, IntPtr.Zero)
+
+                Return StatusReturn.ToString.Trim.ToLower
+
+            End If
+
+        Catch ex As Exception
+
+            Debug.Print($"Error getting status: {SoundName} | {ex.Message}")
+
+        End Try
+
+        Return String.Empty
+
+    End Function
+
+    Public Sub CloseSounds()
+
+        If Sounds IsNot Nothing Then
+
+            For Each Sound In Sounds
+
+                Dim CommandClose As String = $"close {Sound}"
+
+                SendMciCommand(CommandClose, IntPtr.Zero)
+
+            Next
+
+            Sounds = Nothing
+
+        End If
+
+    End Sub
+
+End Structure
+
+
 Public Class Form1
 
     Private Controllers As XboxControllers
+
+    Private Player As AudioPlayer
 
     'Game State Data *************************************
     Private Enum GameStateEnum
@@ -1059,13 +1316,13 @@ Public Class Form1
     Private LastKeyDown As Date = Now
 
 
-    <DllImport("winmm.dll", EntryPoint:="mciSendStringW")>
-    Private Shared Function mciSendStringW(<MarshalAs(UnmanagedType.LPTStr)> ByVal lpszCommand As String,
-                                           <MarshalAs(UnmanagedType.LPWStr)> ByVal lpszReturnString As StringBuilder,
-                                           ByVal cchReturn As UInteger, ByVal hwndCallback As IntPtr) As Integer
-    End Function
+    '<DllImport("winmm.dll", EntryPoint:="mciSendStringW")>
+    'Private Shared Function mciSendStringW(<MarshalAs(UnmanagedType.LPTStr)> ByVal lpszCommand As String,
+    '                                       <MarshalAs(UnmanagedType.LPWStr)> ByVal lpszReturnString As StringBuilder,
+    '                                       ByVal cchReturn As UInteger, ByVal hwndCallback As IntPtr) As Integer
+    'End Function
 
-    Private Sounds() As String
+    'Private Sounds() As String
 
     Private Context As New BufferedGraphicsContext
 
@@ -1168,8 +1425,9 @@ Public Class Form1
 
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
 
-        CloseSounds()
-
+        'CloseSounds()
+        Player.CloseSounds()
+        Controllers = Nothing
     End Sub
 
     Protected Overrides Sub OnPaintBackground(ByVal e As PaintEventArgs)
@@ -1592,7 +1850,7 @@ Public Class Form1
 
         GameState = GameStateEnum.StartScreen
 
-        LoopSound("startscreenmusic")
+        Player.LoopSound("startscreenmusic")
 
         PlaceBallCenterCourt()
 
@@ -1630,13 +1888,13 @@ Public Class Form1
 
     Private Sub PlayWinningSound()
 
-        PlaySound("winning")
+        Player.PlaySound("winning")
 
     End Sub
 
     Private Sub PlayPauseSound()
 
-        LoopSound("pause")
+        Player.LoopSound("pause")
 
     End Sub
 
@@ -1818,7 +2076,7 @@ Public Class Form1
         If Ball.Rect.IntersectsWith(RightPaddle.Rect) Then
             ' Yes, the ball did hit the right paddle.
 
-            PlaySound("hit")
+            Player.PlaySound("hit")
 
             ' Stop the ball's movement.
             Ball.Velocity.X = 0
@@ -1885,7 +2143,7 @@ Public Class Form1
         If Ball.Rect.IntersectsWith(LeftPaddle.Rect) Then
             ' Yes, the ball did hit the left paddle.
 
-            PlaySound("hit")
+            Player.PlaySound("hit")
 
             ' Stop the ball's movement.
             Ball.Velocity.X = 0
@@ -2278,9 +2536,9 @@ Public Class Form1
 
                 IsAKeyDown = True
 
-                If IsPlaying("startscreenmusic") = True Then
+                If Player.IsPlaying("startscreenmusic") = True Then
 
-                    PauseSound("startscreenmusic")
+                    Player.PauseSound("startscreenmusic")
 
                 End If
 
@@ -2796,7 +3054,7 @@ Public Class Form1
 
                 MovePointerOffScreen()
 
-                PauseSound("pause")
+                Player.PauseSound("pause")
 
             End If
 
@@ -2818,7 +3076,7 @@ Public Class Form1
 
                 MovePointerOffScreen()
 
-                PauseSound("pause")
+                Player.PauseSound("pause")
 
             End If
 
@@ -2836,7 +3094,7 @@ Public Class Form1
 
                 ResetGame()
 
-                PauseSound("pause")
+                Player.PauseSound("pause")
 
                 MovePointerOffScreen()
 
@@ -2856,7 +3114,7 @@ Public Class Form1
 
                 ResetGame()
 
-                PauseSound("pause")
+                Player.PauseSound("pause")
 
                 MovePointerOffScreen()
 
@@ -2876,7 +3134,7 @@ Public Class Form1
 
                 ResetGame()
 
-                PauseSound("pause")
+                Player.PauseSound("pause")
 
                 MovePointerOffScreen()
 
@@ -3342,9 +3600,9 @@ Public Class Form1
 
                         IsAButtonDown(ControllerNumber) = True
 
-                        If IsPlaying("startscreenmusic") = True Then
+                        If Player.IsPlaying("startscreenmusic") = True Then
 
-                            PauseSound("startscreenmusic")
+                            Player.PauseSound("startscreenmusic")
 
                         End If
 
@@ -3392,7 +3650,7 @@ Public Class Form1
 
                         ResetGame()
 
-                        PauseSound("pause")
+                        Player.PauseSound("pause")
 
                         MovePointerOffScreen()
 
@@ -3479,9 +3737,9 @@ Public Class Form1
 
                         IsStartButtonDown(ControllerNumber) = True
 
-                        If IsPlaying("startscreenmusic") = True Then
+                        If Player.IsPlaying("startscreenmusic") = True Then
 
-                            PauseSound("startscreenmusic")
+                            Player.PauseSound("startscreenmusic")
 
                         End If
 
@@ -3535,7 +3793,7 @@ Public Class Form1
 
                         MovePointerOffScreen()
 
-                        PauseSound("pause")
+                        Player.PauseSound("pause")
 
                     End If
 
@@ -3553,7 +3811,7 @@ Public Class Form1
 
                         ResetGame()
 
-                        PauseSound("pause")
+                        Player.PauseSound("pause")
 
                         MovePointerOffScreen()
 
@@ -3616,23 +3874,23 @@ Public Class Form1
 
         CreateSoundFileFromResource()
 
-        AddSound("startscreenmusic", $"{Application.StartupPath}startscreenmusic.mp3")
+        Player.AddSound("startscreenmusic", $"{Application.StartupPath}startscreenmusic.mp3")
 
-        SetVolume("startscreenmusic", 300)
+        Player.SetVolume("startscreenmusic", 300)
 
-        LoopSound("startscreenmusic")
+        Player.LoopSound("startscreenmusic")
 
-        AddSound("hit", $"{Application.StartupPath}hit.mp3")
+        Player.AddSound("hit", $"{Application.StartupPath}hit.mp3")
 
-        AddOverlapping("bounce", $"{Application.StartupPath}bounce.mp3")
+        Player.AddOverlapping("bounce", $"{Application.StartupPath}bounce.mp3")
 
-        AddSound("point", $"{Application.StartupPath}point.mp3")
+        Player.AddSound("point", $"{Application.StartupPath}point.mp3")
 
-        SetVolume("point", 400)
+        Player.SetVolume("point", 400)
 
-        AddSound("winning", $"{Application.StartupPath}winning.mp3")
+        Player.AddSound("winning", $"{Application.StartupPath}winning.mp3")
 
-        AddSound("pause", $"{Application.StartupPath}pause.mp3")
+        Player.AddSound("pause", $"{Application.StartupPath}pause.mp3")
 
         LayoutTitleAndInstructions()
 
@@ -3658,13 +3916,13 @@ Public Class Form1
 
     Private Sub PlayBounceSound()
 
-        PlayOverlapping("bounce")
+        Player.PlayOverlapping("bounce")
 
     End Sub
 
     Private Sub PlayPointSound()
 
-        PlaySound("point")
+        Player.PlaySound("point")
 
     End Sub
 
@@ -3747,277 +4005,6 @@ Public Class Form1
         InstructTwoLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) + 35)
 
         EmojiLocation = New Point(ClientSize.Width \ 2 - 90, ClientSize.Height \ 2 - 190)
-
-    End Sub
-
-    Private Function AddSound(SoundName As String, FilePath As String) As Boolean
-
-        'Do we have a name and does the file exist?
-        If Not String.IsNullOrWhiteSpace(SoundName) AndAlso IO.File.Exists(FilePath) Then
-            'Yes, we have a name and the file exists.
-
-            Dim CommandOpen As String = $"open ""{FilePath}"" alias {SoundName}"
-
-            Dim ReturnString As New StringBuilder(128)
-
-            'Do we have sounds?
-            If Sounds IsNot Nothing Then
-                'Yes, we have sounds.
-
-                'Is the sound in the array already?
-                If Not Sounds.Contains(SoundName) Then
-                    'No, the sound is not in the array.
-
-                    'Did the sound file open?
-                    If mciSendStringW(CommandOpen, ReturnString, 0, IntPtr.Zero) = 0 Then
-                        'Yes, the sound file did open.
-
-                        'Add the sound to the Sounds array.
-                        Array.Resize(Sounds, Sounds.Length + 1)
-
-                        Sounds(Sounds.Length - 1) = SoundName
-
-                        Return True 'The sound was added.
-
-                    End If
-
-                End If
-
-            Else
-                'No, we do not have sounds.
-
-                'Did the sound file open?
-                If mciSendStringW(CommandOpen, ReturnString, 0, IntPtr.Zero) = 0 Then
-                    'Yes, the sound file did open.
-
-                    'Start the Sounds array with the sound.
-                    ReDim Sounds(0)
-
-                    Sounds(0) = SoundName
-
-                    Return True 'The sound was added.
-
-                End If
-
-            End If
-
-        End If
-
-        Return False 'The sound was not added.
-
-    End Function
-
-    Private Function SetVolume(SoundName As String, Level As Integer) As Boolean
-
-        'Do we have sounds?
-        If Sounds IsNot Nothing Then
-            'Yes, we have sounds.
-
-            'Is the sound in the sounds array?
-            If Sounds.Contains(SoundName) Then
-                'Yes, the sound is the sounds array.
-
-                'Is the level in the valid range?
-                If Level >= 0 AndAlso Level <= 1000 Then
-                    'Yes, the level is in range.
-
-                    Dim CommandVolume As String = $"setaudio {SoundName} volume to {Level}"
-
-                    Dim ReturnString As New StringBuilder(128)
-
-                    'Was the volume set?
-                    If mciSendStringW(CommandVolume, ReturnString, 0, IntPtr.Zero) = 0 Then
-
-                        Return True 'The volume was set.
-
-                    End If
-
-                End If
-
-            End If
-
-        End If
-
-        Return False 'The volume was not set.
-
-    End Function
-
-    Private Function LoopSound(SoundName As String) As Boolean
-
-        ' Do we have sounds?
-        If Sounds IsNot Nothing Then
-            ' Yes, we have sounds.
-
-            ' Is the sound in the array?
-            If Not Sounds.Contains(SoundName) Then
-                ' No, the sound is not in the array.
-
-                Return False ' The sound is not playing.
-
-            End If
-
-            Dim CommandSeekToStart As String = $"seek {SoundName} to start"
-
-            Dim ReturnString As New StringBuilder(128)
-
-            mciSendStringW(CommandSeekToStart, ReturnString, 0, IntPtr.Zero)
-
-            Dim CommandPlayRepete As String = $"play {SoundName} repeat"
-
-            If mciSendStringW(CommandPlayRepete, ReturnString, 0, Me.Handle) <> 0 Then
-
-                Return False ' The sound is not playing.
-
-            End If
-
-        End If
-
-        Return True ' The sound is playing.
-
-    End Function
-
-    Private Function PlaySound(SoundName As String) As Boolean
-
-        'Do we have sounds?
-        If Sounds IsNot Nothing Then
-            'Yes, we have sounds.
-
-            'Is the sound in the array?
-            If Sounds.Contains(SoundName) Then
-                'Yes, the sound is in the array.
-
-                Dim CommandSeekToStart As String = $"seek {SoundName} to start"
-
-                Dim ReturnString As New StringBuilder(128)
-
-                mciSendStringW(CommandSeekToStart, ReturnString, 0, IntPtr.Zero)
-
-                Dim CommandPlay As String = $"play {SoundName} notify"
-
-                If mciSendStringW(CommandPlay, ReturnString, 0, Me.Handle) = 0 Then
-
-                    Return True 'The sound is playing.
-
-                End If
-
-            End If
-
-        End If
-
-        Return False 'The sound is not playing.
-
-    End Function
-
-    Private Function PauseSound(SoundName As String) As Boolean
-
-        'Do we have sounds?
-        If Sounds IsNot Nothing Then
-            'Yes, we have sounds.
-
-            'Is the sound in the array?
-            If Sounds.Contains(SoundName) Then
-                'Yes, the sound is in the array.
-
-                Dim CommandPause As String = $"pause {SoundName} notify"
-
-                Dim ReturnString As New StringBuilder(128)
-
-                If mciSendStringW(CommandPause, ReturnString, 0, Me.Handle) = 0 Then
-
-                    Return True 'The sound is paused.
-
-                End If
-
-            End If
-
-        End If
-
-        Return False 'The sound is not paused.
-
-    End Function
-
-    Private Function IsPlaying(SoundName As String) As Boolean
-
-        Return GetStatus(SoundName, "mode") = "playing"
-
-    End Function
-
-    Private Sub AddOverlapping(SoundName As String, FilePath As String)
-
-        For Each Suffix As String In {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"}
-
-            AddSound(SoundName & Suffix, FilePath)
-
-        Next
-
-    End Sub
-
-    Private Sub PlayOverlapping(SoundName As String)
-
-        For Each Suffix As String In {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"}
-
-            If Not IsPlaying(SoundName & Suffix) Then
-
-                PlaySound(SoundName & Suffix)
-
-                Exit Sub
-
-            End If
-
-        Next
-
-    End Sub
-
-    Private Sub SetVolumeOverlapping(SoundName As String, Level As Integer)
-
-        For Each Suffix As String In {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"}
-
-            SetVolume(SoundName & Suffix, Level)
-
-        Next
-
-    End Sub
-
-    Private Function GetStatus(SoundName As String, StatusType As String) As String
-
-        If Sounds IsNot Nothing Then
-
-            If Sounds.Contains(SoundName) Then
-
-                Dim Command As String = $"status {SoundName} {StatusType}"
-
-                Dim ReturnString As New StringBuilder(128)
-
-                ' Send the command to get the status
-                If mciSendStringW(Command, ReturnString, ReturnString.Capacity, IntPtr.Zero) = 0 Then
-
-                    Return ReturnString.ToString() ' Return the status if successful
-
-                End If
-
-            End If
-
-        End If
-
-        Return String.Empty ' Return an empty string if there's an error
-
-    End Function
-
-    Private Sub CloseSounds()
-
-        If Sounds IsNot Nothing Then
-
-            For Each Sound In Sounds
-
-                Dim CommandClose As String = $"close {Sound}"
-
-                Dim ReturnString As New StringBuilder(128)
-
-                mciSendStringW(CommandClose, ReturnString, 0, IntPtr.Zero)
-
-            Next
-
-        End If
 
     End Sub
 
