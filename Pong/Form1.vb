@@ -1315,16 +1315,7 @@ Public Class Form1
 
     Private LastKeyDown As Date = Now
 
-
-    '<DllImport("winmm.dll", EntryPoint:="mciSendStringW")>
-    'Private Shared Function mciSendStringW(<MarshalAs(UnmanagedType.LPTStr)> ByVal lpszCommand As String,
-    '                                       <MarshalAs(UnmanagedType.LPWStr)> ByVal lpszReturnString As StringBuilder,
-    '                                       ByVal cchReturn As UInteger, ByVal hwndCallback As IntPtr) As Integer
-    'End Function
-
-    'Private Sounds() As String
-
-    Private Context As New BufferedGraphicsContext
+    'Private Context As New BufferedGraphicsContext
 
     Private FrameCount As Integer = 0
 
@@ -1425,9 +1416,13 @@ Public Class Form1
 
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
 
-        'CloseSounds()
+        ' Clean up resources.
+        gameTimer.Stop()
+        gameTimer.Dispose()
         Player.CloseSounds()
+        Player = Nothing
         Controllers = Nothing
+
     End Sub
 
     Protected Overrides Sub OnPaintBackground(ByVal e As PaintEventArgs)
