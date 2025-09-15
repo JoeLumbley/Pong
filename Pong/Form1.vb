@@ -1315,8 +1315,6 @@ Public Class Form1
 
     Private LastKeyDown As Date = Now
 
-    'Private Context As New BufferedGraphicsContext
-
     Private FrameCount As Integer = 0
 
     Private StartTime As DateTime = Now 'Get current time.
@@ -1362,8 +1360,6 @@ Public Class Form1
     Private RightPaddleGoalIndicatorExpand As Integer = 0
     Private LeftPaddleGoalIndicatorExpand As Integer = 0
 
-
-
     Public Sub New()
         InitializeComponent()
 
@@ -1386,6 +1382,12 @@ Public Class Form1
         DrawGame(e.Graphics)
 
         UpdateFrameCounter()
+
+    End Sub
+
+    Protected Overrides Sub OnPaintBackground(ByVal e As PaintEventArgs)
+
+        ' Intentionally left blank. Do not remove.
 
     End Sub
 
@@ -1425,13 +1427,15 @@ Public Class Form1
 
     End Sub
 
-    Protected Overrides Sub OnPaintBackground(ByVal e As PaintEventArgs)
 
-        'Intentionally left blank. Do not remove.
+    Private Sub Form1_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
+
+        HandleResize()
 
     End Sub
 
-    Private Sub Form1_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
+    Private Sub HandleResize()
+        ' Handle resizing of the window.
 
         ' Pause the game if the window is minimized.
         If WindowState = FormWindowState.Minimized Then
