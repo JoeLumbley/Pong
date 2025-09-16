@@ -1677,7 +1677,7 @@ Public Class Form1
 
             LeftPaddleGoalIndicatorTimer = 0
 
-            LeftPaddleGoalIndicatorExpand = 32
+            LeftPaddleGoalIndicatorExpand = 0
 
             LeftPaddleGoalIndicatorRect = New Rectangle(ClientRectangle.Right - 32, ClientRectangle.Top, 32, ClientSize.Height)
 
@@ -1710,12 +1710,11 @@ Public Class Form1
 
             RightPaddleGoalIndicatorTimer = 0
 
-            RightPaddleGoalIndicatorExpand = 32
+            RightPaddleGoalIndicatorExpand = 0
 
             RightPaddleGoalIndicatorRect = New Rectangle(ClientRectangle.Left, ClientRectangle.Top, 32, ClientSize.Height)
 
         End If
-
 
     End Sub
 
