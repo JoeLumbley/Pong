@@ -2408,7 +2408,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub UpdateRightThumbstickPosition(ControllerNumber As Integer)
+    Private Sub HandleRightThumbstickInput(ControllerNumber As Integer)
 
         If ControllerNumber = 0 Then
 
@@ -2448,7 +2448,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub UpdateLeftThumbstickPosition(ControllerNumber As Integer)
+    Private Sub HandleLeftThumbstickInput(ControllerNumber As Integer)
 
         If ControllerNumber = 0 Then
 
@@ -2478,7 +2478,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub UpdateStartScreenKeyboard()
+    Private Sub HandleStartScreenKeyboardInput()
 
         If AKeyDown Then
 
@@ -3329,7 +3329,7 @@ Public Class Form1
 
         HandleControllerInput()
 
-        UpdateStartScreenKeyboard()
+        HandleStartScreenKeyboardInput()
 
         UpdateDeltaTime()
 
@@ -3344,13 +3344,15 @@ Public Class Form1
     Private Sub HandleControllerInput()
         ' Respond to input from each connected controller.
 
-        For ControllerNumber As Integer = 0 To 3
+        For ControllerNumber As Integer = 0 To 1
 
             If Controllers.Connected(ControllerNumber) Then
 
-                DoButtonLogic(ControllerNumber)
-                UpdateLeftThumbstickPosition(ControllerNumber)
-                UpdateRightThumbstickPosition(ControllerNumber)
+                HandleButtonInput(ControllerNumber)
+
+                HandleLeftThumbstickInput(ControllerNumber)
+
+                HandleRightThumbstickInput(ControllerNumber)
 
             End If
 
@@ -3560,7 +3562,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DoButtonLogic(ControllerNumber As Integer)
+    Private Sub HandleButtonInput(ControllerNumber As Integer)
 
         DoDPadLogic(ControllerNumber)
 
@@ -4029,13 +4031,9 @@ Public Class Form1
 
     Private Sub LayoutTitleAndInstructions()
 
-
-
-        'Dim ThisFontSize As SizeF = 
         Dim TitleTextSize As SizeF = TextRenderer.MeasureText(TitleText, TitleFont)
-        TitleLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - TitleTextSize.Height)
 
-        'Dim InstructStartTextSize As SizeF = TextRenderer.MeasureText(InstructStartText, InstructionsFont)
+        TitleLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - TitleTextSize.Height)
 
         InstructStartLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
 
@@ -4043,12 +4041,8 @@ Public Class Form1
 
         InstructTwoLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
 
-
-
-
         Ball.Position.Y = ClientSize.Height \ 2 + 40
         Ball.Rect.Y = Ball.Position.Y
-
 
         EmojiLocation = New Point(ClientSize.Width \ 2 - 90, ClientSize.Height \ 2 - 190)
 
@@ -4249,7 +4243,6 @@ Public Class Form1
         End Select
 
     End Sub
-
 
 End Class
 
