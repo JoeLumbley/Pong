@@ -1337,6 +1337,8 @@ Public Class Form1
 
     Private ReadOnly AlineCenter As New StringFormat With {.Alignment = StringAlignment.Center}
 
+    Private ReadOnly AlineLeft As New StringFormat With {.Alignment = StringAlignment.Near}
+
     Private ReadOnly AlineCenterMiddle As New StringFormat With {.Alignment = StringAlignment.Center,
                                                                  .LineAlignment = StringAlignment.Center}
 
@@ -3359,15 +3361,34 @@ Public Class Form1
         Dim statusBrush As Brush = If(Controllers.Connected(0), Brushes.White, Brushes.DarkGray)
 
         g.DrawString(statusText, New Font(FontFamily.GenericSansSerif, 15), statusBrush, New PointF(0, 0),
-             New StringFormat() With {.Alignment = StringAlignment.Near})
+             AlineLeft)
 
         Dim statusText1 As String = If(Controllers.Connected(1), "Controller 1 - Connected", "Controller 1 - Not Connected")
         Dim statusBrush1 As Brush = If(Controllers.Connected(1), Brushes.White, Brushes.DarkGray)
 
         g.DrawString(statusText1, New Font(FontFamily.GenericSansSerif, 15), statusBrush1, New PointF(0, 25),
-             New StringFormat() With {.Alignment = StringAlignment.Near})
+             AlineLeft)
 
     End Sub
+
+    'Private Sub UpdateControllerConnectionStatus()
+    '    ' Draw controller connection status.
+
+    '    Dim statusText As String = If(Controllers.Connected(0), "Controller 0 - Connected", "Controller 0 - Not Connected")
+    '    Dim statusBrush As Brush = If(Controllers.Connected(0), Brushes.White, Brushes.DarkGray)
+
+    '    g.DrawString(statusText, New Font(FontFamily.GenericSansSerif, 15), statusBrush, New PointF(0, 0),
+    '         New StringFormat() With {.Alignment = StringAlignment.Near})
+
+    '    Dim statusText1 As String = If(Controllers.Connected(1), "Controller 1 - Connected", "Controller 1 - Not Connected")
+    '    Dim statusBrush1 As Brush = If(Controllers.Connected(1), Brushes.White, Brushes.DarkGray)
+
+    '    g.DrawString(statusText1, New Font(FontFamily.GenericSansSerif, 15), statusBrush1, New PointF(0, 25),
+    '         New StringFormat() With {.Alignment = StringAlignment.Near})
+
+    'End Sub
+
+
 
     Private Sub DrawTitle(g As Graphics)
 
