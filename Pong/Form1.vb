@@ -3342,16 +3342,16 @@ Public Class Form1
 
     Private Sub DrawStartScreen(g As Graphics)
 
-        Dim statusText As String = If(Controllers.Connected(0), "Controller 0 Connected", "Controller 0 Not Connected")
-        Dim statusBrush As Brush = If(Controllers.Connected(0), Brushes.Lime, Brushes.Tomato)
+        Dim statusText As String = If(Controllers.Connected(0), "Controller 0 - Connected", "Controller 0 - Not Connected")
+        Dim statusBrush As Brush = If(Controllers.Connected(0), Brushes.White, Brushes.DarkGray)
 
-        g.DrawString(statusText, New Font(FontFamily.GenericSansSerif, 13), statusBrush, New PointF(0, 0),
+        g.DrawString(statusText, New Font(FontFamily.GenericSansSerif, 15), statusBrush, New PointF(0, 0),
              New StringFormat() With {.Alignment = StringAlignment.Near})
 
-        Dim statusText1 As String = If(Controllers.Connected(1), "Controller 1 Connected", "Controller 1 Not Connected")
-        Dim statusBrush1 As Brush = If(Controllers.Connected(1), Brushes.Lime, Brushes.Tomato)
+        Dim statusText1 As String = If(Controllers.Connected(1), "Controller 1 - Connected", "Controller 1 - Not Connected")
+        Dim statusBrush1 As Brush = If(Controllers.Connected(1), Brushes.White, Brushes.DarkGray)
 
-        g.DrawString(statusText1, New Font(FontFamily.GenericSansSerif, 13), statusBrush1, New PointF(0, 25),
+        g.DrawString(statusText1, New Font(FontFamily.GenericSansSerif, 15), statusBrush1, New PointF(0, 25),
              New StringFormat() With {.Alignment = StringAlignment.Near})
 
         DrawBall(g)
