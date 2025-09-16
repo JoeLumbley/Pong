@@ -1352,8 +1352,6 @@ Public Class Form1
     Private Controller1ConnectionStatusText As String = "Controller 1 - Not Connected"
     Private Controller1ConnectionStatusBrush As Brush = Brushes.DarkGray
 
-
-
     Private DrawFlashingText As Boolean = True
 
     Private gameTimer As Timer
@@ -3463,13 +3461,19 @@ Public Class Form1
 
             'Draw one player instructions.
             g.DrawString(InstructOneText,
-            InstructionsFont, Brushes.White, InstructOneLocation, AlineCenter)
+                         InstructionsFont,
+                         Brushes.White,
+                         InstructOneLocation,
+                         AlineCenter)
 
         Else
 
             'Draw two player instructions.
             g.DrawString(InstructTwoText,
-            InstructionsFont, Brushes.White, InstructTwoLocation, AlineCenter)
+                         InstructionsFont,
+                         Brushes.White,
+                         InstructTwoLocation,
+                         AlineCenter)
 
         End If
 
