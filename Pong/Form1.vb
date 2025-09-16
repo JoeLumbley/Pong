@@ -1209,12 +1209,12 @@ Public Class Form1
     Private RightPaddle As GameObject
 
     Private Const PingPongEmoji As String = "🏓"
-    Private ReadOnly EmojiFont As New Font("Segoe UI Emoji", 88)
+    Private ReadOnly EmojiFont As New Font("Segoe UI Emoji", 100)
     Private EmojiLocation As New Point(ClientSize.Width \ 2 - 110, ClientSize.Height \ 2 - 125)
 
     Private Const TitleText As String = "P🏓NG"
-    Private TitleLocation As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - 125)
-    Private ReadOnly TitleFont As New Font("Segoe UI Emoji", 100)
+    Private TitleLocation As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - ((ClientSize.Height \ 8) * 4))
+    Private ReadOnly TitleFont As New Font("Segoe UI Emoji", 150)
 
     Private InstructStartLocation As Point
     Private ReadOnly InstructStartText As String = Environment.NewLine &
@@ -1237,7 +1237,7 @@ Public Class Form1
         "First player to 10 points wins 🏆" & Environment.NewLine & Environment.NewLine &
         "Pause / Resume  Start  "
     '******************************************************
-    Private ReadOnly InstructionsFont As New Font("Segoe UI Emoji", 20)
+    Private ReadOnly InstructionsFont As New Font("Segoe UI Emoji", 25)
 
     Private IsBackButtonDown(0 To 3) As Boolean
 
@@ -4029,16 +4029,26 @@ Public Class Form1
 
     Private Sub LayoutTitleAndInstructions()
 
-        TitleLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - 175)
+
+
+        'Dim ThisFontSize As SizeF = 
+        Dim TitleTextSize As SizeF = TextRenderer.MeasureText(TitleText, TitleFont)
+        TitleLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - TitleTextSize.Height)
+
+        'Dim InstructStartTextSize As SizeF = TextRenderer.MeasureText(InstructStartText, InstructionsFont)
+
+        InstructStartLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
+
+        InstructOneLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
+
+        InstructTwoLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
+
+
+
 
         Ball.Position.Y = ClientSize.Height \ 2 + 40
         Ball.Rect.Y = Ball.Position.Y
 
-        InstructStartLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) + 35)
-
-        InstructOneLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) + 35)
-
-        InstructTwoLocation = New Point(ClientSize.Width \ 2, (ClientSize.Height \ 2) + 35)
 
         EmojiLocation = New Point(ClientSize.Width \ 2 - 90, ClientSize.Height \ 2 - 190)
 
@@ -4239,6 +4249,7 @@ Public Class Form1
         End Select
 
     End Sub
+
 
 End Class
 
