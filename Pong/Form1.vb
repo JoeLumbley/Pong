@@ -1344,11 +1344,11 @@ Public Class Form1
 
     Private ControllerConnectionStatusFont As New Font(FontFamily.GenericSansSerif, 15)
 
-    Private Controller0ConnectionStatusLocation As New Point(0, 0)
+    Private Controller0ConnectionStatusLocation As New Point(5, 5)
     Private Controller0ConnectionStatusText As String = "Controller 0 - Not Connected"
     Private Controller0ConnectionStatusBrush As Brush = Brushes.DarkGray
 
-    Private Controller1ConnectionStatusLocation As New Point(0, 25)
+    Private Controller1ConnectionStatusLocation As New Point(5, 30)
     Private Controller1ConnectionStatusText As String = "Controller 1 - Not Connected"
     Private Controller1ConnectionStatusBrush As Brush = Brushes.DarkGray
 
@@ -1451,11 +1451,11 @@ Public Class Form1
     Private Sub HandleResize()
         ' Handle resizing of the window.
 
-        If WindowState = FormWindowState.Normal Then
+        'If WindowState = FormWindowState.Normal Then
 
-            CenterToScreen()
+        '    CenterToScreen()
 
-        End If
+        'End If
 
         ' Pause the game if the window is minimized.
         If WindowState = FormWindowState.Minimized Then
@@ -1479,7 +1479,10 @@ Public Class Form1
         RightPaddle.Rect.X = RightPaddle.Position.X
 
         ' Place the FPS display at the bottom of the client area.
-        FPS_Postion.Y = ClientRectangle.Bottom - 75
+
+        Dim ThisFontSize As SizeF = TextRenderer.MeasureText("FPS: 000", FPSFont)
+        FPS_Postion.X = 5
+        FPS_Postion.Y = ClientRectangle.Bottom - ThisFontSize.Height - 5
 
         LPadScoreLocation = New Point(ClientSize.Width \ 2 \ 2, 100)
 
@@ -1661,7 +1664,7 @@ Public Class Form1
                 LeftPaddleGoalIndicatorFade = 0
             End If
 
-            LeftPaddleGoalIndicatorBrush = New SolidBrush(Color.FromArgb(LeftPaddleGoalIndicatorFade, 255, 255, 255))
+            LeftPaddleGoalIndicatorBrush = New SolidBrush(Color.FromArgb(LeftPaddleGoalIndicatorFade, Color.White))
 
             LeftPaddleGoalIndicatorTimer -= DeltaTime.TotalMilliseconds
 
@@ -1694,7 +1697,7 @@ Public Class Form1
                 RightPaddleGoalIndicatorFade = 0
             End If
 
-            RightPaddleGoalIndicatorBrush = New SolidBrush(Color.FromArgb(RightPaddleGoalIndicatorFade, 255, 255, 255))
+            RightPaddleGoalIndicatorBrush = New SolidBrush(Color.FromArgb(RightPaddleGoalIndicatorFade, Color.White))
 
             RightPaddleGoalIndicatorTimer -= DeltaTime.TotalMilliseconds
 
@@ -3212,14 +3215,9 @@ Public Class Form1
     Private Sub DrawGoalIndicators(g As Graphics)
         'Draw goal zone indicators.
 
-        'g.FillRectangle(RightPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Left, ClientRectangle.Top, 32, ClientSize.Height))
-
-        'g.FillRectangle(LeftPaddleGoalIndicatorBrush, New RectangleF(ClientRectangle.Right - 32, ClientRectangle.Top, 32, ClientSize.Height))
-
         g.FillRectangle(RightPaddleGoalIndicatorBrush, RightPaddleGoalIndicatorRect)
 
         g.FillRectangle(LeftPaddleGoalIndicatorBrush, LeftPaddleGoalIndicatorRect)
-
 
     End Sub
 
@@ -3967,7 +3965,6 @@ Public Class Form1
     End Sub
 
     Private Sub InitializeForm()
-
 
         MinimumSize = New Size(1280, 720)
 
