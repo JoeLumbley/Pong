@@ -1367,7 +1367,6 @@ Public Class Form1
     Private RightPaddleGoalIndicatorFade As Integer = 0
     Private LeftPaddleGoalIndicatorFade As Integer = 0
 
-
     Private RightPaddleGoalIndicatorRect As Rectangle
     Private LeftPaddleGoalIndicatorRect As Rectangle
 
