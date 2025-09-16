@@ -1451,6 +1451,12 @@ Public Class Form1
     Private Sub HandleResize()
         ' Handle resizing of the window.
 
+        If WindowState = FormWindowState.Normal Then
+
+            CenterToScreen()
+
+        End If
+
         ' Pause the game if the window is minimized.
         If WindowState = FormWindowState.Minimized Then
 
@@ -1655,7 +1661,7 @@ Public Class Form1
                 LeftPaddleGoalIndicatorFade = 0
             End If
 
-            LeftPaddleGoalIndicatorBrush = New SolidBrush(Color.FromArgb(LeftPaddleGoalIndicatorFade, 0, 255, 0))
+            LeftPaddleGoalIndicatorBrush = New SolidBrush(Color.FromArgb(LeftPaddleGoalIndicatorFade, 255, 255, 255))
 
             LeftPaddleGoalIndicatorTimer -= DeltaTime.TotalMilliseconds
 
@@ -1688,7 +1694,7 @@ Public Class Form1
                 RightPaddleGoalIndicatorFade = 0
             End If
 
-            RightPaddleGoalIndicatorBrush = New SolidBrush(Color.FromArgb(RightPaddleGoalIndicatorFade, 0, 255, 0))
+            RightPaddleGoalIndicatorBrush = New SolidBrush(Color.FromArgb(RightPaddleGoalIndicatorFade, 255, 255, 255))
 
             RightPaddleGoalIndicatorTimer -= DeltaTime.TotalMilliseconds
 
@@ -3533,7 +3539,7 @@ Public Class Form1
 
     Private Sub DrawFPSDisplay(g As Graphics)
 
-        g.DrawString(FPS.ToString & " FPS", FPSFont, Brushes.MediumOrchid, FPS_Postion)
+        g.DrawString(FPS.ToString & " FPS", FPSFont, Brushes.DarkGray, FPS_Postion)
 
     End Sub
 
@@ -3962,7 +3968,8 @@ Public Class Form1
 
     Private Sub InitializeForm()
 
-        CenterToScreen()
+
+        MinimumSize = New Size(1280, 720)
 
         SetStyle(ControlStyles.OptimizedDoubleBuffer Or ControlStyles.AllPaintingInWmPaint, True)
 
