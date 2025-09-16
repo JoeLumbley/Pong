@@ -1344,6 +1344,16 @@ Public Class Form1
 
     Private ControllerConnectionStatusFont As New Font(FontFamily.GenericSansSerif, 15)
 
+    Private Controller0ConnectionStatusLocation As New Point(0, 0)
+    Private Controller0ConnectionStatusText As String = "Controller 0 - Not Connected"
+    Private Controller0ConnectionStatusBrush As Brush = Brushes.DarkGray
+
+    Private Controller1ConnectionStatusLocation As New Point(0, 25)
+    Private Controller1ConnectionStatusText As String = "Controller 1 - Not Connected"
+    Private Controller1ConnectionStatusBrush As Brush = Brushes.DarkGray
+
+
+
     Private DrawFlashingText As Boolean = True
 
     Private gameTimer As Timer
@@ -3313,6 +3323,8 @@ Public Class Form1
 
         Controllers.Update()
 
+        UpdateControllerConnectionStatus()
+
         HandleControllerInput()
 
         UpdateStartScreenKeyboard()
@@ -3359,36 +3371,29 @@ Public Class Form1
     Private Sub DrawControllerConnectionStatus(g As Graphics)
         ' Draw controller connection status.
 
-        Dim statusText As String = If(Controllers.Connected(0), "Controller 0 - Connected", "Controller 0 - Not Connected")
-        Dim statusBrush As Brush = If(Controllers.Connected(0), Brushes.White, Brushes.DarkGray)
+        g.DrawString(Controller0ConnectionStatusText,
+                     ControllerConnectionStatusFont,
+                     Controller0ConnectionStatusBrush,
+                     Controller0ConnectionStatusLocation,
+                     AlineLeft)
 
-        g.DrawString(statusText, ControllerConnectionStatusFont, statusBrush, New PointF(0, 0),
-             AlineLeft)
-
-        Dim statusText1 As String = If(Controllers.Connected(1), "Controller 1 - Connected", "Controller 1 - Not Connected")
-        Dim statusBrush1 As Brush = If(Controllers.Connected(1), Brushes.White, Brushes.DarkGray)
-
-        g.DrawString(statusText1, ControllerConnectionStatusFont, statusBrush1, New PointF(0, 25),
-             AlineLeft)
+        g.DrawString(Controller1ConnectionStatusText,
+                     ControllerConnectionStatusFont,
+                     Controller1ConnectionStatusBrush,
+                     Controller1ConnectionStatusLocation,
+                     AlineLeft)
 
     End Sub
 
-    'Private Sub UpdateControllerConnectionStatus()
-    '    ' Draw controller connection status.
+    Private Sub UpdateControllerConnectionStatus()
 
-    '    Dim statusText As String = If(Controllers.Connected(0), "Controller 0 - Connected", "Controller 0 - Not Connected")
-    '    Dim statusBrush As Brush = If(Controllers.Connected(0), Brushes.White, Brushes.DarkGray)
+        Controller0ConnectionStatusText = If(Controllers.Connected(0), "Controller 0 - Connected", "Controller 0 - Not Connected")
+        Controller0ConnectionStatusBrush = If(Controllers.Connected(0), Brushes.White, Brushes.DarkGray)
 
-    '    g.DrawString(statusText, New Font(FontFamily.GenericSansSerif, 15), statusBrush, New PointF(0, 0),
-    '         New StringFormat() With {.Alignment = StringAlignment.Near})
+        Controller1ConnectionStatusText = If(Controllers.Connected(1), "Controller 1 - Connected", "Controller 1 - Not Connected")
+        Controller1ConnectionStatusBrush = If(Controllers.Connected(1), Brushes.White, Brushes.DarkGray)
 
-    '    Dim statusText1 As String = If(Controllers.Connected(1), "Controller 1 - Connected", "Controller 1 - Not Connected")
-    '    Dim statusBrush1 As Brush = If(Controllers.Connected(1), Brushes.White, Brushes.DarkGray)
-
-    '    g.DrawString(statusText1, New Font(FontFamily.GenericSansSerif, 15), statusBrush1, New PointF(0, 25),
-    '         New StringFormat() With {.Alignment = StringAlignment.Near})
-
-    'End Sub
+    End Sub
 
 
 
