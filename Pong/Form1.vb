@@ -1657,7 +1657,7 @@ Public Class Form1
         If LeftPaddleGoalIndicatorTimer > 0 Then
 
             If LeftPaddleGoalIndicatorFade > 0 Then
-                LeftPaddleGoalIndicatorFade -= CInt(0.4 * DeltaTime.TotalMilliseconds)
+                LeftPaddleGoalIndicatorFade -= CInt(0.3 * DeltaTime.TotalMilliseconds)
             End If
 
             If LeftPaddleGoalIndicatorFade < 0 Then
@@ -1690,7 +1690,7 @@ Public Class Form1
         If RightPaddleGoalIndicatorTimer > 0 Then
 
             If RightPaddleGoalIndicatorFade > 0 Then
-                RightPaddleGoalIndicatorFade -= CInt(0.4 * DeltaTime.TotalMilliseconds)
+                RightPaddleGoalIndicatorFade -= CInt(0.3 * DeltaTime.TotalMilliseconds)
             End If
 
             If RightPaddleGoalIndicatorFade < 0 Then
@@ -2046,7 +2046,7 @@ Public Class Form1
 
             PlayPointSound()
             'TODO
-            RightPaddleGoalIndicatorTimer = 1000
+            RightPaddleGoalIndicatorTimer = 1500
             RightPaddleGoalIndicatorFade = 255
 
             ' Award point to right paddle.
@@ -2067,7 +2067,7 @@ Public Class Form1
             PlayPointSound()
             ' TODO
 
-            LeftPaddleGoalIndicatorTimer = 1000
+            LeftPaddleGoalIndicatorTimer = 1500
             LeftPaddleGoalIndicatorFade = 255
 
 
