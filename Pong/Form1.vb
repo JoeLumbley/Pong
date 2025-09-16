@@ -3342,6 +3342,19 @@ Public Class Form1
 
     Private Sub DrawStartScreen(g As Graphics)
 
+        DrawControllerConnectionStatus(g)
+
+        DrawBall(g)
+
+        DrawTitle(g)
+
+        DrawStartScreenInstructions(g)
+
+    End Sub
+
+    Private Sub DrawControllerConnectionStatus(g As Graphics)
+        ' Draw controller connection status.
+
         Dim statusText As String = If(Controllers.Connected(0), "Controller 0 - Connected", "Controller 0 - Not Connected")
         Dim statusBrush As Brush = If(Controllers.Connected(0), Brushes.White, Brushes.DarkGray)
 
@@ -3353,12 +3366,6 @@ Public Class Form1
 
         g.DrawString(statusText1, New Font(FontFamily.GenericSansSerif, 15), statusBrush1, New PointF(0, 25),
              New StringFormat() With {.Alignment = StringAlignment.Near})
-
-        DrawBall(g)
-
-        DrawTitle(g)
-
-        DrawStartScreenInstructions(g)
 
     End Sub
 
