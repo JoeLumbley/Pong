@@ -3453,6 +3453,8 @@ Public Class Form1
 
     Private Sub DrawInstructions(g As Graphics)
 
+        DrawControllerConnectionStatus(g)
+
         DrawBall(g)
 
         DrawTitle(g)
