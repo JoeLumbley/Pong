@@ -1371,8 +1371,7 @@ Public Class Form1
     Private RightPaddleGoalIndicatorExpand As Integer = 0
     Private LeftPaddleGoalIndicatorExpand As Integer = 0
 
-    Public Sub New()
-        InitializeComponent()
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         InitializeApp()
 
@@ -1427,69 +1426,15 @@ Public Class Form1
 
     End Sub
 
-    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
-
-        ' Clean up resources.
-        gameTimer.Stop()
-        gameTimer.Dispose()
-        Player.CloseSounds()
-        Player = Nothing
-        Controllers = Nothing
-
-    End Sub
-
-
     Private Sub Form1_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
 
         HandleResize()
 
     End Sub
 
-    Private Sub HandleResize()
-        ' Handle resizing of the window.
+    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
 
-        'If WindowState = FormWindowState.Normal Then
-
-        '    CenterToScreen()
-
-        'End If
-
-        ' Pause the game if the window is minimized.
-        If WindowState = FormWindowState.Minimized Then
-
-            If GameState = GameStateEnum.Playing Then
-
-                GameState = GameStateEnum.Pause
-
-            End If
-
-        End If
-
-        LayoutTitleAndInstructions()
-
-        CenterCourtLine()
-
-        LeftPaddle.Position.X = 20
-        LeftPaddle.Rect.X = LeftPaddle.Position.X
-
-        RightPaddle.Position.X = ClientSize.Width - RightPaddle.Rect.Width - 20 'Aline right 20 pix padding
-        RightPaddle.Rect.X = RightPaddle.Position.X
-
-        ' Place the FPS display at the bottom of the client area.
-
-        Dim ThisFontSize As SizeF = TextRenderer.MeasureText("FPS: 000", FPSFont)
-        FPS_Postion.X = 5
-        FPS_Postion.Y = ClientRectangle.Bottom - ThisFontSize.Height - 5
-
-        LPadScoreLocation = New Point(ClientSize.Width \ 2 \ 2, 100)
-
-        LPadTrophyLocation = New Point(ClientSize.Width \ 2 \ 2, ClientSize.Height \ 2 - 0)
-
-        RPadScoreLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), 100)
-
-        RPadTrophyLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), ClientSize.Height \ 2 - 0)
-
-        ClientCenter = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
+        CleanUpResources()
 
     End Sub
 
@@ -1563,6 +1508,59 @@ Public Class Form1
         End Select
 
     End Sub
+
+    Private Sub HandleResize()
+        ' Handle resizing of the window.
+
+        ' Pause the game if the window is minimized.
+        If WindowState = FormWindowState.Minimized Then
+
+            If GameState = GameStateEnum.Playing Then
+
+                GameState = GameStateEnum.Pause
+
+            End If
+
+        End If
+
+        LayoutTitleAndInstructions()
+
+        CenterCourtLine()
+
+        LeftPaddle.Position.X = 20
+        LeftPaddle.Rect.X = LeftPaddle.Position.X
+
+        RightPaddle.Position.X = ClientSize.Width - RightPaddle.Rect.Width - 20 'Aline right 20 pix padding
+        RightPaddle.Rect.X = RightPaddle.Position.X
+
+        ' Place the FPS display at the bottom of the client area.
+
+        Dim ThisFontSize As SizeF = TextRenderer.MeasureText("FPS: 000", FPSFont)
+        FPS_Postion.X = 5
+        FPS_Postion.Y = ClientRectangle.Bottom - ThisFontSize.Height - 5
+
+        LPadScoreLocation = New Point(ClientSize.Width \ 2 \ 2, 100)
+
+        LPadTrophyLocation = New Point(ClientSize.Width \ 2 \ 2, ClientSize.Height \ 2 - 0)
+
+        RPadScoreLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), 100)
+
+        RPadTrophyLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), ClientSize.Height \ 2 - 0)
+
+        ClientCenter = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
+
+    End Sub
+
+    Private Sub CleanUpResources()
+
+        gameTimer.Stop()
+        gameTimer.Dispose()
+        Player.CloseSounds()
+        Player = Nothing
+        Controllers = Nothing
+
+    End Sub
+
 
     Private Sub UpdatePlaying()
 
