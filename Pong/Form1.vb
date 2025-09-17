@@ -1355,27 +1355,6 @@ Public Class Form1
 
     Private gameTimer As Timer
 
-
-
-
-
-
-    ''Goal Indicator Data **********************************
-    'Private RightPaddleGoalIndicatorTimer As Integer = 0
-    'Private LeftPaddleGoalIndicatorTimer As Integer = 0
-
-    'Private RightPaddleGoalIndicatorBrush As SolidBrush = Brushes.Transparent
-    'Private LeftPaddleGoalIndicatorBrush As SolidBrush = Brushes.Transparent
-
-    'Private RightPaddleGoalIndicatorFade As Integer = 0
-    'Private LeftPaddleGoalIndicatorFade As Integer = 0
-
-    'Private RightPaddleGoalIndicatorRect As Rectangle
-    'Private LeftPaddleGoalIndicatorRect As Rectangle
-
-    'Private RightPaddleGoalIndicatorExpand As Integer = 0
-    'Private LeftPaddleGoalIndicatorExpand As Integer = 0
-
     Private Structure GoalIndicator
         Public Timer As Integer
         Public Brush As SolidBrush
@@ -1383,14 +1362,14 @@ Public Class Form1
         Public Rect As Rectangle
         Public Expand As Integer
 
-        Public Sub New(ByVal initialTimer As Integer, ByVal initialBrush As SolidBrush,
-                       ByVal initialFade As Integer, ByVal initialRect As Rectangle,
-                       ByVal initialExpand As Integer)
-            Me.Timer = initialTimer
-            Me.Brush = initialBrush
-            Me.Fade = initialFade
-            Me.Rect = initialRect
-            Me.Expand = initialExpand
+        Public Sub New(initialTimer As Integer, initialBrush As SolidBrush,
+                       initialFade As Integer, initialRect As Rectangle,
+                       initialExpand As Integer)
+            Timer = initialTimer
+            Brush = initialBrush
+            Fade = initialFade
+            Rect = initialRect
+            Expand = initialExpand
         End Sub
 
     End Structure
