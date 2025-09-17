@@ -1355,20 +1355,56 @@ Public Class Form1
 
     Private gameTimer As Timer
 
-    Private RightPaddleGoalIndicatorTimer As Integer = 0
-    Private LeftPaddleGoalIndicatorTimer As Integer = 0
 
-    Private RightPaddleGoalIndicatorBrush As SolidBrush = Brushes.Transparent
-    Private LeftPaddleGoalIndicatorBrush As SolidBrush = Brushes.Transparent
 
-    Private RightPaddleGoalIndicatorFade As Integer = 0
-    Private LeftPaddleGoalIndicatorFade As Integer = 0
 
-    Private RightPaddleGoalIndicatorRect As Rectangle
-    Private LeftPaddleGoalIndicatorRect As Rectangle
 
-    Private RightPaddleGoalIndicatorExpand As Integer = 0
-    Private LeftPaddleGoalIndicatorExpand As Integer = 0
+
+    ''Goal Indicator Data **********************************
+    'Private RightPaddleGoalIndicatorTimer As Integer = 0
+    'Private LeftPaddleGoalIndicatorTimer As Integer = 0
+
+    'Private RightPaddleGoalIndicatorBrush As SolidBrush = Brushes.Transparent
+    'Private LeftPaddleGoalIndicatorBrush As SolidBrush = Brushes.Transparent
+
+    'Private RightPaddleGoalIndicatorFade As Integer = 0
+    'Private LeftPaddleGoalIndicatorFade As Integer = 0
+
+    'Private RightPaddleGoalIndicatorRect As Rectangle
+    'Private LeftPaddleGoalIndicatorRect As Rectangle
+
+    'Private RightPaddleGoalIndicatorExpand As Integer = 0
+    'Private LeftPaddleGoalIndicatorExpand As Integer = 0
+
+    Private Structure GoalIndicator
+        Public Timer As Integer
+        Public Brush As SolidBrush
+        Public Fade As Integer
+        Public Rect As Rectangle
+        Public Expand As Integer
+
+        Public Sub New(ByVal initialTimer As Integer, ByVal initialBrush As SolidBrush,
+                       ByVal initialFade As Integer, ByVal initialRect As Rectangle,
+                       ByVal initialExpand As Integer)
+            Me.Timer = initialTimer
+            Me.Brush = initialBrush
+            Me.Fade = initialFade
+            Me.Rect = initialRect
+            Me.Expand = initialExpand
+        End Sub
+
+    End Structure
+
+    Private RightGoalIndicator As New GoalIndicator(0,
+                                                    Brushes.Transparent,
+                                                    0,
+                                                    New Rectangle(ClientSize.Width - 20, 0, 20, ClientSize.Height),
+                                                    0)
+    Private LeftGoalIndicator As New GoalIndicator(0,
+                                                   Brushes.Transparent,
+                                                   0,
+                                                   New Rectangle(0, 0, 20, ClientSize.Height),
+                                                   0)
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
 
@@ -1648,66 +1684,66 @@ Public Class Form1
 
     Private Sub UpdateLeftPaddleGoalIndicator()
 
-        If LeftPaddleGoalIndicatorTimer > 0 Then
+        If LeftGoalIndicator.Timer > 0 Then
 
-            If LeftPaddleGoalIndicatorFade > 0 Then
-                LeftPaddleGoalIndicatorFade -= CInt(0.3 * DeltaTime.TotalMilliseconds)
+            If LeftGoalIndicator.Fade > 0 Then
+                LeftGoalIndicator.Fade -= CInt(0.3 * DeltaTime.TotalMilliseconds)
             End If
 
-            If LeftPaddleGoalIndicatorFade < 0 Then
-                LeftPaddleGoalIndicatorFade = 0
+            If LeftGoalIndicator.Fade < 0 Then
+                LeftGoalIndicator.Fade = 0
             End If
 
-            LeftPaddleGoalIndicatorBrush = New SolidBrush(Color.FromArgb(LeftPaddleGoalIndicatorFade, Color.White))
+            LeftGoalIndicator.Brush = New SolidBrush(Color.FromArgb(LeftGoalIndicator.Fade, Color.White))
 
-            LeftPaddleGoalIndicatorTimer -= DeltaTime.TotalMilliseconds
+            LeftGoalIndicator.Timer -= DeltaTime.TotalMilliseconds
 
-            LeftPaddleGoalIndicatorExpand += CInt(0.1 * DeltaTime.TotalMilliseconds)
+            LeftGoalIndicator.Expand += CInt(0.1 * DeltaTime.TotalMilliseconds)
 
-            LeftPaddleGoalIndicatorRect = New Rectangle(ClientRectangle.Right - LeftPaddleGoalIndicatorExpand, ClientRectangle.Top, LeftPaddleGoalIndicatorExpand, ClientSize.Height)
+            LeftGoalIndicator.Rect = New Rectangle(ClientRectangle.Right - LeftGoalIndicator.Expand, ClientRectangle.Top, LeftGoalIndicator.Expand, ClientSize.Height)
 
         Else
 
-            LeftPaddleGoalIndicatorBrush = Brushes.Transparent
+            LeftGoalIndicator.Brush = Brushes.Transparent
 
-            LeftPaddleGoalIndicatorTimer = 0
+            LeftGoalIndicator.Timer = 0
 
-            LeftPaddleGoalIndicatorExpand = 0
+            LeftGoalIndicator.Expand = 0
 
-            LeftPaddleGoalIndicatorRect = New Rectangle(ClientRectangle.Right - 32, ClientRectangle.Top, 32, ClientSize.Height)
+            LeftGoalIndicator.Rect = New Rectangle(ClientRectangle.Right - 32, ClientRectangle.Top, 32, ClientSize.Height)
 
         End If
 
     End Sub
 
     Private Sub UpdateRightPaddleGoalIndicator()
-        If RightPaddleGoalIndicatorTimer > 0 Then
+        If RightGoalIndicator.Timer > 0 Then
 
-            If RightPaddleGoalIndicatorFade > 0 Then
-                RightPaddleGoalIndicatorFade -= CInt(0.3 * DeltaTime.TotalMilliseconds)
+            If RightGoalIndicator.Fade > 0 Then
+                RightGoalIndicator.Fade -= CInt(0.3 * DeltaTime.TotalMilliseconds)
             End If
 
-            If RightPaddleGoalIndicatorFade < 0 Then
-                RightPaddleGoalIndicatorFade = 0
+            If RightGoalIndicator.Fade < 0 Then
+                RightGoalIndicator.Fade = 0
             End If
 
-            RightPaddleGoalIndicatorBrush = New SolidBrush(Color.FromArgb(RightPaddleGoalIndicatorFade, Color.White))
+            RightGoalIndicator.Brush = New SolidBrush(Color.FromArgb(RightGoalIndicator.Fade, Color.White))
 
-            RightPaddleGoalIndicatorTimer -= DeltaTime.TotalMilliseconds
+            RightGoalIndicator.Timer -= DeltaTime.TotalMilliseconds
 
-            RightPaddleGoalIndicatorExpand += CInt(0.1 * DeltaTime.TotalMilliseconds)
+            RightGoalIndicator.Expand += CInt(0.1 * DeltaTime.TotalMilliseconds)
 
-            RightPaddleGoalIndicatorRect = New Rectangle(ClientRectangle.Left, ClientRectangle.Top, RightPaddleGoalIndicatorExpand, ClientSize.Height)
+            RightGoalIndicator.Rect = New Rectangle(ClientRectangle.Left, ClientRectangle.Top, RightGoalIndicator.Expand, ClientSize.Height)
 
         Else
 
-            RightPaddleGoalIndicatorBrush = Brushes.Transparent
+            RightGoalIndicator.Brush = Brushes.Transparent
 
-            RightPaddleGoalIndicatorTimer = 0
+            RightGoalIndicator.Timer = 0
 
-            RightPaddleGoalIndicatorExpand = 0
+            RightGoalIndicator.Expand = 0
 
-            RightPaddleGoalIndicatorRect = New Rectangle(ClientRectangle.Left, ClientRectangle.Top, 32, ClientSize.Height)
+            RightGoalIndicator.Rect = New Rectangle(ClientRectangle.Left, ClientRectangle.Top, 32, ClientSize.Height)
 
         End If
 
@@ -2039,8 +2075,8 @@ Public Class Form1
 
             PlayPointSound()
             'TODO
-            RightPaddleGoalIndicatorTimer = 1500
-            RightPaddleGoalIndicatorFade = 255
+            RightGoalIndicator.Timer = 1500
+            RightGoalIndicator.Fade = 255
 
             ' Award point to right paddle.
             RightPaddleScore += 1
@@ -2060,8 +2096,8 @@ Public Class Form1
             PlayPointSound()
             ' TODO
 
-            LeftPaddleGoalIndicatorTimer = 1500
-            LeftPaddleGoalIndicatorFade = 255
+            LeftGoalIndicator.Timer = 1500
+            LeftGoalIndicator.Fade = 255
 
 
             ' Award a point to left paddle.
@@ -3208,9 +3244,9 @@ Public Class Form1
     Private Sub DrawGoalIndicators(g As Graphics)
         'Draw goal zone indicators.
 
-        g.FillRectangle(RightPaddleGoalIndicatorBrush, RightPaddleGoalIndicatorRect)
+        g.FillRectangle(RightGoalIndicator.Brush, RightGoalIndicator.Rect)
 
-        g.FillRectangle(LeftPaddleGoalIndicatorBrush, LeftPaddleGoalIndicatorRect)
+        g.FillRectangle(LeftGoalIndicator.Brush, LeftGoalIndicator.Rect)
 
     End Sub
 
