@@ -1357,7 +1357,6 @@ Public Class Form1
 
     Private Structure GoalIndicator
         Public Timer As Integer
-        'Public Brush As SolidBrush
         Public Fade As Integer
         Public Rect As Rectangle
         Public Expand As Integer
@@ -1366,7 +1365,6 @@ Public Class Form1
                        initialFade As Integer, initialRect As Rectangle,
                        initialExpand As Integer)
             Timer = initialTimer
-            'Brush = initialBrush
             Fade = initialFade
             Rect = initialRect
             Expand = initialExpand
