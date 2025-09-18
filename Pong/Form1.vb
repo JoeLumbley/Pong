@@ -1188,7 +1188,7 @@ Public Class Form1
     'State Data *******************************************
     Private GameState As GameStateEnum = GameStateEnum.StartScreen
     Private Serving As ServeStateEnum = ServeStateEnum.LeftPaddle
-    Private ServSpeed As Single = 500
+    Private ServSpeed As Single = 475
     Private Winner As WinStateEnum = WinStateEnum.LeftPaddle
     Private NumberOfPlayers As Integer = 1
     '******************************************************
@@ -1380,14 +1380,27 @@ Public Class Form1
 
     Private RightGoalIndicator As New GoalIndicator(0,
                                                     0,
-                                                    New Rectangle(ClientSize.Width - 20, 0, 20, ClientSize.Height),
+                                                    New Rectangle(0, 0, 0, 0),
                                                     0)
+
     Private LeftGoalIndicator As New GoalIndicator(0,
                                                    0,
-                                                   New Rectangle(0, 0, 20, ClientSize.Height),
+                                                   New Rectangle(0, 0, 0, 0),
                                                    0)
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+
+        '' Set the form's DoubleBuffered property to true
+        'Me.DoubleBuffered = True
+        'Me.SetStyle(ControlStyles.OptimizedDoubleBuffer, True)
+        'Me.SetStyle(ControlStyles.AllPaintingInWmPaint, True)
+        'Me.UpdateStyles()
+        'Me.BackColor = Color.Black
+        'Me.KeyPreview = True 'Capture keyboard events before they reach any controls.
+        'Me.MinimumSize = New Size(800, 600)
+        'Me.Text = "Pong"
+
+        'RightGoalIndicator = New GoalIndicator(0, 0, New Rectangle(ClientSize.Width - 20, 0, 20, ClientSize.Height), 0)
 
         InitializeApp()
 
@@ -1542,6 +1555,17 @@ Public Class Form1
         LayoutTitleAndInstructions()
 
         CenterCourtLine()
+
+        RightPaddle.Rect.Width = Height \ 32
+        Ball.Rect.Width = Height \ 32
+        LeftPaddle.Rect.Width = Height \ 32
+        RightPaddle.Rect.Height = Height \ 8
+        Ball.Rect.Height = Height \ 32
+        LeftPaddle.Rect.Height = Height \ 8
+
+        ServSpeed = Height \ 2
+        RightPaddle.MaxVelocity.Y = Height \ 3
+        LeftPaddle.MaxVelocity.Y = Height \ 2
 
         LeftPaddle.Position.X = 20
         LeftPaddle.Rect.X = LeftPaddle.Position.X
@@ -3908,6 +3932,10 @@ Public Class Form1
 
     Private Sub InitializeApp()
 
+        Debug.Print($"Initialization Starting")
+
+        InitializeForm()
+
         Ball.Rect.Width = 32
         Ball.Rect.Height = 32
         Ball.Position.X = 960
@@ -3947,7 +3975,6 @@ Public Class Form1
         RightPaddle.Acceleration.X = 0
         RightPaddle.Acceleration.Y = 2250
 
-        InitializeForm()
 
         CreateSoundFileFromResource()
 
@@ -4007,9 +4034,16 @@ Public Class Form1
 
         MinimumSize = New Size(1280, 720)
 
+        CenterToScreen()
+
+
+        DoubleBuffered = True
+
         SetStyle(ControlStyles.OptimizedDoubleBuffer Or ControlStyles.AllPaintingInWmPaint, True)
 
         SetStyle(ControlStyles.UserPaint, True)
+
+        UpdateStyles()
 
         Text = "P🏓NG - Code with Joe"
 
