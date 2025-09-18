@@ -1357,30 +1357,34 @@ Public Class Form1
 
     Private Structure GoalIndicator
         Public Timer As Integer
-        Public Brush As SolidBrush
+        'Public Brush As SolidBrush
         Public Fade As Integer
         Public Rect As Rectangle
         Public Expand As Integer
 
-        Public Sub New(initialTimer As Integer, initialBrush As SolidBrush,
+        Public Sub New(initialTimer As Integer,
                        initialFade As Integer, initialRect As Rectangle,
                        initialExpand As Integer)
             Timer = initialTimer
-            Brush = initialBrush
+            'Brush = initialBrush
             Fade = initialFade
             Rect = initialRect
             Expand = initialExpand
         End Sub
 
+        Public ReadOnly Property ComputedBrush As SolidBrush
+            Get
+                Return New SolidBrush(Color.FromArgb(Fade, Color.White))
+            End Get
+        End Property
+
     End Structure
 
     Private RightGoalIndicator As New GoalIndicator(0,
-                                                    Brushes.Transparent,
                                                     0,
                                                     New Rectangle(ClientSize.Width - 20, 0, 20, ClientSize.Height),
                                                     0)
     Private LeftGoalIndicator As New GoalIndicator(0,
-                                                   Brushes.Transparent,
                                                    0,
                                                    New Rectangle(0, 0, 20, ClientSize.Height),
                                                    0)
@@ -1666,14 +1670,17 @@ Public Class Form1
         If LeftGoalIndicator.Timer > 0 Then
 
             If LeftGoalIndicator.Fade > 0 Then
-                LeftGoalIndicator.Fade -= CInt(0.3 * DeltaTime.TotalMilliseconds)
+                'LeftGoalIndicator.Fade -= CInt(0.3 * DeltaTime.TotalMilliseconds)
+
+                LeftGoalIndicator.Fade = Math.Max(0, LeftGoalIndicator.Fade - CInt(0.3 * DeltaTime.TotalMilliseconds))
+
             End If
 
-            If LeftGoalIndicator.Fade < 0 Then
-                LeftGoalIndicator.Fade = 0
-            End If
+            'If LeftGoalIndicator.Fade < 0 Then
+            '    LeftGoalIndicator.Fade = 0
+            'End If
 
-            LeftGoalIndicator.Brush = New SolidBrush(Color.FromArgb(LeftGoalIndicator.Fade, Color.White))
+            'LeftGoalIndicator.Brush = New SolidBrush(Color.FromArgb(LeftGoalIndicator.Fade, Color.White))
 
             LeftGoalIndicator.Timer -= DeltaTime.TotalMilliseconds
 
@@ -1683,7 +1690,7 @@ Public Class Form1
 
         Else
 
-            LeftGoalIndicator.Brush = Brushes.Transparent
+            'LeftGoalIndicator.Brush = Brushes.Transparent
 
             LeftGoalIndicator.Timer = 0
 
@@ -1699,14 +1706,17 @@ Public Class Form1
         If RightGoalIndicator.Timer > 0 Then
 
             If RightGoalIndicator.Fade > 0 Then
-                RightGoalIndicator.Fade -= CInt(0.3 * DeltaTime.TotalMilliseconds)
+                'RightGoalIndicator.Fade -= CInt(0.3 * DeltaTime.TotalMilliseconds)
+
+                RightGoalIndicator.Fade = Math.Max(0, RightGoalIndicator.Fade - CInt(0.3 * DeltaTime.TotalMilliseconds))
+
             End If
 
-            If RightGoalIndicator.Fade < 0 Then
-                RightGoalIndicator.Fade = 0
-            End If
+            'If RightGoalIndicator.Fade < 0 Then
+            '    RightGoalIndicator.Fade = 0
+            'End If
 
-            RightGoalIndicator.Brush = New SolidBrush(Color.FromArgb(RightGoalIndicator.Fade, Color.White))
+            'RightGoalIndicator.Brush = New SolidBrush(Color.FromArgb(RightGoalIndicator.Fade, Color.White))
 
             RightGoalIndicator.Timer -= DeltaTime.TotalMilliseconds
 
@@ -1716,7 +1726,7 @@ Public Class Form1
 
         Else
 
-            RightGoalIndicator.Brush = Brushes.Transparent
+            'RightGoalIndicator.Brush = Brushes.Transparent
 
             RightGoalIndicator.Timer = 0
 
@@ -3220,12 +3230,25 @@ Public Class Form1
 
     End Sub
 
+    'Private Sub DrawGoalIndicators(g As Graphics)
+    '    'Draw goal zone indicators.
+
+    '    g.FillRectangle(RightGoalIndicator.Brush, RightGoalIndicator.Rect)
+
+    '    g.FillRectangle(LeftGoalIndicator.Brush, LeftGoalIndicator.Rect)
+
+    'End Sub
+
+    Private Sub DrawGoalIndicator(g As Graphics, indicator As GoalIndicator)
+
+        g.FillRectangle(indicator.ComputedBrush, indicator.Rect)
+
+    End Sub
+
     Private Sub DrawGoalIndicators(g As Graphics)
-        'Draw goal zone indicators.
 
-        g.FillRectangle(RightGoalIndicator.Brush, RightGoalIndicator.Rect)
-
-        g.FillRectangle(LeftGoalIndicator.Brush, LeftGoalIndicator.Rect)
+        DrawGoalIndicator(g, RightGoalIndicator)
+        DrawGoalIndicator(g, LeftGoalIndicator)
 
     End Sub
 
