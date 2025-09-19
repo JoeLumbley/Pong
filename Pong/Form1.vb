@@ -1395,7 +1395,7 @@ Public Class Form1
         'Me.SetStyle(ControlStyles.OptimizedDoubleBuffer, True)
         'Me.SetStyle(ControlStyles.AllPaintingInWmPaint, True)
         'Me.UpdateStyles()
-        'Me.BackColor = Color.Black
+        BackColor = Color.Black
         'Me.KeyPreview = True 'Capture keyboard events before they reach any controls.
         'Me.MinimumSize = New Size(800, 600)
         'Me.Text = "Pong"
@@ -1424,11 +1424,11 @@ Public Class Form1
 
     End Sub
 
-    Protected Overrides Sub OnPaintBackground(ByVal e As PaintEventArgs)
+    'Protected Overrides Sub OnPaintBackground(ByVal e As PaintEventArgs)
 
-        ' Intentionally left blank. Do not remove.
+    '    ' Intentionally left blank. Do not remove.
 
-    End Sub
+    'End Sub
 
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
 
@@ -1506,7 +1506,7 @@ Public Class Form1
         g.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
         g.SmoothingMode = Drawing2D.SmoothingMode.None
 
-        DrawBackground(g)
+        'DrawBackground(g)
 
         Select Case GameState
 
@@ -1563,9 +1563,9 @@ Public Class Form1
         Ball.Rect.Height = Height \ 32
         LeftPaddle.Rect.Height = Height \ 8
 
-        ServSpeed = Height \ 2
-        RightPaddle.MaxVelocity.Y = Height \ 3
-        LeftPaddle.MaxVelocity.Y = Height \ 2
+        ServSpeed = CInt(Height / 2)
+        RightPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 25)
+        LeftPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 25)
 
         LeftPaddle.Position.X = 20
         LeftPaddle.Rect.X = LeftPaddle.Position.X
