@@ -1564,7 +1564,7 @@ Public Class Form1
         LeftPaddle.Rect.Height = Height \ 8
 
         ServSpeed = CInt(Height / 2)
-        RightPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 25)
+        RightPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 15)
         LeftPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 25)
 
         LeftPaddle.Position.X = 20
