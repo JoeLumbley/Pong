@@ -1403,6 +1403,13 @@ Public Class Form1
 
     End Sub
 
+    Private Sub Form1_Activated(sender As Object, e As EventArgs) Handles Me.Activated
+
+        HandleResize()
+
+    End Sub
+
+
     Private Sub OnGameTick(sender As Object, e As EventArgs)
 
         UpdateGame()
@@ -1565,7 +1572,12 @@ Public Class Form1
 
 
         ServSpeed = CInt(Height / 2.223)
+        Debug.Print($"Serve Speed: {ServSpeed}")
+
+
         RightPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 16)
+        Debug.Print($"Right Paddle Max Velocity: {RightPaddle.MaxVelocity.Y}")
+
         LeftPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 40)
 
 
@@ -3975,7 +3987,7 @@ Public Class Form1
         RightPaddle.Velocity.X = 0
         RightPaddle.Velocity.Y = 0
         RightPaddle.MaxVelocity.X = 500
-        RightPaddle.MaxVelocity.Y = 475
+        RightPaddle.MaxVelocity.Y = 0
         RightPaddle.Acceleration.X = 0
         RightPaddle.Acceleration.Y = 2250
 
@@ -4007,6 +4019,8 @@ Public Class Form1
         Controllers.Initialize()
 
         SetupGameTimer()
+
+        HandleResize()
 
         Debug.Print($"Initialization Complete")
 
@@ -4053,7 +4067,10 @@ Public Class Form1
 
         WindowState = FormWindowState.Maximized
 
+
     End Sub
+
+
 
     Private Sub UpdateDeltaTime()
         ' Delta time (Δt) is the elapsed time since the last frame.
