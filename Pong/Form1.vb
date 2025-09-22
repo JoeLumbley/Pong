@@ -1165,7 +1165,6 @@ Public Class Form1
 
     Private Player As AudioPlayer
 
-    'Game State Data *************************************
     Private Enum GameStateEnum
         StartScreen
         Instructions
@@ -1185,13 +1184,11 @@ Public Class Form1
         RightPaddle
     End Enum
 
-    'State Data *******************************************
     Private GameState As GameStateEnum = GameStateEnum.StartScreen
     Private Serving As ServeStateEnum = ServeStateEnum.LeftPaddle
     Private ServSpeed As Single = 475
     Private Winner As WinStateEnum = WinStateEnum.LeftPaddle
     Private NumberOfPlayers As Integer = 1
-    '******************************************************
 
     Private Structure GameObject
         Public Position As Vector2 'A vector 2 is composed of two floating-point values called X and Y.
@@ -1563,9 +1560,17 @@ Public Class Form1
         Ball.Rect.Height = Height \ 32
         LeftPaddle.Rect.Height = Height \ 8
 
-        ServSpeed = CInt(Height / 2)
-        RightPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 15)
-        LeftPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 25)
+
+
+
+
+        ServSpeed = CInt(Height / 2.223)
+        RightPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 16)
+        LeftPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 40)
+
+
+
+
 
         LeftPaddle.Position.X = 20
         LeftPaddle.Rect.X = LeftPaddle.Position.X
@@ -1574,7 +1579,6 @@ Public Class Form1
         RightPaddle.Rect.X = RightPaddle.Position.X
 
         ' Place the FPS display at the bottom of the client area.
-
         Dim ThisFontSize As SizeF = TextRenderer.MeasureText("FPS: 000", FPSFont)
         FPS_Postion.X = 5
         FPS_Postion.Y = ClientRectangle.Bottom - ThisFontSize.Height - 5
