@@ -1570,9 +1570,6 @@ Public Class Form1
         LeftPaddle.Rect.Height = Height \ 8
 
 
-
-
-
         ServSpeed = CInt(Height / 2.223)
         Debug.Print($"Serve Speed: {ServSpeed}")
 
@@ -1581,9 +1578,6 @@ Public Class Form1
         Debug.Print($"Right Paddle Max Velocity: {RightPaddle.MaxVelocity.Y}")
 
         LeftPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 40)
-
-
-
 
 
         LeftPaddle.Position.X = 20
