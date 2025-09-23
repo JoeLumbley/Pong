@@ -1403,11 +1403,13 @@ Public Class Form1
 
     End Sub
 
-    Private Sub Form1_Activated(sender As Object, e As EventArgs) Handles Me.Activated
+
+    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
 
         HandleResize()
 
     End Sub
+
 
 
     Private Sub OnGameTick(sender As Object, e As EventArgs)
@@ -1575,7 +1577,7 @@ Public Class Form1
         Debug.Print($"Serve Speed: {ServSpeed}")
 
 
-        RightPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 16)
+        RightPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 10)
         Debug.Print($"Right Paddle Max Velocity: {RightPaddle.MaxVelocity.Y}")
 
         LeftPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 40)
@@ -4022,7 +4024,7 @@ Public Class Form1
 
         HandleResize()
 
-        Debug.Print($"Initialization Complete")
+        Debug.Print($"Initialization Complete ******")
 
     End Sub
 
