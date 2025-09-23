@@ -1210,7 +1210,7 @@ Public Class Form1
 
     Private Const TitleText As String = "P🏓NG"
     Private TitleLocation As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - ((ClientSize.Height \ 8) * 4))
-    Private ReadOnly TitleFont As New Font("Segoe UI Emoji", 150)
+    Private TitleFont As New Font("Segoe UI Emoji", 150)
 
     Private InstructStartLocation As Point
     Private ReadOnly InstructStartText As String = Environment.NewLine &
@@ -1233,7 +1233,7 @@ Public Class Form1
         "First player to 10 points wins 🏆" & Environment.NewLine & Environment.NewLine &
         "Pause / Resume  Start  "
     '******************************************************
-    Private ReadOnly InstructionsFont As New Font("Segoe UI Emoji", 25)
+    Private InstructionsFont As New Font("Segoe UI Emoji", 25)
 
     Private IsBackButtonDown(0 To 3) As Boolean
 
@@ -1574,10 +1574,10 @@ Public Class Form1
         Debug.Print($"Serve Speed: {ServSpeed}")
 
 
-        RightPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 10)
+        RightPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 9.9)
         Debug.Print($"Right Paddle Max Velocity: {RightPaddle.MaxVelocity.Y}")
 
-        LeftPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 40)
+        LeftPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 9.9)
 
 
         LeftPaddle.Position.X = 20
@@ -4121,15 +4121,33 @@ Public Class Form1
 
     Private Sub LayoutTitleAndInstructions()
 
+        TitleFont = New Font("Segoe UI Emoji", CInt(Height / 6.5))
+
         Dim TitleTextSize As SizeF = TextRenderer.MeasureText(TitleText, TitleFont)
 
+
+
         TitleLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - TitleTextSize.Height)
+
+
+        InstructionsFont = New Font("Segoe UI Emoji", CInt(Height / 35))
 
         InstructStartLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
 
         InstructOneLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
 
         InstructTwoLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
+
+        ControllerConnectionStatusFont = New Font("Segoe UI Emoji", CInt(Height / 48))
+
+        Dim ControllerConnectionStatusPad = CInt(Height / 200)
+
+        Dim ControllerConnectionStatusTextSize As SizeF = TextRenderer.MeasureText(Controller0ConnectionStatusText, ControllerConnectionStatusFont)
+
+        Controller0ConnectionStatusLocation = New Point(ControllerConnectionStatusPad, ClientRectangle.Top + ControllerConnectionStatusPad)
+        Controller1ConnectionStatusLocation = New Point(ControllerConnectionStatusPad, ClientRectangle.Top + ControllerConnectionStatusPad + CInt(ControllerConnectionStatusTextSize.Height) + ControllerConnectionStatusPad \ 2)
+
+
 
         Ball.Position.Y = ClientSize.Height \ 2 + 40
         Ball.Rect.Y = Ball.Position.Y
