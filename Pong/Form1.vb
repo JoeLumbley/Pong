@@ -1204,9 +1204,9 @@ Public Class Form1
 
     Private RightPaddle As GameObject
 
-    Private Const PingPongEmoji As String = "🏓"
-    Private ReadOnly EmojiFont As New Font("Segoe UI Emoji", 100)
-    Private EmojiLocation As New Point(ClientSize.Width \ 2 - 110, ClientSize.Height \ 2 - 125)
+    'Private Const PingPongEmoji As String = "🏓"
+    'Private ReadOnly EmojiFont As New Font("Segoe UI Emoji", 100)
+    'Private EmojiLocation As New Point(ClientSize.Width \ 2 - 110, ClientSize.Height \ 2 - 125)
 
     Private Const TitleText As String = "P🏓NG"
     Private TitleLocation As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - ((ClientSize.Height \ 8) * 4))
@@ -1387,11 +1387,6 @@ Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-        '' Set the form's DoubleBuffered property to true
-        'Me.DoubleBuffered = True
-        'Me.SetStyle(ControlStyles.OptimizedDoubleBuffer, True)
-        'Me.SetStyle(ControlStyles.AllPaintingInWmPaint, True)
-        'Me.UpdateStyles()
         BackColor = Color.Black
         'Me.KeyPreview = True 'Capture keyboard events before they reach any controls.
         'Me.MinimumSize = New Size(800, 600)
@@ -4046,7 +4041,7 @@ Public Class Form1
 
     Private Sub InitializeForm()
 
-        MinimumSize = New Size(1280, 720)
+        'MinimumSize = New Size(800, 600)
 
         CenterToScreen()
 
@@ -4138,21 +4133,22 @@ Public Class Form1
 
         InstructTwoLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
 
-        ControllerConnectionStatusFont = New Font("Segoe UI Emoji", CInt(Height / 48))
+        ControllerConnectionStatusFont = New Font("Segoe UI Emoji", Height / 48)
 
         Dim ControllerConnectionStatusPad = CInt(Height / 200)
 
         Dim ControllerConnectionStatusTextSize As SizeF = TextRenderer.MeasureText(Controller0ConnectionStatusText, ControllerConnectionStatusFont)
 
         Controller0ConnectionStatusLocation = New Point(ControllerConnectionStatusPad, ClientRectangle.Top + ControllerConnectionStatusPad)
-        Controller1ConnectionStatusLocation = New Point(ControllerConnectionStatusPad, ClientRectangle.Top + ControllerConnectionStatusPad + CInt(ControllerConnectionStatusTextSize.Height) + ControllerConnectionStatusPad \ 2)
+        Controller1ConnectionStatusLocation = New Point(ControllerConnectionStatusPad,
+                                                        ClientRectangle.Top + ControllerConnectionStatusPad + CInt(ControllerConnectionStatusTextSize.Height) + ControllerConnectionStatusPad \ 2)
 
 
 
         Ball.Position.Y = ClientSize.Height \ 2 + 40
         Ball.Rect.Y = Ball.Position.Y
 
-        EmojiLocation = New Point(ClientSize.Width \ 2 - 90, ClientSize.Height \ 2 - 190)
+        'EmojiLocation = New Point(ClientSize.Width \ 2 - 90, ClientSize.Height \ 2 - 190)
 
     End Sub
 

@@ -28,8 +28,9 @@ Partial Class Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(881, 398)
+        ClientSize = New Size(881, 441)
         Margin = New Padding(2)
+        MinimumSize = New Size(720, 480)
         Name = "Form1"
         StartPosition = FormStartPosition.CenterScreen
         Text = "Form1"
