@@ -4354,6 +4354,6 @@ End Class
 ' https://monica.im/
 ' She is helping me write better code and learn new things.
 
-' Copilot is another AI assistant.
+' Copilot is our other AI assistant.
 ' https://copilot.github.com/
 ' It is also helping me write better code and learn new things.
