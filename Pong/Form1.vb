@@ -1204,10 +1204,6 @@ Public Class Form1
 
     Private RightPaddle As GameObject
 
-    'Private Const PingPongEmoji As String = "🏓"
-    'Private ReadOnly EmojiFont As New Font("Segoe UI Emoji", 100)
-    'Private EmojiLocation As New Point(ClientSize.Width \ 2 - 110, ClientSize.Height \ 2 - 125)
-
     Private Const TitleText As String = "P🏓NG"
     Private TitleLocation As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - ((ClientSize.Height \ 8) * 4))
     Private TitleFont As New Font("Segoe UI Emoji", 150)
@@ -1388,24 +1384,16 @@ Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         BackColor = Color.Black
-        'Me.KeyPreview = True 'Capture keyboard events before they reach any controls.
-        'Me.MinimumSize = New Size(800, 600)
-        'Me.Text = "Pong"
-
-        'RightGoalIndicator = New GoalIndicator(0, 0, New Rectangle(ClientSize.Width - 20, 0, 20, ClientSize.Height), 0)
 
         InitializeApp()
 
     End Sub
-
 
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
 
         HandleResize()
 
     End Sub
-
-
 
     Private Sub OnGameTick(sender As Object, e As EventArgs)
 
@@ -1424,12 +1412,6 @@ Public Class Form1
         UpdateFrameCounter()
 
     End Sub
-
-    'Protected Overrides Sub OnPaintBackground(ByVal e As PaintEventArgs)
-
-    '    ' Intentionally left blank. Do not remove.
-
-    'End Sub
 
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
 
@@ -1506,8 +1488,6 @@ Public Class Form1
         g.CompositingQuality = Drawing2D.CompositingQuality.HighQuality
         g.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
         g.SmoothingMode = Drawing2D.SmoothingMode.None
-
-        'DrawBackground(g)
 
         Select Case GameState
 
@@ -1699,17 +1679,10 @@ Public Class Form1
         If LeftGoalIndicator.Timer > 0 Then
 
             If LeftGoalIndicator.Fade > 0 Then
-                'LeftGoalIndicator.Fade -= CInt(0.3 * DeltaTime.TotalMilliseconds)
 
                 LeftGoalIndicator.Fade = Math.Max(0, LeftGoalIndicator.Fade - CInt(0.3 * DeltaTime.TotalMilliseconds))
 
             End If
-
-            'If LeftGoalIndicator.Fade < 0 Then
-            '    LeftGoalIndicator.Fade = 0
-            'End If
-
-            'LeftGoalIndicator.Brush = New SolidBrush(Color.FromArgb(LeftGoalIndicator.Fade, Color.White))
 
             LeftGoalIndicator.Timer -= DeltaTime.TotalMilliseconds
 
@@ -1718,8 +1691,6 @@ Public Class Form1
             LeftGoalIndicator.Rect = New Rectangle(ClientRectangle.Right - LeftGoalIndicator.Expand, ClientRectangle.Top, LeftGoalIndicator.Expand, ClientSize.Height)
 
         Else
-
-            'LeftGoalIndicator.Brush = Brushes.Transparent
 
             LeftGoalIndicator.Timer = 0
 
@@ -1735,17 +1706,10 @@ Public Class Form1
         If RightGoalIndicator.Timer > 0 Then
 
             If RightGoalIndicator.Fade > 0 Then
-                'RightGoalIndicator.Fade -= CInt(0.3 * DeltaTime.TotalMilliseconds)
 
                 RightGoalIndicator.Fade = Math.Max(0, RightGoalIndicator.Fade - CInt(0.3 * DeltaTime.TotalMilliseconds))
 
             End If
-
-            'If RightGoalIndicator.Fade < 0 Then
-            '    RightGoalIndicator.Fade = 0
-            'End If
-
-            'RightGoalIndicator.Brush = New SolidBrush(Color.FromArgb(RightGoalIndicator.Fade, Color.White))
 
             RightGoalIndicator.Timer -= DeltaTime.TotalMilliseconds
 
@@ -1754,8 +1718,6 @@ Public Class Form1
             RightGoalIndicator.Rect = New Rectangle(ClientRectangle.Left, ClientRectangle.Top, RightGoalIndicator.Expand, ClientSize.Height)
 
         Else
-
-            'RightGoalIndicator.Brush = Brushes.Transparent
 
             RightGoalIndicator.Timer = 0
 
@@ -2092,7 +2054,7 @@ Public Class Form1
             ' Yes, ball entered left goal zone.
 
             PlayPointSound()
-            'TODO
+
             RightGoalIndicator.Timer = 1500
             RightGoalIndicator.Fade = 255
 
@@ -2112,11 +2074,9 @@ Public Class Form1
             ' Yes, ball entered goal zone.
 
             PlayPointSound()
-            ' TODO
 
             LeftGoalIndicator.Timer = 1500
             LeftGoalIndicator.Fade = 255
-
 
             ' Award a point to left paddle.
             LeftPaddleScore += 1
@@ -3259,15 +3219,6 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub DrawGoalIndicators(g As Graphics)
-    '    'Draw goal zone indicators.
-
-    '    g.FillRectangle(RightGoalIndicator.Brush, RightGoalIndicator.Rect)
-
-    '    g.FillRectangle(LeftGoalIndicator.Brush, LeftGoalIndicator.Rect)
-
-    'End Sub
-
     Private Sub DrawGoalIndicator(g As Graphics, indicator As GoalIndicator)
 
         g.FillRectangle(indicator.ComputedBrush, indicator.Rect)
@@ -3460,8 +3411,6 @@ Public Class Form1
         Controller1ConnectionStatusBrush = If(Controllers.Connected(1), Brushes.White, Brushes.DarkGray)
 
     End Sub
-
-
 
     Private Sub DrawTitle(g As Graphics)
 
@@ -4041,10 +3990,7 @@ Public Class Form1
 
     Private Sub InitializeForm()
 
-        'MinimumSize = New Size(800, 600)
-
         CenterToScreen()
-
 
         DoubleBuffered = True
 
@@ -4058,10 +4004,7 @@ Public Class Form1
 
         WindowState = FormWindowState.Maximized
 
-
     End Sub
-
-
 
     Private Sub UpdateDeltaTime()
         ' Delta time (Δt) is the elapsed time since the last frame.
@@ -4120,10 +4063,7 @@ Public Class Form1
 
         Dim TitleTextSize As SizeF = TextRenderer.MeasureText(TitleText, TitleFont)
 
-
-
         TitleLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - TitleTextSize.Height)
-
 
         InstructionsFont = New Font("Segoe UI Emoji", CInt(Height / 35))
 
@@ -4137,7 +4077,8 @@ Public Class Form1
 
         Dim ControllerConnectionStatusPad = CInt(Height / 200)
 
-        Dim ControllerConnectionStatusTextSize As SizeF = TextRenderer.MeasureText(Controller0ConnectionStatusText, ControllerConnectionStatusFont)
+        Dim ControllerConnectionStatusTextSize As SizeF = TextRenderer.MeasureText(Controller0ConnectionStatusText,
+                                                                                   ControllerConnectionStatusFont)
 
         Controller0ConnectionStatusLocation = New Point(ControllerConnectionStatusPad, ClientRectangle.Top + ControllerConnectionStatusPad)
         Controller1ConnectionStatusLocation = New Point(ControllerConnectionStatusPad,
@@ -4147,8 +4088,6 @@ Public Class Form1
 
         Ball.Position.Y = ClientSize.Height \ 2 + 40
         Ball.Rect.Y = Ball.Position.Y
-
-        'EmojiLocation = New Point(ClientSize.Width \ 2 - 90, ClientSize.Height \ 2 - 190)
 
     End Sub
 
