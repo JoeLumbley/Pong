@@ -1231,6 +1231,9 @@ Public Class Form1
     '******************************************************
     Private InstructionsFont As New Font("Segoe UI Emoji", 25)
 
+    Private ComputerPlayerIdentifierFont As New Font("Segoe UI Emoji", 25)
+
+
     Private IsBackButtonDown(0 To 3) As Boolean
 
     Private IsStartButtonDown(0 To 3) As Boolean
@@ -1245,7 +1248,7 @@ Public Class Form1
     Private CenterlineTop As Point
     Private CenterlineBottom As Point
 
-    Private ReadOnly CenterlinePen As New Pen(Color.White, 16) With {
+    Private CenterlinePen As New Pen(Color.White, 16) With {
                     .DashStyle = Drawing2D.DashStyle.Custom,
                     .DashPattern = New Single() {1, 2}
                     }
@@ -1263,7 +1266,7 @@ Public Class Form1
     Private RPadTrophyLocation As Point
     Private LPadTrophyLocation As Point
 
-    Private ReadOnly ScoreFont As New Font(FontFamily.GenericSansSerif, 75)
+    Private ScoreFont As New Font(FontFamily.GenericSansSerif, 75)
 
     Private ClientCenter As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
 
@@ -1317,7 +1320,7 @@ Public Class Form1
 
     Private FPS As Integer = 0
 
-    Private ReadOnly FPSFont As New Font(FontFamily.GenericSansSerif, 25)
+    Private FPSFont As New Font(FontFamily.GenericSansSerif, 25)
 
     Private FPS_Postion As New Point(0, 0)
 
@@ -1562,19 +1565,38 @@ Public Class Form1
         RightPaddle.Rect.X = RightPaddle.Position.X
 
         ' Place the FPS display at the bottom of the client area.
+        FPSFont = New Font("Segoe UI", Height \ 34)
         Dim ThisFontSize As SizeF = TextRenderer.MeasureText("FPS: 000", FPSFont)
         FPS_Postion.X = 5
         FPS_Postion.Y = ClientRectangle.Bottom - ThisFontSize.Height - 5
 
-        LPadScoreLocation = New Point(ClientSize.Width \ 2 \ 2, 100)
+
+        ScoreFont = New Font(FontFamily.GenericSansSerif, Height \ 10)
+
+        ComputerPlayerIdentifierFont = New Font("Segoe UI", CInt(Height / 34))
+
+
+        Dim CPUIDFontSize As SizeF = TextRenderer.MeasureText("CPU", ComputerPlayerIdentifierFont)
+
+
+        LPadScoreLocation = New Point(ClientSize.Width \ 2 \ 2, CPUIDFontSize.Height)
+
+
+        RPadScoreLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), CPUIDFontSize.Height)
 
         LPadTrophyLocation = New Point(ClientSize.Width \ 2 \ 2, ClientSize.Height \ 2 - 0)
 
-        RPadScoreLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), 100)
+
+
 
         RPadTrophyLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), ClientSize.Height \ 2 - 0)
 
         ClientCenter = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
+
+        CenterlinePen = New Pen(Color.White, Height \ 64) With {
+                    .DashStyle = Drawing2D.DashStyle.Custom,
+                    .DashPattern = New Single() {1, 2}
+                    }
 
     End Sub
 
@@ -2971,7 +2993,7 @@ Public Class Form1
 
     Private Sub DrawComputerPlayerIdentifier(g As Graphics)
 
-        g.DrawString("CPU", InstructionsFont, Brushes.White, ClientSize.Width - (ClientSize.Width \ 4), 20, AlineCenterMiddle)
+        g.DrawString("CPU", ComputerPlayerIdentifierFont, Brushes.White, ClientSize.Width - (ClientSize.Width \ 4), 0, AlineCenter)
 
     End Sub
 
@@ -3520,7 +3542,7 @@ Public Class Form1
 
     Private Sub DrawRightPaddleScore(g As Graphics)
 
-        g.DrawString(RightPaddleScore, ScoreFont, Brushes.White, RPadScoreLocation, AlineCenterMiddle)
+        g.DrawString(RightPaddleScore, ScoreFont, Brushes.White, RPadScoreLocation, AlineCenter)
 
     End Sub
 
@@ -3538,7 +3560,7 @@ Public Class Form1
 
     Private Sub DrawLeftPaddleScore(g As Graphics)
 
-        g.DrawString(LeftPaddleScore, ScoreFont, Brushes.White, LPadScoreLocation, AlineCenterMiddle)
+        g.DrawString(LeftPaddleScore, ScoreFont, Brushes.White, LPadScoreLocation, AlineCenter)
 
     End Sub
 
