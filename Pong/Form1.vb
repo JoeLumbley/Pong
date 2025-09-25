@@ -1556,10 +1556,10 @@ Public Class Form1
         Debug.Print($"Serve Speed: {ServSpeed}")
 
 
-        RightPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 9.9)
+        RightPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 15)
         Debug.Print($"Right Paddle Max Velocity: {RightPaddle.MaxVelocity.Y}")
 
-        LeftPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 9.9)
+        LeftPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 15)
 
 
         LeftPaddle.Position.X = 20
