@@ -471,7 +471,6 @@ Public Class Form1
         FPS_Postion.X = 5
         FPS_Postion.Y = ClientRectangle.Bottom - ThisFontSize.Height - 5
 
-
         ScoreFont = New Font(FontFamily.GenericSansSerif, Height \ 10)
 
         ComputerPlayerIdentifierFont = New Font("Segoe UI", CInt(Height / 34))
