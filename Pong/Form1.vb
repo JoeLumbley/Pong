@@ -1161,6 +1161,8 @@ End Structure
 
 Public Class Form1
 
+    Inherits Form
+
     Private Controllers As XboxControllers
 
     Private Player As AudioPlayer
@@ -1383,6 +1385,8 @@ Public Class Form1
                                                    0,
                                                    New Rectangle(0, 0, 0, 0),
                                                    0)
+
+    Private ServeStartTime As DateTime
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
 
@@ -1977,17 +1981,39 @@ Public Class Form1
 
         PlaceBallCenterCourt()
 
-        If Serving = ServeStateEnum.RightPaddle Then
+        UpdateGoalIndicators()
 
-            ServeRightPaddle()
 
-        Else
+        Dim ServeTimeElapsed = Now.Subtract(ServeStartTime)
 
-            ServeLeftPaddle()
+        If ServeTimeElapsed.TotalMilliseconds > 700 Then
+
+
+
+
+            Player.PlaySound("serve")
+
+
+            If Serving = ServeStateEnum.RightPaddle Then
+
+                ServeRightPaddle()
+
+            Else
+
+                ServeLeftPaddle()
+
+            End If
+
+            LastFrame = Now
+
+            GameState = GameStateEnum.Playing
+
 
         End If
 
-        GameState = GameStateEnum.Playing
+
+
+
 
     End Sub
 
@@ -2086,8 +2112,11 @@ Public Class Form1
             ' Change possession of ball to right paddle.
             Serving = ServeStateEnum.RightPaddle
 
+            ServeStartTime = DateTime.Now
+
             ' Change game state to serve.
             GameState = GameStateEnum.Serve
+
 
         End If
 
@@ -2105,6 +2134,8 @@ Public Class Form1
 
             ' Change possession of ball to left paddle.
             Serving = ServeStateEnum.LeftPaddle
+
+            ServeStartTime = DateTime.Now
 
             ' Change game state to serve.
             GameState = GameStateEnum.Serve
@@ -2592,6 +2623,8 @@ Public Class Form1
                     Player.PauseSound("startscreenmusic")
 
                 End If
+
+                ServeStartTime = DateTime.Now
 
                 GameState = GameStateEnum.Serve
 
@@ -3330,6 +3363,8 @@ Public Class Form1
 
     Private Sub DrawServe(g As Graphics)
 
+        DrawGoalIndicators(g)
+
         DrawCenterCourtLine(g)
 
         DrawLeftPaddle(g)
@@ -3685,6 +3720,8 @@ Public Class Form1
 
                         End If
 
+                        ServeStartTime = DateTime.Now
+
                         GameState = GameStateEnum.Serve
 
                         MovePointerOffScreen()
@@ -3822,6 +3859,8 @@ Public Class Form1
 
                         End If
 
+                        ServeStartTime = DateTime.Now
+
                         GameState = GameStateEnum.Serve
 
                         MovePointerOffScreen()
@@ -3910,7 +3949,7 @@ Public Class Form1
 
     Private Sub InitializeApp()
 
-        Debug.Print($"Initialization Starting")
+        Debug.Print($"Initialization Starting...")
 
         InitializeForm()
 
@@ -3968,11 +4007,14 @@ Public Class Form1
 
         Player.AddSound("point", $"{Application.StartupPath}point.mp3")
 
-        Player.SetVolume("point", 400)
+        Player.SetVolume("point", 300)
 
         Player.AddSound("winning", $"{Application.StartupPath}winning.mp3")
 
         Player.AddSound("pause", $"{Application.StartupPath}pause.mp3")
+
+        Player.AddSound("serve", $"{Application.StartupPath}serve.mp3")
+        Player.SetVolume("serve", 200)
 
         LayoutTitleAndInstructions()
 
@@ -4160,6 +4202,14 @@ Public Class Form1
         If Not IO.File.Exists(FilePath) Then
 
             IO.File.WriteAllBytes(FilePath, My.Resources.PauseMusic2)
+
+        End If
+
+        FilePath = Path.Combine(Application.StartupPath, "serve.mp3")
+
+        If Not IO.File.Exists(FilePath) Then
+
+            IO.File.WriteAllBytes(FilePath, My.Resources.serve)
 
         End If
 

@@ -133,6 +133,9 @@
   <data name="Point2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Music\Point2.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="serve" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Music\serve.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="Start_Screen_Music_7___Pong" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Music\Start Screen Music 7 - Pong.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
