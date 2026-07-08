@@ -28,64 +28,6 @@
 ---
 
 
-# Getting Started
-To begin, you'll need to set up your development environment and clone the repository to get the game files. 
-
-## 🛠️ **Set Up Your Environment**
-
-
-![014](https://github.com/user-attachments/assets/918c5027-4d82-41aa-8f64-f4f87c2d235a)
-
-
-
-
-Visual Studio is an Integrated Development Environment (IDE) created by Microsoft. 
-
-It is a powerful software development tool that provides a comprehensive set of features and tools for building a wide range of applications.
-
-This is the IDE I use to make P🏓NG and I recommend that you use.
-
-
-
-
-![005](https://github.com/user-attachments/assets/2c8d863d-df92-4989-b5af-1f70e503d4f9)
-
-Grab Visual Studio Community—it's free and perfect for indie devs.
-
-Install Visual Studio from here:  https://visualstudio.microsoft.com/downloads/ and include the .NET Desktop Development workload.
-
-
-## 🧬📦 **Clone the Repository** 
-
-Click the "Code" button.
-
-Copy the repository's URL.
-
-![010](https://github.com/user-attachments/assets/562269e4-ec11-4702-addb-795769eeac3c)
-
-Open Visual Studio.
-
-Click "Clone a repository".
-
-
-
-![006](https://github.com/user-attachments/assets/e7e542f5-a0f6-4258-bc58-491db0a0a78d)
-
-Paste the repository URL into the location field.
-
-Click the "Clone" button.
-
-![008](https://github.com/user-attachments/assets/fd1627da-83ab-48ed-9c3b-ffc6049add27)
-
-Once the cloning process is complete, you will have your own local copy of the game that you can run and modify on your computer.
-
-Dive into the code, experiment, and enhance the game while learning valuable programming skills!
-
----
-
-[Getting Started](#getting-started) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
-
----
 
 
 # ⌨️ Keyboard Controls
@@ -587,7 +529,69 @@ By understanding these components, you can enhance your coding skills and apply 
 - **Game Design Principles**: Read about game design principles to improve your understanding of creating engaging and fun gameplay experiences.
 
 Happy coding!
+
 ---
+
+
+# Getting Started
+To begin, you'll need to set up your development environment and clone the repository to get the game files. 
+
+## 🛠️ **Set Up Your Environment**
+
+
+![014](https://github.com/user-attachments/assets/918c5027-4d82-41aa-8f64-f4f87c2d235a)
+
+
+
+
+Visual Studio is an Integrated Development Environment (IDE) created by Microsoft. 
+
+It is a powerful software development tool that provides a comprehensive set of features and tools for building a wide range of applications.
+
+This is the IDE I use to make P🏓NG and I recommend that you use.
+
+
+
+
+![005](https://github.com/user-attachments/assets/2c8d863d-df92-4989-b5af-1f70e503d4f9)
+
+Grab Visual Studio Community—it's free and perfect for indie devs.
+
+Install Visual Studio from here:  https://visualstudio.microsoft.com/downloads/ and include the .NET Desktop Development workload.
+
+
+## 🧬📦 **Clone the Repository** 
+
+Click the "Code" button.
+
+Copy the repository's URL.
+
+![010](https://github.com/user-attachments/assets/562269e4-ec11-4702-addb-795769eeac3c)
+
+Open Visual Studio.
+
+Click "Clone a repository".
+
+
+
+![006](https://github.com/user-attachments/assets/e7e542f5-a0f6-4258-bc58-491db0a0a78d)
+
+Paste the repository URL into the location field.
+
+Click the "Clone" button.
+
+![008](https://github.com/user-attachments/assets/fd1627da-83ab-48ed-9c3b-ffc6049add27)
+
+Once the cloning process is complete, you will have your own local copy of the game that you can run and modify on your computer.
+
+Dive into the code, experiment, and enhance the game while learning valuable programming skills!
+
+---
+
+[Getting Started](#getting-started) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
+
+---
+
 
 
 [Getting Started](#getting-started) | [Keyboard Controls](#%EF%B8%8F-keyboard-controls) | [XBox Controllers](#-xbox-controllers) |  [Code Walk Through](#-code-walk-through) |  [Top](#png)
