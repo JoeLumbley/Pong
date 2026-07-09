@@ -869,31 +869,15 @@ Public Class Form1
 
     Private Sub UpdateServe()
 
-
-        'PlaceBallCenterCourt()
-
-        UpdateGoalIndicators()
-
-
         Dim ServeTimeElapsed = Now.Subtract(ServeStartTime)
 
         If ServeTimeElapsed.TotalMilliseconds > 900 Then
-
-
-
 
             Player.PlaySound("serve")
 
             PlaceBallCenterCourt()
 
-            ' Place the paddles in the center of the screen.
-            LeftPaddle.Position.Y = (ClientSize.Height \ 2) - (LeftPaddle.Rect.Height \ 2)
-            LeftPaddle.Rect.Y = LeftPaddle.Position.Y
-
-            RightPaddle.Position.Y = (ClientSize.Height \ 2) - (RightPaddle.Rect.Height \ 2)
-            RightPaddle.Rect.Y = RightPaddle.Position.Y
-
-
+            CenterPaddlesVertical()
 
             If Serving = ServeStateEnum.RightPaddle Then
 
@@ -909,12 +893,20 @@ Public Class Form1
 
             GameState = GameStateEnum.Playing
 
-
         End If
 
+        UpdateGoalIndicators()
 
+    End Sub
 
+    Private Sub CenterPaddlesVertical()
+        ' Center the paddles vertically in the client area.
 
+        LeftPaddle.Position.Y = (ClientSize.Height \ 2) - (LeftPaddle.Rect.Height \ 2)
+        LeftPaddle.Rect.Y = LeftPaddle.Position.Y
+
+        RightPaddle.Position.Y = (ClientSize.Height \ 2) - (RightPaddle.Rect.Height \ 2)
+        RightPaddle.Rect.Y = RightPaddle.Position.Y
 
     End Sub
 
