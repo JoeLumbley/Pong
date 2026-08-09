@@ -402,69 +402,6 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub CheckScore()
-    '    If scoreLeft >= 10 Then
-    '        'winnerText = "Left Player Wins!"
-    '        'gameOver = True
-    '        'speed = 400
-
-    '        'CenterBallRandom()
-
-    '        'AudioPlayer.PauseSound("loop")
-    '        'AudioPlayer.LoopSound("start")
-
-    '        'currentState = GameState.StartScreen
-    '        'Return
-
-
-    '        winnerText = "Left Player Wins!"
-    '        currentState = GameState.EndScreen
-
-    '        AudioPlayer.PauseSound("loop")
-    '        AudioPlayer.LoopSound("start")
-
-    '        CenterBallRandom()
-    '        speed = 400
-    '        Return
-
-    '    End If
-
-    '    If scoreRight >= 10 Then
-    '        'winnerText = "Right Player Wins!"
-    '        'gameOver = True
-    '        'speed = 400
-
-    '        'CenterBallRandom()
-
-    '        'AudioPlayer.PauseSound("loop")
-    '        'AudioPlayer.LoopSound("start")
-
-    '        'currentState = GameState.StartScreen
-    '        'Return
-
-
-    '        winnerText = "Right Player Wins!"
-    '        currentState = GameState.EndScreen
-
-    '        AudioPlayer.PauseSound("loop")
-    '        AudioPlayer.LoopSound("start")
-
-    '        CenterBallRandom()
-    '        speed = 400
-    '        Return
-
-    '    End If
-
-    '    If ballPos.X <= 0 Then
-    '        scoreRight += 1
-    '        ResetBall(1)
-    '    ElseIf ballPos.X >= ClientSize.Width - ballDiameter Then
-    '        scoreLeft += 1
-    '        ResetBall(-1)
-    '    End If
-    'End Sub
-
-
     Private Sub CheckScore()
         If scoreLeft >= 10 Then
             winnerText = "Left Player Wins!"
@@ -483,14 +420,12 @@ Public Class Form1
         If ballPos.X <= 0 Then
             scoreRight += 1
             AudioPlayer.PlaySound("point")
-            ResetBall(1)
-            ' ResetBall(1) ' Reset ball to the right side
+            ResetBall(1) ' Reset ball to the right side
             ResetPaddles() ' Reset paddles to their initial positions
-
         ElseIf ballPos.X >= ClientSize.Width - ballDiameter Then
             scoreLeft += 1
             AudioPlayer.PlaySound("point")
-            ResetBall(-1)
+            ResetBall(-1) ' Reset ball to the left side
             ResetPaddles() ' Reset paddles to their initial positions
         End If
     End Sub
@@ -566,18 +501,6 @@ Public Class Form1
         DrawTrail(g)
         DrawBall(g)
 
-        'If currentState = GameState.Playing Then
-        '    DrawPaddles(g)
-        '    DrawHUD(g)
-        'Else
-        '    If gameOver Then
-        '        DrawGameOver(g)
-        '    Else
-        '        DrawStartScreen(g)
-        '    End If
-        'End If
-
-
         Select Case currentState
             Case GameState.StartScreen
                 DrawStartScreen(g)
@@ -648,11 +571,6 @@ Public Class Form1
 
         Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
 
-        'Using tb As New SolidBrush(titleColor)
-        '    g.DrawString(title, titleFont, tb,
-        '                 CSng((ClientSize.Width - titleSize.Width) / 2),
-        '                 CSng(ClientSize.Height * 0.15))
-        'End Using
 
         Using tb As New SolidBrush(titleColor)
             g.DrawString(title, titleFont, tb,
@@ -702,10 +620,8 @@ Public Class Form1
     End Sub
 
     Private Sub DrawGameOver(g As Graphics)
-        'Dim font As New Font("Segoe UI", 48, FontStyle.Bold)
         Dim font As New Font("Segoe UI", CSng(ClientSize.Height / 20), FontStyle.Bold)
 
-        'Dim infoFont As New Font("Segoe UI", 28)
         Dim infoFont As New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
 
         Dim size = g.MeasureString(winnerText, font)
@@ -722,8 +638,6 @@ Public Class Form1
                          CSng(ClientSize.Height * 0.55))
         End Using
     End Sub
-
-    'Protected Overrides Sub OnPaint()
 
 
     Protected Overrides Sub OnPaintBackground(pevent As PaintEventArgs)
@@ -823,12 +737,10 @@ Public Class Form1
 
         MovePointerOffScreen()
 
-
         speed = 800
 
         scoreLeft = 0
         scoreRight = 0
-        'gameOver = False
         winnerText = ""
         currentState = GameState.Playing
 
@@ -897,11 +809,6 @@ Public Class Form1
                                     Screen.PrimaryScreen.WorkingArea.Height \ 2)
 
     End Sub
-
-
-
-
-
 
 
 End Class
