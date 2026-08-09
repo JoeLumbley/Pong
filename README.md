@@ -14,7 +14,7 @@
 
 ### Learning Objectives
 - Understand the basics of game mechanics and physics, including how to simulate movement and collisions.
-- Gain hands-on experience with VB.NET and game development concepts, such as state management and event handling.
+- Gain hands-on experience with game development concepts, such as state management and event handling.
 - Learn how to implement user input handling, game states, sound effects, and graphical rendering.
 
 ---
