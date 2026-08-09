@@ -298,82 +298,6 @@ Public Class Form1
         paddleRight.Y = Math.Max(0, Math.Min(ClientSize.Height - paddleHeight, paddleRight.Y))
 
     End Sub
-
-    'Private Sub HandlePaddleCollisions()
-    '    Dim ballRect As New RectangleF(ballPos.X, ballPos.Y, ballDiameter, ballDiameter)
-
-    '    If ballRect.IntersectsWith(paddleLeft) AndAlso velX < 0 Then
-
-    '        Dim rnd As New Random()
-    '        Dim angle As Double = 180 * (Math.PI / 180) ' Convert degrees to radians
-    '        Dim direction As Integer = If(velX > 0, -1, 1)
-
-    '        If paddleLeftVelocity < -1 Then
-    '            ' Paddle moving UP → add upward spin
-
-    '            angle = 315 * (Math.PI / 180) ' Convert degrees to radians
-
-    '            velX = direction * speed
-    '            velY = Math.Sin(angle) * speed
-
-    '        ElseIf paddleLeftVelocity > 1 Then
-    '            ' Paddle moving DOWN → add downward spin
-
-    '            angle = 45 * (Math.PI / 180) ' Convert degrees to radians
-
-    '            velX = direction * speed
-    '            velY = Math.Sin(angle) * speed
-
-    '        Else
-    '            ' Paddle stationary → normal bounce
-
-    '            velX = Math.Abs(velX)
-
-    '        End If
-
-    '        PlayWithCooldown("bounce", 100)
-
-    '    End If
-
-
-    '    If ballRect.IntersectsWith(paddleRight) AndAlso velX > 0 Then
-    '        'velX = -Math.Abs(velX)
-
-    '        If playerMode = 2 Then
-    '            '' Two-player mode → normal bounce
-    '            'velX = -Math.Abs(velX)
-
-
-    '            ' Two-player mode → add spin based on paddle movement
-    '            If paddleRight.Y + paddleHeight / 2 < ballPos.Y + ballDiameter / 2 Then
-    '                ' Paddle moving UP → add upward spin
-    '                velY -= 50
-    '            ElseIf paddleRight.Y + paddleHeight / 2 > ballPos.Y + ballDiameter / 2 Then
-    '                ' Paddle moving DOWN → add downward spin
-    '                velY += 50
-    '            End If
-    '            velX = -Math.Abs(velX)
-
-    '        Else
-    '            ' Single-player mode → add spin based on paddle movement
-    '            If paddleRight.Y + paddleHeight / 2 < ballPos.Y + ballDiameter / 2 Then
-    '                ' Paddle moving UP → add upward spin
-    '                velY -= 50
-    '            ElseIf paddleRight.Y + paddleHeight / 2 > ballPos.Y + ballDiameter / 2 Then
-    '                ' Paddle moving DOWN → add downward spin
-    '                velY += 50
-    '            End If
-    '            velX = -Math.Abs(velX)
-    '        End If
-
-    '        PlayWithCooldown("bounce", 100)
-
-    '    End If
-
-
-    'End Sub
-
-
     Private Sub HandlePaddleCollisions()
 
         Dim ballRect As New RectangleF(ballPos.X, ballPos.Y, ballDiameter, ballDiameter)
@@ -397,13 +321,8 @@ Public Class Form1
                 angle = 0 * (Math.PI / 180)
             End If
 
-            'If angle = 0 Then
-            '    velX = Math.Abs(velX)
-            'Else
             velX = Math.Cos(angle) * speed
             velY = Math.Sin(angle) * speed
-
-            'End If
 
             PlayWithCooldown("bounce", 100)
 
@@ -438,14 +357,8 @@ Public Class Form1
                 'angle = 180 * (Math.PI / 180)
             End If
 
-            'If angle = 0 Then
-            '    velX = Math.Abs(velX)
-            'Else
             velX = Math.Cos(angle) * speed
             velY = Math.Sin(angle) * speed
-
-            'End If
-
 
             PlayWithCooldown("bounce", 100)
 
