@@ -49,806 +49,988 @@
 ' OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ' SOFTWARE.
 
+' Pong Refactor - Full Version with Start Screen, Fade, Blink, AI, Game Over, Player Selection
+'
+' MIT License
+' Copyright (c) 2026 Joseph W. Lumbley
 
-Imports System.Numerics
-Imports System.ComponentModel
-Imports System.Runtime.InteropServices
-Imports System.Text
+Imports System.Drawing.Drawing2D
 Imports System.IO
 
 Public Class Form1
 
     Inherits Form
 
-    Private Controllers As XboxControllers
 
-    Private Player As AudioPlayer
-
-    Private Enum GameStateEnum
+    ' -------------------------------
+    '  Game State
+    ' -------------------------------
+    Private Enum GameState
         StartScreen
-        Instructions
-        Serve
         Playing
         EndScreen
-        Pause
+
     End Enum
 
-    Private Enum ServeStateEnum
-        LeftPaddle
-        RightPaddle
-    End Enum
+    Private currentState As GameState = GameState.StartScreen
+    'Private gameOver As Boolean = False
+    Private winnerText As String = ""
 
-    Private Enum WinStateEnum
-        LeftPaddle
-        RightPaddle
-    End Enum
+    ' -------------------------------
+    '  Player Mode
+    ' -------------------------------
+    Private playerMode As Integer = 1       ' 1 = Single Player (AI), 2 = Two Players
+    Private selectedOption As Integer = 0   ' 0 = "1 Player", 1 = "2 Players"
 
-    Private GameState As GameStateEnum = GameStateEnum.StartScreen
-    Private Serving As ServeStateEnum = ServeStateEnum.LeftPaddle
-    Private ServSpeed As Single = 475
-    Private Winner As WinStateEnum = WinStateEnum.LeftPaddle
-    Private NumberOfPlayers As Integer = 1
+    ' -------------------------------
+    '  Engine State
+    ' -------------------------------
+    Private ballPos As PointF
+    Private ballDiameter As Integer = 60
 
-    Private Structure GameObject
-        Public Position As Vector2 'A vector 2 is composed of two floating-point values called X and Y.
-        Public Acceleration As Vector2
-        Public Velocity As Vector2
-        Public MaxVelocity As Vector2
-        Public Rect As Rectangle
-    End Structure
+    Private velX As Double
+    Private velY As Double
+    Private speed As Double = 200
 
-    Private Ball As GameObject
+    Private physicsTimer As New Timer()
+    Private sw As New Stopwatch()
 
-    Private LeftPaddle As GameObject
+    ' -------------------------------
+    '  FPS Tracking
+    ' -------------------------------
+    Private frameCount As Integer = 0
+    Private fps As Integer = 0
+    Private fpsTimer As New Stopwatch()
 
-    Private RightPaddle As GameObject
+    ' -------------------------------
+    '  GDI Resources
+    ' -------------------------------
+    Private ballBrush As SolidBrush
+    Private fpsBrush As SolidBrush
+    Private fpsFont As Font
+    Private trailBrushes As SolidBrush()
+    Private paddleBrush As SolidBrush
 
-    Private Const TitleText As String = "P🏓NG"
-    Private TitleLocation As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - ((ClientSize.Height \ 8) * 4))
-    Private TitleFont As New Font("Segoe UI Emoji", 150)
+    ' -------------------------------
+    '  Trail System
+    ' -------------------------------
+    Private trail As New List(Of PointF)
+    Private trailLength As Integer = 25
+    Private trailSizes As Integer()
+    Private trailOffsets As Single()
+    Private trailAlpha As Integer()
 
-    Private InstructStartLocation As Point
-    Private ReadOnly InstructStartText As String = Environment.NewLine &
-        "One player  A   Two players  B"
+    Private lastPlay As New Dictionary(Of String, Double)
 
-    'One Player Instructions Data *************************
-    Private InstructOneLocation As Point
-    Private Shared ReadOnly InstructOneText As String = Environment.NewLine &
-        "Play  A" & Environment.NewLine & Environment.NewLine &
-        "You are the 🏓 left paddle" & Environment.NewLine &
-        "Beat the computer to 10 points to win 🏆" & Environment.NewLine & Environment.NewLine &
-        "Pause / Resume  Start "
-    '******************************************************
+    ' -------------------------------
+    '  Pong State
+    ' -------------------------------
+    Private paddleLeft As RectangleF
+    Private paddleRight As RectangleF
 
-    'Two Player Instructions Data *************************
-    Private InstructTwoLocation As Point
-    Private Shared ReadOnly InstructTwoText As String = Environment.NewLine &
-        "Play  A  " & Environment.NewLine & Environment.NewLine &
-        "🏓 Left Paddle vs Right Paddle 🏓" & Environment.NewLine &
-        "First player to 10 points wins 🏆" & Environment.NewLine & Environment.NewLine &
-        "Pause / Resume  Start  "
-    '******************************************************
-    Private InstructionsFont As New Font("Segoe UI Emoji", 25)
+    Private paddleWidth As Integer = 32
+    Private paddleHeight As Integer = 128
+    Private paddleSpeed As Integer = 700
 
-    Private ComputerPlayerIdentifierFont As New Font("Segoe UI Emoji", 25)
+    Private moveUpLeft As Boolean
+    Private moveDownLeft As Boolean
+    Private moveUpRight As Boolean
+    Private moveDownRight As Boolean
+
+    Private scoreLeft As Integer = 0
+    Private scoreRight As Integer = 0
+
+    ' -------------------------------
+    '  Start Screen FX
+    ' -------------------------------
+    Private titleAlpha As Integer = 0
+    Private titleFadeIn As Boolean = True
+    Private blinkVisible As Boolean = True
+    Private blinkTimer As New Stopwatch()
 
 
-    Private IsBackButtonDown(0 To 3) As Boolean
+    Private rng As New Random()
 
-    Private IsStartButtonDown(0 To 3) As Boolean
+    Private lastPaddleLeftY As Single
+    Dim paddleLeftVelocity As Single
+    Dim paddleRightVelocity As Single
+    Dim lastPaddleRightY As Single
 
-    Private IsAButtonDown(0 To 3) As Boolean
 
-    Private IsAKeyDown As Boolean = False
 
-    Private IsXButtonDown(0 To 3) As Boolean
 
-    'Centerline Data *******************
-    Private CenterlineTop As Point
-    Private CenterlineBottom As Point
+    Public Sub New()
 
-    Private CenterlinePen As New Pen(Color.White, 16) With {
-                    .DashStyle = Drawing2D.DashStyle.Custom,
-                    .DashPattern = New Single() {1, 2}
-                    }
+        'Me.init
 
-    Private Const LeftPaddleSpeed As Integer = 8
-    Private LeftPaddleScore As Integer
-    Private LPadScoreLocation As Point
-    Private ReadOnly LeftPaddleMidlinePen As New Pen(Color.Goldenrod, 7)
-    Private LeftPaddleMiddle As Integer = LeftPaddle.Rect.Y + LeftPaddle.Rect.Height \ 2
+        Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or
+                    ControlStyles.UserPaint Or
+                    ControlStyles.OptimizedDoubleBuffer, True)
 
-    Private Const RightPaddleSpeed As Integer = 8
-    Private RightPaddleScore As Integer
-    Private RPadScoreLocation As Point
+        Me.DoubleBuffered = True
+        Me.BackColor = Color.Black
+        Me.StartPosition = FormStartPosition.CenterScreen
+        Me.WindowState = FormWindowState.Maximized
 
-    Private RPadTrophyLocation As Point
-    Private LPadTrophyLocation As Point
+        ' Center ball
+        ballPos = New PointF((ClientSize.Width - ballDiameter) / 2,
+                             (ClientSize.Height - ballDiameter) / 2)
 
-    Private ScoreFont As New Font(FontFamily.GenericSansSerif, 75)
+        ' Random direction
+        Dim rnd As New Random()
+        Dim angle As Double = rnd.NextDouble() * Math.PI * 2
+        velX = Math.Cos(angle) * speed
+        velY = Math.Sin(angle) * speed
 
-    Private ClientCenter As New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
+        physicsTimer.Interval = 15
+        AddHandler physicsTimer.Tick, AddressOf PhysicsTick
 
-    Private ApplyLeftPaddleEnglish As Boolean = False
-
-    Private ApplyRightPaddleEnglish As Boolean = False
-
-    'Counter Data *************************************
-    Private FlashCount As Integer = 0
-    Private EndScreenCounter As Integer = 0
-    '******************************************************
-
-    Private BallMiddle As Single = Ball.Rect.Y + Ball.Rect.Height / 2
-
-    Private RightPaddleMiddle As Single = RightPaddle.Rect.Y + RightPaddle.Rect.Height / 2
-
-    'Keyboard Event Data **********************************
-    Private SpaceBarDown As Boolean = False
-    Private WKeyDown As Boolean = False
-    Private SKeyDown As Boolean = False
-    Private UpArrowKeyDown As Boolean = False
-    Private DownArrowKeyDown As Boolean = False
-    Private OneKeyDown As Boolean = False
-    Private TwoKeyDown As Boolean = False
-    Private PKeyDown As Boolean = False
-    Private IsPKeyDown As Boolean = False
-
-    Private BackspaceKeyDown As Boolean = False
-    Private IsBackspaceKeyDown As Boolean = False
-
-    Private AKeyDown As Boolean = False
-    Private BKeyDown As Boolean = False
-    Private XKeyDown As Boolean = False
-    Private IsXKeyDown As Boolean = False
-
-    Private EscKeyDown As Boolean = False
-    Private IsEscKeyDown As Boolean = False
-
-    Private PauseKeyDown As Boolean = False
-    Private IsPauseKeyDown As Boolean = False
-
-    Private LastKeyDown As Date = Now
-
-    Private FrameCount As Integer = 0
-
-    Private StartTime As DateTime = Now 'Get current time.
-
-    Private TimeElapsed As TimeSpan
-
-    Private SecondsElapsed As Double = 0
-
-    Private FPS As Integer = 0
-
-    Private FPSFont As New Font(FontFamily.GenericSansSerif, 25)
-
-    Private FPS_Postion As New Point(0, 0)
-
-    Private CurrentFrame As DateTime = Now 'Get current time.
-
-    Private LastFrame As DateTime = CurrentFrame 'Initialize last frame time to current time.
-
-    Private DeltaTime As TimeSpan = CurrentFrame - LastFrame 'Initialize delta time to 0
-
-    Private ReadOnly AlineCenter As New StringFormat With {.Alignment = StringAlignment.Center}
-
-    Private ReadOnly AlineLeft As New StringFormat With {.Alignment = StringAlignment.Near}
-
-    Private ReadOnly AlineCenterMiddle As New StringFormat With {.Alignment = StringAlignment.Center,
-                                                                 .LineAlignment = StringAlignment.Center}
-
-    Private ControllerConnectionStatusFont As New Font(FontFamily.GenericSansSerif, 15)
-
-    Private Controller0ConnectionStatusLocation As New Point(5, 5)
-    Private Controller0ConnectionStatusText As String = "Controller 0 - Not Connected"
-    Private Controller0ConnectionStatusBrush As Brush = Brushes.DarkGray
-
-    Private Controller1ConnectionStatusLocation As New Point(5, 30)
-    Private Controller1ConnectionStatusText As String = "Controller 1 - Not Connected"
-    Private Controller1ConnectionStatusBrush As Brush = Brushes.DarkGray
-
-    Private DrawFlashingText As Boolean = True
-
-    Private gameTimer As Timer
-
-    Private Structure GoalIndicator
-        Public Timer As Integer
-        Public Fade As Integer
-        Public Rect As Rectangle
-        Public Expand As Integer
-
-        Public Sub New(initialTimer As Integer,
-                       initialFade As Integer, initialRect As Rectangle,
-                       initialExpand As Integer)
-            Timer = initialTimer
-            Fade = initialFade
-            Rect = initialRect
-            Expand = initialExpand
-        End Sub
-
-        Public ReadOnly Property ComputedBrush As SolidBrush
-            Get
-                Return New SolidBrush(Color.FromArgb(Fade, Color.White))
-            End Get
-        End Property
-
-    End Structure
-
-    Private RightGoalIndicator As New GoalIndicator(0,
-                                                    0,
-                                                    New Rectangle(0, 0, 0, 0),
-                                                    0)
-
-    Private LeftGoalIndicator As New GoalIndicator(0,
-                                                   0,
-                                                   New Rectangle(0, 0, 0, 0),
-                                                   0)
-
-    Private ServeStartTime As DateTime
-
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
-
-        BackColor = Color.Black
-
-        InitializeApp()
+        sw.Start()
+        fpsTimer.Start()
 
     End Sub
 
-    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+    Protected Overrides Sub OnLoad(e As EventArgs)
+        MyBase.OnLoad(e)
 
-        HandleResize()
+        InitAudio()
+        InitGraphics()
+        InitTrails()
+        InitPaddles()
+        InitPhysics()
+
+        blinkTimer.Start()
+    End Sub
+
+    Private Sub InitPhysics()
+        physicsTimer.Start()
+    End Sub
+
+    Private Sub InitGraphics()
+        ballBrush = New SolidBrush(Color.DeepSkyBlue)
+        fpsBrush = New SolidBrush(Color.White)
+        fpsFont = New Font("Segoe UI", 14, FontStyle.Bold)
+        paddleBrush = New SolidBrush(Color.White)
+    End Sub
+
+    Private Sub InitTrails()
+        trailSizes = New Integer(trailLength - 1) {}
+        trailOffsets = New Single(trailLength - 1) {}
+
+        For i As Integer = 0 To trailLength - 1
+            Dim size As Integer = ballDiameter - (trailLength - i) * 2
+            If size < 10 Then size = 10
+
+            trailSizes(i) = size
+            trailOffsets(i) = CSng((ballDiameter - size) / 2)
+        Next
+
+        trailAlpha = New Integer(trailLength - 1) {}
+        For i As Integer = 0 To trailLength - 1
+            Dim t As Double = i / trailLength
+            trailAlpha(i) = CInt(32 * t * t)
+        Next
+
+        trailBrushes = New SolidBrush(trailLength - 1) {}
+        For i As Integer = 0 To trailLength - 1
+            trailBrushes(i) = New SolidBrush(Color.FromArgb(trailAlpha(i), 0, 191, 255))
+        Next
+    End Sub
+
+    Private Sub InitPaddles()
+        paddleLeft = New RectangleF(50,
+                                    (ClientSize.Height - paddleHeight) / 2,
+                                    paddleWidth,
+                                    paddleHeight)
+
+        paddleRight = New RectangleF(ClientSize.Width - 50 - paddleWidth,
+                                     (ClientSize.Height - paddleHeight) / 2,
+                                     paddleWidth,
+                                     paddleHeight)
+    End Sub
+
+    Private Sub InitAudio()
+        CreateSoundFiles()
+
+        AudioPlayer.AddSound("loop", Path.Combine(Application.StartupPath, "loop.mp3"))
+        AudioPlayer.SetVolume("loop", 100)
+
+        AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
+        AudioPlayer.SetVolume("point", 125)
+
+        AudioPlayer.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
+        AudioPlayer.SetVolumeOverlapping("bounce", 70)
+
+        AudioPlayer.AddSound("start", Path.Combine(Application.StartupPath, "start.mp3"))
+        AudioPlayer.SetVolume("start", 70)
+        AudioPlayer.LoopSound("start")
+    End Sub
+
+    ' -------------------------------
+    '  Physics Loop
+    ' -------------------------------
+    Private Sub PhysicsTick(sender As Object, e As EventArgs)
+        If Me.WindowState = FormWindowState.Minimized Then Return
+
+
+
+        Dim dt As Double = sw.Elapsed.TotalSeconds
+        sw.Restart()
+        dt = Math.Min(dt, 0.05)
+
+        ' Ball always moves
+        ballPos.X += CSng(velX * dt)
+        ballPos.Y += CSng(velY * dt)
+
+        HandleWallCollisions()
+        UpdateTrail()
+
+        If currentState = GameState.StartScreen Then
+            UpdateStartScreenFX()
+        ElseIf currentState = GameState.Playing Then
+            UpdatePaddles(dt)
+
+            If playerMode = 1 Then
+                UpdateAI(dt)
+            End If
+
+            HandlePaddleCollisions()
+            CheckScore()
+        End If
+
+        paddleLeftVelocity = paddleLeft.Y - lastPaddleLeftY
+        lastPaddleLeftY = paddleLeft.Y
+
+        paddleRightVelocity = paddleRight.Y - lastPaddleRightY
+        lastPaddleRightY = paddleRight.Y
+
+        Invalidate()
+    End Sub
+
+    Private Sub UpdateStartScreenFX()
+        If titleFadeIn Then
+            titleAlpha += 3
+            If titleAlpha >= 255 Then
+                titleAlpha = 255
+                titleFadeIn = False
+            End If
+        Else
+            titleAlpha -= 3
+            If titleAlpha <= 80 Then
+                titleAlpha = 80
+                titleFadeIn = True
+            End If
+        End If
+
+        If blinkTimer.ElapsedMilliseconds >= 800 Then
+            blinkVisible = Not blinkVisible
+            blinkTimer.Restart()
+        End If
+    End Sub
+
+    Private Sub UpdatePaddles(dt As Double)
+        If moveUpLeft Then paddleLeft.Y -= CSng(paddleSpeed * dt)
+        If moveDownLeft Then paddleLeft.Y += CSng(paddleSpeed * dt)
+
+        If playerMode = 2 Then
+            If moveUpRight Then paddleRight.Y -= CSng(paddleSpeed * dt)
+            If moveDownRight Then paddleRight.Y += CSng(paddleSpeed * dt)
+        End If
+
+        paddleLeft.Y = Math.Max(0, Math.Min(ClientSize.Height - paddleHeight, paddleLeft.Y))
+        paddleRight.Y = Math.Max(0, Math.Min(ClientSize.Height - paddleHeight, paddleRight.Y))
+    End Sub
+
+    Private Sub UpdateAI(dt As Double)
+        Dim targetY As Single = ballPos.Y + ballDiameter / 2
+
+        If targetY < paddleRight.Y + paddleHeight / 2 Then
+            ' Move paddle up towards the ball with a slight delay to make it
+            ' beatable if you increse the delay factor (0.9) you can adjust the
+            ' factor to make the AI easier or harder. A lower factor makes it
+            ' easier, a higher factor makes it harder.
+            ' example: 0.5 = easier, 1.0 = harder
+            paddleRight.Y -= CSng(paddleSpeed * dt * 0.655)
+        End If
+
+        If targetY > paddleRight.Y + paddleHeight / 2 Then
+            paddleRight.Y += CSng(paddleSpeed * dt * 0.655)
+
+        End If
+
+        ' Clamp the paddle position to stay within the window bounds
+        paddleRight.Y = Math.Max(0, Math.Min(ClientSize.Height - paddleHeight, paddleRight.Y))
 
     End Sub
 
-    Private Sub OnGameTick(sender As Object, e As EventArgs)
+    'Private Sub HandlePaddleCollisions()
+    '    Dim ballRect As New RectangleF(ballPos.X, ballPos.Y, ballDiameter, ballDiameter)
 
-        UpdateGame()
+    '    If ballRect.IntersectsWith(paddleLeft) AndAlso velX < 0 Then
 
-        Invalidate() 'Calls OnPaint Sub
+    '        Dim rnd As New Random()
+    '        Dim angle As Double = 180 * (Math.PI / 180) ' Convert degrees to radians
+    '        Dim direction As Integer = If(velX > 0, -1, 1)
+
+    '        If paddleLeftVelocity < -1 Then
+    '            ' Paddle moving UP → add upward spin
+
+    '            angle = 315 * (Math.PI / 180) ' Convert degrees to radians
+
+    '            velX = direction * speed
+    '            velY = Math.Sin(angle) * speed
+
+    '        ElseIf paddleLeftVelocity > 1 Then
+    '            ' Paddle moving DOWN → add downward spin
+
+    '            angle = 45 * (Math.PI / 180) ' Convert degrees to radians
+
+    '            velX = direction * speed
+    '            velY = Math.Sin(angle) * speed
+
+    '        Else
+    '            ' Paddle stationary → normal bounce
+
+    '            velX = Math.Abs(velX)
+
+    '        End If
+
+    '        PlayWithCooldown("bounce", 100)
+
+    '    End If
+
+
+    '    If ballRect.IntersectsWith(paddleRight) AndAlso velX > 0 Then
+    '        'velX = -Math.Abs(velX)
+
+    '        If playerMode = 2 Then
+    '            '' Two-player mode → normal bounce
+    '            'velX = -Math.Abs(velX)
+
+
+    '            ' Two-player mode → add spin based on paddle movement
+    '            If paddleRight.Y + paddleHeight / 2 < ballPos.Y + ballDiameter / 2 Then
+    '                ' Paddle moving UP → add upward spin
+    '                velY -= 50
+    '            ElseIf paddleRight.Y + paddleHeight / 2 > ballPos.Y + ballDiameter / 2 Then
+    '                ' Paddle moving DOWN → add downward spin
+    '                velY += 50
+    '            End If
+    '            velX = -Math.Abs(velX)
+
+    '        Else
+    '            ' Single-player mode → add spin based on paddle movement
+    '            If paddleRight.Y + paddleHeight / 2 < ballPos.Y + ballDiameter / 2 Then
+    '                ' Paddle moving UP → add upward spin
+    '                velY -= 50
+    '            ElseIf paddleRight.Y + paddleHeight / 2 > ballPos.Y + ballDiameter / 2 Then
+    '                ' Paddle moving DOWN → add downward spin
+    '                velY += 50
+    '            End If
+    '            velX = -Math.Abs(velX)
+    '        End If
+
+    '        PlayWithCooldown("bounce", 100)
+
+    '    End If
+
+
+    'End Sub
+
+
+    Private Sub HandlePaddleCollisions()
+
+        Dim ballRect As New RectangleF(ballPos.X, ballPos.Y, ballDiameter, ballDiameter)
+        Dim angle As Double
+
+        ' -------------------------
+        ' LEFT PADDLE COLLISION
+        ' -------------------------
+        If ballRect.IntersectsWith(paddleLeft) AndAlso velX < 0 Then
+
+            If paddleLeftVelocity < -1 Then
+                ' Paddle moving UP → upward spin
+                angle = 315 * (Math.PI / 180) '315
+
+            ElseIf paddleLeftVelocity > 1 Then
+                ' Paddle moving DOWN → downward spin
+                angle = 45 * (Math.PI / 180) '45
+
+            Else
+                ' Paddle stationary → straight bounce
+                angle = 0 * (Math.PI / 180)
+            End If
+
+            'If angle = 0 Then
+            '    velX = Math.Abs(velX)
+            'Else
+            velX = Math.Cos(angle) * speed
+            velY = Math.Sin(angle) * speed
+
+            'End If
+
+            PlayWithCooldown("bounce", 100)
+
+        End If
+
+
+        ' -------------------------
+        ' RIGHT PADDLE COLLISION
+        ' -------------------------
+        If ballRect.IntersectsWith(paddleRight) AndAlso velX > 0 Then
+
+
+            If paddleRightVelocity < -1 Then
+                ' Paddle moving UP → upward spin
+                angle = 225 * (Math.PI / 180) ' 225
+
+            ElseIf paddleRightVelocity > 1 Then
+                ' Paddle moving DOWN → downward spin
+                angle = 135 * (Math.PI / 180)
+
+            Else
+
+                If playerMode = 1 Then
+                    ' Single-player mode → bounce slightly down 
+                    angle = 175 * (Math.PI / 180)
+                Else
+                    ' Two-player mode → straight bounce
+                    angle = 180 * (Math.PI / 180)
+                End If
+
+                '' Paddle stationary → straight bounce
+                'angle = 180 * (Math.PI / 180)
+            End If
+
+            'If angle = 0 Then
+            '    velX = Math.Abs(velX)
+            'Else
+            velX = Math.Cos(angle) * speed
+            velY = Math.Sin(angle) * speed
+
+            'End If
+
+
+            PlayWithCooldown("bounce", 100)
+
+        End If
 
     End Sub
 
-    Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
 
+
+
+    Private Sub HandleWallCollisions()
+
+        ' Vertical bounce (always)
+        If ballPos.Y <= 0 Then
+            ballPos.Y = 0
+            velY = Math.Abs(velY)
+            PlayWithCooldown("bounce", 100)
+
+        ElseIf ballPos.Y >= ClientSize.Height - ballDiameter Then
+            ballPos.Y = ClientSize.Height - ballDiameter
+            velY = -Math.Abs(velY)
+            PlayWithCooldown("bounce", 100)
+        End If
+
+        ' Horizontal bounce only on Start Screen
+        If currentState = GameState.StartScreen OrElse currentState = GameState.EndScreen Then
+
+            If ballPos.X <= 0 Then
+                ballPos.X = 0
+                velX = Math.Abs(velX)
+                PlayWithCooldown("bounce", 100)
+
+            ElseIf ballPos.X >= ClientSize.Width - ballDiameter Then
+                ballPos.X = ClientSize.Width - ballDiameter
+                velX = -Math.Abs(velX)
+                PlayWithCooldown("bounce", 100)
+
+            End If
+
+        End If
+
+    End Sub
+
+    'Private Sub CheckScore()
+    '    If scoreLeft >= 10 Then
+    '        'winnerText = "Left Player Wins!"
+    '        'gameOver = True
+    '        'speed = 400
+
+    '        'CenterBallRandom()
+
+    '        'AudioPlayer.PauseSound("loop")
+    '        'AudioPlayer.LoopSound("start")
+
+    '        'currentState = GameState.StartScreen
+    '        'Return
+
+
+    '        winnerText = "Left Player Wins!"
+    '        currentState = GameState.EndScreen
+
+    '        AudioPlayer.PauseSound("loop")
+    '        AudioPlayer.LoopSound("start")
+
+    '        CenterBallRandom()
+    '        speed = 400
+    '        Return
+
+    '    End If
+
+    '    If scoreRight >= 10 Then
+    '        'winnerText = "Right Player Wins!"
+    '        'gameOver = True
+    '        'speed = 400
+
+    '        'CenterBallRandom()
+
+    '        'AudioPlayer.PauseSound("loop")
+    '        'AudioPlayer.LoopSound("start")
+
+    '        'currentState = GameState.StartScreen
+    '        'Return
+
+
+    '        winnerText = "Right Player Wins!"
+    '        currentState = GameState.EndScreen
+
+    '        AudioPlayer.PauseSound("loop")
+    '        AudioPlayer.LoopSound("start")
+
+    '        CenterBallRandom()
+    '        speed = 400
+    '        Return
+
+    '    End If
+
+    '    If ballPos.X <= 0 Then
+    '        scoreRight += 1
+    '        ResetBall(1)
+    '    ElseIf ballPos.X >= ClientSize.Width - ballDiameter Then
+    '        scoreLeft += 1
+    '        ResetBall(-1)
+    '    End If
+    'End Sub
+
+
+    Private Sub CheckScore()
+        If scoreLeft >= 10 Then
+            winnerText = "Left Player Wins!"
+            currentState = GameState.EndScreen
+            EndMatch()
+            Return
+        End If
+
+        If scoreRight >= 10 Then
+            winnerText = "Right Player Wins!"
+            currentState = GameState.EndScreen
+            EndMatch()
+            Return
+        End If
+
+        If ballPos.X <= 0 Then
+            scoreRight += 1
+            AudioPlayer.PlaySound("point")
+            ResetBall(1)
+            ' ResetBall(1) ' Reset ball to the right side
+            ResetPaddles() ' Reset paddles to their initial positions
+
+        ElseIf ballPos.X >= ClientSize.Width - ballDiameter Then
+            scoreLeft += 1
+            AudioPlayer.PlaySound("point")
+            ResetBall(-1)
+            ResetPaddles() ' Reset paddles to their initial positions
+        End If
+    End Sub
+
+    Private Sub ResetPaddles()
+        paddleLeft.Y = (ClientSize.Height - paddleHeight) / 2
+        paddleRight.Y = (ClientSize.Height - paddleHeight) / 2
+    End Sub
+
+    Private Sub EndMatch()
+        speed = 200
+        CenterBallRandom()
+
+        AudioPlayer.PauseSound("loop")
+        AudioPlayer.LoopSound("start")
+    End Sub
+
+
+    Private Sub CenterBallRandom()
+        ballPos = New PointF((ClientSize.Width - ballDiameter) / 2,
+                             (ClientSize.Height - ballDiameter) / 2)
+
+        Dim rnd As New Random()
+        Dim angle As Double = rnd.NextDouble() * Math.PI * 2
+        velX = Math.Cos(angle) * speed
+        velY = Math.Sin(angle) * speed
+    End Sub
+
+    Private Sub ResetBall(direction As Integer)
+        ballPos = New PointF((ClientSize.Width - ballDiameter) / 2,
+                             (ClientSize.Height - ballDiameter) / 2)
+
+        Dim rnd As New Random()
+        Dim angle As Double = rnd.NextDouble() * Math.PI / 3 - Math.PI / 6
+
+        velX = direction * speed
+        velY = Math.Sin(angle) * speed
+
+        trail.Clear()
+    End Sub
+
+    Public Sub PlayWithCooldown(name As String, ms As Integer)
+        Dim now = Environment.TickCount
+        If lastPlay.ContainsKey(name) AndAlso now - lastPlay(name) < ms Then Return
+        lastPlay(name) = now
+        AudioPlayer.PlayOverlapping(name)
+    End Sub
+
+    ' -------------------------------
+    '  Trail Update
+    ' -------------------------------
+    Private Sub UpdateTrail()
+        trail.Add(New PointF(ballPos.X, ballPos.Y))
+
+        If trail.Count > trailLength Then
+            trail.RemoveAt(0)
+        End If
+    End Sub
+
+    ' -------------------------------
+    '  Rendering
+    ' -------------------------------
+    Protected Overrides Sub OnPaint(e As PaintEventArgs)
         MyBase.OnPaint(e)
 
-        DrawGame(e.Graphics)
+        Dim g = e.Graphics
+        g.CompositingMode = CompositingMode.SourceOver
+        g.SmoothingMode = SmoothingMode.AntiAlias
+        g.PixelOffsetMode = PixelOffsetMode.HighQuality
+        g.InterpolationMode = InterpolationMode.HighQualityBicubic
+        g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit
 
-        UpdateFrameCounter()
+        DrawTrail(g)
+        DrawBall(g)
 
-    End Sub
+        'If currentState = GameState.Playing Then
+        '    DrawPaddles(g)
+        '    DrawHUD(g)
+        'Else
+        '    If gameOver Then
+        '        DrawGameOver(g)
+        '    Else
+        '        DrawStartScreen(g)
+        '    End If
+        'End If
 
-    Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
 
-        Dim ElapsedTime As TimeSpan = Now - LastKeyDown
-
-        ' Every 50 milliseconds check for keydown.
-        If ElapsedTime.TotalMilliseconds >= 50 Then
-
-            DoKeyDown(e)
-
-            LastKeyDown = DateTime.Now
-
-        End If
-
-        e.Handled = True
-
-    End Sub
-
-    Private Sub Form1_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
-
-        DoKeyUp(e)
-
-        e.Handled = True
-
-    End Sub
-
-    Private Sub Form1_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
-
-        HandleResize()
-
-    End Sub
-
-    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
-
-        CleanUpResources()
-
-    End Sub
-
-    Private Sub UpdateGame()
-
-        Select Case GameState
-
-            Case GameStateEnum.Playing
-
-                UpdatePlaying()
-
-            Case GameStateEnum.StartScreen
-
-                UpdateStartScreen()
-
-            Case GameStateEnum.Instructions
-
-                UpdateInstructions()
-
-            Case GameStateEnum.Serve
-
-                UpdateServe()
-
-            Case GameStateEnum.Pause
-
-                UpdatePause()
-
-            Case GameStateEnum.EndScreen
-
-                UpdateEndScreen()
-
-        End Select
-
-    End Sub
-
-    Private Sub DrawGame(g As Graphics)
-
-        g.CompositingMode = Drawing2D.CompositingMode.SourceOver
-        g.CompositingQuality = Drawing2D.CompositingQuality.HighQuality
-        g.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
-        g.SmoothingMode = Drawing2D.SmoothingMode.None
-
-        Select Case GameState
-
-            Case GameStateEnum.Playing
-
-                DrawPlaying(g)
-
-            Case GameStateEnum.StartScreen
-
+        Select Case currentState
+            Case GameState.StartScreen
                 DrawStartScreen(g)
 
-            Case GameStateEnum.Instructions
+            Case GameState.Playing
+                DrawTrail(g)
+                DrawBall(g)
+                DrawPaddles(g)
+                DrawHUD(g)
 
-                DrawInstructions(g)
-
-            Case GameStateEnum.Serve
-
-                DrawServe(g)
-
-            Case GameStateEnum.Pause
-
-                DrawPauseScreen(g)
-
-            Case GameStateEnum.EndScreen
-
-                DrawEndScreen(g)
-
+            Case GameState.EndScreen
+                DrawGameOver(g)
         End Select
 
     End Sub
 
-    Private Sub HandleResize()
-        ' Handle resizing of the window.
+    Private Sub DrawTrail(g As Graphics)
+        Dim count As Integer = Math.Min(trail.Count, trailLength)
 
-        ' Pause the game if the window is minimized.
-        If WindowState = FormWindowState.Minimized Then
+        For i As Integer = 0 To count - 1
+            Dim p As PointF = trail(i)
+            Dim size As Integer = trailSizes(i)
+            Dim offset As Single = trailOffsets(i)
 
-            If GameState = GameStateEnum.Playing Then
+            g.FillEllipse(trailBrushes(i),
+                          p.X + offset,
+                          p.Y + offset,
+                          size,
+                          size)
+        Next
+    End Sub
 
-                GameState = GameStateEnum.Pause
+    Private Sub DrawBall(g As Graphics)
+        g.FillEllipse(ballBrush,
+                      ballPos.X,
+                      ballPos.Y,
+                      ballDiameter,
+                      ballDiameter)
+    End Sub
 
+    Private Sub DrawPaddles(g As Graphics)
+        g.FillRectangle(paddleBrush, paddleLeft)
+        g.FillRectangle(paddleBrush, paddleRight)
+    End Sub
+
+    Private Sub DrawHUD(g As Graphics)
+        UpdateFPS()
+
+        g.DrawString($"FPS: {fps}", fpsFont, fpsBrush, 10, 10)
+
+        Dim scoreFont As New Font("Segoe UI", CSng(ClientSize.Height / 12), FontStyle.Bold)
+
+        Dim scoreText As String = $"{scoreLeft}   {scoreRight}"
+        Dim size = g.MeasureString(scoreText, scoreFont)
+        g.DrawString(scoreText, scoreFont, fpsBrush,
+                     CSng((ClientSize.Width - size.Width) / 2),
+                     CSng(10))
+    End Sub
+
+
+    Private Sub DrawStartScreen(g As Graphics)
+        Dim titleFont As New Font("Segoe UI", CSng(ClientSize.Height / 10), FontStyle.Bold)
+        Dim menuFont As New Font("Segoe UI", CSng(ClientSize.Height / 30), FontStyle.Regular)
+        Dim infoFont As New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
+
+        Dim title As String = "PONG"
+        Dim titleSize = g.MeasureString(title, titleFont)
+
+        Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
+
+        'Using tb As New SolidBrush(titleColor)
+        '    g.DrawString(title, titleFont, tb,
+        '                 CSng((ClientSize.Width - titleSize.Width) / 2),
+        '                 CSng(ClientSize.Height * 0.15))
+        'End Using
+
+        Using tb As New SolidBrush(titleColor)
+            g.DrawString(title, titleFont, tb,
+                         CSng((ClientSize.Width - titleSize.Width) / 2),
+                         CSng(ClientSize.Height * 0.15))
+        End Using
+
+
+        ' Menu options
+        Dim option1 As String = "1 Player"
+        Dim option2 As String = "2 Players"
+
+        Dim opt1Size = g.MeasureString(option1, menuFont)
+        Dim opt2Size = g.MeasureString(option2, menuFont)
+
+        Dim opt1Color As Color = If(selectedOption = 0,
+                                    Color.FromArgb(255, 255, 255),
+                                    Color.FromArgb(120, 120, 120))
+
+        Dim opt2Color As Color = If(selectedOption = 1,
+                                    Color.FromArgb(255, 255, 255),
+                                    Color.FromArgb(120, 120, 120))
+
+        Using b1 As New SolidBrush(opt1Color)
+            g.DrawString(option1, menuFont, b1,
+                         CSng((ClientSize.Width - opt1Size.Width) / 2),
+                         CSng(ClientSize.Height * 0.45))
+        End Using
+
+        Using b2 As New SolidBrush(opt2Color)
+            g.DrawString(option2, menuFont, b2,
+                         CSng((ClientSize.Width - opt2Size.Width) / 2),
+                         CSng(ClientSize.Height * 0.55))
+        End Using
+
+        ' Blink "Press SPACE"
+        If blinkVisible Then
+            Dim info As String = "Press SPACE to Start"
+            Dim infoSize = g.MeasureString(info, infoFont)
+
+            Using ib As New SolidBrush(Color.White)
+                g.DrawString(info, infoFont, ib,
+                             CSng((ClientSize.Width - infoSize.Width) / 2),
+                             CSng(ClientSize.Height * 0.75))
+            End Using
+        End If
+    End Sub
+
+    Private Sub DrawGameOver(g As Graphics)
+        'Dim font As New Font("Segoe UI", 48, FontStyle.Bold)
+        Dim font As New Font("Segoe UI", CSng(ClientSize.Height / 20), FontStyle.Bold)
+
+        'Dim infoFont As New Font("Segoe UI", 28)
+        Dim infoFont As New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
+
+        Dim size = g.MeasureString(winnerText, font)
+        Dim info As String = "Press SPACE to Restart"
+        Dim infoSize = g.MeasureString(info, infoFont)
+
+        Using b As New SolidBrush(Color.White)
+            g.DrawString(winnerText, font, b,
+                         CSng((ClientSize.Width - size.Width) / 2),
+                         CSng(ClientSize.Height * 0.3))
+
+            g.DrawString(info, infoFont, b,
+                         CSng((ClientSize.Width - infoSize.Width) / 2),
+                         CSng(ClientSize.Height * 0.55))
+        End Using
+    End Sub
+
+    'Protected Overrides Sub OnPaint()
+
+
+    Protected Overrides Sub OnPaintBackground(pevent As PaintEventArgs)
+        ' Suppress background flicker
+    End Sub
+
+    ' -------------------------------
+    '  FPS Counter
+    ' -------------------------------
+    Private Sub UpdateFPS()
+        frameCount += 1
+
+        If fpsTimer.ElapsedMilliseconds >= 1000 Then
+            fps = frameCount
+            frameCount = 0
+            fpsTimer.Restart()
+        End If
+    End Sub
+
+    Protected Overrides Sub OnResize(e As EventArgs)
+        MyBase.OnResize(e)
+
+        If Me.WindowState = FormWindowState.Minimized Then Return
+        If trailSizes Is Nothing OrElse trailOffsets Is Nothing Then Return
+
+        If ballPos.Y > ClientSize.Height - ballDiameter Then
+            ballPos.Y = ClientSize.Height - ballDiameter
+        End If
+
+        For i As Integer = 0 To trailLength - 1
+            Dim size As Integer = trailSizes(i)
+            trailOffsets(i) = CSng((ballDiameter - size) / 2)
+        Next
+
+        paddleRight.X = ClientSize.Width - 50 - paddleWidth
+
+        Invalidate()
+    End Sub
+
+    ' -------------------------------
+    '  Input
+    ' -------------------------------
+    Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
+        MyBase.OnKeyDown(e)
+
+        ' -------------------------------
+        '  Start Screen Input
+        ' -------------------------------
+        If currentState = GameState.StartScreen Then
+
+            If e.KeyCode = Keys.Up Then
+                selectedOption = 0
+            ElseIf e.KeyCode = Keys.Down Then
+                selectedOption = 1
+            ElseIf e.KeyCode = Keys.Space OrElse e.KeyCode = Keys.Enter Then
+                playerMode = If(selectedOption = 0, 1, 2)
+                StartNewMatch()
             End If
 
+            Return
         End If
 
-        LayoutTitleAndInstructions()
-
-        CenterCourtLine()
-
-        RightPaddle.Rect.Width = Height \ 32
-        Ball.Rect.Width = Height \ 32
-        LeftPaddle.Rect.Width = Height \ 32
-        RightPaddle.Rect.Height = Height \ 8
-        Ball.Rect.Height = Height \ 32
-        LeftPaddle.Rect.Height = Height \ 8
-
-
-        ServSpeed = CInt(Height / 2.223)
-        Debug.Print($"Serve Speed: {ServSpeed}")
-
-
-        RightPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 14.8)
-        Debug.Print($"Right Paddle Max Velocity: {RightPaddle.MaxVelocity.Y}")
-
-        LeftPaddle.MaxVelocity.Y = ServSpeed - (ServSpeed / 14.8)
-
-
-        LeftPaddle.Position.X = 20
-        LeftPaddle.Rect.X = LeftPaddle.Position.X
-
-        RightPaddle.Position.X = ClientSize.Width - RightPaddle.Rect.Width - 20 'Aline right 20 pix padding
-        RightPaddle.Rect.X = RightPaddle.Position.X
-
-        ' Place the FPS display at the bottom of the client area.
-        FPSFont = New Font("Segoe UI", Height \ 34)
-        Dim ThisFontSize As SizeF = TextRenderer.MeasureText("FPS: 000", FPSFont)
-        FPS_Postion.X = 5
-        FPS_Postion.Y = ClientRectangle.Bottom - ThisFontSize.Height - 5
-
-        ScoreFont = New Font(FontFamily.GenericSansSerif, Height \ 10)
-
-        ComputerPlayerIdentifierFont = New Font("Segoe UI", CInt(Height / 34))
-
-
-        Dim CPUIDFontSize As SizeF = TextRenderer.MeasureText("CPU", ComputerPlayerIdentifierFont)
-
-
-        LPadScoreLocation = New Point(ClientSize.Width \ 2 \ 2, CPUIDFontSize.Height)
-
-
-        RPadScoreLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), CPUIDFontSize.Height)
-
-        LPadTrophyLocation = New Point(ClientSize.Width \ 2 \ 2, ClientSize.Height \ 2 - 0)
-
-
-
-
-        RPadTrophyLocation = New Point(ClientSize.Width - (ClientSize.Width \ 4), ClientSize.Height \ 2 - 0)
-
-        ClientCenter = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
-
-        CenterlinePen = New Pen(Color.White, Height \ 64) With {
-                    .DashStyle = Drawing2D.DashStyle.Custom,
-                    .DashPattern = New Single() {1, 2}
-                    }
-
-    End Sub
-
-    Private Sub CleanUpResources()
-
-        gameTimer.Stop()
-        gameTimer.Dispose()
-        Player.CloseSounds()
-        Player = Nothing
-        Controllers = Nothing
-
-    End Sub
-
-
-    Private Sub UpdatePlaying()
-
-        Controllers.Update()
-
-        HandleControllerInput()
-
-        UpdateLeftPaddleKeyboard()
-
-        If PKeyDown Then
-
-            If Not IsPKeyDown Then
-
-                IsPKeyDown = True
-
-                GameState = GameStateEnum.Pause
-
-                MovePointerOffScreen()
-
-                PlayPauseSound()
-
+        If currentState = GameState.EndScreen Then
+            If e.KeyCode = Keys.Space OrElse e.KeyCode = Keys.Enter Then
+                currentState = GameState.StartScreen
+                winnerText = ""
             End If
-
-        Else
-
-            IsPKeyDown = False
-
+            Return
         End If
 
-        If PauseKeyDown Then
 
-            If Not IsPauseKeyDown Then
+        ' -------------------------------
+        '  Gameplay Input
+        ' -------------------------------
+        If e.KeyCode = Keys.W Then moveUpLeft = True
+        If e.KeyCode = Keys.S Then moveDownLeft = True
 
-                IsPauseKeyDown = True
+        If playerMode = 2 Then
+            If e.KeyCode = Keys.Up Then moveUpRight = True
+            If e.KeyCode = Keys.Down Then moveDownRight = True
+        End If
+    End Sub
 
-                GameState = GameStateEnum.Pause
+    Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
+        MyBase.OnKeyUp(e)
 
-                MovePointerOffScreen()
+        If e.KeyCode = Keys.W Then moveUpLeft = False
+        If e.KeyCode = Keys.S Then moveDownLeft = False
 
-                PlayPauseSound()
+        If playerMode = 2 Then
+            If e.KeyCode = Keys.Up Then moveUpRight = False
+            If e.KeyCode = Keys.Down Then moveDownRight = False
+        End If
+    End Sub
 
+    Private Sub StartNewMatch()
+
+        MovePointerOffScreen()
+
+
+        speed = 800
+
+        scoreLeft = 0
+        scoreRight = 0
+        'gameOver = False
+        winnerText = ""
+        currentState = GameState.Playing
+
+        AudioPlayer.PauseSound("start")
+        AudioPlayer.LoopSound("loop")
+
+        ResetBall(If(New Random().Next(0, 2) = 0, -1, 1))
+    End Sub
+
+    ' -------------------------------
+    '  Cleanup
+    ' -------------------------------
+    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        ballBrush?.Dispose()
+        fpsBrush?.Dispose()
+        fpsFont?.Dispose()
+        paddleBrush?.Dispose()
+        physicsTimer?.Dispose()
+
+        If trailBrushes IsNot Nothing Then
+            For Each b In trailBrushes
+                b?.Dispose()
+            Next
+        End If
+
+        AudioPlayer.CloseAll()
+    End Sub
+
+    Private Sub CreateSoundFiles()
+        Dim FilePath As String = Path.Combine(Application.StartupPath, "loop.mp3")
+        CreateFileFromResource(FilePath, My.Resources.Resource1.BB_MegaLoop)
+
+        FilePath = Path.Combine(Application.StartupPath, "bounce.mp3")
+        CreateFileFromResource(FilePath, My.Resources.Resource1.Bounce)
+
+        FilePath = Path.Combine(Application.StartupPath, "start.mp3")
+        CreateFileFromResource(FilePath, My.Resources.Resource1.Start_loop)
+
+        FilePath = Path.Combine(Application.StartupPath, "point.mp3")
+        CreateFileFromResource(FilePath, My.Resources.Resource1.hit3)
+
+    End Sub
+
+    Private Sub CreateFileFromResource(filepath As String, resource As Byte())
+        Try
+            If Not IO.File.Exists(filepath) Then
+                IO.File.WriteAllBytes(filepath, resource)
             End If
-
-        Else
-
-            IsPauseKeyDown = False
-
-        End If
-
-
-        If NumberOfPlayers = 1 Then
-
-            UpdateComputerPlayer()
-
-        Else
-
-            UpdateRightPaddleKeyboard()
-
-        End If
-
-        UpdateDeltaTime()
-
-        UpdateBallMovement()
-
-        UpdatePaddleMovement()
-
-        CheckForPaddleHits()
-
-        CheckForWallBounce()
-
-        UpdateScore()
-
-        CheckforEndGame()
-
-        UpdateGoalIndicators()
-
-    End Sub
-
-    Private Sub UpdateGoalIndicators()
-
-        UpdateRightPaddleGoalIndicator()
-
-        UpdateLeftPaddleGoalIndicator()
-
-    End Sub
-
-    Private Sub UpdateLeftPaddleGoalIndicator()
-
-        If LeftGoalIndicator.Timer > 0 Then
-
-            If LeftGoalIndicator.Fade > 0 Then
-
-                LeftGoalIndicator.Fade = Math.Max(0, LeftGoalIndicator.Fade - CInt(0.3 * DeltaTime.TotalMilliseconds))
-
-            End If
-
-            LeftGoalIndicator.Timer -= DeltaTime.TotalMilliseconds
-
-            LeftGoalIndicator.Expand += CInt(0.1 * DeltaTime.TotalMilliseconds)
-
-            LeftGoalIndicator.Rect = New Rectangle(ClientRectangle.Right - LeftGoalIndicator.Expand, ClientRectangle.Top, LeftGoalIndicator.Expand, ClientSize.Height)
-
-        Else
-
-            LeftGoalIndicator.Timer = 0
-
-            LeftGoalIndicator.Expand = 0
-
-            LeftGoalIndicator.Rect = New Rectangle(ClientRectangle.Right - 32, ClientRectangle.Top, 32, ClientSize.Height)
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateRightPaddleGoalIndicator()
-        If RightGoalIndicator.Timer > 0 Then
-
-            If RightGoalIndicator.Fade > 0 Then
-
-                RightGoalIndicator.Fade = Math.Max(0, RightGoalIndicator.Fade - CInt(0.3 * DeltaTime.TotalMilliseconds))
-
-            End If
-
-            RightGoalIndicator.Timer -= DeltaTime.TotalMilliseconds
-
-            RightGoalIndicator.Expand += CInt(0.1 * DeltaTime.TotalMilliseconds)
-
-            RightGoalIndicator.Rect = New Rectangle(ClientRectangle.Left, ClientRectangle.Top, RightGoalIndicator.Expand, ClientSize.Height)
-
-        Else
-
-            RightGoalIndicator.Timer = 0
-
-            RightGoalIndicator.Expand = 0
-
-            RightGoalIndicator.Rect = New Rectangle(ClientRectangle.Left, ClientRectangle.Top, 32, ClientSize.Height)
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateComputerPlayer()
-        ' In one player mode the right paddle is played
-        ' by the following algorithm.
-
-        BallMiddle = Ball.Rect.Y + Ball.Rect.Height \ 2
-
-        RightPaddleMiddle = RightPaddle.Rect.Y + RightPaddle.Rect.Height \ 2
-
-        ' Is the ball above the paddle?
-        If BallMiddle < RightPaddleMiddle Then
-            ' Yes, the ball is above the paddle.
-
-            ' Is the paddle moving down?
-            If RightPaddle.Velocity.Y > 0 Then
-                ' Yes, the paddle is moving down.
-
-                ' Stop move before changing direction.
-                RightPaddle.Velocity.Y = 0 'Zero speed.
-
-            End If
-
-            ' Is the paddle at or past the top edge of the client rectangle?
-            If RightPaddle.Rect.Y <= ClientRectangle.Top Then
-                ' Yes, the paddle is at or past the top edge of the client rectangle.
-
-                ' Stop paddle movement.
-                RightPaddle.Velocity.Y = 0
-
-                ' Push paddle above the top edge of the client rectangle.
-                RightPaddle.Rect.Y = ClientRectangle.Top
-
-                RightPaddle.Position.Y = RightPaddle.Rect.Y
-
-            Else
-                ' No, the paddle is not at or past the top edge of the client rectangle.
-
-                ' Accelerate paddle up.
-                RightPaddle.Velocity.Y -= RightPaddle.Acceleration.Y * DeltaTime.TotalSeconds
-
-                ' Limit paddle velocity to the max.
-                If RightPaddle.Velocity.Y < -RightPaddle.MaxVelocity.Y Then RightPaddle.Velocity.Y = -RightPaddle.MaxVelocity.Y
-
-            End If
-
-            ' Is the ball below the paddle?
-        ElseIf BallMiddle > RightPaddleMiddle Then
-            ' Yes, the ball is below the paddle.
-
-            ' Is the paddle moving up?
-            If RightPaddle.Velocity.Y < 0 Then
-                ' Yes, the paddle is moving up.
-
-                ' Stop move before changing direction.
-                RightPaddle.Velocity.Y = 0 'Zero speed.
-
-            End If
-
-            ' Is the paddle at or past the bottom edge of the client rectangle?
-            If RightPaddle.Rect.Y + RightPaddle.Rect.Height >= ClientRectangle.Bottom Then
-                ' Yes, the paddle is at or past the bottom edge of the client rectangle.
-
-                ' Stop paddle movement.
-                RightPaddle.Velocity.Y = 0
-
-                ' Push paddle above the bottom edge of the client rectangle.
-                RightPaddle.Rect.Y = ClientRectangle.Bottom - RightPaddle.Rect.Height
-
-                RightPaddle.Position.Y = RightPaddle.Rect.Y
-
-            Else
-                ' No, the paddle is not at or past the bottom edge of the client rectangle.
-
-                ' Accelerate paddle down.
-                RightPaddle.Velocity.Y += RightPaddle.Acceleration.Y * DeltaTime.TotalSeconds
-
-                ' Limit paddle velocity to the max.
-                If RightPaddle.Velocity.Y > RightPaddle.MaxVelocity.Y Then RightPaddle.Velocity.Y = RightPaddle.MaxVelocity.Y
-
-            End If
-
-        Else
-
-            DecelerateRightPaddle()
-
-        End If
-
-    End Sub
-
-    Private Sub CheckforEndGame()
-
-        ' Did left paddle reach winning score?
-        If LeftPaddleScore >= 10 Then
-            ' Yes, left paddle did reach winning score.
-
-            ' Set winner to left paddle.
-            Winner = WinStateEnum.LeftPaddle
-
-            ' Reset the frame counter.
-            FlashCount = 0
-
-            ' Change game state to end screen.
-            GameState = GameStateEnum.EndScreen
-
-            PlayWinningSound()
-
-        End If
-
-        ' Did right paddle reach winning score?
-        If RightPaddleScore >= 10 Then
-            ' Yes, right paddle did reach winning score.
-
-            ' Set winner to right paddle.
-            Winner = WinStateEnum.RightPaddle
-
-            ' Reset frame counter.
-            FlashCount = 0
-
-            ' Change game state to end screen.
-            GameState = GameStateEnum.EndScreen
-
-            PlayWinningSound()
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateEndScreen()
-
-        UpdateFlashingText()
-
-        EndScreenCounter += 1
-
-        If EndScreenCounter >= 500 Then
-
-            ResetGame()
-
-        End If
-
-    End Sub
-
-    Private Sub ResetGame()
-
-        EndScreenCounter = 0
-
-        LeftPaddleScore = 0
-
-        RightPaddleScore = 0
-
-        LastFrame = Now
-
-        GameState = GameStateEnum.StartScreen
-
-        Player.LoopSound("startscreenmusic")
-
-        PlaceBallCenterCourt()
-
-        Ball.Velocity.X = -50
-        Ball.Velocity.Y = -50
-
-    End Sub
-
-    Private Sub UpdateFlashingText()
-        ' This algorithm controls the rate of flash for text.
-
-        ' Advance the frame counter.
-        FlashCount += 1
-
-        ' Draw text for 60 frames.
-        If FlashCount <= 60 Then
-
-            DrawFlashingText = True
-
-        Else
-
-            DrawFlashingText = False
-
-        End If
-
-        ' Dont draw text for the next 60 frames.
-        If FlashCount >= 120 Then
-
-            ' Repete
-            FlashCount = 0
-
-        End If
-
-    End Sub
-
-    Private Sub PlayWinningSound()
-
-        Player.PlaySound("winning")
-
-    End Sub
-
-    Private Sub PlayPauseSound()
-
-        Player.LoopSound("pause")
-
+        Catch ex As Exception
+            Debug.Print($"Error creating file: {ex.Message}")
+        End Try
     End Sub
 
     Private Sub MovePointerOffScreen()
@@ -867,3565 +1049,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub UpdateServe()
-
-        Dim ServeTimeElapsed = Now.Subtract(ServeStartTime)
-
-        If ServeTimeElapsed.TotalMilliseconds > 900 Then
-
-            Player.PlaySound("serve")
-
-            PlaceBallCenterCourt()
-
-            CenterPaddlesVertical()
-
-            If Serving = ServeStateEnum.RightPaddle Then
-
-                ServeRightPaddle()
-
-            Else
-
-                ServeLeftPaddle()
-
-            End If
-
-            LastFrame = Now
-
-            GameState = GameStateEnum.Playing
-
-        End If
-
-        UpdateGoalIndicators()
-
-    End Sub
-
-    Private Sub CenterPaddlesVertical()
-        ' Center the paddles vertically in the client area.
-
-        LeftPaddle.Position.Y = (ClientSize.Height \ 2) - (LeftPaddle.Rect.Height \ 2)
-        LeftPaddle.Rect.Y = LeftPaddle.Position.Y
-
-        RightPaddle.Position.Y = (ClientSize.Height \ 2) - (RightPaddle.Rect.Height \ 2)
-        RightPaddle.Rect.Y = RightPaddle.Position.Y
-
-    End Sub
-
-    Private Sub ServeLeftPaddle()
-
-        Select Case RandomNumber()
-
-            Case 1
-
-                ' Send ball up and to the right.
-                Ball.Velocity.X = ServSpeed
-                Ball.Velocity.Y = -ServSpeed
-
-            Case 2
-
-                ' Send ball to the right.
-                Ball.Velocity.X = ServSpeed
-                Ball.Velocity.Y = 0
-
-            Case 3
-
-                ' Send ball down and to the right.
-                Ball.Velocity.X = ServSpeed
-                Ball.Velocity.Y = ServSpeed
-
-        End Select
-
-    End Sub
-
-    Private Sub ServeRightPaddle()
-
-        Select Case RandomNumber()
-
-            Case 1
-
-                ' Send ball up and to the left.
-                Ball.Velocity.X = -ServSpeed
-                Ball.Velocity.Y = -ServSpeed
-
-            Case 2
-
-                ' Send ball to the left.
-                Ball.Velocity.X = -ServSpeed
-                Ball.Velocity.Y = 0
-
-            Case 3
-
-                ' Send ball down and to the left.
-                Ball.Velocity.X = -ServSpeed
-                Ball.Velocity.Y = ServSpeed
-
-        End Select
-
-    End Sub
-    Private Shared Function RandomNumber() As Integer
-
-        ' Initialize random-number generator.
-        Randomize()
-
-        ' Generate random number between 1 and 3.
-        Return CInt(Int((3 * Rnd()) + 1))
-
-    End Function
-
-    Private Sub PlaceBallCenterCourt()
-
-        Ball.Rect.Location = New Point((ClientSize.Width \ 2) - (Ball.Rect.Width \ 2), (ClientSize.Height \ 2) - (Ball.Rect.Height \ 2))
-
-        Ball.Position.X = Ball.Rect.X
-        Ball.Position.Y = Ball.Rect.Y
-
-    End Sub
-
-    Private Sub UpdatePaddleMovement()
-
-        UpdateLeftPaddleMovement()
-
-        UpdateRightPaddleMovement()
-
-    End Sub
-
-    Private Sub UpdateScore()
-
-        ' Did ball enter left goal zone?
-        If Ball.Rect.X < 0 Then
-            ' Yes, ball entered left goal zone.
-
-            PlayPointSound()
-
-            RightGoalIndicator.Timer = 1500
-            RightGoalIndicator.Fade = 255
-
-            ' Award point to right paddle.
-            RightPaddleScore += 1
-
-            ' Change possession of ball to right paddle.
-            Serving = ServeStateEnum.RightPaddle
-
-            ServeStartTime = DateTime.Now
-
-            ' Change game state to serve.
-            GameState = GameStateEnum.Serve
-
-
-        End If
-
-        ' Did ball enter right goal zone?
-        If Ball.Rect.X + Ball.Rect.Width > ClientSize.Width Then
-            ' Yes, ball entered goal zone.
-
-            PlayPointSound()
-
-            LeftGoalIndicator.Timer = 1500
-            LeftGoalIndicator.Fade = 255
-
-            ' Award a point to left paddle.
-            LeftPaddleScore += 1
-
-            ' Change possession of ball to left paddle.
-            Serving = ServeStateEnum.LeftPaddle
-
-            ServeStartTime = DateTime.Now
-
-            ' Change game state to serve.
-            GameState = GameStateEnum.Serve
-
-        End If
-
-    End Sub
-
-    Private Sub CheckForPaddleHits()
-
-        CheckForLeftPaddleHits()
-
-        CheckForRightPaddleHits()
-
-    End Sub
-
-    Private Sub CheckForRightPaddleHits()
-
-        ' Did the ball hit the right paddle?
-        If Ball.Rect.IntersectsWith(RightPaddle.Rect) Then
-            ' Yes, the ball did hit the right paddle.
-
-            Player.PlaySound("hit")
-
-            ' Stop the ball's movement.
-            Ball.Velocity.X = 0
-            Ball.Velocity.Y = 0
-
-            ' Moves the ball to the left of the right paddle, ensuring there’s a 5-pixel gap.
-            Ball.Rect.X = RightPaddle.Rect.X - (Ball.Rect.Width + 5)
-
-            ' Update the ball's position to match the new rectangle position.
-            Ball.Position.X = Ball.Rect.X
-
-            ' Is the number of players two?
-            If NumberOfPlayers = 2 Then
-                ' Yes, the number of players is two.
-
-                ' Set a flag to indicate that the ball should have some spin (English) applied.
-                ApplyRightPaddleEnglish = True
-
-                ' Trigger a vibration effect on the left side of the right paddle controller "1".
-                Controllers.VibrateLeft(1, 42000)
-
-            Else
-                ' No, the number of players is not two.
-
-                DoComputerPlayerEnglish()
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub DoComputerPlayerEnglish()
-        ' For the computer player we use random english.
-        ' This makes the game more interesting.
-
-        Select Case RandomNumber()
-
-            Case 1
-
-                ' Send ball up and to the left.
-                Ball.Velocity.X = -ServSpeed
-                Ball.Velocity.Y = -ServSpeed
-
-            Case 2
-
-                ' Send ball to the left.
-                Ball.Velocity.X = -ServSpeed
-                Ball.Velocity.Y = 0
-
-            Case 3
-
-                ' Send ball down and to the left.
-                Ball.Velocity.X = -ServSpeed
-                Ball.Velocity.Y = ServSpeed
-
-        End Select
-
-    End Sub
-
-    Private Sub CheckForLeftPaddleHits()
-
-        ' Did the ball hit the left paddle?
-        If Ball.Rect.IntersectsWith(LeftPaddle.Rect) Then
-            ' Yes, the ball did hit the left paddle.
-
-            Player.PlaySound("hit")
-
-            ' Stop the ball's movement.
-            Ball.Velocity.X = 0
-            Ball.Velocity.Y = 0
-
-            ' Set the ball's position to the right edge of the left paddle, plus an extra 5 pixels.
-            Ball.Rect.X = LeftPaddle.Rect.X + LeftPaddle.Rect.Width + 5
-
-            ' Update the ball's position to match the new rectangle position.
-            Ball.Position.X = Ball.Rect.X
-
-            ' Set a flag to indicate that the ball should have some spin (English) applied.
-            ApplyLeftPaddleEnglish = True
-
-            ' Trigger a vibration effect on the left side of the left paddle controller "0".
-            Controllers.VibrateLeft(0, 42000)
-
-        End If
-
-    End Sub
-
-    Private Sub LimitPaddleMovement()
-
-        LimitLeftPaddleMovement()
-
-        LimitRightPaddleMovement()
-
-    End Sub
-
-    Private Sub LimitRightPaddleMovement()
-
-        If RightPaddle.Rect.Y <= ClientRectangle.Top Then
-
-            RightPaddle.Velocity.Y = 100
-
-            RightPaddle.Rect.Y = ClientRectangle.Top
-
-        End If
-
-        If RightPaddle.Rect.Y + RightPaddle.Rect.Height >= ClientRectangle.Bottom Then
-
-            RightPaddle.Velocity.Y = -100
-
-            RightPaddle.Rect.Y = ClientRectangle.Bottom - RightPaddle.Rect.Height
-
-        End If
-
-    End Sub
-
-    Private Sub LimitLeftPaddleMovement()
-
-        If LeftPaddle.Rect.Y <= ClientRectangle.Top Then
-
-            LeftPaddle.Velocity.Y = 100
-
-            LeftPaddle.Rect.Y = ClientRectangle.Top
-
-        End If
-
-        If LeftPaddle.Rect.Y + LeftPaddle.Rect.Height >= ClientRectangle.Bottom Then
-
-            LeftPaddle.Velocity.Y = -100
-
-            LeftPaddle.Rect.Y = ClientRectangle.Bottom - LeftPaddle.Rect.Height
-
-        End If
-
-    End Sub
-
-    Private Sub CheckForWallBounce()
-
-        'Did the ball hit the top wall?
-        If Ball.Rect.Y < ClientRectangle.Top Then
-            'Yes, the ball hit the top wall.
-
-            Dim TempV As Single = Ball.Velocity.Y
-
-            Ball.Velocity.Y = 0
-
-            'Push the ball to the walls top edge.
-            Ball.Rect.Y = ClientRectangle.Top + 5
-
-            Ball.Position.Y = Ball.Rect.Y
-
-            PlayBounceSound()
-
-            'Reverse direction on the y-axis
-            Ball.Velocity.Y = TempV * -1
-
-        End If
-
-        'Did the ball hit the bottom wall?
-        If Ball.Rect.Y + Ball.Rect.Height > ClientRectangle.Bottom Then
-            'Yes, the ball hit the bottom wall.
-
-            Dim TempV As Single = Ball.Velocity.Y
-
-            Ball.Velocity.Y = 0
-
-            'Push the ball to the walls bottom edge.
-            Ball.Rect.Y = ClientRectangle.Bottom - Ball.Rect.Height - 5
-
-            Ball.Position.Y = Ball.Rect.Y
-
-            PlayBounceSound()
-
-            'Reverse direction on the y-axis
-            Ball.Velocity.Y = TempV * -1
-
-        End If
-
-    End Sub
-
-    Private Sub CheckForWallBounceXaxis()
-
-        'Did the ball hit the left edge of the wall?
-        If Ball.Rect.X < ClientRectangle.Left Then
-            'Yes, the ball hit the left edge of the wall.
-
-            Dim TempV As Single = Ball.Velocity.X
-
-            Ball.Velocity.X = 0
-
-            'Push the ball to the walls left edge.
-            Ball.Rect.X = ClientRectangle.Left + 5
-
-            Ball.Position.X = Ball.Rect.X
-
-            PlayBounceSound()
-
-            'Reverse direction on the y-axis
-            Ball.Velocity.X = TempV * -1
-
-        End If
-
-        'Did the ball hit the bottom wall?
-        If Ball.Rect.X + Ball.Rect.Width > ClientRectangle.Right Then
-            'Yes, the ball hit the bottom wall.
-
-            Dim TempV As Single = Ball.Velocity.X
-
-            Ball.Velocity.X = 0
-
-            'Push the ball to the walls right edge.
-            Ball.Rect.X = ClientRectangle.Right - Ball.Rect.Height - 5
-
-            Ball.Position.X = Ball.Rect.X
-
-            PlayBounceSound()
-
-            'Reverse direction on the y-axis
-            Ball.Velocity.X = TempV * -1
-
-        End If
-
-    End Sub
-
-    Private Sub DoDPadLogic(controllerNumber As Integer)
-
-        If controllerNumber = 0 Then
-
-            DoDPadLogicControllerZero()
-
-        End If
-
-        If controllerNumber = 1 Then
-
-            If NumberOfPlayers = 2 Then
-
-                DoDPadLogicControllerOne()
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub DoDPadLogicControllerOne()
-
-        If Controllers.DPadUp(1) Then
-
-            MoveRightPaddleUp()
-
-        ElseIf Controllers.DPadDown(1) Then
-
-            MoveRightPaddleDown()
-
-        Else
-
-            If Controllers.RightThumbstickYaxisNeutral(1) AndAlso Controllers.LeftThumbstickYaxisNeutral(1) AndAlso Not UpArrowKeyDown AndAlso Not DownArrowKeyDown Then
-
-                DecelerateRightPaddle()
-
-            End If
-
-            If ApplyRightPaddleEnglish AndAlso Controllers.RightThumbstickYaxisNeutral(1) AndAlso Controllers.LeftThumbstickYaxisNeutral(1) AndAlso Not UpArrowKeyDown AndAlso Not DownArrowKeyDown Then
-
-                ApplyRightPaddleEnglish = False
-
-                'Send ball to the left.
-                Ball.Velocity.X = -ServSpeed
-                Ball.Velocity.Y = 0
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub DoDPadLogicControllerZero()
-
-        If Controllers.DPadUp(0) Then
-
-            MoveLeftPaddleUp()
-
-        ElseIf Controllers.DPadDown(0) Then
-
-            MoveLeftPaddleDown()
-
-        Else
-            ' The direction pad is in the neutral position.
-
-            If Controllers.RightThumbstickYaxisNeutral(0) AndAlso Controllers.LeftThumbstickYaxisNeutral(0) AndAlso Not WKeyDown AndAlso Not SKeyDown Then
-
-                DecelerateLeftPaddle()
-
-            End If
-
-            If ApplyLeftPaddleEnglish AndAlso Controllers.RightThumbstickYaxisNeutral(0) AndAlso Controllers.LeftThumbstickYaxisNeutral(0) AndAlso Not WKeyDown AndAlso Not SKeyDown Then
-
-                ApplyLeftPaddleEnglish = False
-
-                'Send ball to the right.
-                Ball.Velocity.X = ServSpeed
-                Ball.Velocity.Y = 0
-
-                Debug.Print("Left Paddle Send Ball Right")
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub HandleRightThumbstickInput(ControllerNumber As Integer)
-
-        If ControllerNumber = 0 Then
-
-            UpdateRightThumbstickPositionControllerZero()
-
-        End If
-
-        If ControllerNumber = 1 Then
-
-            If NumberOfPlayers = 2 Then
-
-                UpdateRightThumbstickPositionControllerOne()
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateRightThumbstickPositionControllerOne()
-
-        If Controllers.RightThumbstickDown(1) Then
-            MoveRightPaddleDown()
-        ElseIf Controllers.RightThumbstickUp(1) Then
-            MoveRightPaddleUp()
-        End If
-
-    End Sub
-
-    Private Sub UpdateRightThumbstickPositionControllerZero()
-
-        If Controllers.RightThumbstickDown(0) Then
-            MoveLeftPaddleDown()
-        ElseIf Controllers.RightThumbstickUp(0) Then
-            MoveLeftPaddleUp()
-        End If
-
-    End Sub
-
-    Private Sub HandleLeftThumbstickInput(ControllerNumber As Integer)
-
-        If ControllerNumber = 0 Then
-
-            UpdateLeftThumbstickPositionControllerZero()
-
-        End If
-
-        If ControllerNumber = 1 Then
-
-            If NumberOfPlayers = 2 Then
-
-                UpdateLeftThumbstickPositionControllerOne()
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateLeftThumbstickPositionControllerOne()
-
-        If Controllers.LeftThumbstickDown(1) Then
-            MoveRightPaddleDown()
-        ElseIf Controllers.LeftThumbstickUp(1) Then
-            MoveRightPaddleUp()
-        End If
-
-    End Sub
-
-    Private Sub HandleStartScreenKeyboardInput()
-
-        If AKeyDown Then
-
-            If Not IsAKeyDown Then
-
-                IsAKeyDown = True
-
-                NumberOfPlayers = 1
-
-                GameState = GameStateEnum.Instructions
-
-                MovePointerOffScreen()
-
-            End If
-
-        Else
-
-            IsAKeyDown = False
-
-        End If
-
-        If BKeyDown Then
-
-            NumberOfPlayers = 2
-
-            GameState = GameStateEnum.Instructions
-
-            MovePointerOffScreen()
-
-        End If
-
-        If EscKeyDown Then
-
-            If Not IsEscKeyDown Then
-
-                IsEscKeyDown = True
-
-                MovePointerCenterScreen()
-
-                Application.Exit()
-
-            End If
-
-        Else
-
-            IsEscKeyDown = False
-
-        End If
-
-        If XKeyDown Then
-
-            If Not IsXKeyDown Then
-
-                IsXKeyDown = True
-
-                MovePointerCenterScreen()
-
-                Application.Exit()
-
-            End If
-
-        Else
-
-            IsXKeyDown = False
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateInstructionsScreenKeyboard()
-
-        If AKeyDown Then
-
-            If Not IsAKeyDown Then
-
-                IsAKeyDown = True
-
-                If Player.IsPlaying("startscreenmusic") = True Then
-
-                    Player.PauseSound("startscreenmusic")
-
-                End If
-
-                ServeStartTime = DateTime.Now
-
-                GameState = GameStateEnum.Serve
-
-                MovePointerOffScreen()
-
-            End If
-
-        Else
-
-            IsAKeyDown = False
-
-        End If
-
-        If EscKeyDown Then
-
-            If Not IsEscKeyDown Then
-
-                IsEscKeyDown = True
-
-                GameState = GameStateEnum.StartScreen
-
-                MovePointerOffScreen()
-
-            End If
-
-        Else
-
-            IsEscKeyDown = False
-
-        End If
-
-        If XKeyDown Then
-
-            If Not IsXKeyDown Then
-
-                IsXKeyDown = True
-
-                GameState = GameStateEnum.StartScreen
-
-                MovePointerOffScreen()
-
-            End If
-
-        Else
-
-            IsXKeyDown = False
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateLeftPaddleKeyboard()
-
-        If WKeyDown Then
-
-            MoveLeftPaddleUp()
-
-
-        ElseIf SKeyDown Then
-
-            MoveLeftPaddleDown()
-
-        Else
-
-            If Not Controllers.Connected(0) Then
-
-                DecelerateLeftPaddle()
-
-                If ApplyLeftPaddleEnglish Then
-
-                    ApplyLeftPaddleEnglish = False
-
-                    'Send ball to the right.
-                    Ball.Velocity.X = ServSpeed
-                    Ball.Velocity.Y = 0
-
-                    Debug.Print("Left Paddle Send Ball Right")
-
-                End If
-
-            End If
-
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateRightPaddleKeyboard()
-
-        If UpArrowKeyDown = True Then
-
-            MoveRightPaddleUp()
-
-        ElseIf DownArrowKeyDown = True Then
-
-            MoveRightPaddleDown()
-
-        Else
-
-            If Not Controllers.Connected(1) Then
-
-                DecelerateRightPaddle()
-
-                If ApplyRightPaddleEnglish Then
-
-                    ApplyRightPaddleEnglish = False
-
-                    'Send ball to the left.
-                    Ball.Velocity.X = -ServSpeed
-                    Ball.Velocity.Y = 0
-
-                End If
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub MoveRightPaddleUp()
-
-        ' Is the paddle moving down?
-        If RightPaddle.Velocity.Y > 0 Then
-            ' Yes, the paddle is moving down.
-
-            ' Stop move before changing direction.
-            RightPaddle.Velocity.Y = 0 'Zero speed.
-
-        End If
-
-        ' Is the paddle at or past the top edge of the client rectangle?
-        If RightPaddle.Rect.Y <= ClientRectangle.Top Then
-            'Yes, the paddle is at or past the top edge of the client rectangle.
-
-            ' Stop paddle movement.
-            RightPaddle.Velocity.Y = 0
-
-            ' Push paddle above the top edge of the client rectangle.
-            RightPaddle.Rect.Y = ClientRectangle.Top
-
-        Else
-            ' No, the paddle is not at or past the top edge of the client rectangle.
-
-            ' Accelerate paddle up.
-            RightPaddle.Velocity.Y -= RightPaddle.Acceleration.Y * DeltaTime.TotalSeconds
-
-            ' Limit paddle velocity to the max.
-            If RightPaddle.Velocity.Y < -RightPaddle.MaxVelocity.Y Then RightPaddle.Velocity.Y = -RightPaddle.MaxVelocity.Y
-
-        End If
-
-        If ApplyRightPaddleEnglish Then
-
-            ApplyRightPaddleEnglish = False
-
-            ' Send ball up and to the left.
-            Ball.Velocity.X = -ServSpeed
-            Ball.Velocity.Y = -ServSpeed
-
-        End If
-
-    End Sub
-
-    Private Sub MoveRightPaddleDown()
-
-        ' Is the paddle moving up?
-        If RightPaddle.Velocity.Y < 0 Then
-            ' Yes, the paddle is moving up.
-
-            ' Stop move before changing direction.
-            RightPaddle.Velocity.Y = 0 'Zero speed.
-
-        End If
-
-        ' Is the paddle at or past the bottom edge of the client rectangle?
-        If RightPaddle.Rect.Y + RightPaddle.Rect.Height >= ClientRectangle.Bottom Then
-            'Yes, the paddle is at or past the bottom edge of the client rectangle.
-
-            ' Stop paddle movement.
-            RightPaddle.Velocity.Y = 0
-
-            ' Push paddle above the bottom edge of the client rectangle.
-            RightPaddle.Rect.Y = ClientRectangle.Bottom - RightPaddle.Rect.Height
-
-        Else
-            ' No, the paddle is not at or past the bottom edge of the client rectangle.
-
-            ' Accelerate paddle down.
-            RightPaddle.Velocity.Y += RightPaddle.Acceleration.Y * DeltaTime.TotalSeconds
-
-            ' Limit paddle velocity to the max.
-            If RightPaddle.Velocity.Y > RightPaddle.MaxVelocity.Y Then RightPaddle.Velocity.Y = RightPaddle.MaxVelocity.Y
-
-        End If
-
-        If ApplyRightPaddleEnglish Then
-
-            ApplyRightPaddleEnglish = False
-
-            ' Send ball down and to the left.
-            Ball.Velocity.X = -ServSpeed
-            Ball.Velocity.Y = ServSpeed
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateLeftThumbstickPositionControllerZero()
-
-        If Controllers.LeftThumbstickDown(0) Then
-            MoveLeftPaddleDown()
-        ElseIf Controllers.LeftThumbstickUp(0) Then
-            MoveLeftPaddleUp()
-        End If
-
-    End Sub
-
-    Private Sub MoveLeftPaddleUp()
-
-        ' Is the paddle moving down?
-        If LeftPaddle.Velocity.Y > 0 Then
-            ' Yes, the paddle is moving down.
-
-            ' Stop move before changing direction.
-            LeftPaddle.Velocity.Y = 0 ' Zero speed.
-
-            Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
-
-        End If
-
-        MoveLeftPaddleUpCheckTopBoundaryMaxVelocity()
-
-        If ApplyLeftPaddleEnglish Then
-
-            ApplyLeftPaddleEnglish = False
-
-            ' Send ball up and to the right.
-            Ball.Velocity.X = ServSpeed
-            Ball.Velocity.Y = -ServSpeed
-
-            Debug.Print("Left Paddle Send Ball Up Right")
-
-        End If
-
-    End Sub
-
-    Private Sub MoveLeftPaddleUpCheckTopBoundaryMaxVelocity()
-
-        ' Has the paddle reached or exceeded the top of the client area?
-        If LeftPaddle.Rect.Top <= ClientRectangle.Top Then
-            ' Yes, the paddle has reached the top of the client area.
-
-            ' Is the paddle moving up?
-            If LeftPaddle.Velocity.Y < 0 Then
-                'Yes, the paddle is moving up.
-
-                ' Stop the paddle.
-                LeftPaddle.Velocity.Y = 0
-
-                Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
-
-            End If
-
-            ' Is the paddle passed the top of the client area.
-            If LeftPaddle.Rect.Top < ClientRectangle.Top Then
-                ' Yes, the paddle is passed the top of the client area.
-
-                ' Aline paddle to the top of the client area.
-                LeftPaddle.Rect.Y = ClientRectangle.Top
-
-                ' Snyc paddle position.
-                LeftPaddle.Position.Y = LeftPaddle.Rect.Y
-
-                Debug.Print("Left Paddle Aline Top")
-
-            End If
-
-            ' Has the paddle reached or exceeded max velocity?
-        ElseIf LeftPaddle.Velocity.Y > -LeftPaddle.MaxVelocity.Y Then
-            ' No, the paddle has not reached or exceeded max velocity.
-            ' No, the paddle has not reached or exceeded the top of the client area.
-
-            ' Calculate potential new velocity
-            Dim newVelocityY As Double = LeftPaddle.Velocity.Y - (LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds)
-
-            ' Does the potential new velocity exceed the max velocity?
-            If newVelocityY < -LeftPaddle.MaxVelocity.Y Then
-                ' Yes, the potential new velocity does exceed the max velocity.
-
-                ' Limit paddle velocity to the max.
-                LeftPaddle.Velocity.Y = -LeftPaddle.MaxVelocity.Y
-
-                Debug.Print($"Left Paddle Up-- Velocity {LeftPaddle.Velocity.Y} -Max-")
-
-            Else
-                ' No, the potential new velocity does not exceed the max velocity.
-
-                ' Send paddle up.
-                LeftPaddle.Velocity.Y = newVelocityY
-
-                Debug.Print($"Left Paddle Up-- Velocity {LeftPaddle.Velocity.Y}")
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub MoveLeftPaddleDown()
-
-        ' Is the paddle moving up?
-        If LeftPaddle.Velocity.Y < 0 Then
-            ' Yes, the paddle is moving up.
-
-            ' Stop move before changing direction.
-            LeftPaddle.Velocity.Y = 0 ' Zero speed.
-
-            Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
-
-        End If
-
-        MoveLeftPaddleDownCheckBottomBoundary()
-
-        If ApplyLeftPaddleEnglish Then
-
-            ApplyLeftPaddleEnglish = False
-
-            ' Send ball down and to the right.
-            Ball.Velocity.X = ServSpeed
-            Ball.Velocity.Y = ServSpeed
-
-            Debug.Print("Left Paddle Send Ball Down Right")
-
-        End If
-
-    End Sub
-
-    Private Sub MoveLeftPaddleDownCheckBottomBoundary()
-
-        ' Has the paddle reached or exceeded the bottom of the client area?
-        If LeftPaddle.Rect.Bottom >= ClientRectangle.Bottom Then
-            ' Yes, the paddle has reached or exceeded the bottom of the client area.
-
-            ' Is the paddle moving down?
-            If LeftPaddle.Velocity.Y > 0 Then
-                ' Yes, the paddle is moving down.
-
-                ' Stop the paddle.
-                LeftPaddle.Velocity.Y = 0
-
-                Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
-
-            End If
-
-            ' Is the paddle passed the bottom of the client area.
-            If LeftPaddle.Rect.Bottom > ClientRectangle.Bottom Then
-                ' Yes, the paddle is passed the bottom of the client area.
-
-                ' Aline paddle to bottom of the client area.
-                LeftPaddle.Rect.Y = ClientRectangle.Bottom - LeftPaddle.Rect.Height
-
-                ' Sync paddle position.
-                LeftPaddle.Position.Y = LeftPaddle.Rect.Y
-
-                Debug.Print("Left Paddle Aline Bottom")
-
-            End If
-
-            ' Has the paddle reached or exceeded max velocity?
-        ElseIf LeftPaddle.Velocity.Y < LeftPaddle.MaxVelocity.Y Then
-            ' No, the paddle has not reached or exceeded max velocity.
-            ' No, the paddle has not reached or exceeded the bottom of the client area.
-
-            ' Calculate potential new velocity
-            Dim newVelocityY As Double = LeftPaddle.Velocity.Y + (LeftPaddle.Acceleration.Y * DeltaTime.TotalSeconds)
-
-            ' Does the potential new velocity exceed the max velocity?
-            If newVelocityY > LeftPaddle.MaxVelocity.Y Then
-                ' Yes, the potential new velocity does exceed the max velocity.
-
-                ' Limit paddle velocity to the max.
-                LeftPaddle.Velocity.Y = LeftPaddle.MaxVelocity.Y
-
-                Debug.Print($"Left Paddle Down Velocity {LeftPaddle.Velocity.Y} -Max-")
-
-            Else
-                ' No, the potential new velocity does not exceed the max velocity.
-
-                ' Send paddle down.
-                LeftPaddle.Velocity.Y = newVelocityY
-
-                Debug.Print($"Left Paddle Down Velocity {LeftPaddle.Velocity.Y}")
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub DrawComputerPlayerIdentifier(g As Graphics)
-
-        g.DrawString("CPU", ComputerPlayerIdentifierFont, Brushes.White, ClientSize.Width - (ClientSize.Width \ 4), 0, AlineCenter)
-
-    End Sub
-
-    Private Sub DecelerateLeftPaddle()
-
-        ' Is the paddle moving up?
-        If LeftPaddle.Velocity.Y < 0 Then
-            ' Yes, the paddle is moving up.
-
-            ' Calculate potential new velocity
-            Dim newVelocityY As Double = LeftPaddle.Velocity.Y + (LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds)
-
-            ' Does the potential new velocity exceed zero speed?
-            If newVelocityY > 0 Then
-                ' Yes, the potential new velocity does exceed zero speed.
-
-                ' Limit paddle decelerate to zero speed.
-                ' This prevents the paddle from reversing direction.
-                LeftPaddle.Velocity.Y = 0
-
-                Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
-
-            Else
-                ' No, the potential new velocity does not exceed zero speed.
-
-                ' Decelerate paddle.
-                LeftPaddle.Velocity.Y = newVelocityY
-
-                Debug.Print($"Left Paddle DCel Velocity {LeftPaddle.Velocity.Y}")
-
-            End If
-
-        End If
-
-        ' Is the paddle moving down?
-        If LeftPaddle.Velocity.Y > 0 Then
-            ' Yes, the paddle is moving down.
-
-            ' Calculate potential new velocity
-            Dim newVelocityY As Double = LeftPaddle.Velocity.Y + (-LeftPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds)
-
-            ' Does the potential new velocity exceed zero speed?
-            If newVelocityY < 0 Then
-                ' Yes, the potential new velocity does exceed zero speed.
-
-                ' Limit paddle decelerate to zero speed.
-                ' This prevents the paddle from reversing direction.
-                LeftPaddle.Velocity.Y = 0
-
-                Debug.Print($"Left Paddle Stop Velocity {LeftPaddle.Velocity.Y}")
-
-            Else
-                ' No, the potential new velocity does not exceed zero speed.
-
-                ' Decelerate paddle.
-                LeftPaddle.Velocity.Y = newVelocityY
-
-                Debug.Print($"Left Paddle DCel Velocity {LeftPaddle.Velocity.Y}")
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub DecelerateRightPaddle()
-
-        ' Is the paddle moving up?
-        If RightPaddle.Velocity.Y < 0 Then
-            ' Yes, the paddle is moving up.
-
-            ' Decelerate paddle.
-            RightPaddle.Velocity.Y += RightPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
-
-            ' Limit decelerate to zero speed.
-            If RightPaddle.Velocity.Y > 0 Then RightPaddle.Velocity.Y = 0 'Zero speed.
-
-        End If
-
-        ' Is the paddle moving down?
-        If RightPaddle.Velocity.Y > 0 Then
-            ' Yes, the paddle is moving down.
-
-            ' Decelerate paddle.
-            RightPaddle.Velocity.Y += -RightPaddle.Acceleration.Y * 2 * DeltaTime.TotalSeconds
-
-            ' Limit decelerate to zero speed.
-            If RightPaddle.Velocity.Y < 0 Then RightPaddle.Velocity.Y = 0 'Zero speed.
-
-        End If
-
-    End Sub
-
-    Private Sub UpdatePause()
-
-        Controllers.Update()
-
-        HandleControllerInput()
-
-        If PKeyDown Then
-
-            If Not IsPKeyDown Then
-
-                IsPKeyDown = True
-
-                LastFrame = Now
-
-                GameState = GameStateEnum.Playing
-
-                MovePointerOffScreen()
-
-                Player.PauseSound("pause")
-
-            End If
-
-        Else
-
-            IsPKeyDown = False
-
-        End If
-
-        If PauseKeyDown Then
-
-            If Not IsPauseKeyDown Then
-
-                IsPauseKeyDown = True
-
-                LastFrame = Now
-
-                GameState = GameStateEnum.Playing
-
-                MovePointerOffScreen()
-
-                Player.PauseSound("pause")
-
-            End If
-
-        Else
-
-            IsPauseKeyDown = False
-
-        End If
-
-        If BackspaceKeyDown Then
-
-            If Not IsBackspaceKeyDown Then
-
-                IsBackspaceKeyDown = True
-
-                ResetGame()
-
-                Player.PauseSound("pause")
-
-                MovePointerOffScreen()
-
-            End If
-
-        Else
-
-            IsBackspaceKeyDown = False
-
-        End If
-
-        If EscKeyDown Then
-
-            If Not IsEscKeyDown Then
-
-                IsEscKeyDown = True
-
-                ResetGame()
-
-                Player.PauseSound("pause")
-
-                MovePointerOffScreen()
-
-            End If
-
-        Else
-
-            IsEscKeyDown = False
-
-        End If
-
-        If XKeyDown Then
-
-            If Not IsXKeyDown Then
-
-                IsXKeyDown = True
-
-                ResetGame()
-
-                Player.PauseSound("pause")
-
-                MovePointerOffScreen()
-
-            End If
-
-        Else
-
-            IsXKeyDown = False
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateInstructions()
-
-        Controllers.Update()
-
-        HandleControllerInput()
-
-        UpdateInstructionsScreenKeyboard()
-
-        UpdateDeltaTime()
-
-        UpdateBallMovement()
-
-        CheckForWallBounce()
-
-        CheckForWallBounceXaxis()
-
-    End Sub
-
-    Private Sub DrawEndScreen(g As Graphics)
-
-        DrawGoalIndicators(g)
-
-        DrawCenterCourtLine(g)
-
-        DrawLeftPaddle(g)
-
-        DrawRightPaddle(g)
-
-        DrawBall(g)
-
-        If NumberOfPlayers = 1 Then
-
-            DrawComputerPlayerIdentifier(g)
-
-        End If
-
-        DrawEndScores(g)
-
-        UpdateGoalIndicators()
-
-    End Sub
-
-    Private Sub DrawGoalIndicator(g As Graphics, indicator As GoalIndicator)
-
-        g.FillRectangle(indicator.ComputedBrush, indicator.Rect)
-
-    End Sub
-
-    Private Sub DrawGoalIndicators(g As Graphics)
-
-        DrawGoalIndicator(g, RightGoalIndicator)
-        DrawGoalIndicator(g, LeftGoalIndicator)
-
-    End Sub
-
-    Private Sub DrawEndScores(g As Graphics)
-
-        'Did the left paddle win?
-        If Winner = WinStateEnum.LeftPaddle Then
-            'Yes, the left paddle won.
-
-            'Flash the winning score.
-            If DrawFlashingText = True Then
-
-                DrawLeftPaddleScore(g)
-
-                DrawLeftPaddleTrophy(g)
-
-            End If
-
-        Else
-            'No, the left paddle didn't win.
-
-            DrawLeftPaddleScore(g)
-
-        End If
-
-        'Did the right paddle win?
-        If Winner = WinStateEnum.RightPaddle Then
-            'Yes, the right paddle won.
-
-            'Flash the winning score.
-            If DrawFlashingText = True Then
-
-                DrawRightPaddleScore(g)
-
-                DrawRightPaddleTrophy(g)
-
-            End If
-
-        Else
-            'No, the right paddle didn't win.
-
-            DrawRightPaddleScore(g)
-
-        End If
-
-    End Sub
-
-    Private Sub DrawPauseScreen(g As Graphics)
-
-        DrawCenterCourtLine(g)
-
-        DrawLeftPaddle(g)
-
-        DrawRightPaddle(g)
-
-        DrawBall(g)
-
-        If NumberOfPlayers = 1 Then
-
-            DrawComputerPlayerIdentifier(g)
-
-        End If
-
-        DrawLeftPaddleScore(g)
-
-        DrawRightPaddleScore(g)
-
-        DrawPausedText(g)
-
-    End Sub
-
-    Private Sub DrawPausedText(g As Graphics)
-
-        g.DrawString("Paused", TitleFont, Brushes.White, ClientCenter, AlineCenterMiddle)
-
-    End Sub
-
-    Private Sub DrawServe(g As Graphics)
-
-        DrawGoalIndicators(g)
-
-        DrawCenterCourtLine(g)
-
-        DrawLeftPaddle(g)
-
-        DrawRightPaddle(g)
-
-        DrawBall(g)
-
-        If NumberOfPlayers = 1 Then
-
-            DrawComputerPlayerIdentifier(g)
-
-        End If
-
-        DrawLeftPaddleScore(g)
-
-        DrawRightPaddleScore(g)
-
-    End Sub
-
-    Private Sub DrawBackground(g As Graphics)
-
-        g.Clear(Color.Black)
-
-    End Sub
-
-    Private Sub UpdateStartScreen()
-
-        Controllers.Update()
-
-        UpdateControllerConnectionStatus()
-
-        HandleControllerInput()
-
-        HandleStartScreenKeyboardInput()
-
-        UpdateDeltaTime()
-
-        UpdateBallMovement()
-
-        CheckForWallBounce()
-
-        CheckForWallBounceXaxis()
-
-    End Sub
-
-    Private Sub HandleControllerInput()
-        ' Respond to input from each connected controller.
-
-        For ControllerNumber As Integer = 0 To 1
-
-            If Controllers.Connected(ControllerNumber) Then
-
-                HandleButtonInput(ControllerNumber)
-
-                HandleLeftThumbstickInput(ControllerNumber)
-
-                HandleRightThumbstickInput(ControllerNumber)
-
-            End If
-
-        Next
-
-    End Sub
-
-    Private Sub DrawStartScreen(g As Graphics)
-
-        DrawControllerConnectionStatus(g)
-
-        DrawBall(g)
-
-        DrawTitle(g)
-
-        DrawStartScreenInstructions(g)
-
-    End Sub
-
-    Private Sub DrawControllerConnectionStatus(g As Graphics)
-        ' Draw controller connection status.
-
-        g.DrawString(Controller0ConnectionStatusText,
-                     ControllerConnectionStatusFont,
-                     Controller0ConnectionStatusBrush,
-                     Controller0ConnectionStatusLocation,
-                     AlineLeft)
-
-        g.DrawString(Controller1ConnectionStatusText,
-                     ControllerConnectionStatusFont,
-                     Controller1ConnectionStatusBrush,
-                     Controller1ConnectionStatusLocation,
-                     AlineLeft)
-
-    End Sub
-
-    Private Sub UpdateControllerConnectionStatus()
-
-        Controller0ConnectionStatusText = If(Controllers.Connected(0), "Controller 0 - Connected", "Controller 0 - Not Connected")
-        Controller0ConnectionStatusBrush = If(Controllers.Connected(0), Brushes.White, Brushes.DarkGray)
-
-        Controller1ConnectionStatusText = If(Controllers.Connected(1), "Controller 1 - Connected", "Controller 1 - Not Connected")
-        Controller1ConnectionStatusBrush = If(Controllers.Connected(1), Brushes.White, Brushes.DarkGray)
-
-    End Sub
-
-    Private Sub DrawTitle(g As Graphics)
-
-        g.DrawString(TitleText, TitleFont, Brushes.White, TitleLocation, AlineCenter)
-
-    End Sub
-
-    Private Sub DrawStartScreenInstructions(g As Graphics)
-
-        g.DrawString(InstructStartText, InstructionsFont, Brushes.White, InstructStartLocation, AlineCenter)
-
-    End Sub
-
-    Private Sub UpdateBallMovement()
-
-        'Move ball horizontally.
-        Ball.Position.X += Ball.Velocity.X * DeltaTime.TotalSeconds 'Δs = V * Δt
-        'Displacement = Velocity x Delta Time
-
-        Ball.Rect.X = Math.Round(Ball.Position.X)
-
-        'Move our vertically.
-        Ball.Position.Y += Ball.Velocity.Y * DeltaTime.TotalSeconds 'Δs = V * Δt
-        'Displacement = Velocity x Delta Time
-
-        Ball.Rect.Y = Math.Round(Ball.Position.Y)
-
-    End Sub
-
-    Private Sub Wraparound()
-
-        'When the rectangle exits the right side of the client area.
-        If Ball.Rect.X >= ClientRectangle.Right Then
-
-            'The rectangle reappears on the left side the client area.
-            Ball.Rect.X = ClientRectangle.Left - Ball.Rect.Width
-
-        End If
-
-        'When the rectangle exits the left side of the client area.
-        If Ball.Rect.X <= ClientRectangle.Left Then
-
-            'The rectangle reappears on the right side the client area.
-            Ball.Rect.X = ClientRectangle.Right - Ball.Rect.Width
-
-        End If
-
-        Ball.Position.X = Ball.Rect.X
-
-    End Sub
-
-    Private Sub DrawInstructions(g As Graphics)
-
-        DrawControllerConnectionStatus(g)
-
-        DrawBall(g)
-
-        DrawTitle(g)
-
-        If NumberOfPlayers = 1 Then
-
-            'Draw one player instructions.
-            g.DrawString(InstructOneText,
-                         InstructionsFont,
-                         Brushes.White,
-                         InstructOneLocation,
-                         AlineCenter)
-
-        Else
-
-            'Draw two player instructions.
-            g.DrawString(InstructTwoText,
-                         InstructionsFont,
-                         Brushes.White,
-                         InstructTwoLocation,
-                         AlineCenter)
-
-        End If
-
-    End Sub
-
-    Private Sub DrawPlaying(g As Graphics)
-
-        DrawGoalIndicators(g)
-
-        DrawCenterCourtLine(g)
-
-        DrawLeftPaddle(g)
-
-        DrawRightPaddle(g)
-
-        DrawBall(g)
-
-        If NumberOfPlayers = 1 Then
-
-            DrawComputerPlayerIdentifier(g)
-
-        End If
-
-        DrawLeftPaddleScore(g)
-
-        DrawRightPaddleScore(g)
-
-        DrawFPSDisplay(g)
-
-    End Sub
-
-    Private Sub DrawRightPaddleScore(g As Graphics)
-
-        g.DrawString(RightPaddleScore, ScoreFont, Brushes.White, RPadScoreLocation, AlineCenter)
-
-    End Sub
-
-    Private Sub DrawRightPaddleTrophy(g As Graphics)
-
-        g.DrawString("🏆", TitleFont, Brushes.White, RPadTrophyLocation, AlineCenterMiddle)
-
-    End Sub
-
-    Private Sub DrawLeftPaddleTrophy(g As Graphics)
-
-        g.DrawString("🏆", TitleFont, Brushes.White, LPadTrophyLocation, AlineCenterMiddle)
-
-    End Sub
-
-    Private Sub DrawLeftPaddleScore(g As Graphics)
-
-        g.DrawString(LeftPaddleScore, ScoreFont, Brushes.White, LPadScoreLocation, AlineCenter)
-
-    End Sub
-
-    Private Sub DrawRightPaddle(g As Graphics)
-
-        g.FillRectangle(Brushes.White, RightPaddle.Rect)
-
-    End Sub
-
-    Private Sub DrawLeftPaddle(g As Graphics)
-
-        g.FillRectangle(Brushes.White, LeftPaddle.Rect)
-
-    End Sub
-
-    Private Sub DrawFPSDisplay(g As Graphics)
-
-        g.DrawString(FPS.ToString & " FPS", FPSFont, Brushes.DarkGray, FPS_Postion)
-
-    End Sub
-
-    Private Sub DrawCenterCourtLine(g As Graphics)
-
-        g.DrawLine(CenterlinePen, CenterlineTop, CenterlineBottom)
-
-    End Sub
-
-    Private Sub CenterCourtLine()
-
-        'Centers the court line in the client area of our form.
-        CenterlineTop = New Point(ClientSize.Width \ 2, 0)
-
-        CenterlineBottom = New Point(ClientSize.Width \ 2, ClientSize.Height)
-
-    End Sub
-
-    Private Sub DrawBall(g As Graphics)
-
-        g.FillRectangle(Brushes.White, Ball.Rect)
-
-    End Sub
-
-    Private Sub HandleButtonInput(ControllerNumber As Integer)
-
-        DoDPadLogic(ControllerNumber)
-
-        DoLetterButtonLogic(ControllerNumber)
-
-        DoStartBackLogic(ControllerNumber)
-
-        'DoBumperLogic(ControllerNumber)
-
-        'DoStickLogic(ControllerNumber)
-
-    End Sub
-
-    Private Sub DoLetterButtonLogic(ControllerNumber As Integer)
-
-        Select Case GameState
-
-            Case GameStateEnum.StartScreen
-
-                If Controllers.A(ControllerNumber) Then
-
-                    If Not IsAButtonDown(ControllerNumber) Then
-
-                        IsAButtonDown(ControllerNumber) = True
-
-                        NumberOfPlayers = 1
-
-                        GameState = GameStateEnum.Instructions
-
-                        MovePointerOffScreen()
-
-                    End If
-
-                Else
-
-                    IsAButtonDown(ControllerNumber) = False
-
-                End If
-
-                If Controllers.B(ControllerNumber) Then
-
-                    NumberOfPlayers = 2
-
-                    GameState = GameStateEnum.Instructions
-
-                    MovePointerOffScreen()
-
-                End If
-
-                If Controllers.X(ControllerNumber) Then
-
-                    If Not IsXButtonDown(ControllerNumber) Then
-
-                        IsXButtonDown(ControllerNumber) = True
-
-                        MovePointerCenterScreen()
-
-                        Application.Exit()
-
-                    End If
-
-                Else
-
-                    IsXButtonDown(ControllerNumber) = False
-
-                End If
-
-            Case GameStateEnum.Instructions
-
-                If Controllers.A(ControllerNumber) Then
-
-                    If Not IsAButtonDown(ControllerNumber) Then
-
-                        IsAButtonDown(ControllerNumber) = True
-
-                        If Player.IsPlaying("startscreenmusic") = True Then
-
-                            Player.PauseSound("startscreenmusic")
-
-                        End If
-
-                        ServeStartTime = DateTime.Now
-
-                        GameState = GameStateEnum.Serve
-
-                        MovePointerOffScreen()
-
-                    End If
-
-                Else
-
-                    IsAButtonDown(ControllerNumber) = False
-
-                End If
-
-                If Controllers.X(ControllerNumber) Then
-
-                    If Not IsXButtonDown(ControllerNumber) Then
-
-                        IsXButtonDown(ControllerNumber) = True
-
-                        GameState = GameStateEnum.StartScreen
-
-                        MovePointerOffScreen()
-
-                    End If
-
-                Else
-
-                    IsXButtonDown(ControllerNumber) = False
-
-                End If
-
-            Case GameStateEnum.Playing
-
-            Case GameStateEnum.Serve
-
-            Case GameStateEnum.Pause
-
-                If Controllers.X(ControllerNumber) Then
-
-                    If Not IsXButtonDown(ControllerNumber) Then
-
-                        IsXButtonDown(ControllerNumber) = True
-
-                        ResetGame()
-
-                        Player.PauseSound("pause")
-
-                        MovePointerOffScreen()
-
-                    End If
-
-                Else
-
-                    IsXButtonDown(ControllerNumber) = False
-
-                End If
-
-
-            Case GameStateEnum.EndScreen
-
-        End Select
-
-    End Sub
-
-    Private Sub DoStartBackLogic(ControllerNumber As Integer)
-
-        Select Case GameState
-
-            Case GameStateEnum.StartScreen
-
-                If Controllers.Start(ControllerNumber) Then
-
-                    If Not IsStartButtonDown(ControllerNumber) Then
-
-                        IsStartButtonDown(ControllerNumber) = True
-
-                        GameState = GameStateEnum.Instructions
-
-                        MovePointerOffScreen()
-
-                    End If
-
-                Else
-
-                    IsStartButtonDown(ControllerNumber) = False
-
-                End If
-
-                If Controllers.Back(ControllerNumber) Then
-
-                    If Not IsBackButtonDown(ControllerNumber) Then
-
-                        IsBackButtonDown(ControllerNumber) = True
-
-                        MovePointerCenterScreen()
-
-                        Application.Exit()
-
-                    End If
-
-                Else
-
-                    IsBackButtonDown(ControllerNumber) = False
-
-                End If
-
-            Case GameStateEnum.Instructions
-
-                If Controllers.Back(ControllerNumber) Then
-
-                    If Not IsBackButtonDown(ControllerNumber) Then
-
-                        IsBackButtonDown(ControllerNumber) = True
-
-                        GameState = GameStateEnum.StartScreen
-
-                        MovePointerOffScreen()
-
-                    End If
-
-                Else
-
-                    IsBackButtonDown(ControllerNumber) = False
-
-                End If
-
-                If Controllers.Start(ControllerNumber) Then
-
-                    If Not IsStartButtonDown(ControllerNumber) Then
-
-                        IsStartButtonDown(ControllerNumber) = True
-
-                        If Player.IsPlaying("startscreenmusic") = True Then
-
-                            Player.PauseSound("startscreenmusic")
-
-                        End If
-
-                        ServeStartTime = DateTime.Now
-
-                        GameState = GameStateEnum.Serve
-
-                        MovePointerOffScreen()
-
-                    End If
-
-                Else
-
-                    IsStartButtonDown(ControllerNumber) = False
-
-                End If
-
-            Case GameStateEnum.Playing
-
-                If Controllers.Start(ControllerNumber) Then
-
-                    If Not IsStartButtonDown(ControllerNumber) Then
-
-                        IsStartButtonDown(ControllerNumber) = True
-
-                        GameState = GameStateEnum.Pause
-
-                        MovePointerOffScreen()
-
-                        PlayPauseSound()
-
-                    End If
-
-                Else
-
-                    IsStartButtonDown(ControllerNumber) = False
-
-                End If
-
-            Case GameStateEnum.Serve
-
-            Case GameStateEnum.Pause
-
-                If Controllers.Start(ControllerNumber) Then
-
-                    If Not IsStartButtonDown(ControllerNumber) Then
-
-                        IsStartButtonDown(ControllerNumber) = True
-
-                        LastFrame = Now
-
-                        GameState = GameStateEnum.Playing
-
-                        MovePointerOffScreen()
-
-                        Player.PauseSound("pause")
-
-                    End If
-
-                Else
-
-                    IsStartButtonDown(ControllerNumber) = False
-
-                End If
-
-                If Controllers.Back(ControllerNumber) Then
-
-                    If Not IsBackButtonDown(ControllerNumber) Then
-
-                        IsBackButtonDown(ControllerNumber) = True
-
-                        ResetGame()
-
-                        Player.PauseSound("pause")
-
-                        MovePointerOffScreen()
-
-                    End If
-
-                Else
-
-                    IsBackButtonDown(ControllerNumber) = False
-
-                End If
-
-            Case GameStateEnum.EndScreen
-
-        End Select
-
-    End Sub
-
-    Private Sub InitializeApp()
-
-        Debug.Print($"Initialization Starting...")
-
-        InitializeForm()
-
-        Ball.Rect.Width = 32
-        Ball.Rect.Height = 32
-        Ball.Position.X = 960
-        Ball.Position.Y = 540
-        Ball.Rect.X = Ball.Position.X
-        Ball.Rect.Y = Ball.Position.Y
-        Ball.Velocity.X = -50
-        Ball.Velocity.Y = -50
-        Ball.MaxVelocity.X = 500
-        Ball.MaxVelocity.Y = 500
-        Ball.Acceleration.X = 25
-        Ball.Acceleration.Y = 25
-
-        LeftPaddle.Rect.Width = 32
-        LeftPaddle.Rect.Height = 128
-        LeftPaddle.Position.X = 20
-        LeftPaddle.Position.Y = ClientSize.Height \ 2 - LeftPaddle.Rect.Height \ 2 'Center vertically
-        LeftPaddle.Rect.X = LeftPaddle.Position.X
-        LeftPaddle.Rect.Y = LeftPaddle.Position.Y
-        LeftPaddle.Velocity.X = 0
-        LeftPaddle.Velocity.Y = 0
-        LeftPaddle.MaxVelocity.X = 500
-        LeftPaddle.MaxVelocity.Y = 475
-        LeftPaddle.Acceleration.X = 0
-        LeftPaddle.Acceleration.Y = 2250
-
-        RightPaddle.Rect.Width = 32
-        RightPaddle.Rect.Height = 128
-        RightPaddle.Position.X = ClientSize.Width - RightPaddle.Rect.Width - 20 'Aline right 20 pix padding
-        RightPaddle.Position.Y = ClientSize.Height \ 2 - RightPaddle.Rect.Height \ 2 'Center vertically
-        RightPaddle.Rect.X = RightPaddle.Position.X
-        RightPaddle.Rect.Y = RightPaddle.Position.Y
-        RightPaddle.Velocity.X = 0
-        RightPaddle.Velocity.Y = 0
-        RightPaddle.MaxVelocity.X = 500
-        RightPaddle.MaxVelocity.Y = 0
-        RightPaddle.Acceleration.X = 0
-        RightPaddle.Acceleration.Y = 2250
-
-
-        CreateSoundFileFromResource()
-
-        Player.AddSound("startscreenmusic", $"{Application.StartupPath}startscreenmusic.mp3")
-
-        Player.SetVolume("startscreenmusic", 300)
-
-        Player.LoopSound("startscreenmusic")
-
-        Player.AddSound("hit", $"{Application.StartupPath}hit.mp3")
-
-        Player.AddOverlapping("bounce", $"{Application.StartupPath}bounce.mp3")
-
-        Player.AddSound("point", $"{Application.StartupPath}point.mp3")
-
-        Player.SetVolume("point", 300)
-
-        Player.AddSound("winning", $"{Application.StartupPath}winning.mp3")
-
-        Player.AddSound("pause", $"{Application.StartupPath}pause.mp3")
-
-        Player.AddSound("serve", $"{Application.StartupPath}serve.mp3")
-        Player.SetVolume("serve", 200)
-
-        LayoutTitleAndInstructions()
-
-        MovePointerOffScreen()
-
-        Controllers.Initialize()
-
-        SetupGameTimer()
-
-        HandleResize()
-
-        Debug.Print($"Initialization Complete ******")
-
-    End Sub
-
-    Private Sub SetupGameTimer()
-
-        gameTimer = New Timer() With {.Interval = 15}
-
-        AddHandler gameTimer.Tick, AddressOf OnGameTick
-
-        gameTimer.Start()
-
-    End Sub
-
-    Private Sub PlayBounceSound()
-
-        Player.PlayOverlapping("bounce")
-
-    End Sub
-
-    Private Sub PlayPointSound()
-
-        Player.PlaySound("point")
-
-    End Sub
-
-    Private Sub InitializeForm()
-
-        MinimumSize = New Size(800, 600)
-
-        CenterToScreen()
-
-        DoubleBuffered = True
-
-        SetStyle(ControlStyles.OptimizedDoubleBuffer Or ControlStyles.AllPaintingInWmPaint, True)
-
-        SetStyle(ControlStyles.UserPaint, True)
-
-        UpdateStyles()
-
-        Text = "P🏓NG - Code with Joe"
-
-        WindowState = FormWindowState.Maximized
-
-    End Sub
-
-    Private Sub UpdateDeltaTime()
-        ' Delta time (Δt) is the elapsed time since the last frame.
-
-        CurrentFrame = Now
-
-        DeltaTime = CurrentFrame - LastFrame ' Calculate delta time
-
-        LastFrame = CurrentFrame ' Update last frame time
-
-    End Sub
-
-    Private Sub UpdateLeftPaddleMovement()
-
-        LeftPaddle.Position.Y += LeftPaddle.Velocity.Y * DeltaTime.TotalSeconds ' Δs = V * Δt
-        ' Displacement = Velocity x Delta Time
-
-        LeftPaddle.Rect.Y = Math.Round(LeftPaddle.Position.Y)
-
-    End Sub
-
-    Private Sub UpdateRightPaddleMovement()
-
-        RightPaddle.Position.Y += RightPaddle.Velocity.Y * DeltaTime.TotalSeconds ' Δs = V * Δt
-        ' Displacement = Velocity x Delta Time
-
-        RightPaddle.Rect.Y = Math.Round(RightPaddle.Position.Y)
-
-    End Sub
-
-    Private Sub UpdateFrameCounter()
-
-        TimeElapsed = Now.Subtract(StartTime)
-
-        SecondsElapsed = TimeElapsed.TotalSeconds
-
-        If SecondsElapsed < 1 Then
-
-            FrameCount += 1
-
-        Else
-
-            FPS = FrameCount
-
-            FrameCount = 0
-
-            StartTime = Now
-
-        End If
-
-    End Sub
-
-    Private Sub LayoutTitleAndInstructions()
-
-        TitleFont = New Font("Segoe UI Emoji", CInt(Height / 6.5))
-
-        Dim TitleTextSize As SizeF = TextRenderer.MeasureText(TitleText, TitleFont)
-
-        TitleLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2 - TitleTextSize.Height)
-
-        InstructionsFont = New Font("Segoe UI Emoji", CInt(Height / 35))
-
-        InstructStartLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
-
-        InstructOneLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
-
-        InstructTwoLocation = New Point(ClientSize.Width \ 2, ClientSize.Height \ 2)
-
-        ControllerConnectionStatusFont = New Font("Segoe UI Emoji", Height / 48)
-
-        Dim ControllerConnectionStatusPad = CInt(Height / 200)
-
-        Dim ControllerConnectionStatusTextSize As SizeF = TextRenderer.MeasureText(Controller0ConnectionStatusText,
-                                                                                   ControllerConnectionStatusFont)
-
-        Controller0ConnectionStatusLocation = New Point(ControllerConnectionStatusPad, ClientRectangle.Top + ControllerConnectionStatusPad)
-        Controller1ConnectionStatusLocation = New Point(ControllerConnectionStatusPad,
-                                                        ClientRectangle.Top + ControllerConnectionStatusPad + CInt(ControllerConnectionStatusTextSize.Height) + ControllerConnectionStatusPad \ 2)
-
-
-
-        Ball.Position.Y = ClientSize.Height \ 2 + 40
-        Ball.Rect.Y = Ball.Position.Y
-
-    End Sub
-
-    Private Sub CreateSoundFileFromResource()
-
-        Dim FilePath As String = Path.Combine(Application.StartupPath, "startscreenmusic.mp3")
-
-        If Not IO.File.Exists(FilePath) Then
-
-            IO.File.WriteAllBytes(FilePath, My.Resources.Start_Screen_Music_7___Pong)
-
-        End If
-
-        FilePath = Path.Combine(Application.StartupPath, "hit.mp3")
-
-        If Not IO.File.Exists(FilePath) Then
-
-            IO.File.WriteAllBytes(FilePath, My.Resources.Hit2)
-
-        End If
-
-        FilePath = Path.Combine(Application.StartupPath, "bounce.mp3")
-
-        If Not IO.File.Exists(FilePath) Then
-
-            IO.File.WriteAllBytes(FilePath, My.Resources.Bounce2)
-
-        End If
-
-        FilePath = Path.Combine(Application.StartupPath, "point.mp3")
-
-        If Not IO.File.Exists(FilePath) Then
-
-            IO.File.WriteAllBytes(FilePath, My.Resources.Point2)
-
-        End If
-
-        FilePath = Path.Combine(Application.StartupPath, "winning.mp3")
-
-        If Not IO.File.Exists(FilePath) Then
-
-            IO.File.WriteAllBytes(FilePath, My.Resources.Match2)
-
-        End If
-
-        FilePath = Path.Combine(Application.StartupPath, "pause.mp3")
-
-        If Not IO.File.Exists(FilePath) Then
-
-            IO.File.WriteAllBytes(FilePath, My.Resources.PauseMusic2)
-
-        End If
-
-        FilePath = Path.Combine(Application.StartupPath, "serve.mp3")
-
-        If Not IO.File.Exists(FilePath) Then
-
-            IO.File.WriteAllBytes(FilePath, My.Resources.serve)
-
-        End If
-
-    End Sub
-
-    Private Sub DoKeyDown(e As KeyEventArgs)
-
-        Select Case e.KeyCode
-
-            Case Keys.Space
-
-                SpaceBarDown = True
-
-            Case Keys.W
-
-                WKeyDown = True
-
-            Case Keys.S
-
-                SKeyDown = True
-
-            Case Keys.Up
-
-                UpArrowKeyDown = True
-
-            Case Keys.Down
-
-                DownArrowKeyDown = True
-
-            Case Keys.D1
-
-                OneKeyDown = True
-
-            Case Keys.NumPad1
-
-                OneKeyDown = True
-
-            Case Keys.D2
-
-                TwoKeyDown = True
-
-            Case Keys.NumPad2
-
-                TwoKeyDown = True
-
-            Case Keys.P
-
-                PKeyDown = True
-
-            Case Keys.A
-
-                AKeyDown = True
-
-            Case Keys.B
-
-                BKeyDown = True
-
-            Case Keys.X
-
-                XKeyDown = True
-
-            Case Keys.Back
-
-                BackspaceKeyDown = True
-
-            Case Keys.Escape
-
-                EscKeyDown = True
-
-            Case Keys.Pause
-
-                PauseKeyDown = True
-
-        End Select
-
-    End Sub
-
-    Private Sub DoKeyUp(e As KeyEventArgs)
-
-        Select Case e.KeyCode
-
-            Case Keys.Space
-
-                SpaceBarDown = False
-
-            Case Keys.W
-
-                WKeyDown = False
-
-            Case Keys.S
-
-                SKeyDown = False
-
-            Case Keys.Up
-
-                UpArrowKeyDown = False
-
-            Case Keys.Down
-
-                DownArrowKeyDown = False
-
-            Case Keys.D1
-
-                OneKeyDown = False
-
-            Case Keys.NumPad1
-
-                OneKeyDown = False
-
-            Case Keys.D2
-
-                TwoKeyDown = False
-
-            Case Keys.NumPad2
-
-                TwoKeyDown = False
-
-            Case Keys.P
-
-                PKeyDown = False
-
-            Case Keys.A
-
-                AKeyDown = False
-
-            Case Keys.B
-
-                BKeyDown = False
-
-            Case Keys.X
-
-                XKeyDown = False
-
-            Case Keys.Back
-
-                BackspaceKeyDown = False
-
-            Case Keys.Escape
-
-                EscKeyDown = False
-
-            Case Keys.Pause
-
-                PauseKeyDown = False
-
-        End Select
-
-    End Sub
 
 End Class
 
 
-Public Structure XboxControllers
-
-    <DllImport("XInput1_4.dll")>
-    Private Shared Function XInputGetState(dwUserIndex As Integer,
-                                     ByRef pState As XINPUT_STATE) As Integer
-    End Function
-
-    <StructLayout(LayoutKind.Explicit)>
-    Private Structure XINPUT_STATE
-
-        <FieldOffset(0)>
-        Public dwPacketNumber As UInteger ' Unsigned integer range 0 through 4,294,967,295.
-        <FieldOffset(4)>
-        Public Gamepad As XINPUT_GAMEPAD
-    End Structure
-
-    <StructLayout(LayoutKind.Sequential)>
-    Private Structure XINPUT_GAMEPAD
-
-        Public wButtons As UShort ' Unsigned integer range 0 through 65,535.
-        Public bLeftTrigger As Byte ' Unsigned integer range 0 through 255.
-        Public bRightTrigger As Byte
-        Public sThumbLX As Short ' Signed integer range -32,768 through 32,767.
-        Public sThumbLY As Short
-        Public sThumbRX As Short
-        Public sThumbRY As Short
-    End Structure
-
-    Private State As XINPUT_STATE
-
-    Private Enum Button
-
-        DPadUp = 1
-        DPadDown = 2
-        DPadLeft = 4
-        DPadRight = 8
-        Start = 16
-        Back = 32
-        LeftStick = 64
-        RightStick = 128
-        LeftBumper = 256
-        RightBumper = 512
-        A = 4096
-        B = 8192
-        X = 16384
-        Y = 32768
-    End Enum
-
-    ' Set the start of the thumbstick neutral zone to 1/2 over.
-    Private Const NeutralStart As Short = -16384 ' -16,384 = -32,768 / 2
-    ' The thumbstick position must be more than 1/2 over the neutral start to
-    ' register as moved.
-    ' A short is a signed 16-bit (2-byte) integer range -32,768 through 32,767.
-    ' This gives us 65,536 values.
-
-    ' Set the end of the thumbstick neutral zone to 1/2 over.
-    Private Const NeutralEnd As Short = 16384 ' 16,383.5 = 32,767 / 2
-    ' The thumbstick position must be more than 1/2 over the neutral end to
-    ' register as moved.
-
-    ' Set the trigger threshold to 1/4 pull.
-    Private Const TriggerThreshold As Byte = 64 ' 64 = 256 / 4
-    ' The trigger position must be greater than the trigger threshold to
-    ' register as pulled.
-    ' A byte is a unsigned 8-bit (1-byte) integer range 0 through 255.
-    ' This gives us 256 values.
-
-    Public Connected() As Boolean
-
-    Private ConnectionStart As Date
-
-    Public Buttons() As UShort
-
-    Public LeftThumbstickXaxisNeutral() As Boolean
-    Public LeftThumbstickYaxisNeutral() As Boolean
-
-    Public RightThumbstickXaxisNeutral() As Boolean
-    Public RightThumbstickYaxisNeutral() As Boolean
-
-    Public DPadNeutral() As Boolean
-
-    Public LetterButtonsNeutral() As Boolean
-
-    Public DPadUp() As Boolean
-    Public DPadDown() As Boolean
-    Public DPadLeft() As Boolean
-    Public DPadRight() As Boolean
-
-    Public Start() As Boolean
-    Public Back() As Boolean
-
-    Public LeftStick() As Boolean
-    Public RightStick() As Boolean
-
-    Public LeftBumper() As Boolean
-    Public RightBumper() As Boolean
-
-    Public A() As Boolean
-    Public B() As Boolean
-    Public X() As Boolean
-    Public Y() As Boolean
-
-    Public RightThumbstickUp() As Boolean
-    Public RightThumbstickDown() As Boolean
-    Public RightThumbstickLeft() As Boolean
-    Public RightThumbstickRight() As Boolean
-
-    Public LeftThumbstickUp() As Boolean
-    Public LeftThumbstickDown() As Boolean
-    Public LeftThumbstickLeft() As Boolean
-    Public LeftThumbstickRight() As Boolean
-
-    Public LeftTrigger() As Boolean
-    Public RightTrigger() As Boolean
-
-    Public TimeToVibe As Integer
-
-    Private LeftVibrateStart() As Date
-
-    Private RightVibrateStart() As Date
-
-    Private IsLeftVibrating() As Boolean
-
-    Private IsRightVibrating() As Boolean
-
-    Public Sub Initialize()
-
-        ' Initialize the Connected array to indicate whether controllers are connected.
-        Connected = New Boolean(0 To 3) {}
-
-        ' Record the current date and time when initialization starts.
-        ConnectionStart = DateTime.Now
-
-        ' Initialize the Buttons array to store the state of controller buttons.
-        Buttons = New UShort(0 To 3) {}
-
-        ' Initialize arrays to check if thumbstick axes are in the neutral position.
-        LeftThumbstickXaxisNeutral = New Boolean(0 To 3) {}
-        LeftThumbstickYaxisNeutral = New Boolean(0 To 3) {}
-        RightThumbstickXaxisNeutral = New Boolean(0 To 3) {}
-        RightThumbstickYaxisNeutral = New Boolean(0 To 3) {}
-
-        ' Initialize array to check if the D-Pad is in the neutral position.
-        DPadNeutral = New Boolean(0 To 3) {}
-
-        ' Initialize array to check if letter buttons are in the neutral position.
-        LetterButtonsNeutral = New Boolean(0 To 3) {}
-
-        ' Set all thumbstick axes, triggers, D-Pad, letter buttons, start/back buttons,
-        ' bumpers,and stick buttons to neutral for all controllers (indices 0 to 3).
-        For i As Integer = 0 To 3
-
-            LeftThumbstickXaxisNeutral(i) = True
-            LeftThumbstickYaxisNeutral(i) = True
-            RightThumbstickXaxisNeutral(i) = True
-            RightThumbstickYaxisNeutral(i) = True
-
-            DPadNeutral(i) = True
-
-            LetterButtonsNeutral(i) = True
-
-        Next
-
-        ' Initialize arrays for thumbstick directional states.
-        RightThumbstickLeft = New Boolean(0 To 3) {}
-        RightThumbstickRight = New Boolean(0 To 3) {}
-        RightThumbstickDown = New Boolean(0 To 3) {}
-        RightThumbstickUp = New Boolean(0 To 3) {}
-        LeftThumbstickLeft = New Boolean(0 To 3) {}
-        LeftThumbstickRight = New Boolean(0 To 3) {}
-        LeftThumbstickDown = New Boolean(0 To 3) {}
-        LeftThumbstickUp = New Boolean(0 To 3) {}
-
-        ' Initialize arrays for trigger states.
-        LeftTrigger = New Boolean(0 To 3) {}
-        RightTrigger = New Boolean(0 To 3) {}
-
-        ' Initialize arrays for letter button states (A, B, X, Y).
-        A = New Boolean(0 To 3) {}
-        B = New Boolean(0 To 3) {}
-        X = New Boolean(0 To 3) {}
-        Y = New Boolean(0 To 3) {}
-
-        ' Initialize arrays for bumper button states.
-        LeftBumper = New Boolean(0 To 3) {}
-        RightBumper = New Boolean(0 To 3) {}
-
-        ' Initialize arrays for D-Pad directional states.
-        DPadUp = New Boolean(0 To 3) {}
-        DPadDown = New Boolean(0 To 3) {}
-        DPadLeft = New Boolean(0 To 3) {}
-        DPadRight = New Boolean(0 To 3) {}
-
-        ' Initialize arrays for start and back button states.
-        Start = New Boolean(0 To 3) {}
-        Back = New Boolean(0 To 3) {}
-
-        ' Initialize arrays for stick button states.
-        LeftStick = New Boolean(0 To 3) {}
-        RightStick = New Boolean(0 To 3) {}
-
-        TimeToVibe = 400 'ms
-
-        LeftVibrateStart = New Date(0 To 3) {}
-        RightVibrateStart = New Date(0 To 3) {}
-
-        For ControllerNumber As Integer = 0 To 3
-
-            LeftVibrateStart(ControllerNumber) = Now
-
-            RightVibrateStart(ControllerNumber) = Now
-
-        Next
-
-        IsLeftVibrating = New Boolean(0 To 3) {}
-        IsRightVibrating = New Boolean(0 To 3) {}
-
-        ' Call the TestInitialization method to verify the initial state of the controllers.
-        TestInitialization()
-
-    End Sub
-
-    Public Sub Update()
-
-        Dim ElapsedTime As TimeSpan = Now - ConnectionStart
-
-        ' Every second check for connected controllers.
-        If ElapsedTime.TotalSeconds >= 1 Then
-
-            For ControllerNumber As Integer = 0 To 3 ' Up to 4 controllers
-
-                Connected(ControllerNumber) = IsConnected(ControllerNumber)
-
-            Next
-
-            ConnectionStart = DateTime.Now
-
-        End If
-
-        For ControllerNumber As Integer = 0 To 3
-
-            If Connected(ControllerNumber) Then
-
-                UpdateState(ControllerNumber)
-
-            End If
-
-        Next
-
-        UpdateVibrateTimers()
-
-    End Sub
-
-    Private Sub UpdateState(controllerNumber As Integer)
-
-        Try
-
-            XInputGetState(controllerNumber, State)
-
-            UpdateButtons(controllerNumber)
-
-            UpdateThumbsticks(controllerNumber)
-
-            UpdateTriggers(controllerNumber)
-
-        Catch ex As Exception
-            ' Something went wrong (An exception occurred).
-
-            Debug.Print($"Error getting XInput state: {controllerNumber} | {ex.Message}")
-
-        End Try
-
-    End Sub
-
-    Private Sub UpdateButtons(CID As Integer)
-
-        UpdateDPadButtons(CID)
-
-        UpdateLetterButtons(CID)
-
-        UpdateBumperButtons(CID)
-
-        UpdateStickButtons(CID)
-
-        UpdateStartBackButtons(CID)
-
-        UpdateDPadNeutral(CID)
-
-        UpdateLetterButtonsNeutral(CID)
-
-        Buttons(CID) = State.Gamepad.wButtons
-
-    End Sub
-
-    Private Sub UpdateThumbsticks(controllerNumber As Integer)
-
-        UpdateLeftThumbstick(controllerNumber)
-
-        UpdateRightThumbstick(controllerNumber)
-
-    End Sub
-
-    Private Sub UpdateTriggers(controllerNumber As Integer)
-
-        UpdateLeftTrigger(controllerNumber)
-
-        UpdateRightTrigger(controllerNumber)
-
-    End Sub
-
-    Private Sub UpdateDPadButtons(CID As Integer)
-
-        DPadUp(CID) = (State.Gamepad.wButtons And Button.DPadUp) <> 0
-        DPadDown(CID) = (State.Gamepad.wButtons And Button.DPadDown) <> 0
-        DPadLeft(CID) = (State.Gamepad.wButtons And Button.DPadLeft) <> 0
-        DPadRight(CID) = (State.Gamepad.wButtons And Button.DPadRight) <> 0
-
-    End Sub
-
-    Private Sub UpdateLetterButtons(CID As Integer)
-
-        A(CID) = (State.Gamepad.wButtons And Button.A) <> 0
-        B(CID) = (State.Gamepad.wButtons And Button.B) <> 0
-        X(CID) = (State.Gamepad.wButtons And Button.X) <> 0
-        Y(CID) = (State.Gamepad.wButtons And Button.Y) <> 0
-
-    End Sub
-
-    Private Sub UpdateBumperButtons(CID As Integer)
-
-        LeftBumper(CID) = (State.Gamepad.wButtons And Button.LeftBumper) <> 0
-        RightBumper(CID) = (State.Gamepad.wButtons And Button.RightBumper) <> 0
-
-    End Sub
-
-    Private Sub UpdateStickButtons(CID As Integer)
-
-        LeftStick(CID) = (State.Gamepad.wButtons And Button.LeftStick) <> 0
-        RightStick(CID) = (State.Gamepad.wButtons And Button.RightStick) <> 0
-
-    End Sub
-
-    Private Sub UpdateStartBackButtons(CID As Integer)
-
-        Start(CID) = (State.Gamepad.wButtons And Button.Start) <> 0
-        Back(CID) = (State.Gamepad.wButtons And Button.Back) <> 0
-
-    End Sub
-
-    Private Sub UpdateLeftThumbstick(ControllerNumber As Integer)
-
-        UpdateLeftThumbstickXaxis(ControllerNumber)
-
-        UpdateLeftThumbstickYaxis(ControllerNumber)
-
-    End Sub
-
-    Private Sub UpdateLeftThumbstickYaxis(ControllerNumber As Integer)
-        ' The range on the Y-axis is -32,768 through 32,767.
-        ' Signed 16-bit (2-byte) integer.
-
-        ' What position is the left thumbstick in on the Y-axis?
-        If State.Gamepad.sThumbLY <= NeutralStart Then
-            ' The left thumbstick is in the down position.
-
-            LeftThumbstickUp(ControllerNumber) = False
-
-            LeftThumbstickYaxisNeutral(ControllerNumber) = False
-
-            LeftThumbstickDown(ControllerNumber) = True
-
-        ElseIf State.Gamepad.sThumbLY >= NeutralEnd Then
-            ' The left thumbstick is in the up position.
-
-            LeftThumbstickDown(ControllerNumber) = False
-
-            LeftThumbstickYaxisNeutral(ControllerNumber) = False
-
-            LeftThumbstickUp(ControllerNumber) = True
-
-        Else
-            ' The left thumbstick is in the neutral position.
-
-            LeftThumbstickUp(ControllerNumber) = False
-
-            LeftThumbstickDown(ControllerNumber) = False
-
-            LeftThumbstickYaxisNeutral(ControllerNumber) = True
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateLeftThumbstickXaxis(ControllerNumber As Integer)
-        ' The range on the X-axis is -32,768 through 32,767.
-        ' sThumbLX is a signed 16-bit (2-byte) integer.
-
-        ' What position is the left thumbstick in on the X-axis?
-        If State.Gamepad.sThumbLX <= NeutralStart Then
-            ' The left thumbstick is in the left position.
-
-            LeftThumbstickRight(ControllerNumber) = False
-
-            LeftThumbstickXaxisNeutral(ControllerNumber) = False
-
-            LeftThumbstickLeft(ControllerNumber) = True
-
-        ElseIf State.Gamepad.sThumbLX >= NeutralEnd Then
-            ' The left thumbstick is in the right position.
-
-            LeftThumbstickLeft(ControllerNumber) = False
-
-            LeftThumbstickXaxisNeutral(ControllerNumber) = False
-
-            LeftThumbstickRight(ControllerNumber) = True
-
-        Else
-            ' The left thumbstick is in the neutral position.
-
-            LeftThumbstickLeft(ControllerNumber) = False
-
-            LeftThumbstickRight(ControllerNumber) = False
-
-            LeftThumbstickXaxisNeutral(ControllerNumber) = True
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateRightThumbstick(ControllerNumber As Integer)
-
-        UpdateRightThumbstickXaxis(ControllerNumber)
-
-        UpdateRightThumbstickYaxis(ControllerNumber)
-
-    End Sub
-
-    Private Sub UpdateRightThumbstickYaxis(ControllerNumber As Integer)
-        ' The range on the Y-axis is -32,768 through 32,767.
-        ' sThumbRY is a signed 16-bit (2-byte) integer.
-
-        ' What position is the right thumbstick in on the Y-axis?
-        If State.Gamepad.sThumbRY <= NeutralStart Then
-            ' The right thumbstick is in the down position.
-
-            RightThumbstickUp(ControllerNumber) = False
-
-            RightThumbstickYaxisNeutral(ControllerNumber) = False
-
-            RightThumbstickDown(ControllerNumber) = True
-
-        ElseIf State.Gamepad.sThumbRY >= NeutralEnd Then
-            ' The right thumbstick is in the up position.
-
-            RightThumbstickDown(ControllerNumber) = False
-
-            RightThumbstickYaxisNeutral(ControllerNumber) = False
-
-            RightThumbstickUp(ControllerNumber) = True
-
-        Else
-            ' The right thumbstick is in the neutral position.
-
-            RightThumbstickUp(ControllerNumber) = False
-
-            RightThumbstickDown(ControllerNumber) = False
-
-            RightThumbstickYaxisNeutral(ControllerNumber) = True
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateRightThumbstickXaxis(ControllerNumber As Integer)
-        ' The range on the X-axis is -32,768 through 32,767.
-        ' Signed 16-bit (2-byte) integer.
-
-        ' What position is the right thumbstick in on the X-axis?
-        If State.Gamepad.sThumbRX <= NeutralStart Then
-            ' The right thumbstick is in the left position.
-
-            RightThumbstickRight(ControllerNumber) = False
-
-            RightThumbstickXaxisNeutral(ControllerNumber) = False
-
-            RightThumbstickLeft(ControllerNumber) = True
-
-        ElseIf State.Gamepad.sThumbRX >= NeutralEnd Then
-            ' The right thumbstick is in the right position.
-
-            RightThumbstickLeft(ControllerNumber) = False
-
-            RightThumbstickXaxisNeutral(ControllerNumber) = False
-
-            RightThumbstickRight(ControllerNumber) = True
-
-        Else
-            ' The right thumbstick is in the neutral position.
-
-            RightThumbstickLeft(ControllerNumber) = False
-
-            RightThumbstickRight(ControllerNumber) = False
-
-            RightThumbstickXaxisNeutral(ControllerNumber) = True
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateRightTrigger(ControllerNumber As Integer)
-        ' The range of right trigger is 0 to 255. Unsigned 8-bit (1-byte) integer.
-        ' The trigger position must be greater than the trigger threshold to
-        ' register as pressed.
-
-        ' What position is the right trigger in?
-        If State.Gamepad.bRightTrigger > TriggerThreshold Then
-            ' The right trigger is in the down position. Trigger Break. Bang!
-
-            RightTrigger(ControllerNumber) = True
-
-        Else
-            ' The right trigger is in the neutral position. Pre-Travel.
-
-            RightTrigger(ControllerNumber) = False
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateLeftTrigger(ControllerNumber As Integer)
-        ' The range of left trigger is 0 to 255. Unsigned 8-bit (1-byte) integer.
-        ' The trigger position must be greater than the trigger threshold to
-        ' register as pressed.
-
-        ' What position is the left trigger in?
-        If State.Gamepad.bLeftTrigger > TriggerThreshold Then
-            ' The left trigger is in the fire position. Trigger Break. Bang!
-
-            LeftTrigger(ControllerNumber) = True
-
-        Else
-            ' The left trigger is in the neutral position. Pre-Travel.
-
-            LeftTrigger(ControllerNumber) = False
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateDPadNeutral(controllerNumber As Integer)
-
-        If DPadDown(controllerNumber) Or
-           DPadLeft(controllerNumber) Or
-           DPadRight(controllerNumber) Or
-           DPadUp(controllerNumber) Then
-
-            DPadNeutral(controllerNumber) = False
-
-        Else
-
-            DPadNeutral(controllerNumber) = True
-
-        End If
-
-    End Sub
-
-    Private Sub UpdateLetterButtonsNeutral(controllerNumber As Integer)
-
-        If A(controllerNumber) Or
-           B(controllerNumber) Or
-           X(controllerNumber) Or
-           Y(controllerNumber) Then
-
-            LetterButtonsNeutral(controllerNumber) = False
-
-        Else
-
-            LetterButtonsNeutral(controllerNumber) = True
-
-        End If
-
-    End Sub
-
-    Private Function IsConnected(controllerNumber As Integer) As Boolean
-
-        Try
-
-            Return XInputGetState(controllerNumber, State) = 0
-            ' 0 means the controller is connected.
-            ' Anything else (a non-zero value) means the controller is not
-            ' connected.
-
-        Catch ex As Exception
-            ' Something went wrong (An exception occured).
-
-            Debug.Print($"Error getting XInput state: {controllerNumber} | {ex.Message}")
-
-            Return False
-
-        End Try
-
-    End Function
-
-    Private Sub TestInitialization()
-
-        ' Check that ConnectionStart is not Nothing (initialization was successful)
-        Debug.Assert(Not ConnectionStart = Nothing,
-                     $"Connection Start should not be Nothing.")
-
-        ' Check that Buttons array is initialized
-        Debug.Assert(Buttons IsNot Nothing,
-                     $"Buttons should not be Nothing.")
-
-        Debug.Assert(Not TimeToVibe = Nothing,
-                     $"TimeToVibe should not be Nothing.")
-
-        For i As Integer = 0 To 3
-
-            ' Check that all controllers are initialized as not connected
-            Debug.Assert(Not Connected(i),
-                         $"Controller {i} should not be connected after initialization.")
-
-            ' Check that all axes of the Left Thumbsticks are initialized as neutral. 
-            Debug.Assert(LeftThumbstickXaxisNeutral(i),
-                         $"Left Thumbstick X-axis for Controller {i} should be neutral.")
-            Debug.Assert(LeftThumbstickYaxisNeutral(i),
-                         $"Left Thumbstick Y-axis for Controller {i} should be neutral.")
-
-            ' Check that all axes of the Right Thumbsticks are initialized as neutral. 
-            Debug.Assert(RightThumbstickXaxisNeutral(i),
-                         $"Right Thumbstick X-axis for Controller {i} should be neutral.")
-            Debug.Assert(RightThumbstickYaxisNeutral(i),
-                         $"Right Thumbstick Y-axis for Controller {i} should be neutral.")
-
-            ' Check that all DPads are initialized as neutral. 
-            Debug.Assert(DPadNeutral(i),
-                         $"DPad for Controller {i} should be neutral.")
-
-            ' Check that all Letter Buttons are initialized as neutral. 
-            Debug.Assert(LetterButtonsNeutral(i),
-                         $"Letter Buttons for Controller {i} should be neutral.")
-
-            ' Check that additional Right Thumbstick states are not active.
-            Debug.Assert(Not RightThumbstickLeft(i),
-                         $"Right Thumbstick Left for Controller {i} should not be true.")
-            Debug.Assert(Not RightThumbstickRight(i),
-                         $"Right Thumbstick Right for Controller {i} should not be true.")
-            Debug.Assert(Not RightThumbstickDown(i),
-                         $"Right Thumbstick Down for Controller {i} should not be true.")
-            Debug.Assert(Not RightThumbstickUp(i),
-                         $"Right Thumbstick Up for Controller {i} should not be true.")
-
-            ' Check that additional Left Thumbstick states are not active.
-            Debug.Assert(Not LeftThumbstickLeft(i),
-                         $"Left Thumbstick Left for Controller {i} should not be true.")
-            Debug.Assert(Not LeftThumbstickRight(i),
-                         $"Left Thumbstick Right for Controller {i} should not be true.")
-            Debug.Assert(Not LeftThumbstickDown(i),
-                         $"Left Thumbstick Down for Controller {i} should not be true.")
-            Debug.Assert(Not LeftThumbstickUp(i),
-                         $"Left Thumbstick Up for Controller {i} should not be true.")
-
-            ' Check that trigger states are not active.
-            Debug.Assert(Not LeftTrigger(i),
-                         $"Left Trigger for Controller {i} should not be true.")
-            Debug.Assert(Not RightTrigger(i),
-                         $"Right Trigger for Controller {i} should not be true.")
-
-            ' Check that letter button states (A, B, X, Y) are not active.
-            Debug.Assert(Not A(i),
-                         $"A for Controller {i} should not be true.")
-            Debug.Assert(Not B(i),
-                         $"B for Controller {i} should not be true.")
-            Debug.Assert(Not X(i),
-                         $"X for Controller {i} should not be true.")
-            Debug.Assert(Not Y(i),
-                         $"Y for Controller {i} should not be true.")
-
-            ' Check that bumper button states are not active.
-            Debug.Assert(Not LeftBumper(i),
-                         $"Left Bumper for Controller {i} should not be true.")
-            Debug.Assert(Not RightBumper(i),
-                         $"Right Bumper for Controller {i} should not be true.")
-
-            ' Check that D-Pad directional states are not active.
-            Debug.Assert(Not DPadUp(i),
-                         $"D-Pad Up for Controller {i} should not be true.")
-            Debug.Assert(Not DPadDown(i),
-                         $"D-Pad Down for Controller {i} should not be true.")
-            Debug.Assert(Not DPadLeft(i),
-                         $"D-Pad Left for Controller {i} should not be true.")
-            Debug.Assert(Not DPadRight(i),
-                         $"D-Pad Right for Controller {i} should not be true.")
-
-            ' Check that start and back button states are not active.
-            Debug.Assert(Not Start(i),
-                         $"Start Button for Controller {i} should not be true.")
-            Debug.Assert(Not Back(i),
-                         $"Back Button for Controller {i} should not be true.")
-
-            ' Check that stick button states are not active.
-            Debug.Assert(Not LeftStick(i),
-                         $"Left Stick for Controller {i} should not be true.")
-            Debug.Assert(Not RightStick(i),
-                         $"Right Stick for Controller {i} should not be true.")
-
-            Debug.Assert(Not LeftVibrateStart(i) = Nothing,
-                         $"Left Vibrate Start for Controller {i} should not be Nothing.")
-            Debug.Assert(Not RightVibrateStart(i) = Nothing,
-                         $"Right Vibrate Start for Controller {i} should not be Nothing.")
-
-            Debug.Assert(Not IsLeftVibrating(i),
-                         $"Is Left Vibrating for Controller {i} should not be true.")
-            Debug.Assert(Not IsRightVibrating(i),
-                         $"Is Right Vibrating for Controller {i} should not be true.")
-
-        Next
-
-        ' For Lex
-
-    End Sub
-
-    <DllImport("XInput1_4.dll")>
-    Private Shared Function XInputSetState(playerIndex As Integer,
-                                     ByRef vibration As XINPUT_VIBRATION) As Integer
-    End Function
-
-    Private Structure XINPUT_VIBRATION
-
-        Public wLeftMotorSpeed As UShort
-        Public wRightMotorSpeed As UShort
-    End Structure
-
-    Private Vibration As XINPUT_VIBRATION
-
-    Public Sub VibrateLeft(CID As Integer, Speed As UShort)
-        ' The range of speed is 0 through 65,535. Unsigned 16-bit (2-byte) integer.
-        ' The left motor is the low-frequency rumble motor.
-
-        ' Set left motor speed.
-        Vibration.wLeftMotorSpeed = Speed
-
-        LeftVibrateStart(CID) = Now
-
-        IsLeftVibrating(CID) = True
-
-    End Sub
-
-    Public Sub VibrateRight(CID As Integer, Speed As UShort)
-        ' The range of speed is 0 through 65,535. Unsigned 16-bit (2-byte) integer.
-        ' The right motor is the high-frequency rumble motor.
-
-        ' Set right motor speed.
-        Vibration.wRightMotorSpeed = Speed
-
-        RightVibrateStart(CID) = Now
-
-        IsRightVibrating(CID) = True
-
-    End Sub
-
-    Private Sub SendVibrationMotorCommand(ControllerID As Integer)
-        ' Sends vibration motor speed command to the specified controller.
-
-        Try
-
-            ' Send motor speed command to the specified controller.
-            If XInputSetState(ControllerID, Vibration) = 0 Then
-                ' The motor speed was set. Success.
-
-                Debug.Print($"{ControllerID} did vibrate.  {Vibration.wLeftMotorSpeed} |  {Vibration.wRightMotorSpeed} ")
-
-            Else
-                ' The motor speed was not set. Fail.
-
-                Debug.Print($"{ControllerID} did not vibrate.  {Vibration.wLeftMotorSpeed} |  {Vibration.wRightMotorSpeed} ")
-
-            End If
-
-        Catch ex As Exception
-
-            Debug.Print($"Error sending vibration motor command: {ControllerID} | {Vibration.wLeftMotorSpeed} |  {Vibration.wRightMotorSpeed} | {ex.Message}")
-
-            Exit Sub
-
-        End Try
-
-    End Sub
-
-    Private Sub UpdateVibrateTimers()
-
-        UpdateLeftVibrateTimer()
-
-        UpdateRightVibrateTimer()
-
-    End Sub
-
-    Private Sub UpdateLeftVibrateTimer()
-
-        For ControllerNumber As Integer = 0 To 3
-
-            If IsLeftVibrating(ControllerNumber) Then
-
-                Dim ElapsedTime As TimeSpan = Now - LeftVibrateStart(ControllerNumber)
-
-                If ElapsedTime.TotalMilliseconds >= TimeToVibe Then
-
-                    IsLeftVibrating(ControllerNumber) = False
-
-                    ' Turn left motor off (set zero speed).
-                    Vibration.wLeftMotorSpeed = 0
-
-                End If
-
-                SendVibrationMotorCommand(ControllerNumber)
-
-            End If
-
-        Next
-
-    End Sub
-
-    Private Sub UpdateRightVibrateTimer()
-
-        For ControllerNumber As Integer = 0 To 3
-
-            If IsRightVibrating(ControllerNumber) Then
-
-                Dim ElapsedTime As TimeSpan = Now - RightVibrateStart(ControllerNumber)
-
-                If ElapsedTime.TotalMilliseconds >= TimeToVibe Then
-
-                    IsRightVibrating(ControllerNumber) = False
-
-                    ' Turn left motor off (set zero speed).
-                    Vibration.wRightMotorSpeed = 0
-
-                End If
-
-                SendVibrationMotorCommand(ControllerNumber)
-
-            End If
-
-        Next
-
-    End Sub
-
-End Structure
-
-Public Structure AudioPlayer
-
-    <DllImport("winmm.dll", EntryPoint:="mciSendStringW")>
-    Private Shared Function mciSendStringW(<MarshalAs(UnmanagedType.LPWStr)> ByVal lpszCommand As String,
-                                           <MarshalAs(UnmanagedType.LPWStr)> ByVal lpszReturnString As StringBuilder,
-                                           ByVal cchReturn As UInteger, ByVal hwndCallback As IntPtr) As Integer
-    End Function
-
-    Private Sounds() As String
-
-    Public Function AddSound(SoundName As String, FilePath As String) As Boolean
-
-        ' Do we have a name and does the file exist?
-        If Not String.IsNullOrWhiteSpace(SoundName) AndAlso IO.File.Exists(FilePath) Then
-            ' Yes, we have a name and the file exists.
-
-            Dim CommandOpen As String = $"open ""{FilePath}"" alias {SoundName}"
-
-            ' Do we have sounds?
-            If Sounds Is Nothing Then
-                ' No we do not have sounds.
-
-                ' Did the sound file open?
-                If SendMciCommand(CommandOpen, IntPtr.Zero) Then
-                    ' Yes, the sound file did open.
-
-                    ' Start the Sounds array with the sound.
-                    ReDim Sounds(0)
-
-                    Sounds(0) = SoundName
-
-                    Return True ' The sound was added.
-
-                End If
-
-                ' Is the sound in the array already?
-            ElseIf Not Sounds.Contains(SoundName) Then
-                ' Yes we have sounds and no the sound is not in the array.
-
-                ' Did the sound file open?
-                If SendMciCommand(CommandOpen, IntPtr.Zero) Then
-                    ' Yes, the sound file did open.
-
-                    ' Add the sound to the Sounds array.
-                    Array.Resize(Sounds, Sounds.Length + 1)
-
-                    Sounds(Sounds.Length - 1) = SoundName
-
-                    Return True ' The sound was added.
-
-                End If
-
-            End If
-
-        End If
-
-        Debug.Print($"{SoundName} not added to sounds.")
-
-        Return False ' The sound was not added.
-
-    End Function
-
-    Public Function SetVolume(SoundName As String, Level As Integer) As Boolean
-
-        ' Do we have sounds and is the sound in the array and is the level in the valid range?
-        If Sounds IsNot Nothing AndAlso Sounds.Contains(SoundName) AndAlso Level >= 0 AndAlso Level <= 1000 Then
-            ' We have sounds and the sound is in the array and the level is in range.
-
-            Dim CommandVolume As String = $"setaudio {SoundName} volume to {Level}"
-
-            Return SendMciCommand(CommandVolume, IntPtr.Zero) ' The volume was set.
-
-        End If
-
-        Debug.Print($"{SoundName} volume not set.")
-
-        Return False ' The volume was not set.
-
-    End Function
-
-    Public Function LoopSound(SoundName As String) As Boolean
-
-        ' Do we have sounds and is the sound in the array?
-        If Sounds IsNot Nothing AndAlso Sounds.Contains(SoundName) Then
-            ' We have sounds and the sound is in the array.
-
-            Dim CommandSeekToStart As String = $"seek {SoundName} to start"
-
-            Dim CommandPlayRepeat As String = $"play {SoundName} repeat"
-
-            Return SendMciCommand(CommandSeekToStart, IntPtr.Zero) AndAlso
-                   SendMciCommand(CommandPlayRepeat, IntPtr.Zero) ' The sound is looping.
-
-        End If
-
-        Debug.Print($"{SoundName} not looping.")
-
-        Return False ' The sound is not looping.
-
-    End Function
-
-    Public Function PlaySound(SoundName As String) As Boolean
-
-        ' Do we have sounds and is the sound in the array?
-        If Sounds IsNot Nothing AndAlso Sounds.Contains(SoundName) Then
-            ' We have sounds and the sound is in the array.
-
-            Dim CommandSeekToStart As String = $"seek {SoundName} to start"
-
-            Dim CommandPlay As String = $"play {SoundName} notify"
-
-            Return SendMciCommand(CommandSeekToStart, IntPtr.Zero) AndAlso
-                   SendMciCommand(CommandPlay, IntPtr.Zero) ' The sound is playing.
-
-        End If
-
-        Debug.Print($"{SoundName} not playing.")
-
-        Return False ' The sound is not playing.
-
-    End Function
-
-    Public Function PauseSound(SoundName As String) As Boolean
-
-        ' Do we have sounds and is the sound in the array?
-        If Sounds IsNot Nothing AndAlso Sounds.Contains(SoundName) Then
-            ' We have sounds and the sound is in the array.
-
-            Dim CommandPause As String = $"pause {SoundName} notify"
-
-            Return SendMciCommand(CommandPause, IntPtr.Zero) ' The sound is paused.
-
-        End If
-
-        Debug.Print($"{SoundName} not paused.")
-
-        Return False ' The sound is not paused.
-
-    End Function
-
-    Public Function IsPlaying(SoundName As String) As Boolean
-
-        Return GetStatus(SoundName, "mode") = "playing"
-
-    End Function
-
-    Public Sub AddOverlapping(SoundName As String, FilePath As String)
-
-        For Each Suffix As String In {"A", "B", "C", "D", "E", "F", "G", "H",
-                                      "I", "J", "K", "L", "M", "N", "O", "P",
-                                      "Q", "R", "S", "T", "U", "V", "W", "X"}
-
-            AddSound(SoundName & Suffix, FilePath)
-
-        Next
-
-    End Sub
-
-    Public Sub PlayOverlapping(SoundName As String)
-
-        For Each Suffix As String In {"A", "B", "C", "D", "E", "F", "G", "H",
-                                      "I", "J", "K", "L", "M", "N", "O", "P",
-                                      "Q", "R", "S", "T", "U", "V", "W", "X"}
-
-            If Not IsPlaying(SoundName & Suffix) Then
-
-                PlaySound(SoundName & Suffix)
-
-                Exit Sub
-
-            End If
-
-        Next
-
-    End Sub
-
-    Public Sub SetVolumeOverlapping(SoundName As String, Level As Integer)
-
-        For Each Suffix As String In {"A", "B", "C", "D", "E", "F", "G", "H",
-                                      "I", "J", "K", "L", "M", "N", "O", "P",
-                                      "Q", "R", "S", "T", "U", "V", "W", "X"}
-
-            SetVolume(SoundName & Suffix, Level)
-
-        Next
-
-    End Sub
-
-    Private Function SendMciCommand(command As String, hwndCallback As IntPtr) As Boolean
-
-        Dim ReturnString As New StringBuilder(128)
-
-        Try
-
-            Return mciSendStringW(command, ReturnString, 0, hwndCallback) = 0
-
-        Catch ex As Exception
-
-            Debug.Print($"Error sending MCI command: {command} | {ex.Message}")
-
-            Return False
-
-        End Try
-
-    End Function
-
-    Private Function GetStatus(SoundName As String, StatusType As String) As String
-
-        Try
-
-            ' Do we have sounds and is the sound in the array?
-            If Sounds IsNot Nothing AndAlso Sounds.Contains(SoundName) Then
-                ' We have sounds and the sound is in the array.
-
-                Dim CommandStatus As String = $"status {SoundName} {StatusType}"
-
-                Dim StatusReturn As New StringBuilder(128)
-
-                mciSendStringW(CommandStatus, StatusReturn, 128, IntPtr.Zero)
-
-                Return StatusReturn.ToString.Trim.ToLower
-
-            End If
-
-        Catch ex As Exception
-
-            Debug.Print($"Error getting status: {SoundName} | {ex.Message}")
-
-        End Try
-
-        Return String.Empty
-
-    End Function
-
-    Public Sub CloseSounds()
-
-        If Sounds IsNot Nothing Then
-
-            For Each Sound In Sounds
-
-                Dim CommandClose As String = $"close {Sound}"
-
-                SendMciCommand(CommandClose, IntPtr.Zero)
-
-            Next
-
-            Sounds = Nothing
-
-        End If
-
-    End Sub
-
-End Structure
-
-
-'Learn more:
-'
-'Consuming Unmanaged DLL Functions
-'https://learn.microsoft.com/en-us/dotnet/framework/interop/consuming-unmanaged-dll-functions
-'
-'XInputGetState Function
-'https://learn.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate
-'
-'XINPUT_STATE Structure
-'https://learn.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_state
-'
-'XINPUT_GAMEPAD Structure
-'https://learn.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad
-'
-'XInputSetState Function
-'https://learn.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputsetstate
-'
-'XINPUT_VIBRATION Structure
-'https://learn.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_vibration
-'
-'Getting Started with XInput in Windows Applications
-'https://learn.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput
-'
-'XInput Game Controller APIs
-'https://learn.microsoft.com/en-us/windows/win32/api/_xinput/
-'
-'XInput Versions
-'https://learn.microsoft.com/en-us/windows/win32/xinput/xinput-versions
-'
-'Comparison of XInput and DirectInput Features
-'https://learn.microsoft.com/en-us/windows/win32/xinput/xinput-and-directinput
-'
-'Short Data Type
-'https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/data-types/short-data-type
-'
-'Byte Data Type
-'https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/data-types/byte-data-type
-'
-'UShort Data Type
-'https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/data-types/ushort-data-type
-'
-'UInteger Data Type
-'https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/data-types/uinteger-data-type
-'
-'Boolean Data Type
-'https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/data-types/boolean-data-type
-'
-'Integer Data Type
-'https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/data-types/integer-data-type
-'
-'DllImportAttribute.EntryPoint Field
-'https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.dllimportattribute.entrypoint?view=net-7.0
-'
-'Passing Structures
-'https://learn.microsoft.com/en-us/dotnet/framework/interop/passing-structures
-'
-'Strings used in Structures
-'https://learn.microsoft.com/en-us/dotnet/framework/interop/default-marshalling-for-strings#strings-used-in-structures
-'
-'
-
-' Monica is our an AI assistant.
-' https://monica.im/
-' She is helping me write better code and learn new things.
-
-' Copilot is our other AI assistant.
-' https://copilot.github.com/
-' It is also helping me write better code and learn new things.
