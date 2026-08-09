@@ -1,66 +1,7 @@
-﻿' P🏓NG is a simulation of Table Tennis, a recreational activity and an
-' Olympic sport since 1988 is also known by the term "ping-pong" or just "pong".
-
-' This repository is designed to help new game developers learn the fundamentals
-' of game programming and design through a classic game.
-
-' Features
-'
-'   Classic Gameplay: Experience the timeless fun of ping-pong with modern
-'   enhancements.
-
-'   Keyboard and Controller Support: Play using your keyboard ⌨️ or Xbox
-'   controllers 🎮 , complete with vibration feedback.
-'
-'   Resizable and Pausable: Enjoy a flexible gameplay experience that can be
-'   paused at any time.
-'
-'   Single and Multiplayer Modes: Challenge yourself against a computer player
-'   or compete with friends.
-
-' Learning Objectives
-
-'   Understand the basics of game mechanics and physics.
-
-'   Gain hands-on experience with VB.NET and game development concepts.
-
-'   Learn how to implement user input handling, game states, and sound effects.
-
-' https://github.com/JoeLumbley/Pong
-
-' MIT License
-' Copyright(c) 2023 Joseph W. Lumbley
-
-' Permission is hereby granted, free of charge, to any person obtaining a copy
-' of this software and associated documentation files (the "Software"), to deal
-' in the Software without restriction, including without limitation the rights
-' to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-' copies of the Software, and to permit persons to whom the Software is
-' furnished to do so, subject to the following conditions:
-
-' The above copyright notice and this permission notice shall be included in all
-' copies or substantial portions of the Software.
-
-' THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-' IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-' FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-' AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-' LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-' OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-' SOFTWARE.
-
-' Pong Refactor - Full Version with Start Screen, Fade, Blink, AI, Game Over, Player Selection
-'
-' MIT License
-' Copyright (c) 2026 Joseph W. Lumbley
-
-Imports System.Drawing.Drawing2D
+﻿Imports System.Drawing.Drawing2D
 Imports System.IO
 
 Public Class Form1
-
-    Inherits Form
-
 
     ' -------------------------------
     '  Game State
@@ -156,12 +97,8 @@ Public Class Form1
     Dim paddleRightVelocity As Single
     Dim lastPaddleRightY As Single
 
-
-
-
     Public Sub New()
-
-        'Me.init
+        InitializeComponent()
 
         Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or
                     ControlStyles.UserPaint Or
@@ -187,7 +124,6 @@ Public Class Form1
 
         sw.Start()
         fpsTimer.Start()
-
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -1050,6 +986,9 @@ Public Class Form1
     End Sub
 
 
+
+
+
+
+
 End Class
-
-
