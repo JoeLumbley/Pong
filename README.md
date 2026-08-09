@@ -8,7 +8,7 @@
 
 ### Key Features
 - **Classic Gameplay**: Experience the timeless fun of ping-pong with modern enhancements, including smooth animations and responsive controls.
-- **Keyboard and Controller Support**: Play using your keyboard or Xbox controllers, complete with vibration feedback for an immersive experience.
+- **Keyboard Support**: Play using your keyboard.
 - **Resizable and Pausable**: Enjoy a flexible gameplay experience that can be paused at any time, allowing players to take breaks without losing progress.
 - **Single and Multiplayer Modes**: Challenge yourself against a computer player or compete with friends, making the game versatile for different play styles.
 
