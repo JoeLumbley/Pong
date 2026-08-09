@@ -14,8 +14,7 @@ Public Class Form1
     End Enum
 
     Private currentState As GameState = GameState.StartScreen
-    'Private gameOver As Boolean = False
-    Private winnerText As String = ""
+    Private winnerText As String = String.Empty
 
     ' -------------------------------
     '  Player Mode
@@ -344,7 +343,7 @@ Public Class Form1
                 angle = 135 * (Math.PI / 180)
 
             Else
-
+                ' Paddle stationary
                 If playerMode = 1 Then
                     ' Single-player mode → bounce slightly down 
                     angle = 175 * (Math.PI / 180)
@@ -352,9 +351,6 @@ Public Class Form1
                     ' Two-player mode → straight bounce
                     angle = 180 * (Math.PI / 180)
                 End If
-
-                '' Paddle stationary → straight bounce
-                'angle = 180 * (Math.PI / 180)
             End If
 
             velX = Math.Cos(angle) * speed
@@ -365,9 +361,6 @@ Public Class Form1
         End If
 
     End Sub
-
-
-
 
     Private Sub HandleWallCollisions()
 
@@ -560,8 +553,8 @@ Public Class Form1
                      CSng(10))
     End Sub
 
-
     Private Sub DrawStartScreen(g As Graphics)
+
         Dim titleFont As New Font("Segoe UI", CSng(ClientSize.Height / 10), FontStyle.Bold)
         Dim menuFont As New Font("Segoe UI", CSng(ClientSize.Height / 30), FontStyle.Regular)
         Dim infoFont As New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
@@ -571,13 +564,11 @@ Public Class Form1
 
         Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
 
-
         Using tb As New SolidBrush(titleColor)
             g.DrawString(title, titleFont, tb,
                          CSng((ClientSize.Width - titleSize.Width) / 2),
                          CSng(ClientSize.Height * 0.15))
         End Using
-
 
         ' Menu options
         Dim option1 As String = "1 Player"
