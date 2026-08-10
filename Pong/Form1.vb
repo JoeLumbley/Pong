@@ -452,10 +452,19 @@ Public Class Form1
                              (ClientSize.Height - ballDiameter) / 2)
 
         Dim rnd As New Random()
-        Dim angle As Double = rnd.NextDouble() * Math.PI / 3 - Math.PI / 6
+        'Dim angle As Double = rnd.NextDouble() * Math.PI / 3 - Math.PI / 6
 
-        velX = direction * speed
+        ''velX = direction * speed
+        ''velY = Math.Sin(angle) * speed
+
+        'velX = Math.Cos(angle) * speed
+        'velY = Math.Sin(angle) * speed
+
+
+        Dim angle As Double = rnd.NextDouble() * (Math.PI / 3) - (Math.PI / 6)
+        velX = Math.Cos(angle) * speed * direction
         velY = Math.Sin(angle) * speed
+
 
         trail.Clear()
     End Sub
