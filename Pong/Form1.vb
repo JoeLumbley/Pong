@@ -96,6 +96,10 @@ Public Class Form1
     Dim paddleRightVelocity As Single
     Dim lastPaddleRightY As Single
 
+    Private pauseMenuIndex As Integer = 0
+
+
+
     Public Sub New()
 
         'Me.InitializeComponent()
@@ -401,6 +405,8 @@ Public Class Form1
     End Sub
 
     Private Sub CheckScore()
+        If currentState = GameState.Pause Then Return
+
         If scoreLeft >= 10 Then
             winnerText = "Left Player Wins!"
             currentState = GameState.EndScreen
@@ -573,16 +579,63 @@ Public Class Form1
 
     End Sub
 
+    'Private Sub DrawPauseScreen(g As Graphics)
+
+    '    Using dimBrush As New SolidBrush(Color.FromArgb(64, 0, 0, 0))
+    '        g.FillRectangle(dimBrush, ClientRectangle)
+    '    End Using
+
+    '    Dim font As New Font("Segoe UI", CSng(ClientSize.Height / 20), FontStyle.Bold)
+    '    Dim text As String = "PAUSED"
+    '    Dim size = g.MeasureString(text, font)
+
+    '    Using b As New SolidBrush(Color.White)
+    '        g.DrawString(text, font, b,
+    '                 CSng((ClientSize.Width - size.Width) / 2),
+    '                 CSng(ClientSize.Height * 0.4))
+    '    End Using
+    'End Sub
+
+
     Private Sub DrawPauseScreen(g As Graphics)
-        Dim font As New Font("Segoe UI", CSng(ClientSize.Height / 20), FontStyle.Bold)
-        Dim text As String = "PAUSED"
-        Dim size = g.MeasureString(text, font)
+
+        ' Dim background
+        Using dimBrush As New SolidBrush(Color.FromArgb(120, 0, 0, 0))
+            g.FillRectangle(dimBrush, ClientRectangle)
+        End Using
+
+        ' Title
+        Dim titleFont As New Font("Segoe UI", CSng(ClientSize.Height / 18), FontStyle.Bold)
+        Dim title As String = "PAUSED"
+        Dim titleSize = g.MeasureString(title, titleFont)
 
         Using b As New SolidBrush(Color.White)
-            g.DrawString(text, font, b,
-                     CSng((ClientSize.Width - size.Width) / 2),
-                     CSng(ClientSize.Height * 0.4))
+            g.DrawString(title, titleFont, b,
+                     CSng((ClientSize.Width - titleSize.Width) / 2),
+                     CSng(ClientSize.Height * 0.25))
         End Using
+
+        ' Menu items
+        Dim menuFont As New Font("Segoe UI", CSng(ClientSize.Height / 28), FontStyle.Regular)
+
+        Dim items() As String = {"Resume", "Restart Match", "Quit to Start Screen"}
+
+        For i As Integer = 0 To items.Length - 1
+            Dim text = items(i)
+            Dim size = g.MeasureString(text, menuFont)
+
+            Dim color As Color =
+            If(i = pauseMenuIndex,
+               Color.FromArgb(255, 255, 255),
+               Color.FromArgb(140, 140, 140))
+
+            Using b As New SolidBrush(color)
+                g.DrawString(text, menuFont, b,
+                         CSng((ClientSize.Width - size.Width) / 2),
+                         CSng(ClientSize.Height * 0.4 + i * (size.Height + 10)))
+            End Using
+        Next
+
     End Sub
 
 
@@ -818,28 +871,74 @@ Public Class Form1
         ' -------------------------------
         '  Gameplay Input
         ' -------------------------------
-        If e.KeyCode = Keys.W Then moveUpLeft = True
-        If e.KeyCode = Keys.S Then moveDownLeft = True
+        If currentState = GameState.Playing Then
+            If e.KeyCode = Keys.W Then moveUpLeft = True
+            If e.KeyCode = Keys.S Then moveDownLeft = True
+            If playerMode = 2 Then
+                If e.KeyCode = Keys.Up Then moveUpRight = True
+                If e.KeyCode = Keys.Down Then moveDownRight = True
+            End If
 
-        If playerMode = 2 Then
-            If e.KeyCode = Keys.Up Then moveUpRight = True
-            If e.KeyCode = Keys.Down Then moveDownRight = True
-        End If
+            If e.KeyCode = Keys.P Then
 
 
-        If e.KeyCode = Keys.P Then
-            If currentState = GameState.Playing Then
                 currentState = GameState.Pause
                 physicsTimer.Stop()
+                moveUpLeft = False
+                moveDownLeft = False
+                moveUpRight = False
+                moveDownRight = False
+                pauseMenuIndex = 0
                 Invalidate()
-            ElseIf currentState = GameState.Pause Then
+
+            End If
+
+            Return
+        End If
+
+        If currentState = GameState.Pause Then
+
+            If e.KeyCode = Keys.P Then
                 currentState = GameState.Playing
                 physicsTimer.Start()
             End If
+
+            ' Navigate menu
+            If e.KeyCode = Keys.Up Then
+                pauseMenuIndex = Math.Max(0, pauseMenuIndex - 1)
+                Invalidate()
+                Return
+            End If
+
+            If e.KeyCode = Keys.Down Then
+                pauseMenuIndex = Math.Min(2, pauseMenuIndex + 1)
+                Invalidate()
+                Return
+            End If
+
+            ' Select option
+            If e.KeyCode = Keys.Enter OrElse e.KeyCode = Keys.Space Then
+                Select Case pauseMenuIndex
+                    Case 0 ' Resume
+                        currentState = GameState.Playing
+                        physicsTimer.Start()
+
+                    Case 1 ' Restart
+                        StartNewMatch()
+                        physicsTimer.Start()
+
+                    Case 2 ' Quit to Start Screen
+                        currentState = GameState.StartScreen
+                        winnerText = ""
+                        scoreLeft = 0
+                        scoreRight = 0
+                        physicsTimer.Start()
+                End Select
+
+                Return
+            End If
+
         End If
-
-
-
 
     End Sub
 
