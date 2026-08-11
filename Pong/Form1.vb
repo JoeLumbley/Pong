@@ -906,12 +906,14 @@ Public Class Form1
             ' Navigate menu
             If e.KeyCode = Keys.Up Then
                 pauseMenuIndex = Math.Max(0, pauseMenuIndex - 1)
+                AudioPlayer.PlayOverlapping("bounce")
                 Invalidate()
                 Return
             End If
 
             If e.KeyCode = Keys.Down Then
                 pauseMenuIndex = Math.Min(2, pauseMenuIndex + 1)
+                AudioPlayer.PlayOverlapping("bounce")
                 Invalidate()
                 Return
             End If
