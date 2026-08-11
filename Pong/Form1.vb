@@ -925,9 +925,11 @@ Public Class Form1
                         currentState = GameState.Playing
                         physicsTimer.Start()
 
+
                     Case 1 ' Restart
                         StartNewMatch()
                         physicsTimer.Start()
+
 
                     Case 2 ' Quit to Start Screen
                         currentState = GameState.StartScreen
@@ -936,7 +938,7 @@ Public Class Form1
                         scoreRight = 0
                         physicsTimer.Start()
                 End Select
-
+                AudioPlayer.PlaySound("point")
                 Return
             End If
 
