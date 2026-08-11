@@ -920,26 +920,30 @@ Public Class Form1
 
             ' Select option
             If e.KeyCode = Keys.Enter OrElse e.KeyCode = Keys.Space Then
+
                 Select Case pauseMenuIndex
                     Case 0 ' Resume
                         currentState = GameState.Playing
                         physicsTimer.Start()
-
-
                     Case 1 ' Restart
                         StartNewMatch()
                         physicsTimer.Start()
-
-
                     Case 2 ' Quit to Start Screen
+
+                        AudioPlayer.PauseSound("loop")
+                        AudioPlayer.LoopSound("start")
+
                         currentState = GameState.StartScreen
                         winnerText = ""
                         scoreLeft = 0
                         scoreRight = 0
                         physicsTimer.Start()
                 End Select
+
                 AudioPlayer.PlaySound("point")
+
                 Return
+
             End If
 
         End If
