@@ -108,15 +108,19 @@ Public Class Form1
         Me.StartPosition = FormStartPosition.CenterScreen
         Me.WindowState = FormWindowState.Maximized
 
-        ' Center ball
-        ballPos = New PointF((ClientSize.Width - ballDiameter) / 2,
-                             (ClientSize.Height - ballDiameter) / 2)
+        '' Center ball
+        'ballPos = New PointF((ClientSize.Width - ballDiameter) / 2,
+        '                     (ClientSize.Height - ballDiameter) / 2)
 
-        ' Random direction
-        Dim rnd As New Random()
-        Dim angle As Double = rnd.NextDouble() * Math.PI * 2
-        velX = Math.Cos(angle) * speed
-        velY = Math.Sin(angle) * speed
+        CenterBall()
+
+        '' Random direction
+        'Dim rnd As New Random()
+        'Dim angle As Double = rnd.NextDouble() * Math.PI * 2
+        'velX = Math.Cos(angle) * speed
+        'velY = Math.Sin(angle) * speed
+
+        MoveBallRandom()
 
         physicsTimer.Interval = 15
         AddHandler physicsTimer.Tick, AddressOf PhysicsTick
@@ -430,46 +434,80 @@ Public Class Form1
 
     Private Sub EndMatch()
         speed = 200
-        CenterBallRandom()
+
+
+        CenterBall()
+        MoveBallRandom()
 
         AudioPlayer.PauseSound("loop")
         AudioPlayer.LoopSound("start")
     End Sub
 
 
-    Private Sub CenterBallRandom()
-        ballPos = New PointF((ClientSize.Width - ballDiameter) / 2,
-                             (ClientSize.Height - ballDiameter) / 2)
+    Private Sub CenterBall()
 
+        ' Center the ball in the middle of the client area.
+        ballPos = New PointF((ClientSize.Width - ballDiameter) / 2,
+                            (ClientSize.Height - ballDiameter) / 2)
+
+    End Sub
+
+
+    Private Sub MoveBallRandom()
+
+        ' Move the ball in a random direction with a fixed speed.
         Dim rnd As New Random()
         Dim angle As Double = rnd.NextDouble() * Math.PI * 2
         velX = Math.Cos(angle) * speed
         velY = Math.Sin(angle) * speed
+
     End Sub
 
+
+
+
+
     Private Sub ResetBall(direction As Integer)
-        ballPos = New PointF((ClientSize.Width - ballDiameter) / 2,
-                             (ClientSize.Height - ballDiameter) / 2)
+
+        '' Center the ball in the middle of the screen
+        'ballPos = New PointF((ClientSize.Width - ballDiameter) / 2,
+        '                     (ClientSize.Height - ballDiameter) / 2)
+
+        CenterBall()
+
+        'Dim rnd As New Random()
+
+        '' Random angle between -30 and +30 degrees (in radians) 
+        'Dim angle As Double = rnd.NextDouble() * (Math.PI / 3) - (Math.PI / 6)
+        'velX = Math.Cos(angle) * speed * direction
+        'velY = Math.Sin(angle) * speed
+
+        ServeBall(direction)
+
+        trail.Clear()
+
+    End Sub
+
+
+    Private Sub ServeBall(direction As Integer)
 
         Dim rnd As New Random()
 
-        'Dim angle As Double = rnd.NextDouble() * Math.PI / 3 - Math.PI / 6
-        ''velX = direction * speed
-        ''velY = Math.Sin(angle) * speed
-
+        ' Random angle between -30 and +30 degrees (in radians) 
         Dim angle As Double = rnd.NextDouble() * (Math.PI / 3) - (Math.PI / 6)
         velX = Math.Cos(angle) * speed * direction
         velY = Math.Sin(angle) * speed
 
-
-        trail.Clear()
     End Sub
 
+
     Public Sub PlayWithCooldown(name As String, ms As Integer)
+
         Dim now = Environment.TickCount
         If lastPlay.ContainsKey(name) AndAlso now - lastPlay(name) < ms Then Return
         lastPlay(name) = now
         AudioPlayer.PlayOverlapping(name)
+
     End Sub
 
     ' -------------------------------
@@ -496,20 +534,24 @@ Public Class Form1
         g.InterpolationMode = InterpolationMode.HighQualityBicubic
         g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit
 
-        DrawTrail(g)
-        DrawBall(g)
+        'DrawTrail(g)
+        'DrawBall(g)
 
         Select Case currentState
             Case GameState.StartScreen
-                DrawStartScreen(g)
+                DrawTrail(g)
+                DrawBall(g)
 
+                DrawStartScreen(g)
             Case GameState.Playing
                 DrawTrail(g)
                 DrawBall(g)
                 DrawPaddles(g)
                 DrawHUD(g)
-
             Case GameState.EndScreen
+                DrawTrail(g)
+                DrawBall(g)
+
                 DrawGameOver(g)
         End Select
 
