@@ -10,7 +10,7 @@ Public Class Form1
         StartScreen
         Playing
         EndScreen
-
+        Pause
     End Enum
 
     Private currentState As GameState = GameState.StartScreen
@@ -97,7 +97,8 @@ Public Class Form1
     Dim lastPaddleRightY As Single
 
     Public Sub New()
-        InitializeComponent()
+
+        'Me.InitializeComponent()
 
         Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or
                     ControlStyles.UserPaint Or
@@ -428,8 +429,15 @@ Public Class Form1
     End Sub
 
     Private Sub ResetPaddles()
+
+        ' Center the paddles vertically in the middle of the client area
         paddleLeft.Y = (ClientSize.Height - paddleHeight) / 2
+        'paddleLeft.Y = (ClientSize.Height - paddleLeft.Height) / 2
+
+
         paddleRight.Y = (ClientSize.Height - paddleHeight) / 2
+        'paddleRight.Y = (ClientSize.Height - paddleRight.Height) / 2
+
     End Sub
 
     Private Sub EndMatch()
@@ -553,9 +561,30 @@ Public Class Form1
                 DrawBall(g)
 
                 DrawGameOver(g)
+
+            Case GameState.Pause
+                DrawTrail(g)
+                DrawBall(g)
+                DrawPaddles(g)
+                DrawHUD(g)
+                DrawPauseScreen(g)
+
         End Select
 
     End Sub
+
+    Private Sub DrawPauseScreen(g As Graphics)
+        Dim font As New Font("Segoe UI", CSng(ClientSize.Height / 20), FontStyle.Bold)
+        Dim text As String = "PAUSED"
+        Dim size = g.MeasureString(text, font)
+
+        Using b As New SolidBrush(Color.White)
+            g.DrawString(text, font, b,
+                     CSng((ClientSize.Width - size.Width) / 2),
+                     CSng(ClientSize.Height * 0.4))
+        End Using
+    End Sub
+
 
     Private Sub DrawTrail(g As Graphics)
         Dim count As Integer = Math.Min(trail.Count, trailLength)
@@ -701,16 +730,55 @@ Public Class Form1
         If Me.WindowState = FormWindowState.Minimized Then Return
         If trailSizes Is Nothing OrElse trailOffsets Is Nothing Then Return
 
+
+        ballDiameter = CInt(ClientSize.Height / 20)
+
+        trailLength = CInt(ClientSize.Height / 50)
+
         If ballPos.Y > ClientSize.Height - ballDiameter Then
             ballPos.Y = ClientSize.Height - ballDiameter
         End If
 
-        For i As Integer = 0 To trailLength - 1
-            Dim size As Integer = trailSizes(i)
-            trailOffsets(i) = CSng((ballDiameter - size) / 2)
-        Next
+        'For i As Integer = 0 To trailLength - 1
+        '    Dim size As Integer = trailSizes(i)
+        '    trailOffsets(i) = CSng((ballDiameter - size) / 2)
+        'Next
 
-        paddleRight.X = ClientSize.Width - 50 - paddleWidth
+        paddleHeight = ClientSize.Height / 8
+        paddleWidth = ClientSize.Height / 25
+
+        paddleLeft.Height = paddleHeight
+        paddleLeft.Width = paddleWidth
+
+        paddleRight.Height = paddleHeight
+        paddleRight.Width = paddleWidth
+
+
+
+        'paddleLeft.Height = ClientSize.Height / 8
+        'paddleLeft.Width = ClientSize.Height / 25
+
+
+        'paddleRight.Height = ClientSize.Height / 8
+        'paddleRight.Width = ClientSize.Height / 25
+
+
+        paddleLeft.X = ClientSize.Height / 25
+        paddleRight.X = ClientSize.Width - ClientSize.Height / 25 - paddleWidth
+
+        'paddleLeft.Y = ClientSize.Height / 2 - paddleLeft.Height / 2
+
+
+        ResetPaddles()
+
+        CenterBall()
+
+        InitTrails()
+
+
+        trail.Clear()
+
+
 
         Invalidate()
     End Sub
@@ -757,6 +825,22 @@ Public Class Form1
             If e.KeyCode = Keys.Up Then moveUpRight = True
             If e.KeyCode = Keys.Down Then moveDownRight = True
         End If
+
+
+        If e.KeyCode = Keys.P Then
+            If currentState = GameState.Playing Then
+                currentState = GameState.Pause
+                physicsTimer.Stop()
+                Invalidate()
+            ElseIf currentState = GameState.Pause Then
+                currentState = GameState.Playing
+                physicsTimer.Start()
+            End If
+        End If
+
+
+
+
     End Sub
 
     Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
