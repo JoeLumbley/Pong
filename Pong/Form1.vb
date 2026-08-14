@@ -940,16 +940,13 @@ Public Class Form1
     End Sub
 
     Private Sub CreateSoundFiles()
-        'Dim FilePath As String = Path.Combine(Application.StartupPath, "loop.mp3")
+
         CreateFileFromResource(Path.Combine(Application.StartupPath, "loop.mp3"), My.Resources.Resource1.BB_MegaLoop)
 
-        'FilePath = Path.Combine(Application.StartupPath, "bounce.mp3")
         CreateFileFromResource(Path.Combine(Application.StartupPath, "bounce.mp3"), My.Resources.Resource1.Bounce)
 
-        'FilePath = Path.Combine(Application.StartupPath, "start.mp3")
         CreateFileFromResource(Path.Combine(Application.StartupPath, "start.mp3"), My.Resources.Resource1.Start_loop)
 
-        'FilePath = Path.Combine(Application.StartupPath, "point.mp3")
         CreateFileFromResource(Path.Combine(Application.StartupPath, "point.mp3"), My.Resources.Resource1.hit3)
 
     End Sub
