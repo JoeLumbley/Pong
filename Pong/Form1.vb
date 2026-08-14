@@ -182,6 +182,7 @@ Public Class Form1
     End Sub
 
     Private Sub InitAudio()
+
         CreateSoundFiles()
 
         AudioPlayer.AddSound("loop", Path.Combine(Application.StartupPath, "loop.mp3"))
@@ -196,15 +197,15 @@ Public Class Form1
         AudioPlayer.AddSound("start", Path.Combine(Application.StartupPath, "start.mp3"))
         AudioPlayer.SetVolume("start", 70)
         AudioPlayer.LoopSound("start")
+
     End Sub
 
     ' -------------------------------
     '  Physics Loop
     ' -------------------------------
     Private Sub PhysicsTick(sender As Object, e As EventArgs)
+
         If Me.WindowState = FormWindowState.Minimized Then Return
-
-
 
         Dim dt As Double = sw.Elapsed.TotalSeconds
         sw.Restart()
@@ -237,6 +238,7 @@ Public Class Form1
         lastPaddleRightY = paddleRight.Y
 
         Invalidate()
+
     End Sub
 
     Private Sub UpdateStartScreenFX()
@@ -435,14 +437,15 @@ Public Class Form1
     End Sub
 
     Private Sub EndMatch()
-        speed = 200
 
+        speed = 200
 
         CenterBall()
         MoveBallRandom()
 
         AudioPlayer.PauseSound("loop")
         AudioPlayer.LoopSound("start")
+
     End Sub
 
 
@@ -465,31 +468,15 @@ Public Class Form1
 
     End Sub
 
-
-
-
-
     Private Sub ResetBall(direction As Integer)
 
-        '' Center the ball in the middle of the screen
-        'ballPos = New PointF((ClientSize.Width - ballDiameter) / 2,
-        '                     (ClientSize.Height - ballDiameter) / 2)
-
         CenterBall()
-
-        'Dim rnd As New Random()
-
-        '' Random angle between -30 and +30 degrees (in radians) 
-        'Dim angle As Double = rnd.NextDouble() * (Math.PI / 3) - (Math.PI / 6)
-        'velX = Math.Cos(angle) * speed * direction
-        'velY = Math.Sin(angle) * speed
 
         ServeBall(direction)
 
         trail.Clear()
 
     End Sub
-
 
     Private Sub ServeBall(direction As Integer)
 
@@ -536,9 +523,6 @@ Public Class Form1
         g.InterpolationMode = InterpolationMode.HighQualityBicubic
         g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit
 
-        'DrawTrail(g)
-        'DrawBall(g)
-
         Select Case currentState
             Case GameState.StartScreen
                 DrawTrail(g)
@@ -566,23 +550,6 @@ Public Class Form1
         End Select
 
     End Sub
-
-    'Private Sub DrawPauseScreen(g As Graphics)
-
-    '    Using dimBrush As New SolidBrush(Color.FromArgb(64, 0, 0, 0))
-    '        g.FillRectangle(dimBrush, ClientRectangle)
-    '    End Using
-
-    '    Dim font As New Font("Segoe UI", CSng(ClientSize.Height / 20), FontStyle.Bold)
-    '    Dim text As String = "PAUSED"
-    '    Dim size = g.MeasureString(text, font)
-
-    '    Using b As New SolidBrush(Color.White)
-    '        g.DrawString(text, font, b,
-    '                 CSng((ClientSize.Width - size.Width) / 2),
-    '                 CSng(ClientSize.Height * 0.4))
-    '    End Using
-    'End Sub
 
 
     Private Sub DrawPauseScreen(g As Graphics)
@@ -780,10 +747,6 @@ Public Class Form1
             ballPos.Y = ClientSize.Height - ballDiameter
         End If
 
-        'For i As Integer = 0 To trailLength - 1
-        '    Dim size As Integer = trailSizes(i)
-        '    trailOffsets(i) = CSng((ballDiameter - size) / 2)
-        'Next
 
         paddleHeight = ClientSize.Height / 8
         paddleWidth = ClientSize.Height / 25
@@ -795,19 +758,9 @@ Public Class Form1
         paddleRight.Width = paddleWidth
 
 
-
-        'paddleLeft.Height = ClientSize.Height / 8
-        'paddleLeft.Width = ClientSize.Height / 25
-
-
-        'paddleRight.Height = ClientSize.Height / 8
-        'paddleRight.Width = ClientSize.Height / 25
-
-
         paddleLeft.X = ClientSize.Height / 25
         paddleRight.X = ClientSize.Width - ClientSize.Height / 25 - paddleWidth
 
-        'paddleLeft.Y = ClientSize.Height / 2 - paddleLeft.Height / 2
 
 
         ResetPaddles()
