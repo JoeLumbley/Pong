@@ -102,8 +102,6 @@ Public Class Form1
 
     Public Sub New()
 
-        'Me.InitializeComponent()
-
         Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or
                     ControlStyles.UserPaint Or
                     ControlStyles.OptimizedDoubleBuffer, True)
@@ -113,17 +111,7 @@ Public Class Form1
         Me.StartPosition = FormStartPosition.CenterScreen
         Me.WindowState = FormWindowState.Maximized
 
-        '' Center ball
-        'ballPos = New PointF((ClientSize.Width - ballDiameter) / 2,
-        '                     (ClientSize.Height - ballDiameter) / 2)
-
         CenterBall()
-
-        '' Random direction
-        'Dim rnd As New Random()
-        'Dim angle As Double = rnd.NextDouble() * Math.PI * 2
-        'velX = Math.Cos(angle) * speed
-        'velY = Math.Sin(angle) * speed
 
         MoveBallRandom()
 
