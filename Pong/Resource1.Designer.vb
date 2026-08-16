@@ -67,6 +67,36 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Byte[].
         '''</summary>
+        Friend Shared ReadOnly Property _Select() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Select", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend Shared ReadOnly Property ArrowDown() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("ArrowDown", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend Shared ReadOnly Property ArrowUp() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("ArrowUp", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
         Friend Shared ReadOnly Property BB_MegaLoop() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("BB MegaLoop", resourceCulture)
@@ -90,6 +120,16 @@ Namespace My.Resources
         Friend Shared ReadOnly Property hit3() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("hit3", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend Shared ReadOnly Property PauseMusic2() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("PauseMusic2", resourceCulture)
                 Return CType(obj,Byte())
             End Get
         End Property

@@ -186,17 +186,30 @@ Public Class Form1
         CreateSoundFiles()
 
         AudioPlayer.AddSound("loop", Path.Combine(Application.StartupPath, "loop.mp3"))
-        AudioPlayer.SetVolume("loop", 100)
+        AudioPlayer.SetVolume("loop", 200)
 
         AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
         AudioPlayer.SetVolume("point", 125)
 
         AudioPlayer.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
-        AudioPlayer.SetVolumeOverlapping("bounce", 70)
+        AudioPlayer.SetVolumeOverlapping("bounce", 100)
 
         AudioPlayer.AddSound("start", Path.Combine(Application.StartupPath, "start.mp3"))
-        AudioPlayer.SetVolume("start", 70)
+        AudioPlayer.SetVolume("start", 125)
         AudioPlayer.LoopSound("start")
+
+        AudioPlayer.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
+        AudioPlayer.SetVolumeOverlapping("arrow_up", 200)
+
+        AudioPlayer.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
+        AudioPlayer.SetVolumeOverlapping("arrow_down", 400)
+
+        AudioPlayer.AddOverlapping("select", Path.Combine(Application.StartupPath, "select.mp3"))
+        AudioPlayer.SetVolumeOverlapping("select", 400)
+
+        AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
+        AudioPlayer.SetVolume("pause", 600)
+
 
     End Sub
 
@@ -739,7 +752,7 @@ Public Class Form1
         If trailSizes Is Nothing OrElse trailOffsets Is Nothing Then Return
 
 
-        ballDiameter = CInt(ClientSize.Height / 20)
+        ballDiameter = CInt(ClientSize.Height / 15)
 
         trailLength = CInt(ClientSize.Height / 50)
 
@@ -822,6 +835,8 @@ Public Class Form1
 
             If e.KeyCode = Keys.P Then
 
+                AudioPlayer.PauseSound("loop")
+
 
                 currentState = GameState.Pause
                 physicsTimer.Stop()
@@ -831,6 +846,8 @@ Public Class Form1
                 moveDownRight = False
                 pauseMenuIndex = 0
                 Invalidate()
+
+                AudioPlayer.LoopSound("pause")
 
             End If
 
@@ -846,42 +863,85 @@ Public Class Form1
 
             ' Navigate menu
             If e.KeyCode = Keys.Up Then
-                pauseMenuIndex = Math.Max(0, pauseMenuIndex - 1)
-                AudioPlayer.PlayOverlapping("bounce")
-                Invalidate()
+
+                If pauseMenuIndex > 0 Then
+                    pauseMenuIndex = Math.Max(0, pauseMenuIndex - 1)
+                    AudioPlayer.PlayOverlapping("arrow_up")
+
+                    'PlayWithCooldown("arrow_up", 500)
+                    Invalidate()
+
+                End If
+
                 Return
+
             End If
 
+
             If e.KeyCode = Keys.Down Then
-                pauseMenuIndex = Math.Min(2, pauseMenuIndex + 1)
-                AudioPlayer.PlayOverlapping("bounce")
-                Invalidate()
+
+                If pauseMenuIndex < 2 Then
+
+                    pauseMenuIndex = Math.Min(2, pauseMenuIndex + 1)
+                    AudioPlayer.PlayOverlapping("arrow_down")
+
+                    'PlayWithCooldown("arrow_down", 100)
+                    Invalidate()
+
+                End If
+
                 Return
+
             End If
+
 
             ' Select option
             If e.KeyCode = Keys.Enter OrElse e.KeyCode = Keys.Space Then
 
+                AudioPlayer.PauseSound("pause")
+
+                AudioPlayer.PlayOverlapping("select")
+
+                'PlayWithCooldown("select", 100)
+
                 Select Case pauseMenuIndex
                     Case 0 ' Resume
+
+
                         currentState = GameState.Playing
                         physicsTimer.Start()
+                        AudioPlayer.LoopSound("loop")
+
                     Case 1 ' Restart
+
+
                         StartNewMatch()
                         physicsTimer.Start()
+                        AudioPlayer.LoopSound("loop")
+
                     Case 2 ' Quit to Start Screen
 
-                        AudioPlayer.PauseSound("loop")
-                        AudioPlayer.LoopSound("start")
+
+                        speed = 200
+
+                        CenterBall()
+
+                        MoveBallRandom()
+
+
+                        'AudioPlayer.PauseSound("loop")
 
                         currentState = GameState.StartScreen
                         winnerText = ""
                         scoreLeft = 0
                         scoreRight = 0
                         physicsTimer.Start()
+
+                        AudioPlayer.LoopSound("start")
+
                 End Select
 
-                AudioPlayer.PlaySound("point")
+                'AudioPlayer.PlaySound("point")
 
                 Return
 
@@ -901,6 +961,7 @@ Public Class Form1
             If e.KeyCode = Keys.Up Then moveUpRight = False
             If e.KeyCode = Keys.Down Then moveDownRight = False
         End If
+
     End Sub
 
     Private Sub StartNewMatch()
@@ -918,6 +979,7 @@ Public Class Form1
         AudioPlayer.LoopSound("loop")
 
         ResetBall(If(New Random().Next(0, 2) = 0, -1, 1))
+
     End Sub
 
     ' -------------------------------
@@ -949,6 +1011,16 @@ Public Class Form1
 
         CreateFileFromResource(Path.Combine(Application.StartupPath, "point.mp3"), My.Resources.Resource1.hit3)
 
+        CreateFileFromResource(Path.Combine(Application.StartupPath, "arrow_up.mp3"), My.Resources.Resource1.ArrowUp)
+
+        CreateFileFromResource(Path.Combine(Application.StartupPath, "arrow_down.mp3"), My.Resources.Resource1.ArrowDown)
+
+        CreateFileFromResource(Path.Combine(Application.StartupPath, "select.mp3"), My.Resources.Resource1._Select)
+
+        CreateFileFromResource(Path.Combine(Application.StartupPath, "pause.mp3"), My.Resources.Resource1.PauseMusic2)
+
+
+
     End Sub
 
     Private Sub CreateFileFromResource(filepath As String, resource As Byte())
@@ -962,16 +1034,16 @@ Public Class Form1
     End Sub
 
     Private Sub MovePointerOffScreen()
-        ' Move mouse pointer off screen.
 
+        ' Move mouse pointer off screen.
         Cursor.Position = New Point(Screen.PrimaryScreen.WorkingArea.Right,
                                     Screen.PrimaryScreen.WorkingArea.Height \ 2)
 
     End Sub
 
     Private Sub MovePointerCenterScreen()
-        ' Move mouse pointer center screen.
 
+        ' Move mouse pointer center screen.
         Cursor.Position = New Point(Screen.PrimaryScreen.WorkingArea.Right \ 2,
                                     Screen.PrimaryScreen.WorkingArea.Height \ 2)
 
