@@ -102,6 +102,8 @@ Public Class Form1
 
     Public Sub New()
 
+        Me.Text = "PONG - Code with Joe"
+
         Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or
                     ControlStyles.UserPaint Or
                     ControlStyles.OptimizedDoubleBuffer, True)
@@ -111,9 +113,9 @@ Public Class Form1
         Me.StartPosition = FormStartPosition.CenterScreen
         Me.WindowState = FormWindowState.Maximized
 
-        CenterBall()
+        'CenterBall()
 
-        MoveBallRandom()
+        'MoveBallRandom()
 
         physicsTimer.Interval = 15
         AddHandler physicsTimer.Tick, AddressOf PhysicsTick
@@ -124,6 +126,9 @@ Public Class Form1
 
     Protected Overrides Sub OnLoad(e As EventArgs)
         MyBase.OnLoad(e)
+
+        CenterBall()
+        MoveBallRandom()
 
         InitAudio()
         InitGraphics()
@@ -192,7 +197,7 @@ Public Class Form1
         AudioPlayer.SetVolume("point", 125)
 
         AudioPlayer.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
-        AudioPlayer.SetVolumeOverlapping("bounce", 100)
+        AudioPlayer.SetVolumeOverlapping("bounce", 200)
 
         AudioPlayer.AddSound("start", Path.Combine(Application.StartupPath, "start.mp3"))
         AudioPlayer.SetVolume("start", 125)
@@ -411,6 +416,9 @@ Public Class Form1
         If currentState = GameState.Pause Then Return
 
         If scoreLeft >= 10 Then
+            CenterBall()
+            MoveBallRandom()
+
             winnerText = "Left Player Wins!"
             currentState = GameState.EndScreen
             EndMatch()
@@ -418,6 +426,9 @@ Public Class Form1
         End If
 
         If scoreRight >= 10 Then
+            CenterBall()
+            MoveBallRandom()
+
             winnerText = "Right Player Wins!"
             currentState = GameState.EndScreen
             EndMatch()
