@@ -94,9 +94,9 @@ Public Class Form1
     Private rng As New Random()
 
     Private lastPaddleLeftY As Single
-    Dim paddleLeftVelocity As Single
-    Dim paddleRightVelocity As Single
-    Dim lastPaddleRightY As Single
+    Private paddleLeftVelocity As Single
+    Private paddleRightVelocity As Single
+    Private lastPaddleRightY As Single
 
     Private pauseMenuIndex As Integer = 0
 
