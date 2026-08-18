@@ -199,16 +199,16 @@ Public Class Form1
         CreateSoundFiles()
 
         AudioPlayer.AddSound("loop", Path.Combine(Application.StartupPath, "loop.mp3"))
-        AudioPlayer.SetVolume("loop", 200)
+        AudioPlayer.SetVolume("loop", 500)
 
         AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
-        AudioPlayer.SetVolume("point", 125)
+        AudioPlayer.SetVolume("point", 300)
 
         AudioPlayer.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
         AudioPlayer.SetVolumeOverlapping("bounce", 200)
 
         AudioPlayer.AddSound("start", Path.Combine(Application.StartupPath, "start.mp3"))
-        AudioPlayer.SetVolume("start", 125)
+        AudioPlayer.SetVolume("start", 300)
         AudioPlayer.LoopSound("start")
 
         AudioPlayer.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
@@ -221,7 +221,7 @@ Public Class Form1
         AudioPlayer.SetVolumeOverlapping("select", 400)
 
         AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
-        AudioPlayer.SetVolume("pause", 600)
+        AudioPlayer.SetVolume("pause", 800)
 
 
     End Sub
@@ -257,6 +257,7 @@ Public Class Form1
             CheckScore()
         End If
 
+        ' Update paddle velocities for spin calculations
         paddleLeftVelocity = paddleLeft.Y - lastPaddleLeftY
         lastPaddleLeftY = paddleLeft.Y
 
