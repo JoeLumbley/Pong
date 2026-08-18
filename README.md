@@ -1,6 +1,6 @@
-#  P🏓NG
+#  PONG
 
-**P🏓NG** is designed to help new game developers grasp fundamental programming concepts and design principles through an engaging and interactive experience. The game features classic gameplay mechanics, supports keyboard inputs, and allows for both single-player and multiplayer modes. 
+**PONG** is designed to help new game developers grasp fundamental programming concepts and design principles through an engaging and interactive experience. The game features classic gameplay mechanics, supports keyboard inputs, and allows for both single-player and multiplayer modes. 
 
 
 <img width="1920" height="1080" alt="029" src="https://github.com/user-attachments/assets/53d4e399-6f6c-4c12-9804-c730035c8098" />
