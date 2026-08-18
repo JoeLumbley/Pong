@@ -123,10 +123,6 @@ Public Class Form1
         Me.StartPosition = FormStartPosition.CenterScreen
         Me.WindowState = FormWindowState.Maximized
 
-        'CenterBall()
-
-        'MoveBallRandom()
-
         physicsTimer.Interval = 15
         AddHandler physicsTimer.Tick, AddressOf PhysicsTick
 
