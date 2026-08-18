@@ -50,6 +50,8 @@ Public Class Form1
     Private fpsFont As Font
     Private trailBrushes As SolidBrush()
     Private paddleBrush As SolidBrush
+    Private playerLableBrush As SolidBrush
+    Private scoreBrush As SolidBrush
 
     ' -------------------------------
     '  Trail System
@@ -98,6 +100,14 @@ Public Class Form1
 
     Private pauseMenuIndex As Integer = 0
 
+    ' -------------------------------
+    '  Player Names
+    ' -------------------------------
+    Private leftPlayerName As String = "Left"
+    Private rightPlayerName As String = "Right"
+
+
+
 
 
     Public Sub New()
@@ -145,9 +155,11 @@ Public Class Form1
 
     Private Sub InitGraphics()
         ballBrush = New SolidBrush(Color.DeepSkyBlue)
-        fpsBrush = New SolidBrush(Color.White)
+        fpsBrush = New SolidBrush(Color.Gray)
         fpsFont = New Font("Segoe UI", 14, FontStyle.Bold)
         paddleBrush = New SolidBrush(Color.White)
+        playerLableBrush = New SolidBrush(Color.Gray)
+        scoreBrush = New SolidBrush(Color.White)
     End Sub
 
     Private Sub InitTrails()
@@ -415,25 +427,59 @@ Public Class Form1
     Private Sub CheckScore()
         If currentState = GameState.Pause Then Return
 
+        'If scoreLeft >= 10 Then
+        '    CenterBall()
+        '    MoveBallRandom()
+
+        '    winnerText = "Left Player Wins!"
+        '    currentState = GameState.EndScreen
+        '    EndMatch()
+        '    Return
+        'End If
+
+        'If scoreRight >= 10 Then
+        '    CenterBall()
+        '    MoveBallRandom()
+
+        '    winnerText = "Right Player Wins!"
+        '    currentState = GameState.EndScreen
+        '    EndMatch()
+        '    Return
+        'End If
+
         If scoreLeft >= 10 Then
+
             CenterBall()
             MoveBallRandom()
 
-            winnerText = "Left Player Wins!"
+            'winnerText = $"{leftPlayerName} Wins!"
+
+            If leftPlayerName = "You" Then
+                winnerText = "You Win!"
+            Else
+                winnerText = $"{leftPlayerName} Wins!"
+            End If
+
             currentState = GameState.EndScreen
             EndMatch()
             Return
         End If
 
         If scoreRight >= 10 Then
+
             CenterBall()
             MoveBallRandom()
 
-            winnerText = "Right Player Wins!"
+            winnerText = $"{rightPlayerName} Wins!"
             currentState = GameState.EndScreen
             EndMatch()
             Return
         End If
+
+
+
+
+
 
         If ballPos.X <= 0 Then
             scoreRight += 1
@@ -647,19 +693,107 @@ Public Class Form1
         g.FillRectangle(paddleBrush, paddleRight)
     End Sub
 
+    'Private Sub DrawHUD(g As Graphics)
+    '    UpdateFPS()
+
+    '    g.DrawString($"FPS: {fps}", fpsFont, fpsBrush, 10, 10)
+
+    '    Dim scoreFont As New Font("Segoe UI", CSng(ClientSize.Height / 12), FontStyle.Bold)
+
+    '    Dim scoreText As String = $"{scoreLeft}   {scoreRight}"
+    '    Dim size = g.MeasureString(scoreText, scoreFont)
+    '    g.DrawString(scoreText, scoreFont, fpsBrush,
+    '                 CSng((ClientSize.Width - size.Width) / 2),
+    '                 CSng(10))
+    'End Sub
+
+
+    'Private Sub DrawHUD(g As Graphics)
+    '    UpdateFPS()
+
+    '    g.DrawString($"FPS: {fps}", fpsFont, fpsBrush, 10, 10)
+
+    '    Dim scoreFont As New Font("Segoe UI", CSng(ClientSize.Height / 12), FontStyle.Bold)
+    '    Dim labelFont As New Font("Segoe UI", CSng(ClientSize.Height / 50), FontStyle.Regular)
+
+    '    ' Score text
+    '    Dim scoreText As String = $"{scoreLeft}   {scoreRight}"
+    '    Dim scoreSize = g.MeasureString(scoreText, scoreFont)
+    '    Dim scoreX As Single = CSng((ClientSize.Width - scoreSize.Width) / 2)
+    '    Dim scoreY As Single = 10
+
+    '    ' Draw scores
+    '    g.DrawString(scoreText, scoreFont, fpsBrush, scoreX, scoreY)
+
+    '    ' Draw labels above each score
+    '    Dim leftLabelSize = g.MeasureString(leftPlayerName, labelFont)
+    '    Dim rightLabelSize = g.MeasureString(rightPlayerName, labelFont)
+
+    '    'Dim leftLabelX As Single = scoreX
+    '    Dim leftLabelX As Single = scoreX + (scoreSize.Width / 10)
+
+    '    'Dim rightLabelX As Single = scoreX + scoreSize.Width - rightLabelSize.Width
+    '    Dim rightLabelX As Single = scoreX + (scoreSize.Width / 2) + rightLabelSize.Width
+
+
+    '    'Dim labelY As Single = scoreY - leftLabelSize.Height - 5
+    '    'Dim labelY As Single = scoreY + leftLabelSize.Height + 5
+    '    'Dim labelY As Single = scoreY - leftLabelSize.Height \ 2
+    '    Dim labelY As Single = scoreY - CSng(ClientSize.Height / 200)
+
+
+    '    g.DrawString(leftPlayerName, labelFont, playerLableBrush, leftLabelX, labelY)
+    '    g.DrawString(rightPlayerName, labelFont, playerLableBrush, rightLabelX, labelY)
+    'End Sub
+
+
     Private Sub DrawHUD(g As Graphics)
         UpdateFPS()
 
         g.DrawString($"FPS: {fps}", fpsFont, fpsBrush, 10, 10)
 
         Dim scoreFont As New Font("Segoe UI", CSng(ClientSize.Height / 12), FontStyle.Bold)
+        Dim labelFont As New Font("Segoe UI", CSng(ClientSize.Height / 50), FontStyle.Regular)
 
-        Dim scoreText As String = $"{scoreLeft}   {scoreRight}"
-        Dim size = g.MeasureString(scoreText, scoreFont)
-        g.DrawString(scoreText, scoreFont, fpsBrush,
-                     CSng((ClientSize.Width - size.Width) / 2),
-                     CSng(10))
+        ' Split scores
+        Dim leftScore As String = scoreLeft.ToString()
+        Dim rightScore As String = scoreRight.ToString()
+
+        ' Screen halves
+        Dim halfWidth As Single = ClientSize.Width / 2.0F
+
+        ' Measure text sizes
+        Dim leftScoreSize = g.MeasureString(leftScore, scoreFont)
+        Dim rightScoreSize = g.MeasureString(rightScore, scoreFont)
+
+        Dim leftLabelSize = g.MeasureString(leftPlayerName, labelFont)
+        Dim rightLabelSize = g.MeasureString(rightPlayerName, labelFont)
+
+        ' Vertical positions
+        Dim scoreY As Single = 10
+        Dim labelY As Single = scoreY - CSng(ClientSize.Height / 200)
+
+        ' Center each score inside its half
+        Dim leftScoreX As Single = (halfWidth - leftScoreSize.Width) / 2
+        Dim rightScoreX As Single = halfWidth + (halfWidth - rightScoreSize.Width) / 2
+
+        ' Center each label inside its half
+        Dim leftLabelX As Single = (halfWidth - leftLabelSize.Width) / 2
+        Dim rightLabelX As Single = halfWidth + (halfWidth - rightLabelSize.Width) / 2
+
+        ' Draw labels
+        g.DrawString(leftPlayerName, labelFont, playerLableBrush, leftLabelX, labelY)
+        g.DrawString(rightPlayerName, labelFont, playerLableBrush, rightLabelX, labelY)
+
+        ' Draw scores
+        g.DrawString(leftScore, scoreFont, scoreBrush, leftScoreX, scoreY)
+        g.DrawString(rightScore, scoreFont, scoreBrush, rightScoreX, scoreY)
     End Sub
+
+
+
+
+
 
     Private Sub DrawStartScreen(g As Graphics)
 
@@ -975,23 +1109,58 @@ Public Class Form1
 
     End Sub
 
+    'Private Sub StartNewMatch()
+
+    '    MovePointerOffScreen()
+
+    '    speed = 800
+
+    '    scoreLeft = 0
+    '    scoreRight = 0
+    '    winnerText = ""
+    '    currentState = GameState.Playing
+
+    '    AudioPlayer.PauseSound("start")
+    '    AudioPlayer.LoopSound("loop")
+
+    '    ResetBall(If(New Random().Next(0, 2) = 0, -1, 1))
+
+    'End Sub
+
     Private Sub StartNewMatch()
 
         MovePointerOffScreen()
 
         speed = 800
 
+
         scoreLeft = 0
         scoreRight = 0
-        winnerText = ""
+
+        If playerMode = 1 Then
+            leftPlayerName = "You"
+            rightPlayerName = "CPU"
+        Else
+            leftPlayerName = "Left"
+            rightPlayerName = "Right"
+        End If
+
         currentState = GameState.Playing
+        physicsTimer.Start()
 
         AudioPlayer.PauseSound("start")
         AudioPlayer.LoopSound("loop")
 
-        ResetBall(If(New Random().Next(0, 2) = 0, -1, 1))
+        CenterBall()
+        'MoveBallRandom()
+        ServeBall(If(New Random().Next(0, 2) = 0, -1, 1))
+
 
     End Sub
+
+
+
+
 
     ' -------------------------------
     '  Cleanup
