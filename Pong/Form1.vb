@@ -1027,24 +1027,6 @@ Public Class Form1
                 If e.KeyCode = Keys.Down Then moveDownRight = True
             End If
 
-            'If e.KeyCode = Keys.P Then
-
-            '    AudioPlayer.PauseSound("loop")
-
-
-            '    currentState = GameState.Pause
-            '    physicsTimer.Stop()
-            '    moveUpLeft = False
-            '    moveDownLeft = False
-            '    moveUpRight = False
-            '    moveDownRight = False
-            '    pauseMenuIndex = 0
-            '    Invalidate()
-
-            '    AudioPlayer.LoopSound("pause")
-
-            'End If
-
             If e.KeyCode = Keys.P Then
                 If pauseKeyDown Then Return   ' swallow repeats
                 pauseKeyDown = True
@@ -1086,7 +1068,6 @@ Public Class Form1
                     pauseMenuIndex = Math.Max(0, pauseMenuIndex - 1)
                     AudioPlayer.PlayOverlapping("arrow_up")
 
-                    'PlayWithCooldown("arrow_up", 500)
                     Invalidate()
 
                 End If
@@ -1103,7 +1084,6 @@ Public Class Form1
                     pauseMenuIndex = Math.Min(2, pauseMenuIndex + 1)
                     AudioPlayer.PlayOverlapping("arrow_down")
 
-                    'PlayWithCooldown("arrow_down", 100)
                     Invalidate()
 
                 End If
@@ -1120,7 +1100,6 @@ Public Class Form1
 
                 AudioPlayer.PlayOverlapping("select")
 
-                'PlayWithCooldown("select", 100)
 
                 Select Case pauseMenuIndex
                     Case 0 ' Resume
@@ -1147,7 +1126,6 @@ Public Class Form1
                         MoveBallRandom()
 
 
-                        'AudioPlayer.PauseSound("loop")
 
                         currentState = GameState.StartScreen
                         winnerText = ""
@@ -1159,7 +1137,6 @@ Public Class Form1
 
                 End Select
 
-                'AudioPlayer.PlaySound("point")
 
                 Return
 
@@ -1187,23 +1164,6 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub StartNewMatch()
-
-    '    MovePointerOffScreen()
-
-    '    speed = 800
-
-    '    scoreLeft = 0
-    '    scoreRight = 0
-    '    winnerText = ""
-    '    currentState = GameState.Playing
-
-    '    AudioPlayer.PauseSound("start")
-    '    AudioPlayer.LoopSound("loop")
-
-    '    ResetBall(If(New Random().Next(0, 2) = 0, -1, 1))
-
-    'End Sub
 
     Private Sub StartNewMatch()
 
