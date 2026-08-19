@@ -1,4 +1,25 @@
-﻿Imports System.Drawing.Drawing2D
+﻿' PONG – Code with Joe 
+' A modern, full‑screen remake of the classic Pong arcade game featuring
+' smooth physics, glowing motion trails, dynamic paddle spin, AI or two‑player 
+' mode, animated menus, and immersive sound effects. Built with VB.NET and 
+' GDI+, the game delivers a polished retro experience with responsive controls
+' and crisp visuals.  
+' 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Imports System.Drawing.Drawing2D
 Imports System.IO
 
 Public Class Form1
