@@ -1,6 +1,9 @@
-#  PONG
 
-**PONG** is designed to help new game developers grasp fundamental programming concepts and design principles through an engaging and interactive experience. The game features classic gameplay mechanics, supports keyboard inputs, and allows for both single-player and multiplayer modes. 
+# PONG - Code with Joe
+A modern, full‑screen remake of the classic Pong arcade game. Rebuilt from scratch with smooth physics, glowing motion trails, dynamic paddle spin, an AI opponent, animated menus, and a fully‑featured audio system.
+
+This project isn’t just Pong.
+It’s a compact 2D game engine demonstrating real‑time rendering, delta‑time physics, state‑driven UI, and responsive design.
 
 
 <img width="1920" height="1080" alt="031" src="https://github.com/user-attachments/assets/bc5b7cd8-cc00-4261-b936-596f9f35e8cb" />
