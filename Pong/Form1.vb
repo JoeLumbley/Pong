@@ -425,25 +425,6 @@ Public Class Form1
     Private Sub CheckScore()
         If currentState = GameState.Pause Then Return
 
-        'If scoreLeft >= 10 Then
-        '    CenterBall()
-        '    MoveBallRandom()
-
-        '    winnerText = "Left Player Wins!"
-        '    currentState = GameState.EndScreen
-        '    EndMatch()
-        '    Return
-        'End If
-
-        'If scoreRight >= 10 Then
-        '    CenterBall()
-        '    MoveBallRandom()
-
-        '    winnerText = "Right Player Wins!"
-        '    currentState = GameState.EndScreen
-        '    EndMatch()
-        '    Return
-        'End If
 
         If scoreLeft >= 10 Then
 
@@ -474,11 +455,6 @@ Public Class Form1
             Return
         End If
 
-
-
-
-
-
         If ballPos.X <= 0 Then
             scoreRight += 1
             AudioPlayer.PlaySound("point")
@@ -490,17 +466,14 @@ Public Class Form1
             ResetBall(-1) ' Reset ball to the left side
             ResetPaddles() ' Reset paddles to their initial positions
         End If
+
     End Sub
 
     Private Sub ResetPaddles()
 
         ' Center the paddles vertically in the middle of the client area
         paddleLeft.Y = (ClientSize.Height - paddleHeight) / 2
-        'paddleLeft.Y = (ClientSize.Height - paddleLeft.Height) / 2
-
-
         paddleRight.Y = (ClientSize.Height - paddleHeight) / 2
-        'paddleRight.Y = (ClientSize.Height - paddleRight.Height) / 2
 
     End Sub
 
@@ -524,7 +497,6 @@ Public Class Form1
                             (ClientSize.Height - ballDiameter) / 2)
 
     End Sub
-
 
     Private Sub MoveBallRandom()
 
