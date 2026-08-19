@@ -917,20 +917,16 @@ Public Class Form1
         paddleLeft.X = ClientSize.Height / 25
         paddleRight.X = ClientSize.Width - ClientSize.Height / 25 - paddleWidth
 
-
-
         ResetPaddles()
 
         CenterBall()
 
         InitTrails()
 
-
         trail.Clear()
 
-
-
         Invalidate()
+
     End Sub
 
     ' -------------------------------
