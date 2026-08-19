@@ -691,59 +691,6 @@ Public Class Form1
         g.FillRectangle(paddleBrush, paddleRight)
     End Sub
 
-    'Private Sub DrawHUD(g As Graphics)
-    '    UpdateFPS()
-
-    '    g.DrawString($"FPS: {fps}", fpsFont, fpsBrush, 10, 10)
-
-    '    Dim scoreFont As New Font("Segoe UI", CSng(ClientSize.Height / 12), FontStyle.Bold)
-
-    '    Dim scoreText As String = $"{scoreLeft}   {scoreRight}"
-    '    Dim size = g.MeasureString(scoreText, scoreFont)
-    '    g.DrawString(scoreText, scoreFont, fpsBrush,
-    '                 CSng((ClientSize.Width - size.Width) / 2),
-    '                 CSng(10))
-    'End Sub
-
-
-    'Private Sub DrawHUD(g As Graphics)
-    '    UpdateFPS()
-
-    '    g.DrawString($"FPS: {fps}", fpsFont, fpsBrush, 10, 10)
-
-    '    Dim scoreFont As New Font("Segoe UI", CSng(ClientSize.Height / 12), FontStyle.Bold)
-    '    Dim labelFont As New Font("Segoe UI", CSng(ClientSize.Height / 50), FontStyle.Regular)
-
-    '    ' Score text
-    '    Dim scoreText As String = $"{scoreLeft}   {scoreRight}"
-    '    Dim scoreSize = g.MeasureString(scoreText, scoreFont)
-    '    Dim scoreX As Single = CSng((ClientSize.Width - scoreSize.Width) / 2)
-    '    Dim scoreY As Single = 10
-
-    '    ' Draw scores
-    '    g.DrawString(scoreText, scoreFont, fpsBrush, scoreX, scoreY)
-
-    '    ' Draw labels above each score
-    '    Dim leftLabelSize = g.MeasureString(leftPlayerName, labelFont)
-    '    Dim rightLabelSize = g.MeasureString(rightPlayerName, labelFont)
-
-    '    'Dim leftLabelX As Single = scoreX
-    '    Dim leftLabelX As Single = scoreX + (scoreSize.Width / 10)
-
-    '    'Dim rightLabelX As Single = scoreX + scoreSize.Width - rightLabelSize.Width
-    '    Dim rightLabelX As Single = scoreX + (scoreSize.Width / 2) + rightLabelSize.Width
-
-
-    '    'Dim labelY As Single = scoreY - leftLabelSize.Height - 5
-    '    'Dim labelY As Single = scoreY + leftLabelSize.Height + 5
-    '    'Dim labelY As Single = scoreY - leftLabelSize.Height \ 2
-    '    Dim labelY As Single = scoreY - CSng(ClientSize.Height / 200)
-
-
-    '    g.DrawString(leftPlayerName, labelFont, playerLableBrush, leftLabelX, labelY)
-    '    g.DrawString(rightPlayerName, labelFont, playerLableBrush, rightLabelX, labelY)
-    'End Sub
-
 
     Private Sub DrawHUD(g As Graphics)
         UpdateFPS()
@@ -787,11 +734,6 @@ Public Class Form1
         g.DrawString(leftScore, scoreFont, scoreBrush, leftScoreX, scoreY)
         g.DrawString(rightScore, scoreFont, scoreBrush, rightScoreX, scoreY)
     End Sub
-
-
-
-
-
 
     Private Sub DrawStartScreen(g As Graphics)
 
