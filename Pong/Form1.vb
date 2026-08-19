@@ -977,9 +977,29 @@ Public Class Form1
                     selectedOption = 1
                 End If
 
+            ElseIf e.KeyCode = Keys.NumPad1 Then
+                ' Yes, the user is pressing 1 on the numpad.
+                ' Set the selected option to 0 (1 Player)
+                If Not selectedOption = 0 Then
+                    AudioPlayer.PlayOverlapping("arrow_up")
+                    selectedOption = 0
+                End If
+
+            ElseIf e.KeyCode = Keys.NumPad2 Then
+                ' Yes, the user is pressing 2 on the numpad.
+                ' Set the selected option to 1 (2 Players)
+                If Not selectedOption = 1 Then
+                    AudioPlayer.PlayOverlapping("arrow_down")
+                    selectedOption = 1
+                End If
+
             ElseIf e.KeyCode = Keys.Space OrElse e.KeyCode = Keys.Enter Then
                 playerMode = If(selectedOption = 0, 1, 2)
                 StartNewMatch()
+
+            ElseIf e.KeyCode = Keys.Escape Then
+                Me.Close()
+
             End If
 
             Return
