@@ -944,9 +944,39 @@ Public Class Form1
         If currentState = GameState.StartScreen Then
 
             If e.KeyCode = Keys.Up Then
-                selectedOption = 0
+
+                If Not selectedOption = 0 Then
+                    AudioPlayer.PlayOverlapping("arrow_up")
+                    selectedOption = 0
+                End If
+
             ElseIf e.KeyCode = Keys.Down Then
-                selectedOption = 1
+
+                If Not selectedOption = 1 Then
+                    AudioPlayer.PlayOverlapping("arrow_down")
+                    selectedOption = 1
+                End If
+
+                ' Is the user pressing 1?
+            ElseIf e.KeyCode = Keys.D1 Then
+                ' Yes, the user is pressing 1.
+
+                ' Set the selected option to 0 (1 Player)
+                If Not selectedOption = 0 Then
+                    AudioPlayer.PlayOverlapping("arrow_up")
+                    selectedOption = 0
+                End If
+
+                ' Is the user pressing 2?
+            ElseIf e.KeyCode = Keys.D2 Then
+                ' Yes, the user is pressing 2.
+
+                ' Set the selected option to 1 (2 Players)
+                If Not selectedOption = 1 Then
+                    AudioPlayer.PlayOverlapping("arrow_down")
+                    selectedOption = 1
+                End If
+
             ElseIf e.KeyCode = Keys.Space OrElse e.KeyCode = Keys.Enter Then
                 playerMode = If(selectedOption = 0, 1, 2)
                 StartNewMatch()
@@ -954,6 +984,7 @@ Public Class Form1
 
             Return
         End If
+
 
         If currentState = GameState.EndScreen Then
             If e.KeyCode = Keys.Space OrElse e.KeyCode = Keys.Enter Then
