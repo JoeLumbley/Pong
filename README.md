@@ -3,7 +3,7 @@
 **PONG** is designed to help new game developers grasp fundamental programming concepts and design principles through an engaging and interactive experience. The game features classic gameplay mechanics, supports keyboard inputs, and allows for both single-player and multiplayer modes. 
 
 
-<img width="1920" height="1080" alt="029" src="https://github.com/user-attachments/assets/53d4e399-6f6c-4c12-9804-c730035c8098" />
+<img width="1920" height="1080" alt="031" src="https://github.com/user-attachments/assets/bc5b7cd8-cc00-4261-b936-596f9f35e8cb" />
 
 
 ### Key Features
