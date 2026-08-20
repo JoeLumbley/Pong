@@ -87,9 +87,29 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Byte[].
         '''</summary>
+        Friend Shared ReadOnly Property ArrowDown2() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("ArrowDown2", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
         Friend Shared ReadOnly Property ArrowUp() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("ArrowUp", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend Shared ReadOnly Property ArrowUp2() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("ArrowUp2", resourceCulture)
                 Return CType(obj,Byte())
             End Get
         End Property
@@ -117,6 +137,16 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Byte[].
         '''</summary>
+        Friend Shared ReadOnly Property bounce3() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("bounce3", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
         Friend Shared ReadOnly Property hit3() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("hit3", resourceCulture)
@@ -130,6 +160,26 @@ Namespace My.Resources
         Friend Shared ReadOnly Property PauseMusic2() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("PauseMusic2", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend Shared ReadOnly Property PlayingLoop() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("PlayingLoop", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend Shared ReadOnly Property Select2() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Select2", resourceCulture)
                 Return CType(obj,Byte())
             End Get
         End Property

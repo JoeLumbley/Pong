@@ -231,7 +231,7 @@ Public Class Form1
         CreateSoundFiles()
 
         AudioPlayer.AddSound("loop", Path.Combine(Application.StartupPath, "loop.mp3"))
-        AudioPlayer.SetVolume("loop", 500)
+        AudioPlayer.SetVolume("loop", 100)
 
         AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
         AudioPlayer.SetVolume("point", 300)
@@ -240,17 +240,17 @@ Public Class Form1
         AudioPlayer.SetVolumeOverlapping("bounce", 200)
 
         AudioPlayer.AddSound("start", Path.Combine(Application.StartupPath, "start.mp3"))
-        AudioPlayer.SetVolume("start", 300)
+        AudioPlayer.SetVolume("start", 500)
         AudioPlayer.LoopSound("start")
 
         AudioPlayer.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
-        AudioPlayer.SetVolumeOverlapping("arrow_up", 200)
+        AudioPlayer.SetVolumeOverlapping("arrow_up", 100)
 
         AudioPlayer.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
-        AudioPlayer.SetVolumeOverlapping("arrow_down", 400)
+        AudioPlayer.SetVolumeOverlapping("arrow_down", 100)
 
         AudioPlayer.AddOverlapping("select", Path.Combine(Application.StartupPath, "select.mp3"))
-        AudioPlayer.SetVolumeOverlapping("select", 400)
+        AudioPlayer.SetVolumeOverlapping("select", 100)
 
         AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
         AudioPlayer.SetVolume("pause", 800)
@@ -1162,19 +1162,21 @@ Public Class Form1
 
     Private Sub CreateSoundFiles()
 
-        CreateFileFromResource(Path.Combine(Application.StartupPath, "loop.mp3"), My.Resources.Resource1.BB_MegaLoop)
+        CreateFileFromResource(Path.Combine(Application.StartupPath, "loop.mp3"), My.Resources.Resource1.PlayingLoop)
 
-        CreateFileFromResource(Path.Combine(Application.StartupPath, "bounce.mp3"), My.Resources.Resource1.Bounce)
+        CreateFileFromResource(Path.Combine(Application.StartupPath, "bounce.mp3"), My.Resources.Resource1.bounce3)
 
         CreateFileFromResource(Path.Combine(Application.StartupPath, "start.mp3"), My.Resources.Resource1.Start_loop)
 
         CreateFileFromResource(Path.Combine(Application.StartupPath, "point.mp3"), My.Resources.Resource1.hit3)
 
-        CreateFileFromResource(Path.Combine(Application.StartupPath, "arrow_up.mp3"), My.Resources.Resource1.ArrowUp)
 
-        CreateFileFromResource(Path.Combine(Application.StartupPath, "arrow_down.mp3"), My.Resources.Resource1.ArrowDown)
+        CreateFileFromResource(Path.Combine(Application.StartupPath, "arrow_up.mp3"), My.Resources.Resource1.ArrowUp2)
 
-        CreateFileFromResource(Path.Combine(Application.StartupPath, "select.mp3"), My.Resources.Resource1._Select)
+        CreateFileFromResource(Path.Combine(Application.StartupPath, "arrow_down.mp3"), My.Resources.Resource1.ArrowDown2)
+
+        CreateFileFromResource(Path.Combine(Application.StartupPath, "select.mp3"), My.Resources.Resource1.Select2)
+
 
         CreateFileFromResource(Path.Combine(Application.StartupPath, "pause.mp3"), My.Resources.Resource1.PauseMusic2)
 
