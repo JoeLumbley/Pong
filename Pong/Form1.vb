@@ -837,48 +837,6 @@ Public Class Form1
         End If
     End Sub
 
-    'Protected Overrides Sub OnResize(e As EventArgs)
-    '    MyBase.OnResize(e)
-
-    '    If Me.WindowState = FormWindowState.Minimized Then Return
-    '    If trailSizes Is Nothing OrElse trailOffsets Is Nothing Then Return
-
-
-    '    ballDiameter = CInt(ClientSize.Height / 15)
-
-    '    trailLength = CInt(ClientSize.Height / 50)
-
-    '    If ballPos.Y > ClientSize.Height - ballDiameter Then
-    '        ballPos.Y = ClientSize.Height - ballDiameter
-    '    End If
-
-
-    '    paddleHeight = ClientSize.Height / 8
-    '    paddleWidth = ClientSize.Height / 25
-
-    '    paddleLeft.Height = paddleHeight
-    '    paddleLeft.Width = paddleWidth
-
-    '    paddleRight.Height = paddleHeight
-    '    paddleRight.Width = paddleWidth
-
-
-    '    paddleLeft.X = ClientSize.Height / 25
-    '    paddleRight.X = ClientSize.Width - ClientSize.Height / 25 - paddleWidth
-
-    '    ResetPaddles()
-
-    '    CenterBall()
-
-    '    InitTrails()
-
-    '    trail.Clear()
-
-    '    Invalidate()
-
-    'End Sub
-
-
 
 
     Protected Overrides Sub OnResize(e As EventArgs)
