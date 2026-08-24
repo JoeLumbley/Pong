@@ -231,7 +231,7 @@ Public Class Form1
         CreateSoundFiles()
 
         AudioPlayer.AddSound("loop", Path.Combine(Application.StartupPath, "loop.mp3"))
-        AudioPlayer.SetVolume("loop", 100)
+        AudioPlayer.SetVolume("loop", 500)
 
         AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
         AudioPlayer.SetVolume("point", 300)
@@ -510,7 +510,9 @@ Public Class Form1
 
     Private Sub EndMatch()
 
-        speed = 200
+        'speed = 200
+        speed = 200 * (ClientSize.Height / 1080.0)
+
 
         CenterBall()
         MoveBallRandom()
@@ -833,46 +835,96 @@ Public Class Form1
         End If
     End Sub
 
+    'Protected Overrides Sub OnResize(e As EventArgs)
+    '    MyBase.OnResize(e)
+
+    '    If Me.WindowState = FormWindowState.Minimized Then Return
+    '    If trailSizes Is Nothing OrElse trailOffsets Is Nothing Then Return
+
+
+    '    ballDiameter = CInt(ClientSize.Height / 15)
+
+    '    trailLength = CInt(ClientSize.Height / 50)
+
+    '    If ballPos.Y > ClientSize.Height - ballDiameter Then
+    '        ballPos.Y = ClientSize.Height - ballDiameter
+    '    End If
+
+
+    '    paddleHeight = ClientSize.Height / 8
+    '    paddleWidth = ClientSize.Height / 25
+
+    '    paddleLeft.Height = paddleHeight
+    '    paddleLeft.Width = paddleWidth
+
+    '    paddleRight.Height = paddleHeight
+    '    paddleRight.Width = paddleWidth
+
+
+    '    paddleLeft.X = ClientSize.Height / 25
+    '    paddleRight.X = ClientSize.Width - ClientSize.Height / 25 - paddleWidth
+
+    '    ResetPaddles()
+
+    '    CenterBall()
+
+    '    InitTrails()
+
+    '    trail.Clear()
+
+    '    Invalidate()
+
+    'End Sub
+
+
+
+
     Protected Overrides Sub OnResize(e As EventArgs)
         MyBase.OnResize(e)
 
         If Me.WindowState = FormWindowState.Minimized Then Return
         If trailSizes Is Nothing OrElse trailOffsets Is Nothing Then Return
 
-
         ballDiameter = CInt(ClientSize.Height / 15)
-
         trailLength = CInt(ClientSize.Height / 50)
 
-        If ballPos.Y > ClientSize.Height - ballDiameter Then
-            ballPos.Y = ClientSize.Height - ballDiameter
-        End If
-
+        ' Scale speed based on height
+        ScaleBallSpeed()
 
         paddleHeight = ClientSize.Height / 8
         paddleWidth = ClientSize.Height / 25
 
         paddleLeft.Height = paddleHeight
         paddleLeft.Width = paddleWidth
-
         paddleRight.Height = paddleHeight
         paddleRight.Width = paddleWidth
-
 
         paddleLeft.X = ClientSize.Height / 25
         paddleRight.X = ClientSize.Width - ClientSize.Height / 25 - paddleWidth
 
         ResetPaddles()
-
         CenterBall()
 
-        InitTrails()
+        If GameState.Playing = currentState Then
+            ServeBall(If(velX < 0, -1, 1)) ' Serve in the current direction
+        Else
+            MoveBallRandom()
 
+        End If
+
+
+        InitTrails()
         trail.Clear()
 
         Invalidate()
-
     End Sub
+
+
+
+
+
+
+
 
     ' -------------------------------
     '  Input
@@ -1060,7 +1112,9 @@ Public Class Form1
                     Case 2 ' Quit to Start Screen
 
 
-                        speed = 200
+                        'speed = 200
+                        speed = 200 * (ClientSize.Height / 1080.0)
+
 
                         CenterBall()
 
@@ -1110,7 +1164,8 @@ Public Class Form1
 
         MovePointerOffScreen()
 
-        speed = 800
+        'speed = 800
+        speed = 800 * (ClientSize.Height / 1080.0)
 
 
         scoreLeft = 0
@@ -1209,6 +1264,25 @@ Public Class Form1
                                     Screen.PrimaryScreen.WorkingArea.Height \ 2)
 
     End Sub
+
+
+
+    Private Sub ScaleBallSpeed()
+        If GameState.StartScreen = currentState OrElse GameState.EndScreen = currentState Then
+            speed = 200 * (ClientSize.Height / 1080.0)
+        Else
+            speed = 800 * (ClientSize.Height / 1080.0)
+        End If
+
+
+
+        'speed = 800 * (ClientSize.Height / 1080.0)
+
+
+
+
+    End Sub
+
 
 
 End Class
