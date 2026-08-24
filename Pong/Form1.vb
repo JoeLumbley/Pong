@@ -140,6 +140,7 @@ Public Class Form1
 
     Private pauseKeyDown As Boolean = False
     Private pKeyDown As Boolean = False
+    Private mediaPlayPauseKeyDown As Boolean = False
 
 
 
@@ -1055,9 +1056,26 @@ Public Class Form1
                 AudioPlayer.LoopSound("pause")
             End If
 
+            If e.KeyCode = Keys.MediaPlayPause Then
+                If mediaPlayPauseKeyDown Then Return   ' swallow repeats
+                mediaPlayPauseKeyDown = True
+                AudioPlayer.PauseSound("loop")
+                currentState = GameState.Pause
+                physicsTimer.Stop()
+                moveUpLeft = False
+                moveDownLeft = False
+                moveUpRight = False
+                moveDownRight = False
+                pauseMenuIndex = 0
+                Invalidate()
+                AudioPlayer.LoopSound("pause")
+            End If
+
 
             Return
         End If
+
+
 
         If currentState = GameState.Pause Then
 
@@ -1073,6 +1091,13 @@ Public Class Form1
             If e.KeyCode = Keys.Pause Then
                 If pauseKeyDown Then Return   ' swallow repeats
                 pauseKeyDown = True
+                currentState = GameState.Playing
+                physicsTimer.Start()
+            End If
+
+            If e.KeyCode = Keys.MediaPlayPause Then
+                If mediaPlayPauseKeyDown Then Return   ' swallow repeats
+                mediaPlayPauseKeyDown = True
                 currentState = GameState.Playing
                 physicsTimer.Start()
             End If
@@ -1183,6 +1208,11 @@ Public Class Form1
         If e.KeyCode = Keys.Pause Then
             pauseKeyDown = False
         End If
+
+        If e.KeyCode = Keys.MediaPlayPause Then
+            mediaPlayPauseKeyDown = False
+        End If
+
 
 
     End Sub
