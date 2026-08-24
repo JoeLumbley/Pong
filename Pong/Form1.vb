@@ -139,6 +139,7 @@ Public Class Form1
 
 
     Private pauseKeyDown As Boolean = False
+    Private pKeyDown As Boolean = False
 
 
 
@@ -1021,8 +1022,8 @@ Public Class Form1
             End If
 
             If e.KeyCode = Keys.P Then
-                If pauseKeyDown Then Return   ' swallow repeats
-                pauseKeyDown = True
+                If pKeyDown Then Return   ' swallow repeats
+                pKeyDown = True
 
                 AudioPlayer.PauseSound("loop")
 
@@ -1039,6 +1040,21 @@ Public Class Form1
                 Return
             End If
 
+            If e.KeyCode = Keys.Pause Then
+                If pauseKeyDown Then Return   ' swallow repeats
+                pauseKeyDown = True
+                AudioPlayer.PauseSound("loop")
+                currentState = GameState.Pause
+                physicsTimer.Stop()
+                moveUpLeft = False
+                moveDownLeft = False
+                moveUpRight = False
+                moveDownRight = False
+                pauseMenuIndex = 0
+                Invalidate()
+                AudioPlayer.LoopSound("pause")
+            End If
+
 
             Return
         End If
@@ -1047,12 +1063,20 @@ Public Class Form1
 
             If e.KeyCode = Keys.P Then
 
-                If pauseKeyDown Then Return   ' swallow repeats
-                pauseKeyDown = True
+                If pKeyDown Then Return   ' swallow repeats
+                pKeyDown = True
 
                 currentState = GameState.Playing
                 physicsTimer.Start()
             End If
+
+            If e.KeyCode = Keys.Pause Then
+                If pauseKeyDown Then Return   ' swallow repeats
+                pauseKeyDown = True
+                currentState = GameState.Playing
+                physicsTimer.Start()
+            End If
+
 
             ' Navigate menu
             If e.KeyCode = Keys.Up Then
@@ -1153,6 +1177,10 @@ Public Class Form1
         End If
 
         If e.KeyCode = Keys.P Then
+            pKeyDown = False
+        End If
+
+        If e.KeyCode = Keys.Pause Then
             pauseKeyDown = False
         End If
 
