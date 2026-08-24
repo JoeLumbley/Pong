@@ -46,8 +46,8 @@ To play using your keyboard, use the following controls:
   - **Down Arrow** ⬇️ : Move Down
 
 - **Pause/Resume Game**
-  - **Pause** : **Pause** or **Resume** the game
-  - **Escape** : From pause screen **Resets** the game
+  - **P** : **Pause** or **Resume** the game
+  - **Escape** : From start screen **Quits** the game
  
 
 ---
