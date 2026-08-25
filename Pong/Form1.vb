@@ -105,10 +105,10 @@ Public Class Form1
     Private paddleHeight As Integer = 128
     Private paddleSpeed As Integer = 700
 
-    Private moveUpLeft As Boolean
-    Private moveDownLeft As Boolean
-    Private moveUpRight As Boolean
-    Private moveDownRight As Boolean
+    Private moveLeftPaddleUp As Boolean
+    Private moveLeftPaddleDown As Boolean
+    Private moveRightPaddleUp As Boolean
+    Private moveRightPaddleDown As Boolean
 
     Private scoreLeft As Integer = 0
     Private scoreRight As Integer = 0
@@ -233,23 +233,23 @@ Public Class Form1
         CreateSoundFiles()
 
         AudioPlayer.AddSound("loop", Path.Combine(Application.StartupPath, "loop.mp3"))
-        AudioPlayer.SetVolume("loop", 500)
+        AudioPlayer.SetVolume("loop", 100)
 
         AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
-        AudioPlayer.SetVolume("point", 300)
+        AudioPlayer.SetVolume("point", 500)
 
         AudioPlayer.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
         AudioPlayer.SetVolumeOverlapping("bounce", 200)
 
         AudioPlayer.AddSound("start", Path.Combine(Application.StartupPath, "start.mp3"))
-        AudioPlayer.SetVolume("start", 500)
+        AudioPlayer.SetVolume("start", 100)
         AudioPlayer.LoopSound("start")
 
         AudioPlayer.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
-        AudioPlayer.SetVolumeOverlapping("arrow_up", 100)
+        AudioPlayer.SetVolumeOverlapping("arrow_up", 200)
 
         AudioPlayer.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
-        AudioPlayer.SetVolumeOverlapping("arrow_down", 100)
+        AudioPlayer.SetVolumeOverlapping("arrow_down", 200)
 
         AudioPlayer.AddOverlapping("select", Path.Combine(Application.StartupPath, "select.mp3"))
         AudioPlayer.SetVolumeOverlapping("select", 100)
@@ -324,12 +324,12 @@ Public Class Form1
     End Sub
 
     Private Sub UpdatePaddles(dt As Double)
-        If moveUpLeft Then paddleLeft.Y -= CSng(paddleSpeed * dt)
-        If moveDownLeft Then paddleLeft.Y += CSng(paddleSpeed * dt)
+        If moveLeftPaddleUp Then paddleLeft.Y -= CSng(paddleSpeed * dt)
+        If moveLeftPaddleDown Then paddleLeft.Y += CSng(paddleSpeed * dt)
 
         If playerMode = 2 Then
-            If moveUpRight Then paddleRight.Y -= CSng(paddleSpeed * dt)
-            If moveDownRight Then paddleRight.Y += CSng(paddleSpeed * dt)
+            If moveRightPaddleUp Then paddleRight.Y -= CSng(paddleSpeed * dt)
+            If moveRightPaddleDown Then paddleRight.Y += CSng(paddleSpeed * dt)
         End If
 
         paddleLeft.Y = Math.Max(0, Math.Min(ClientSize.Height - paddleHeight, paddleLeft.Y))
@@ -973,11 +973,11 @@ Public Class Form1
         '  Gameplay Input
         ' -------------------------------
         If currentState = GameState.Playing Then
-            If e.KeyCode = Keys.W Then moveUpLeft = True
-            If e.KeyCode = Keys.S Then moveDownLeft = True
+            If e.KeyCode = Keys.W Then moveLeftPaddleUp = True
+            If e.KeyCode = Keys.S Then moveLeftPaddleDown = True
             If playerMode = 2 Then
-                If e.KeyCode = Keys.Up Then moveUpRight = True
-                If e.KeyCode = Keys.Down Then moveDownRight = True
+                If e.KeyCode = Keys.Up Then moveRightPaddleUp = True
+                If e.KeyCode = Keys.Down Then moveRightPaddleDown = True
             End If
 
             If e.KeyCode = Keys.P Then
@@ -988,10 +988,10 @@ Public Class Form1
 
                 currentState = GameState.Pause
                 physicsTimer.Stop()
-                moveUpLeft = False
-                moveDownLeft = False
-                moveUpRight = False
-                moveDownRight = False
+                moveLeftPaddleUp = False
+                moveLeftPaddleDown = False
+                moveRightPaddleUp = False
+                moveRightPaddleDown = False
                 pauseMenuIndex = 0
                 Invalidate()
 
@@ -1005,10 +1005,10 @@ Public Class Form1
                 AudioPlayer.PauseSound("loop")
                 currentState = GameState.Pause
                 physicsTimer.Stop()
-                moveUpLeft = False
-                moveDownLeft = False
-                moveUpRight = False
-                moveDownRight = False
+                moveLeftPaddleUp = False
+                moveLeftPaddleDown = False
+                moveRightPaddleUp = False
+                moveRightPaddleDown = False
                 pauseMenuIndex = 0
                 Invalidate()
                 AudioPlayer.LoopSound("pause")
@@ -1020,10 +1020,10 @@ Public Class Form1
                 AudioPlayer.PauseSound("loop")
                 currentState = GameState.Pause
                 physicsTimer.Stop()
-                moveUpLeft = False
-                moveDownLeft = False
-                moveUpRight = False
-                moveDownRight = False
+                moveLeftPaddleUp = False
+                moveLeftPaddleDown = False
+                moveRightPaddleUp = False
+                moveRightPaddleDown = False
                 pauseMenuIndex = 0
                 Invalidate()
                 AudioPlayer.LoopSound("pause")
@@ -1151,12 +1151,12 @@ Public Class Form1
     Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
         MyBase.OnKeyUp(e)
 
-        If e.KeyCode = Keys.W Then moveUpLeft = False
-        If e.KeyCode = Keys.S Then moveDownLeft = False
+        If e.KeyCode = Keys.W Then moveLeftPaddleUp = False
+        If e.KeyCode = Keys.S Then moveLeftPaddleDown = False
 
         If playerMode = 2 Then
-            If e.KeyCode = Keys.Up Then moveUpRight = False
-            If e.KeyCode = Keys.Down Then moveDownRight = False
+            If e.KeyCode = Keys.Up Then moveRightPaddleUp = False
+            If e.KeyCode = Keys.Down Then moveRightPaddleDown = False
         End If
 
         If e.KeyCode = Keys.P Then
@@ -1239,7 +1239,7 @@ Public Class Form1
 
         CreateFileFromResource(Path.Combine(Application.StartupPath, "start.mp3"), My.Resources.Resource1.Start_loop)
 
-        CreateFileFromResource(Path.Combine(Application.StartupPath, "point.mp3"), My.Resources.Resource1.hit3)
+        CreateFileFromResource(Path.Combine(Application.StartupPath, "point.mp3"), My.Resources.Resource1.hit4)
 
 
         CreateFileFromResource(Path.Combine(Application.StartupPath, "arrow_up.mp3"), My.Resources.Resource1.ArrowUp2)
