@@ -143,6 +143,8 @@ Public Class Form1
     Private mediaPlayPauseKeyDown As Boolean = False
 
 
+    Private aiDifficulty As Double = 1.0   ' 1.0 = normal
+
 
     Public Sub New()
 
@@ -154,8 +156,12 @@ Public Class Form1
 
         Me.DoubleBuffered = True
         Me.BackColor = Color.Black
+
+        Me.MinimumSize = New Size(256, 256)
+        Me.Size = New Size(1080, 720)
         Me.StartPosition = FormStartPosition.CenterScreen
-        Me.WindowState = FormWindowState.Maximized
+        Me.WindowState = FormWindowState.Normal
+
 
         physicsTimer.Interval = 15
         AddHandler physicsTimer.Tick, AddressOf PhysicsTick
@@ -339,18 +345,28 @@ Public Class Form1
     Private Sub UpdateAI(dt As Double)
         Dim targetY As Single = ballPos.Y + ballDiameter / 2
 
+        'If targetY < paddleRight.Y + paddleHeight / 2 Then
+        '    ' Move paddle up towards the ball with a slight delay to make it
+        '    ' beatable if you increse the delay factor (0.9) you can adjust the
+        '    ' factor to make the AI easier or harder. A lower factor makes it
+        '    ' easier, a higher factor makes it harder.
+        '    ' example: 0.5 = easier, 1.0 = harder
+        '    paddleRight.Y -= CSng(paddleSpeed * dt * 0.5)
+
+        'End If
+
+        'If targetY > paddleRight.Y + paddleHeight / 2 Then
+        '    paddleRight.Y += CSng(paddleSpeed * dt * 0.5)
+
+        'End If
+
+
+        Dim difficultyFactor As Double = 0.655 * aiDifficulty
+
         If targetY < paddleRight.Y + paddleHeight / 2 Then
-            ' Move paddle up towards the ball with a slight delay to make it
-            ' beatable if you increse the delay factor (0.9) you can adjust the
-            ' factor to make the AI easier or harder. A lower factor makes it
-            ' easier, a higher factor makes it harder.
-            ' example: 0.5 = easier, 1.0 = harder
-            paddleRight.Y -= CSng(paddleSpeed * dt * 0.655)
-        End If
-
-        If targetY > paddleRight.Y + paddleHeight / 2 Then
-            paddleRight.Y += CSng(paddleSpeed * dt * 0.655)
-
+            paddleRight.Y -= CSng(paddleSpeed * dt * difficultyFactor)
+        ElseIf targetY > paddleRight.Y + paddleHeight / 2 Then
+            paddleRight.Y += CSng(paddleSpeed * dt * difficultyFactor)
         End If
 
         ' Clamp the paddle position to stay within the window bounds
@@ -845,11 +861,16 @@ Public Class Form1
         If Me.WindowState = FormWindowState.Minimized Then Return
         If trailSizes Is Nothing OrElse trailOffsets Is Nothing Then Return
 
-        ballDiameter = CInt(ClientSize.Height / 15)
+        'ballDiameter = CInt(ClientSize.Height / 16)
+        ScaleBallDiameter()
+
         trailLength = CInt(ClientSize.Height / 50)
 
         ' Scale speed based on height
         ScaleBallSpeed()
+        ScalePaddleSpeed()
+        aiDifficulty = ClientSize.Height / 1080.0
+
 
         paddleHeight = ClientSize.Height / 8
         paddleWidth = ClientSize.Height / 25
@@ -984,53 +1005,62 @@ Public Class Form1
                 If pKeyDown Then Return   ' swallow repeats
                 pKeyDown = True
 
-                AudioPlayer.PauseSound("loop")
-
-                currentState = GameState.Pause
-                physicsTimer.Stop()
-                moveLeftPaddleUp = False
-                moveLeftPaddleDown = False
-                moveRightPaddleUp = False
-                moveRightPaddleDown = False
-                pauseMenuIndex = 0
-                Invalidate()
-
-                AudioPlayer.LoopSound("pause")
+                PauseGame()
                 Return
             End If
 
             If e.KeyCode = Keys.Pause Then
                 If pauseKeyDown Then Return   ' swallow repeats
                 pauseKeyDown = True
-                AudioPlayer.PauseSound("loop")
-                currentState = GameState.Pause
-                physicsTimer.Stop()
-                moveLeftPaddleUp = False
-                moveLeftPaddleDown = False
-                moveRightPaddleUp = False
-                moveRightPaddleDown = False
-                pauseMenuIndex = 0
-                Invalidate()
-                AudioPlayer.LoopSound("pause")
+
+                '' PAUSE the game
+                'AudioPlayer.PauseSound("loop")
+                'currentState = GameState.Pause
+                'physicsTimer.Stop()
+
+                'moveLeftPaddleUp = False
+                'moveLeftPaddleDown = False
+                'moveRightPaddleUp = False
+                'moveRightPaddleDown = False
+
+                'pauseMenuIndex = 0
+                'Invalidate()
+
+                'AudioPlayer.LoopSound("pause")
+
+                PauseGame()
+
+                Return
+
             End If
 
             If e.KeyCode = Keys.MediaPlayPause Then
                 If mediaPlayPauseKeyDown Then Return   ' swallow repeats
                 mediaPlayPauseKeyDown = True
-                AudioPlayer.PauseSound("loop")
-                currentState = GameState.Pause
-                physicsTimer.Stop()
-                moveLeftPaddleUp = False
-                moveLeftPaddleDown = False
-                moveRightPaddleUp = False
-                moveRightPaddleDown = False
-                pauseMenuIndex = 0
-                Invalidate()
-                AudioPlayer.LoopSound("pause")
+
+                '' PAUSE the game
+                'AudioPlayer.PauseSound("loop")
+                'currentState = GameState.Pause
+                'physicsTimer.Stop()
+
+                'moveLeftPaddleUp = False
+                'moveLeftPaddleDown = False
+                'moveRightPaddleUp = False
+                'moveRightPaddleDown = False
+
+                'pauseMenuIndex = 0
+                'Invalidate()
+
+                'AudioPlayer.LoopSound("pause")
+
+                PauseGame()
+
+                Return
+
             End If
 
 
-            Return
+            'Return
         End If
 
 
@@ -1038,26 +1068,56 @@ Public Class Form1
         If currentState = GameState.Pause Then
 
             If e.KeyCode = Keys.P Then
-
                 If pKeyDown Then Return   ' swallow repeats
                 pKeyDown = True
 
-                currentState = GameState.Playing
-                physicsTimer.Start()
+                '' UNPAUSE the game
+                'AudioPlayer.PauseSound("pause")
+                'currentState = GameState.Playing
+                'physicsTimer.Start()
+                'Invalidate()
+
+                'AudioPlayer.LoopSound("loop")
+
+                UnpauseGame()
+                Return
+
             End If
 
             If e.KeyCode = Keys.Pause Then
                 If pauseKeyDown Then Return   ' swallow repeats
                 pauseKeyDown = True
-                currentState = GameState.Playing
-                physicsTimer.Start()
+
+                '' UNPAUSE the game
+                'AudioPlayer.PauseSound("pause")
+                'currentState = GameState.Playing
+                'physicsTimer.Start()
+                'Invalidate()
+
+                'AudioPlayer.LoopSound("loop")
+
+                UnpauseGame()
+
+                Return
+
             End If
 
             If e.KeyCode = Keys.MediaPlayPause Then
                 If mediaPlayPauseKeyDown Then Return   ' swallow repeats
                 mediaPlayPauseKeyDown = True
-                currentState = GameState.Playing
-                physicsTimer.Start()
+
+                '' UNPAUSE the game
+                'AudioPlayer.PauseSound("pause")
+                'currentState = GameState.Playing
+                'physicsTimer.Start()
+                'Invalidate()
+
+                'AudioPlayer.LoopSound("loop")
+
+                UnpauseGame()
+
+                Return
+
             End If
 
 
@@ -1096,7 +1156,7 @@ Public Class Form1
             ' Select option
             If e.KeyCode = Keys.Enter OrElse e.KeyCode = Keys.Space Then
 
-                AudioPlayer.PauseSound("pause")
+                'AudioPlayer.PauseSound("pause")
 
                 AudioPlayer.PlayOverlapping("select")
 
@@ -1104,36 +1164,45 @@ Public Class Form1
                 Select Case pauseMenuIndex
                     Case 0 ' Resume
 
+                        '' UNPAUSE the game
+                        'currentState = GameState.Playing
+                        'physicsTimer.Start()
+                        'AudioPlayer.LoopSound("loop")
 
-                        currentState = GameState.Playing
-                        physicsTimer.Start()
-                        AudioPlayer.LoopSound("loop")
+                        UnpauseGame()
+
+                        Return
 
                     Case 1 ' Restart
 
 
                         StartNewMatch()
-                        physicsTimer.Start()
-                        AudioPlayer.LoopSound("loop")
+
+                        '' UNPAUSE the game
+                        'currentState = GameState.Playing
+                        'physicsTimer.Start()
+                        'AudioPlayer.LoopSound("loop")
+
+                        'UnpauseGame()
 
                     Case 2 ' Quit to Start Screen
 
+                        AudioPlayer.PauseSound("pause")
 
-                        'speed = 200
+                        MovePointerOffScreen()
+
                         speed = 200 * (ClientSize.Height / 1080.0)
 
-
-                        CenterBall()
-
-                        MoveBallRandom()
-
-
-
-                        currentState = GameState.StartScreen
                         winnerText = ""
                         scoreLeft = 0
                         scoreRight = 0
+
+                        CenterBall()
+                        MoveBallRandom()
+
+                        currentState = GameState.StartScreen
                         physicsTimer.Start()
+                        Invalidate()
 
                         AudioPlayer.LoopSound("start")
 
@@ -1145,6 +1214,37 @@ Public Class Form1
             End If
 
         End If
+
+    End Sub
+
+    Private Sub UnpauseGame()
+
+        ' UNPAUSE the game
+        AudioPlayer.PauseSound("pause")
+        currentState = GameState.Playing
+        physicsTimer.Start()
+        Invalidate()
+
+        AudioPlayer.LoopSound("loop")
+
+    End Sub
+
+    Private Sub PauseGame()
+        ' PAUSE the game
+
+        AudioPlayer.PauseSound("loop")
+        currentState = GameState.Pause
+        physicsTimer.Stop()
+
+        moveLeftPaddleUp = False
+        moveLeftPaddleDown = False
+        moveRightPaddleUp = False
+        moveRightPaddleDown = False
+
+        pauseMenuIndex = 0
+        Invalidate()
+
+        AudioPlayer.LoopSound("pause")
 
     End Sub
 
@@ -1178,11 +1278,12 @@ Public Class Form1
 
     Private Sub StartNewMatch()
 
+        AudioPlayer.PauseSound("start")
+        AudioPlayer.PauseSound("pause")
+
         MovePointerOffScreen()
 
-        'speed = 800
         speed = 800 * (ClientSize.Height / 1080.0)
-
 
         scoreLeft = 0
         scoreRight = 0
@@ -1195,16 +1296,14 @@ Public Class Form1
             rightPlayerName = "Right"
         End If
 
-        currentState = GameState.Playing
-        physicsTimer.Start()
-
-        AudioPlayer.PauseSound("start")
-        AudioPlayer.LoopSound("loop")
-
         CenterBall()
-        'MoveBallRandom()
         ServeBall(If(New Random().Next(0, 2) = 0, -1, 1))
 
+        currentState = GameState.Playing
+        physicsTimer.Start()
+        Invalidate()
+
+        AudioPlayer.LoopSound("loop")
 
     End Sub
 
@@ -1298,6 +1397,33 @@ Public Class Form1
 
 
     End Sub
+
+    Private Sub ScalePaddleSpeed()
+        'paddleSpeed = CInt(700 * (ClientSize.Height / 1080.0))
+        paddleSpeed = CInt(700 * Math.Sqrt(ClientSize.Height / 1080.0))
+
+    End Sub
+
+    'Private Sub Form1_MaximizedBoundsChanged(sender As Object, e As EventArgs) Handles Me.MaximizedBoundsChanged
+
+    'End Sub
+
+    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        'ballDiameter = CInt(ClientSize.Height / 32)
+
+        ScaleBallDiameter()
+
+        Me.WindowState = FormWindowState.Maximized
+
+
+    End Sub
+
+
+    Private Sub ScaleBallDiameter()
+        ballDiameter = CInt(ClientSize.Height / 18)
+
+    End Sub
+
 
 
 
