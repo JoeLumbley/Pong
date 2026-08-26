@@ -1185,6 +1185,7 @@ Public Class Form1
 
                     Case 2 ' Quit to Start Screen
 
+                        ' 
                         AudioPlayer.PauseSound("pause")
 
                         MovePointerOffScreen()
@@ -1220,16 +1221,16 @@ Public Class Form1
     Private Sub ToggleFullScreen()
         If Me.FormBorderStyle = FormBorderStyle.None Then
             Me.FormBorderStyle = FormBorderStyle.Sizable
+            Me.WindowState = FormWindowState.Normal
 
             Me.Size = New Size(1280, 720)
             Me.StartPosition = FormStartPosition.CenterScreen
-            Me.WindowState = FormWindowState.Normal
-
 
             Invalidate()
         Else
             Me.FormBorderStyle = FormBorderStyle.None
             Me.WindowState = FormWindowState.Maximized
+
             Invalidate()
 
         End If
