@@ -158,7 +158,7 @@ Public Class Form1
         Me.BackColor = Color.Black
 
         Me.MinimumSize = New Size(256, 256)
-        Me.Size = New Size(1080, 720)
+        Me.Size = New Size(1280, 720)
         Me.StartPosition = FormStartPosition.CenterScreen
         Me.WindowState = FormWindowState.Normal
 
@@ -913,6 +913,17 @@ Public Class Form1
     Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
         MyBase.OnKeyDown(e)
 
+
+        If e.KeyCode = Keys.F11 Then
+            ToggleFullScreen()
+            Return
+        End If
+
+
+
+
+
+
         ' -------------------------------
         '  Start Screen Input
         ' -------------------------------
@@ -990,10 +1001,23 @@ Public Class Form1
         End If
 
 
+
+
+
+
+
+
+
+
+
+
+
+
         ' -------------------------------
         '  Gameplay Input
         ' -------------------------------
         If currentState = GameState.Playing Then
+
             If e.KeyCode = Keys.W Then moveLeftPaddleUp = True
             If e.KeyCode = Keys.S Then moveLeftPaddleDown = True
             If playerMode = 2 Then
@@ -1006,27 +1030,14 @@ Public Class Form1
                 pKeyDown = True
 
                 PauseGame()
+
                 Return
+
             End If
 
             If e.KeyCode = Keys.Pause Then
                 If pauseKeyDown Then Return   ' swallow repeats
                 pauseKeyDown = True
-
-                '' PAUSE the game
-                'AudioPlayer.PauseSound("loop")
-                'currentState = GameState.Pause
-                'physicsTimer.Stop()
-
-                'moveLeftPaddleUp = False
-                'moveLeftPaddleDown = False
-                'moveRightPaddleUp = False
-                'moveRightPaddleDown = False
-
-                'pauseMenuIndex = 0
-                'Invalidate()
-
-                'AudioPlayer.LoopSound("pause")
 
                 PauseGame()
 
@@ -1038,21 +1049,6 @@ Public Class Form1
                 If mediaPlayPauseKeyDown Then Return   ' swallow repeats
                 mediaPlayPauseKeyDown = True
 
-                '' PAUSE the game
-                'AudioPlayer.PauseSound("loop")
-                'currentState = GameState.Pause
-                'physicsTimer.Stop()
-
-                'moveLeftPaddleUp = False
-                'moveLeftPaddleDown = False
-                'moveRightPaddleUp = False
-                'moveRightPaddleDown = False
-
-                'pauseMenuIndex = 0
-                'Invalidate()
-
-                'AudioPlayer.LoopSound("pause")
-
                 PauseGame()
 
                 Return
@@ -1060,8 +1056,24 @@ Public Class Form1
             End If
 
 
-            'Return
+
+            Return
+
         End If
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1156,18 +1168,10 @@ Public Class Form1
             ' Select option
             If e.KeyCode = Keys.Enter OrElse e.KeyCode = Keys.Space Then
 
-                'AudioPlayer.PauseSound("pause")
-
                 AudioPlayer.PlayOverlapping("select")
-
 
                 Select Case pauseMenuIndex
                     Case 0 ' Resume
-
-                        '' UNPAUSE the game
-                        'currentState = GameState.Playing
-                        'physicsTimer.Start()
-                        'AudioPlayer.LoopSound("loop")
 
                         UnpauseGame()
 
@@ -1175,15 +1179,9 @@ Public Class Form1
 
                     Case 1 ' Restart
 
-
                         StartNewMatch()
 
-                        '' UNPAUSE the game
-                        'currentState = GameState.Playing
-                        'physicsTimer.Start()
-                        'AudioPlayer.LoopSound("loop")
-
-                        'UnpauseGame()
+                        Return
 
                     Case 2 ' Quit to Start Screen
 
@@ -1206,16 +1204,45 @@ Public Class Form1
 
                         AudioPlayer.LoopSound("start")
 
+                        Return
+
                 End Select
-
-
-                Return
-
             End If
 
         End If
 
     End Sub
+
+
+
+
+
+    Private Sub ToggleFullScreen()
+        If Me.FormBorderStyle = FormBorderStyle.None Then
+            Me.FormBorderStyle = FormBorderStyle.Sizable
+
+            Me.Size = New Size(1280, 720)
+            Me.StartPosition = FormStartPosition.CenterScreen
+            Me.WindowState = FormWindowState.Normal
+
+
+            Invalidate()
+        Else
+            Me.FormBorderStyle = FormBorderStyle.None
+            Me.WindowState = FormWindowState.Maximized
+            Invalidate()
+
+        End If
+    End Sub
+
+
+
+
+
+
+
+
+
 
     Private Sub UnpauseGame()
 
