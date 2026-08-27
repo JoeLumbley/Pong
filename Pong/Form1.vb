@@ -170,9 +170,72 @@ Public Class Form1
     '    fpsTimer.Start()
     'End Sub
 
+    'Protected Overrides Sub OnLoad(e As EventArgs)
+    '    MyBase.OnLoad(e)
+
+    '    Me.Text = "PONG - Code with Joe"
+
+    '    Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or
+    '                ControlStyles.UserPaint Or
+    '                ControlStyles.OptimizedDoubleBuffer, True)
+
+    '    Me.DoubleBuffered = True
+    '    Me.BackColor = Color.Black
+    '    Me.StartPosition = FormStartPosition.CenterScreen
+    '    Me.MinimumSize = New Size(256, 256)
+    '    Me.Size = New Size(1280, 720)
+
+    '    ' Center on screen
+    '    Dim screenBounds As Rectangle = Screen.PrimaryScreen.WorkingArea
+    '    Dim centerX As Integer = (screenBounds.Width - Me.Width) \ 2
+    '    Dim centerY As Integer = (screenBounds.Height - Me.Height) \ 2
+    '    Me.Location = New Point(centerX, centerY)
+
+    '    Me.WindowState = FormWindowState.Normal
+
+
+    '    physicsTimer.Interval = 15
+    '    AddHandler physicsTimer.Tick, AddressOf PhysicsTick
+
+    '    sw.Start()
+    '    fpsTimer.Start()
+
+
+
+
+
+    '    CenterBall()
+    '    MoveBallRandom()
+
+    '    InitAudio()
+    '    InitGraphics()
+    '    InitTrails()
+    '    InitPaddles()
+    '    InitPhysics()
+
+    '    blinkTimer.Start()
+    'End Sub
+
     Protected Overrides Sub OnLoad(e As EventArgs)
         MyBase.OnLoad(e)
 
+        InitWindow()
+
+        InitTimers()
+
+
+        InitBall()
+
+        InitAudio()
+        InitGraphics()
+        InitTrails()
+
+        InitGameplay()
+
+        blinkTimer.Start()
+    End Sub
+
+    Private Sub InitWindow()
         Me.Text = "PONG - Code with Joe"
 
         Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or
@@ -182,33 +245,46 @@ Public Class Form1
         Me.DoubleBuffered = True
         Me.BackColor = Color.Black
 
+        Me.StartPosition = FormStartPosition.CenterScreen
         Me.MinimumSize = New Size(256, 256)
         Me.Size = New Size(1280, 720)
-        Me.StartPosition = FormStartPosition.CenterScreen
+
+        ' Manual centering (more reliable than StartPosition)
+        Dim screenBounds As Rectangle = Screen.PrimaryScreen.WorkingArea
+        Dim centerX As Integer = (screenBounds.Width - Me.Width) \ 2
+        Dim centerY As Integer = (screenBounds.Height - Me.Height) \ 2
+        Me.Location = New Point(centerX, centerY)
+
         Me.WindowState = FormWindowState.Normal
+    End Sub
 
 
+    Private Sub InitTimers()
         physicsTimer.Interval = 15
         AddHandler physicsTimer.Tick, AddressOf PhysicsTick
 
         sw.Start()
         fpsTimer.Start()
+    End Sub
 
 
 
 
-
+    Private Sub InitBall()
         CenterBall()
         MoveBallRandom()
+    End Sub
 
-        InitAudio()
-        InitGraphics()
-        InitTrails()
+    Private Sub InitGameplay()
         InitPaddles()
         InitPhysics()
-
-        blinkTimer.Start()
     End Sub
+
+
+
+
+
+
 
     Private Sub InitPhysics()
         physicsTimer.Start()
@@ -695,7 +771,18 @@ Public Class Form1
     End Sub
 
 
+    'Private Sub DrawTrail(g As Graphics)
+
+
     Private Sub DrawTrail(g As Graphics)
+
+        If trail Is Nothing OrElse
+       trailSizes Is Nothing OrElse
+       trailOffsets Is Nothing OrElse
+       trailBrushes Is Nothing Then
+            Exit Sub
+        End If
+
         Dim count As Integer = Math.Min(trail.Count, trailLength)
 
         For i As Integer = 0 To count - 1
@@ -709,7 +796,9 @@ Public Class Form1
                           size,
                           size)
         Next
+
     End Sub
+
 
     Private Sub DrawBall(g As Graphics)
         g.FillEllipse(ballBrush,
