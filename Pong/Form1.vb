@@ -447,7 +447,8 @@ Public Class Form1
         Dim targetY As Single = ballPos.Y + ballDiameter / 2
 
 
-        Dim difficultyFactor As Double = 0.655 * aiDifficulty
+        'Dim difficultyFactor As Double = 0.655 * aiDifficulty
+        Dim difficultyFactor As Double = 0.7 * aiDifficulty
 
         If targetY < paddleRight.Y + paddleHeight / 2 Then
             paddleRight.Y -= CSng(paddleSpeed * dt * difficultyFactor)
