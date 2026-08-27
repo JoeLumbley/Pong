@@ -146,7 +146,32 @@ Public Class Form1
     Private aiDifficulty As Double = 1.0   ' 1.0 = normal
 
 
-    Public Sub New()
+    'Public Sub New()
+
+    '    Me.Text = "PONG - Code with Joe"
+
+    '    Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or
+    '                ControlStyles.UserPaint Or
+    '                ControlStyles.OptimizedDoubleBuffer, True)
+
+    '    Me.DoubleBuffered = True
+    '    Me.BackColor = Color.Black
+
+    '    Me.MinimumSize = New Size(256, 256)
+    '    Me.Size = New Size(1280, 720)
+    '    Me.StartPosition = FormStartPosition.CenterScreen
+    '    Me.WindowState = FormWindowState.Normal
+
+
+    '    physicsTimer.Interval = 15
+    '    AddHandler physicsTimer.Tick, AddressOf PhysicsTick
+
+    '    sw.Start()
+    '    fpsTimer.Start()
+    'End Sub
+
+    Protected Overrides Sub OnLoad(e As EventArgs)
+        MyBase.OnLoad(e)
 
         Me.Text = "PONG - Code with Joe"
 
@@ -168,10 +193,10 @@ Public Class Form1
 
         sw.Start()
         fpsTimer.Start()
-    End Sub
 
-    Protected Overrides Sub OnLoad(e As EventArgs)
-        MyBase.OnLoad(e)
+
+
+
 
         CenterBall()
         MoveBallRandom()
@@ -245,7 +270,7 @@ Public Class Form1
         AudioPlayer.SetVolume("point", 500)
 
         AudioPlayer.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
-        AudioPlayer.SetVolumeOverlapping("bounce", 200)
+        AudioPlayer.SetVolumeOverlapping("bounce", 150)
 
         AudioPlayer.AddSound("start", Path.Combine(Application.StartupPath, "start.mp3"))
         AudioPlayer.SetVolume("start", 100)
@@ -344,21 +369,6 @@ Public Class Form1
 
     Private Sub UpdateAI(dt As Double)
         Dim targetY As Single = ballPos.Y + ballDiameter / 2
-
-        'If targetY < paddleRight.Y + paddleHeight / 2 Then
-        '    ' Move paddle up towards the ball with a slight delay to make it
-        '    ' beatable if you increse the delay factor (0.9) you can adjust the
-        '    ' factor to make the AI easier or harder. A lower factor makes it
-        '    ' easier, a higher factor makes it harder.
-        '    ' example: 0.5 = easier, 1.0 = harder
-        '    paddleRight.Y -= CSng(paddleSpeed * dt * 0.5)
-
-        'End If
-
-        'If targetY > paddleRight.Y + paddleHeight / 2 Then
-        '    paddleRight.Y += CSng(paddleSpeed * dt * 0.5)
-
-        'End If
 
 
         Dim difficultyFactor As Double = 0.655 * aiDifficulty
@@ -480,7 +490,6 @@ Public Class Form1
             CenterBall()
             MoveBallRandom()
 
-            'winnerText = $"{leftPlayerName} Wins!"
 
             If leftPlayerName = "You" Then
                 winnerText = "You Win!"
@@ -528,14 +537,15 @@ Public Class Form1
 
     Private Sub EndMatch()
 
-        'speed = 200
+        AudioPlayer.PauseSound("loop")
+
+
         speed = 200 * (ClientSize.Height / 1080.0)
 
 
         CenterBall()
         MoveBallRandom()
 
-        AudioPlayer.PauseSound("loop")
         AudioPlayer.LoopSound("start")
 
     End Sub
@@ -861,7 +871,6 @@ Public Class Form1
         If Me.WindowState = FormWindowState.Minimized Then Return
         If trailSizes Is Nothing OrElse trailOffsets Is Nothing Then Return
 
-        'ballDiameter = CInt(ClientSize.Height / 16)
         ScaleBallDiameter()
 
         trailLength = CInt(ClientSize.Height / 50)
@@ -1083,13 +1092,6 @@ Public Class Form1
                 If pKeyDown Then Return   ' swallow repeats
                 pKeyDown = True
 
-                '' UNPAUSE the game
-                'AudioPlayer.PauseSound("pause")
-                'currentState = GameState.Playing
-                'physicsTimer.Start()
-                'Invalidate()
-
-                'AudioPlayer.LoopSound("loop")
 
                 UnpauseGame()
                 Return
@@ -1100,13 +1102,6 @@ Public Class Form1
                 If pauseKeyDown Then Return   ' swallow repeats
                 pauseKeyDown = True
 
-                '' UNPAUSE the game
-                'AudioPlayer.PauseSound("pause")
-                'currentState = GameState.Playing
-                'physicsTimer.Start()
-                'Invalidate()
-
-                'AudioPlayer.LoopSound("loop")
 
                 UnpauseGame()
 
@@ -1118,13 +1113,6 @@ Public Class Form1
                 If mediaPlayPauseKeyDown Then Return   ' swallow repeats
                 mediaPlayPauseKeyDown = True
 
-                '' UNPAUSE the game
-                'AudioPlayer.PauseSound("pause")
-                'currentState = GameState.Playing
-                'physicsTimer.Start()
-                'Invalidate()
-
-                'AudioPlayer.LoopSound("loop")
 
                 UnpauseGame()
 
@@ -1218,25 +1206,59 @@ Public Class Form1
 
 
 
+    'Private Sub ToggleFullScreen()
+    '    If Me.FormBorderStyle = FormBorderStyle.None Then
+    '        Me.FormBorderStyle = FormBorderStyle.Sizable
+
+    '        Me.Size = New Size(1280, 720)
+    '        'Me.StartPosition = FormStartPosition.CenterScreen
+    '        ' Center form on screen.
+    '        Dim centerScreen As Point =
+    '        Me.Location = centerScreen
+    '        Me.WindowState = FormWindowState.Normal
+
+    '        Invalidate()
+    '    Else
+    '        Me.FormBorderStyle = FormBorderStyle.None
+    '        Me.WindowState = FormWindowState.Maximized
+
+    '        Invalidate()
+
+    '    End If
+    'End Sub
+
+
     Private Sub ToggleFullScreen()
+
         If Me.FormBorderStyle = FormBorderStyle.None Then
+            ' -------------------------
+            ' Exit Fullscreen
+            ' -------------------------
             Me.FormBorderStyle = FormBorderStyle.Sizable
             Me.WindowState = FormWindowState.Normal
 
+            ' Restore size
             Me.Size = New Size(1280, 720)
-            Me.StartPosition = FormStartPosition.CenterScreen
+
+            ' Center on screen
+            Dim screenBounds As Rectangle = Screen.PrimaryScreen.WorkingArea
+            Dim centerX As Integer = (screenBounds.Width - Me.Width) \ 2
+            Dim centerY As Integer = (screenBounds.Height - Me.Height) \ 2
+            Me.Location = New Point(centerX, centerY)
 
             Invalidate()
+
         Else
+            ' -------------------------
+            ' Enter Fullscreen
+            ' -------------------------
             Me.FormBorderStyle = FormBorderStyle.None
             Me.WindowState = FormWindowState.Maximized
 
             Invalidate()
-
         End If
+
     End Sub
-
-
 
 
 
@@ -1418,12 +1440,6 @@ Public Class Form1
         End If
 
 
-
-        'speed = 800 * (ClientSize.Height / 1080.0)
-
-
-
-
     End Sub
 
     Private Sub ScalePaddleSpeed()
@@ -1432,12 +1448,8 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub Form1_MaximizedBoundsChanged(sender As Object, e As EventArgs) Handles Me.MaximizedBoundsChanged
-
-    'End Sub
 
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        'ballDiameter = CInt(ClientSize.Height / 32)
 
         ScaleBallDiameter()
 
