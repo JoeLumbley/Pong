@@ -220,16 +220,11 @@ Public Class Form1
         MyBase.OnLoad(e)
 
         InitWindow()
-
         InitTimers()
-
-
         InitBall()
-
         InitAudio()
         InitGraphics()
         InitTrails()
-
         InitGameplay()
 
         blinkTimer.Start()
