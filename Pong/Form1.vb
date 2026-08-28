@@ -146,6 +146,27 @@ Public Class Form1
     Private aiDifficulty As Double = 1.0   ' 1.0 = normal
 
 
+
+
+    ' -------------------------------
+    '  Cached Fonts & Brushes
+    ' -------------------------------
+    Private hudScoreFont As Font
+    Private hudLabelFont As Font
+    Private pauseTitleFont As Font
+    Private pauseMenuFont As Font
+    Private startTitleFont As Font
+    Private startMenuFont As Font
+    Private startInfoFont As Font
+    Private gameOverFont As Font
+    Private gameOverInfoFont As Font
+
+    Private whiteBrush As SolidBrush
+    Private grayBrush As SolidBrush
+    Private dimBrush As SolidBrush
+
+
+
     'Public Sub New()
 
     '    Me.Text = "PONG - Code with Joe"
@@ -285,6 +306,15 @@ Public Class Form1
         physicsTimer.Start()
     End Sub
 
+    'Private Sub InitGraphics()
+    '    ballBrush = New SolidBrush(Color.DeepSkyBlue)
+    '    fpsBrush = New SolidBrush(Color.Gray)
+    '    fpsFont = New Font("Segoe UI", 14, FontStyle.Bold)
+    '    paddleBrush = New SolidBrush(Color.White)
+    '    playerLableBrush = New SolidBrush(Color.Gray)
+    '    scoreBrush = New SolidBrush(Color.White)
+    'End Sub
+
     Private Sub InitGraphics()
         ballBrush = New SolidBrush(Color.DeepSkyBlue)
         fpsBrush = New SolidBrush(Color.Gray)
@@ -292,7 +322,53 @@ Public Class Form1
         paddleBrush = New SolidBrush(Color.White)
         playerLableBrush = New SolidBrush(Color.Gray)
         scoreBrush = New SolidBrush(Color.White)
+
+        ' Cached brushes
+        whiteBrush = New SolidBrush(Color.White)
+        grayBrush = New SolidBrush(Color.FromArgb(140, 140, 140))
+        dimBrush = New SolidBrush(Color.FromArgb(120, 0, 0, 0))
+
+        ' Cached fonts (resolution‑scaled)
+        hudScoreFont = New Font("Segoe UI", CSng(ClientSize.Height / 12), FontStyle.Bold)
+        hudLabelFont = New Font("Segoe UI", CSng(ClientSize.Height / 50), FontStyle.Regular)
+
+        pauseTitleFont = New Font("Segoe UI", CSng(ClientSize.Height / 18), FontStyle.Bold)
+        pauseMenuFont = New Font("Segoe UI", CSng(ClientSize.Height / 28), FontStyle.Regular)
+
+        startTitleFont = New Font("Segoe UI", CSng(ClientSize.Height / 10), FontStyle.Bold)
+        startMenuFont = New Font("Segoe UI", CSng(ClientSize.Height / 30), FontStyle.Regular)
+        startInfoFont = New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
+
+        gameOverFont = New Font("Segoe UI", CSng(ClientSize.Height / 20), FontStyle.Bold)
+        gameOverInfoFont = New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Sub InitTrails()
         trailSizes = New Integer(trailLength - 1) {}
@@ -725,46 +801,95 @@ Public Class Form1
     End Sub
 
 
+    'Private Sub DrawPauseScreen(g As Graphics)
+
+    '    ' Dim background
+    '    Using dimBrush As New SolidBrush(Color.FromArgb(120, 0, 0, 0))
+    '        g.FillRectangle(dimBrush, ClientRectangle)
+    '    End Using
+
+    '    ' Title
+    '    Dim titleFont As New Font("Segoe UI", CSng(ClientSize.Height / 18), FontStyle.Bold)
+    '    Dim title As String = "PAUSED"
+    '    Dim titleSize = g.MeasureString(title, titleFont)
+
+    '    Using b As New SolidBrush(Color.White)
+    '        g.DrawString(title, titleFont, b,
+    '                 CSng((ClientSize.Width - titleSize.Width) / 2),
+    '                 CSng(ClientSize.Height * 0.25))
+    '    End Using
+
+    '    ' Menu items
+    '    Dim menuFont As New Font("Segoe UI", CSng(ClientSize.Height / 28), FontStyle.Regular)
+
+    '    Dim items() As String = {"Resume", "Restart Match", "Quit to Start Screen"}
+
+    '    For i As Integer = 0 To items.Length - 1
+    '        Dim text = items(i)
+    '        Dim size = g.MeasureString(text, menuFont)
+
+    '        Dim color As Color =
+    '        If(i = pauseMenuIndex,
+    '           Color.FromArgb(255, 255, 255),
+    '           Color.FromArgb(140, 140, 140))
+
+    '        Using b As New SolidBrush(color)
+    '            g.DrawString(text, menuFont, b,
+    '                     CSng((ClientSize.Width - size.Width) / 2),
+    '                     CSng(ClientSize.Height * 0.4 + i * (size.Height + 10)))
+    '        End Using
+    '    Next
+
+    'End Sub
+
+
     Private Sub DrawPauseScreen(g As Graphics)
+        g.FillRectangle(dimBrush, ClientRectangle)
 
-        ' Dim background
-        Using dimBrush As New SolidBrush(Color.FromArgb(120, 0, 0, 0))
-            g.FillRectangle(dimBrush, ClientRectangle)
-        End Using
-
-        ' Title
-        Dim titleFont As New Font("Segoe UI", CSng(ClientSize.Height / 18), FontStyle.Bold)
         Dim title As String = "PAUSED"
-        Dim titleSize = g.MeasureString(title, titleFont)
+        Dim titleSize = g.MeasureString(title, pauseTitleFont)
 
-        Using b As New SolidBrush(Color.White)
-            g.DrawString(title, titleFont, b,
-                     CSng((ClientSize.Width - titleSize.Width) / 2),
-                     CSng(ClientSize.Height * 0.25))
-        End Using
-
-        ' Menu items
-        Dim menuFont As New Font("Segoe UI", CSng(ClientSize.Height / 28), FontStyle.Regular)
+        g.DrawString(title, pauseTitleFont, whiteBrush,
+                 CSng((ClientSize.Width - titleSize.Width) / 2),
+                 CSng(ClientSize.Height * 0.25))
 
         Dim items() As String = {"Resume", "Restart Match", "Quit to Start Screen"}
 
         For i As Integer = 0 To items.Length - 1
             Dim text = items(i)
-            Dim size = g.MeasureString(text, menuFont)
+            Dim size = g.MeasureString(text, pauseMenuFont)
 
-            Dim color As Color =
-            If(i = pauseMenuIndex,
-               Color.FromArgb(255, 255, 255),
-               Color.FromArgb(140, 140, 140))
+            Dim brush As SolidBrush =
+            If(i = pauseMenuIndex, whiteBrush, grayBrush)
 
-            Using b As New SolidBrush(color)
-                g.DrawString(text, menuFont, b,
-                         CSng((ClientSize.Width - size.Width) / 2),
-                         CSng(ClientSize.Height * 0.4 + i * (size.Height + 10)))
-            End Using
+            g.DrawString(text, pauseMenuFont, brush,
+                     CSng((ClientSize.Width - size.Width) / 2),
+                     CSng(ClientSize.Height * 0.4 + i * (size.Height + 10)))
         Next
-
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     'Private Sub DrawTrail(g As Graphics)
@@ -810,125 +935,270 @@ Public Class Form1
     End Sub
 
 
+    'Private Sub DrawHUD(g As Graphics)
+    '    UpdateFPS()
+
+    '    g.DrawString($"FPS: {fps}", fpsFont, fpsBrush, 10, 10)
+
+    '    Dim scoreFont As New Font("Segoe UI", CSng(ClientSize.Height / 12), FontStyle.Bold)
+    '    Dim labelFont As New Font("Segoe UI", CSng(ClientSize.Height / 50), FontStyle.Regular)
+
+    '    ' Split scores
+    '    Dim leftScore As String = scoreLeft.ToString()
+    '    Dim rightScore As String = scoreRight.ToString()
+
+    '    ' Screen halves
+    '    Dim halfWidth As Single = ClientSize.Width / 2.0F
+
+    '    ' Measure text sizes
+    '    Dim leftScoreSize = g.MeasureString(leftScore, scoreFont)
+    '    Dim rightScoreSize = g.MeasureString(rightScore, scoreFont)
+
+    '    Dim leftLabelSize = g.MeasureString(leftPlayerName, labelFont)
+    '    Dim rightLabelSize = g.MeasureString(rightPlayerName, labelFont)
+
+    '    ' Vertical positions
+    '    Dim scoreY As Single = 10
+    '    Dim labelY As Single = scoreY - CSng(ClientSize.Height / 200)
+
+    '    ' Center each score inside its half
+    '    Dim leftScoreX As Single = (halfWidth - leftScoreSize.Width) / 2
+    '    Dim rightScoreX As Single = halfWidth + (halfWidth - rightScoreSize.Width) / 2
+
+    '    ' Center each label inside its half
+    '    Dim leftLabelX As Single = (halfWidth - leftLabelSize.Width) / 2
+    '    Dim rightLabelX As Single = halfWidth + (halfWidth - rightLabelSize.Width) / 2
+
+    '    ' Draw labels
+    '    g.DrawString(leftPlayerName, labelFont, playerLableBrush, leftLabelX, labelY)
+    '    g.DrawString(rightPlayerName, labelFont, playerLableBrush, rightLabelX, labelY)
+
+    '    ' Draw scores
+    '    g.DrawString(leftScore, scoreFont, scoreBrush, leftScoreX, scoreY)
+    '    g.DrawString(rightScore, scoreFont, scoreBrush, rightScoreX, scoreY)
+    'End Sub
+
     Private Sub DrawHUD(g As Graphics)
         UpdateFPS()
 
         g.DrawString($"FPS: {fps}", fpsFont, fpsBrush, 10, 10)
 
-        Dim scoreFont As New Font("Segoe UI", CSng(ClientSize.Height / 12), FontStyle.Bold)
-        Dim labelFont As New Font("Segoe UI", CSng(ClientSize.Height / 50), FontStyle.Regular)
+        Dim halfWidth As Single = ClientSize.Width / 2.0F
 
-        ' Split scores
         Dim leftScore As String = scoreLeft.ToString()
         Dim rightScore As String = scoreRight.ToString()
 
-        ' Screen halves
-        Dim halfWidth As Single = ClientSize.Width / 2.0F
+        Dim leftScoreSize = g.MeasureString(leftScore, hudScoreFont)
+        Dim rightScoreSize = g.MeasureString(rightScore, hudScoreFont)
 
-        ' Measure text sizes
-        Dim leftScoreSize = g.MeasureString(leftScore, scoreFont)
-        Dim rightScoreSize = g.MeasureString(rightScore, scoreFont)
+        Dim leftLabelSize = g.MeasureString(leftPlayerName, hudLabelFont)
+        Dim rightLabelSize = g.MeasureString(rightPlayerName, hudLabelFont)
 
-        Dim leftLabelSize = g.MeasureString(leftPlayerName, labelFont)
-        Dim rightLabelSize = g.MeasureString(rightPlayerName, labelFont)
-
-        ' Vertical positions
         Dim scoreY As Single = 10
         Dim labelY As Single = scoreY - CSng(ClientSize.Height / 200)
 
-        ' Center each score inside its half
         Dim leftScoreX As Single = (halfWidth - leftScoreSize.Width) / 2
         Dim rightScoreX As Single = halfWidth + (halfWidth - rightScoreSize.Width) / 2
 
-        ' Center each label inside its half
         Dim leftLabelX As Single = (halfWidth - leftLabelSize.Width) / 2
         Dim rightLabelX As Single = halfWidth + (halfWidth - rightLabelSize.Width) / 2
 
-        ' Draw labels
-        g.DrawString(leftPlayerName, labelFont, playerLableBrush, leftLabelX, labelY)
-        g.DrawString(rightPlayerName, labelFont, playerLableBrush, rightLabelX, labelY)
+        g.DrawString(leftPlayerName, hudLabelFont, playerLableBrush, leftLabelX, labelY)
+        g.DrawString(rightPlayerName, hudLabelFont, playerLableBrush, rightLabelX, labelY)
 
-        ' Draw scores
-        g.DrawString(leftScore, scoreFont, scoreBrush, leftScoreX, scoreY)
-        g.DrawString(rightScore, scoreFont, scoreBrush, rightScoreX, scoreY)
+        g.DrawString(leftScore, hudScoreFont, scoreBrush, leftScoreX, scoreY)
+        g.DrawString(rightScore, hudScoreFont, scoreBrush, rightScoreX, scoreY)
     End Sub
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    'Private Sub DrawStartScreen(g As Graphics)
+
+    '    Dim titleFont As New Font("Segoe UI", CSng(ClientSize.Height / 10), FontStyle.Bold)
+    '    Dim menuFont As New Font("Segoe UI", CSng(ClientSize.Height / 30), FontStyle.Regular)
+    '    Dim infoFont As New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
+
+    '    Dim title As String = "PONG"
+    '    Dim titleSize = g.MeasureString(title, titleFont)
+
+    '    Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
+
+    '    Using tb As New SolidBrush(titleColor)
+    '        g.DrawString(title, titleFont, tb,
+    '                     CSng((ClientSize.Width - titleSize.Width) / 2),
+    '                     CSng(ClientSize.Height * 0.15))
+    '    End Using
+
+    '    ' Menu options
+    '    Dim option1 As String = "1 Player"
+    '    Dim option2 As String = "2 Players"
+
+    '    Dim opt1Size = g.MeasureString(option1, menuFont)
+    '    Dim opt2Size = g.MeasureString(option2, menuFont)
+
+    '    Dim opt1Color As Color = If(selectedOption = 0,
+    '                                Color.FromArgb(255, 255, 255),
+    '                                Color.FromArgb(120, 120, 120))
+
+    '    Dim opt2Color As Color = If(selectedOption = 1,
+    '                                Color.FromArgb(255, 255, 255),
+    '                                Color.FromArgb(120, 120, 120))
+
+    '    Using b1 As New SolidBrush(opt1Color)
+    '        g.DrawString(option1, menuFont, b1,
+    '                     CSng((ClientSize.Width - opt1Size.Width) / 2),
+    '                     CSng(ClientSize.Height * 0.45))
+    '    End Using
+
+    '    Using b2 As New SolidBrush(opt2Color)
+    '        g.DrawString(option2, menuFont, b2,
+    '                     CSng((ClientSize.Width - opt2Size.Width) / 2),
+    '                     CSng(ClientSize.Height * 0.55))
+    '    End Using
+
+    '    ' Blink "Press SPACE"
+    '    If blinkVisible Then
+    '        Dim info As String = "Press SPACE to Start"
+    '        Dim infoSize = g.MeasureString(info, infoFont)
+
+    '        Using ib As New SolidBrush(Color.White)
+    '            g.DrawString(info, infoFont, ib,
+    '                         CSng((ClientSize.Width - infoSize.Width) / 2),
+    '                         CSng(ClientSize.Height * 0.75))
+    '        End Using
+    '    End If
+    'End Sub
+
     Private Sub DrawStartScreen(g As Graphics)
-
-        Dim titleFont As New Font("Segoe UI", CSng(ClientSize.Height / 10), FontStyle.Bold)
-        Dim menuFont As New Font("Segoe UI", CSng(ClientSize.Height / 30), FontStyle.Regular)
-        Dim infoFont As New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
-
         Dim title As String = "PONG"
-        Dim titleSize = g.MeasureString(title, titleFont)
-
+        Dim titleSize = g.MeasureString(title, startTitleFont)
         Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
 
         Using tb As New SolidBrush(titleColor)
-            g.DrawString(title, titleFont, tb,
-                         CSng((ClientSize.Width - titleSize.Width) / 2),
-                         CSng(ClientSize.Height * 0.15))
+            g.DrawString(title, startTitleFont, tb,
+                     CSng((ClientSize.Width - titleSize.Width) / 2),
+                     CSng(ClientSize.Height * 0.15))
         End Using
 
-        ' Menu options
         Dim option1 As String = "1 Player"
         Dim option2 As String = "2 Players"
 
-        Dim opt1Size = g.MeasureString(option1, menuFont)
-        Dim opt2Size = g.MeasureString(option2, menuFont)
+        Dim opt1Size = g.MeasureString(option1, startMenuFont)
+        Dim opt2Size = g.MeasureString(option2, startMenuFont)
 
-        Dim opt1Color As Color = If(selectedOption = 0,
-                                    Color.FromArgb(255, 255, 255),
-                                    Color.FromArgb(120, 120, 120))
+        Dim opt1Brush As SolidBrush = If(selectedOption = 0, whiteBrush, grayBrush)
+        Dim opt2Brush As SolidBrush = If(selectedOption = 1, whiteBrush, grayBrush)
 
-        Dim opt2Color As Color = If(selectedOption = 1,
-                                    Color.FromArgb(255, 255, 255),
-                                    Color.FromArgb(120, 120, 120))
+        g.DrawString(option1, startMenuFont, opt1Brush,
+                 CSng((ClientSize.Width - opt1Size.Width) / 2),
+                 CSng(ClientSize.Height * 0.45))
 
-        Using b1 As New SolidBrush(opt1Color)
-            g.DrawString(option1, menuFont, b1,
-                         CSng((ClientSize.Width - opt1Size.Width) / 2),
-                         CSng(ClientSize.Height * 0.45))
-        End Using
+        g.DrawString(option2, startMenuFont, opt2Brush,
+                 CSng((ClientSize.Width - opt2Size.Width) / 2),
+                 CSng(ClientSize.Height * 0.55))
 
-        Using b2 As New SolidBrush(opt2Color)
-            g.DrawString(option2, menuFont, b2,
-                         CSng((ClientSize.Width - opt2Size.Width) / 2),
-                         CSng(ClientSize.Height * 0.55))
-        End Using
-
-        ' Blink "Press SPACE"
         If blinkVisible Then
             Dim info As String = "Press SPACE to Start"
-            Dim infoSize = g.MeasureString(info, infoFont)
+            Dim infoSize = g.MeasureString(info, startInfoFont)
 
-            Using ib As New SolidBrush(Color.White)
-                g.DrawString(info, infoFont, ib,
-                             CSng((ClientSize.Width - infoSize.Width) / 2),
-                             CSng(ClientSize.Height * 0.75))
-            End Using
+            g.DrawString(info, startInfoFont, whiteBrush,
+                     CSng((ClientSize.Width - infoSize.Width) / 2),
+                     CSng(ClientSize.Height * 0.75))
         End If
     End Sub
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    'Private Sub DrawGameOver(g As Graphics)
+    '    Dim font As New Font("Segoe UI", CSng(ClientSize.Height / 20), FontStyle.Bold)
+
+    '    Dim infoFont As New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
+
+    '    Dim size = g.MeasureString(winnerText, font)
+    '    Dim info As String = "Press SPACE to Restart"
+    '    Dim infoSize = g.MeasureString(info, infoFont)
+
+    '    Using b As New SolidBrush(Color.White)
+    '        g.DrawString(winnerText, font, b,
+    '                     CSng((ClientSize.Width - size.Width) / 2),
+    '                     CSng(ClientSize.Height * 0.3))
+
+    '        g.DrawString(info, infoFont, b,
+    '                     CSng((ClientSize.Width - infoSize.Width) / 2),
+    '                     CSng(ClientSize.Height * 0.55))
+    '    End Using
+    'End Sub
+
     Private Sub DrawGameOver(g As Graphics)
-        Dim font As New Font("Segoe UI", CSng(ClientSize.Height / 20), FontStyle.Bold)
-
-        Dim infoFont As New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
-
-        Dim size = g.MeasureString(winnerText, font)
+        Dim size = g.MeasureString(winnerText, gameOverFont)
         Dim info As String = "Press SPACE to Restart"
-        Dim infoSize = g.MeasureString(info, infoFont)
+        Dim infoSize = g.MeasureString(info, gameOverInfoFont)
 
-        Using b As New SolidBrush(Color.White)
-            g.DrawString(winnerText, font, b,
-                         CSng((ClientSize.Width - size.Width) / 2),
-                         CSng(ClientSize.Height * 0.3))
+        g.DrawString(winnerText, gameOverFont, whiteBrush,
+                 CSng((ClientSize.Width - size.Width) / 2),
+                 CSng(ClientSize.Height * 0.3))
 
-            g.DrawString(info, infoFont, b,
-                         CSng((ClientSize.Width - infoSize.Width) / 2),
-                         CSng(ClientSize.Height * 0.55))
-        End Using
+        g.DrawString(info, gameOverInfoFont, whiteBrush,
+                 CSng((ClientSize.Width - infoSize.Width) / 2),
+                 CSng(ClientSize.Height * 0.55))
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     Protected Overrides Sub OnPaintBackground(pevent As PaintEventArgs)
@@ -950,22 +1220,71 @@ Public Class Form1
 
 
 
+    'Protected Overrides Sub OnResize(e As EventArgs)
+    '    MyBase.OnResize(e)
+
+    '    If Me.WindowState = FormWindowState.Minimized Then Return
+    '    If trailSizes Is Nothing OrElse trailOffsets Is Nothing Then Return
+
+    '    ScaleBallDiameter()
+
+    '    trailLength = CInt(ClientSize.Height / 50)
+
+    '    ' Scale speed based on height
+    '    ScaleBallSpeed()
+    '    ScalePaddleSpeed()
+    '    aiDifficulty = ClientSize.Height / 1080.0
+
+
+    '    paddleHeight = ClientSize.Height / 8
+    '    paddleWidth = ClientSize.Height / 25
+
+    '    paddleLeft.Height = paddleHeight
+    '    paddleLeft.Width = paddleWidth
+    '    paddleRight.Height = paddleHeight
+    '    paddleRight.Width = paddleWidth
+
+    '    paddleLeft.X = ClientSize.Height / 25
+    '    paddleRight.X = ClientSize.Width - ClientSize.Height / 25 - paddleWidth
+
+    '    ResetPaddles()
+    '    CenterBall()
+
+    '    If GameState.Playing = currentState Then
+    '        ServeBall(If(velX < 0, -1, 1)) ' Serve in the current direction
+    '    Else
+    '        MoveBallRandom()
+
+    '    End If
+
+
+    '    InitTrails()
+    '    trail.Clear()
+
+    '    RescaleFonts()
+
+    '    Invalidate()
+    'End Sub
+
+
+
     Protected Overrides Sub OnResize(e As EventArgs)
         MyBase.OnResize(e)
 
         If Me.WindowState = FormWindowState.Minimized Then Return
         If trailSizes Is Nothing OrElse trailOffsets Is Nothing Then Return
 
+        ' -------------------------------
+        '  Scale ball + speed
+        ' -------------------------------
         ScaleBallDiameter()
-
-        trailLength = CInt(ClientSize.Height / 50)
-
-        ' Scale speed based on height
         ScaleBallSpeed()
         ScalePaddleSpeed()
         aiDifficulty = ClientSize.Height / 1080.0
 
-
+        ' -------------------------------
+        '  Scale paddles
+        ' -------------------------------
         paddleHeight = ClientSize.Height / 8
         paddleWidth = ClientSize.Height / 25
 
@@ -980,20 +1299,71 @@ Public Class Form1
         ResetPaddles()
         CenterBall()
 
-        If GameState.Playing = currentState Then
-            ServeBall(If(velX < 0, -1, 1)) ' Serve in the current direction
+        ' -------------------------------
+        '  Preserve ball direction
+        ' -------------------------------
+        If currentState = GameState.Playing Then
+            ServeBall(If(velX < 0, -1, 1))
         Else
             MoveBallRandom()
-
         End If
 
+        ' -------------------------------
+        '  Resize trail WITHOUT allocating
+        ' -------------------------------
+        Dim newLength As Integer = CInt(ClientSize.Height / 30)
+        If newLength < 5 Then newLength = 5
 
-        InitTrails()
+        If newLength <> trailLength Then
+            trailLength = newLength
+
+            ' Resize existing arrays instead of allocating new ones
+            ReDim Preserve trailSizes(trailLength - 1)
+            ReDim Preserve trailOffsets(trailLength - 1)
+            ReDim Preserve trailAlpha(trailLength - 1)
+            ReDim Preserve trailBrushes(trailLength - 1)
+
+            ' Recompute values without allocating new brushes
+            For i As Integer = 0 To trailLength - 1
+                Dim size As Integer = ballDiameter - (trailLength - i) * 2
+                If size < 10 Then size = 10
+
+                trailSizes(i) = size
+                trailOffsets(i) = CSng((ballDiameter - size) / 2)
+
+                Dim alpha As Integer = CInt(32 * (i / trailLength) ^ 2)
+                trailAlpha(i) = alpha
+
+                If trailBrushes(i) Is Nothing Then
+                    trailBrushes(i) = New SolidBrush(Color.FromArgb(alpha, 0, 191, 255))
+                Else
+                    trailBrushes(i).Color = Color.FromArgb(alpha, 0, 191, 255)
+                End If
+            Next
+        End If
+
+        ' Clear trail without allocating
         trail.Clear()
+
+        RescaleFonts()
 
         Invalidate()
     End Sub
 
+    Private Sub RescaleFonts()
+        hudScoreFont = New Font("Segoe UI", CSng(ClientSize.Height / 12), FontStyle.Bold)
+        hudLabelFont = New Font("Segoe UI", CSng(ClientSize.Height / 50), FontStyle.Regular)
+
+        pauseTitleFont = New Font("Segoe UI", CSng(ClientSize.Height / 18), FontStyle.Bold)
+        pauseMenuFont = New Font("Segoe UI", CSng(ClientSize.Height / 28), FontStyle.Regular)
+
+        startTitleFont = New Font("Segoe UI", CSng(ClientSize.Height / 10), FontStyle.Bold)
+        startMenuFont = New Font("Segoe UI", CSng(ClientSize.Height / 30), FontStyle.Regular)
+        startInfoFont = New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
+
+        gameOverFont = New Font("Segoe UI", CSng(ClientSize.Height / 20), FontStyle.Bold)
+        gameOverInfoFont = New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
+    End Sub
 
 
 
