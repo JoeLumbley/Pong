@@ -228,22 +228,10 @@ Public Class Form1
 
 
 
-
-
-
-
     Private Sub InitPhysics()
         physicsTimer.Start()
     End Sub
 
-    'Private Sub InitGraphics()
-    '    ballBrush = New SolidBrush(Color.DeepSkyBlue)
-    '    fpsBrush = New SolidBrush(Color.Gray)
-    '    fpsFont = New Font("Segoe UI", 14, FontStyle.Bold)
-    '    paddleBrush = New SolidBrush(Color.White)
-    '    playerLableBrush = New SolidBrush(Color.Gray)
-    '    scoreBrush = New SolidBrush(Color.White)
-    'End Sub
 
     Private Sub InitGraphics()
         ballBrush = New SolidBrush(Color.DeepSkyBlue)
@@ -272,31 +260,6 @@ Public Class Form1
         gameOverFont = New Font("Segoe UI", CSng(ClientSize.Height / 20), FontStyle.Bold)
         gameOverInfoFont = New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
