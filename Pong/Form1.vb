@@ -694,48 +694,6 @@ Public Class Form1
     End Sub
 
 
-    'Private Sub DrawPauseScreen(g As Graphics)
-
-    '    ' Dim background
-    '    Using dimBrush As New SolidBrush(Color.FromArgb(120, 0, 0, 0))
-    '        g.FillRectangle(dimBrush, ClientRectangle)
-    '    End Using
-
-    '    ' Title
-    '    Dim titleFont As New Font("Segoe UI", CSng(ClientSize.Height / 18), FontStyle.Bold)
-    '    Dim title As String = "PAUSED"
-    '    Dim titleSize = g.MeasureString(title, titleFont)
-
-    '    Using b As New SolidBrush(Color.White)
-    '        g.DrawString(title, titleFont, b,
-    '                 CSng((ClientSize.Width - titleSize.Width) / 2),
-    '                 CSng(ClientSize.Height * 0.25))
-    '    End Using
-
-    '    ' Menu items
-    '    Dim menuFont As New Font("Segoe UI", CSng(ClientSize.Height / 28), FontStyle.Regular)
-
-    '    Dim items() As String = {"Resume", "Restart Match", "Quit to Start Screen"}
-
-    '    For i As Integer = 0 To items.Length - 1
-    '        Dim text = items(i)
-    '        Dim size = g.MeasureString(text, menuFont)
-
-    '        Dim color As Color =
-    '        If(i = pauseMenuIndex,
-    '           Color.FromArgb(255, 255, 255),
-    '           Color.FromArgb(140, 140, 140))
-
-    '        Using b As New SolidBrush(color)
-    '            g.DrawString(text, menuFont, b,
-    '                     CSng((ClientSize.Width - size.Width) / 2),
-    '                     CSng(ClientSize.Height * 0.4 + i * (size.Height + 10)))
-    '        End Using
-    '    Next
-
-    'End Sub
-
-
     Private Sub DrawPauseScreen(g As Graphics)
         g.FillRectangle(dimBrush, ClientRectangle)
 
@@ -761,31 +719,6 @@ Public Class Form1
         Next
     End Sub
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    'Private Sub DrawTrail(g As Graphics)
 
 
     Private Sub DrawTrail(g As Graphics)
@@ -827,49 +760,6 @@ Public Class Form1
         g.FillRectangle(paddleBrush, paddleRight)
     End Sub
 
-
-    'Private Sub DrawHUD(g As Graphics)
-    '    UpdateFPS()
-
-    '    g.DrawString($"FPS: {fps}", fpsFont, fpsBrush, 10, 10)
-
-    '    Dim scoreFont As New Font("Segoe UI", CSng(ClientSize.Height / 12), FontStyle.Bold)
-    '    Dim labelFont As New Font("Segoe UI", CSng(ClientSize.Height / 50), FontStyle.Regular)
-
-    '    ' Split scores
-    '    Dim leftScore As String = scoreLeft.ToString()
-    '    Dim rightScore As String = scoreRight.ToString()
-
-    '    ' Screen halves
-    '    Dim halfWidth As Single = ClientSize.Width / 2.0F
-
-    '    ' Measure text sizes
-    '    Dim leftScoreSize = g.MeasureString(leftScore, scoreFont)
-    '    Dim rightScoreSize = g.MeasureString(rightScore, scoreFont)
-
-    '    Dim leftLabelSize = g.MeasureString(leftPlayerName, labelFont)
-    '    Dim rightLabelSize = g.MeasureString(rightPlayerName, labelFont)
-
-    '    ' Vertical positions
-    '    Dim scoreY As Single = 10
-    '    Dim labelY As Single = scoreY - CSng(ClientSize.Height / 200)
-
-    '    ' Center each score inside its half
-    '    Dim leftScoreX As Single = (halfWidth - leftScoreSize.Width) / 2
-    '    Dim rightScoreX As Single = halfWidth + (halfWidth - rightScoreSize.Width) / 2
-
-    '    ' Center each label inside its half
-    '    Dim leftLabelX As Single = (halfWidth - leftLabelSize.Width) / 2
-    '    Dim rightLabelX As Single = halfWidth + (halfWidth - rightLabelSize.Width) / 2
-
-    '    ' Draw labels
-    '    g.DrawString(leftPlayerName, labelFont, playerLableBrush, leftLabelX, labelY)
-    '    g.DrawString(rightPlayerName, labelFont, playerLableBrush, rightLabelX, labelY)
-
-    '    ' Draw scores
-    '    g.DrawString(leftScore, scoreFont, scoreBrush, leftScoreX, scoreY)
-    '    g.DrawString(rightScore, scoreFont, scoreBrush, rightScoreX, scoreY)
-    'End Sub
 
     Private Sub DrawHUD(g As Graphics)
         UpdateFPS()
