@@ -795,85 +795,6 @@ Public Class Form1
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    'Private Sub DrawStartScreen(g As Graphics)
-
-    '    Dim titleFont As New Font("Segoe UI", CSng(ClientSize.Height / 10), FontStyle.Bold)
-    '    Dim menuFont As New Font("Segoe UI", CSng(ClientSize.Height / 30), FontStyle.Regular)
-    '    Dim infoFont As New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
-
-    '    Dim title As String = "PONG"
-    '    Dim titleSize = g.MeasureString(title, titleFont)
-
-    '    Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
-
-    '    Using tb As New SolidBrush(titleColor)
-    '        g.DrawString(title, titleFont, tb,
-    '                     CSng((ClientSize.Width - titleSize.Width) / 2),
-    '                     CSng(ClientSize.Height * 0.15))
-    '    End Using
-
-    '    ' Menu options
-    '    Dim option1 As String = "1 Player"
-    '    Dim option2 As String = "2 Players"
-
-    '    Dim opt1Size = g.MeasureString(option1, menuFont)
-    '    Dim opt2Size = g.MeasureString(option2, menuFont)
-
-    '    Dim opt1Color As Color = If(selectedOption = 0,
-    '                                Color.FromArgb(255, 255, 255),
-    '                                Color.FromArgb(120, 120, 120))
-
-    '    Dim opt2Color As Color = If(selectedOption = 1,
-    '                                Color.FromArgb(255, 255, 255),
-    '                                Color.FromArgb(120, 120, 120))
-
-    '    Using b1 As New SolidBrush(opt1Color)
-    '        g.DrawString(option1, menuFont, b1,
-    '                     CSng((ClientSize.Width - opt1Size.Width) / 2),
-    '                     CSng(ClientSize.Height * 0.45))
-    '    End Using
-
-    '    Using b2 As New SolidBrush(opt2Color)
-    '        g.DrawString(option2, menuFont, b2,
-    '                     CSng((ClientSize.Width - opt2Size.Width) / 2),
-    '                     CSng(ClientSize.Height * 0.55))
-    '    End Using
-
-    '    ' Blink "Press SPACE"
-    '    If blinkVisible Then
-    '        Dim info As String = "Press SPACE to Start"
-    '        Dim infoSize = g.MeasureString(info, infoFont)
-
-    '        Using ib As New SolidBrush(Color.White)
-    '            g.DrawString(info, infoFont, ib,
-    '                         CSng((ClientSize.Width - infoSize.Width) / 2),
-    '                         CSng(ClientSize.Height * 0.75))
-    '        End Using
-    '    End If
-    'End Sub
-
     Private Sub DrawStartScreen(g As Graphics)
         Dim title As String = "PONG"
         Dim titleSize = g.MeasureString(title, startTitleFont)
@@ -914,46 +835,6 @@ Public Class Form1
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    'Private Sub DrawGameOver(g As Graphics)
-    '    Dim font As New Font("Segoe UI", CSng(ClientSize.Height / 20), FontStyle.Bold)
-
-    '    Dim infoFont As New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
-
-    '    Dim size = g.MeasureString(winnerText, font)
-    '    Dim info As String = "Press SPACE to Restart"
-    '    Dim infoSize = g.MeasureString(info, infoFont)
-
-    '    Using b As New SolidBrush(Color.White)
-    '        g.DrawString(winnerText, font, b,
-    '                     CSng((ClientSize.Width - size.Width) / 2),
-    '                     CSng(ClientSize.Height * 0.3))
-
-    '        g.DrawString(info, infoFont, b,
-    '                     CSng((ClientSize.Width - infoSize.Width) / 2),
-    '                     CSng(ClientSize.Height * 0.55))
-    '    End Using
-    'End Sub
-
     Private Sub DrawGameOver(g As Graphics)
         Dim size = g.MeasureString(winnerText, gameOverFont)
         Dim info As String = "Press SPACE to Restart"
@@ -967,19 +848,6 @@ Public Class Form1
                  CSng((ClientSize.Width - infoSize.Width) / 2),
                  CSng(ClientSize.Height * 0.55))
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1000,54 +868,6 @@ Public Class Form1
             fpsTimer.Restart()
         End If
     End Sub
-
-
-
-    'Protected Overrides Sub OnResize(e As EventArgs)
-    '    MyBase.OnResize(e)
-
-    '    If Me.WindowState = FormWindowState.Minimized Then Return
-    '    If trailSizes Is Nothing OrElse trailOffsets Is Nothing Then Return
-
-    '    ScaleBallDiameter()
-
-    '    trailLength = CInt(ClientSize.Height / 50)
-
-    '    ' Scale speed based on height
-    '    ScaleBallSpeed()
-    '    ScalePaddleSpeed()
-    '    aiDifficulty = ClientSize.Height / 1080.0
-
-
-    '    paddleHeight = ClientSize.Height / 8
-    '    paddleWidth = ClientSize.Height / 25
-
-    '    paddleLeft.Height = paddleHeight
-    '    paddleLeft.Width = paddleWidth
-    '    paddleRight.Height = paddleHeight
-    '    paddleRight.Width = paddleWidth
-
-    '    paddleLeft.X = ClientSize.Height / 25
-    '    paddleRight.X = ClientSize.Width - ClientSize.Height / 25 - paddleWidth
-
-    '    ResetPaddles()
-    '    CenterBall()
-
-    '    If GameState.Playing = currentState Then
-    '        ServeBall(If(velX < 0, -1, 1)) ' Serve in the current direction
-    '    Else
-    '        MoveBallRandom()
-
-    '    End If
-
-
-    '    InitTrails()
-    '    trail.Clear()
-
-    '    RescaleFonts()
-
-    '    Invalidate()
-    'End Sub
 
 
 
@@ -1147,11 +967,6 @@ Public Class Form1
         gameOverFont = New Font("Segoe UI", CSng(ClientSize.Height / 20), FontStyle.Bold)
         gameOverInfoFont = New Font("Segoe UI", CSng(ClientSize.Height / 35), FontStyle.Regular)
     End Sub
-
-
-
-
-
 
 
     ' -------------------------------
@@ -1441,29 +1256,6 @@ Public Class Form1
     End Sub
 
 
-
-
-
-    'Private Sub ToggleFullScreen()
-    '    If Me.FormBorderStyle = FormBorderStyle.None Then
-    '        Me.FormBorderStyle = FormBorderStyle.Sizable
-
-    '        Me.Size = New Size(1280, 720)
-    '        'Me.StartPosition = FormStartPosition.CenterScreen
-    '        ' Center form on screen.
-    '        Dim centerScreen As Point =
-    '        Me.Location = centerScreen
-    '        Me.WindowState = FormWindowState.Normal
-
-    '        Invalidate()
-    '    Else
-    '        Me.FormBorderStyle = FormBorderStyle.None
-    '        Me.WindowState = FormWindowState.Maximized
-
-    '        Invalidate()
-
-    '    End If
-    'End Sub
 
 
     Private Sub ToggleFullScreen()
