@@ -951,6 +951,7 @@ Public Class Form1
         ' END SCREEN INPUT
         If currentState = GameState.EndScreen Then
             If e.KeyCode = Keys.Space OrElse e.KeyCode = Keys.Enter Then
+                AudioPlayer.PlayOverlapping("select")
                 currentState = GameState.StartScreen
                 winnerText = ""
             End If
@@ -997,6 +998,7 @@ Public Class Form1
                 End If
 
             Case Keys.Space, Keys.Enter
+                AudioPlayer.PlayOverlapping("select")
                 playerMode = If(selectedOption = 0, 1, 2)
                 StartNewMatch()
 
