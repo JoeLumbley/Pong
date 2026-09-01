@@ -845,7 +845,9 @@ Public Class Form1
         CenterBall()
 
         If currentState = GameState.Playing Then
-            ServeBall(If(velX < 0, -1, 1))
+            'ServeBall(If(velX < 0, -1, 1))
+            ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
+
         Else
             MoveBallRandom()
         End If
@@ -997,15 +999,15 @@ Public Class Form1
                     selectedOption = 1
                 End If
 
-            Case Keys.Space, Keys.Enter
+            Case Keys.Space, Keys.Enter, Keys.S
                 AudioPlayer.PlayOverlapping("select")
                 playerMode = If(selectedOption = 0, 1, 2)
                 StartNewMatch()
 
-            Case Keys.S
-                AudioPlayer.PlayOverlapping("select")
-                playerMode = If(selectedOption = 0, 1, 2)
-                StartNewMatch()
+            'Case Keys.S
+            '    AudioPlayer.PlayOverlapping("select")
+            '    playerMode = If(selectedOption = 0, 1, 2)
+            '    StartNewMatch()
 
 
             Case Keys.Escape
