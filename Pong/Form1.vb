@@ -1049,6 +1049,9 @@ Public Class Form1
 
 
             Case Keys.Escape
+                If escapeKeyDown Then Return
+                escapeKeyDown = True
+
                 AudioPlayer.PlayOverlapping("select")
                 Me.Close()
         End Select
@@ -1166,7 +1169,9 @@ Public Class Form1
 
             AudioPlayer.PlayOverlapping("select")
 
-            UnpauseGame()
+            'UnpauseGame()
+            Quit2StartScreen()
+
             Return
         End If
 
