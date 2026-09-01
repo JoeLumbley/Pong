@@ -1076,6 +1076,16 @@ Public Class Form1
             Return
         End If
 
+        If e.KeyCode = Keys.N Then
+            StartNewMatch()
+            Return
+        End If
+
+        If e.KeyCode = Keys.Q Then
+            Quit2StartScreen()
+            Return
+        End If
+
         If e.KeyCode = Keys.Enter OrElse e.KeyCode = Keys.Space Then
             AudioPlayer.PlayOverlapping("select")
 
@@ -1094,6 +1104,7 @@ Public Class Form1
 
             End Select
         End If
+
     End Sub
 
     Private Sub Quit2StartScreen()
