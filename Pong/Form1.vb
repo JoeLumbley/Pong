@@ -638,7 +638,7 @@ Public Class Form1
                      CSng((ClientSize.Width - titleSize.Width) / 2.0F),
                      CSng(ClientSize.Height * 0.25F))
 
-        Dim items() As String = {"Resume", "Restart Match", "Quit to Start Screen"}
+        Dim items() As String = {"Resume", "New Match", "Quit to Start Screen"}
 
         For i As Integer = 0 To items.Length - 1
             Dim text = items(i)
@@ -1076,13 +1076,29 @@ Public Class Form1
             Return
         End If
 
+        If e.KeyCode = Keys.R Then
+            AudioPlayer.PlayOverlapping("select")
+            UnpauseGame()
+            Return
+        End If
+
         If e.KeyCode = Keys.N Then
+            AudioPlayer.PlayOverlapping("select")
             StartNewMatch()
             Return
         End If
 
         If e.KeyCode = Keys.Q Then
+            AudioPlayer.PlayOverlapping("select")
+
             Quit2StartScreen()
+            Return
+        End If
+
+        If e.KeyCode = Keys.Escape Then
+            AudioPlayer.PlayOverlapping("select")
+
+            UnpauseGame()
             Return
         End If
 
@@ -1283,8 +1299,8 @@ Public Class Form1
 
     Private Sub CreateFileFromResource(filepath As String, resource As Byte())
         Try
-            If Not File.Exists(filepath) Then
-                File.WriteAllBytes(filepath, resource)
+            If Not IO.File.Exists(filepath) Then
+                IO.File.WriteAllBytes(filepath, resource)
             End If
         Catch ex As Exception
             Debug.Print($"Error creating file: {ex.Message}")
