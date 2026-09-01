@@ -956,9 +956,6 @@ Public Class Form1
         End If
 
 
-
-
-
         ' ============================
         ' ESC pressed while fullscreen
         ' ============================
@@ -970,9 +967,6 @@ Public Class Form1
             ToggleFullScreen()
             Return
         End If
-
-
-
 
 
         ' START SCREEN INPUT
