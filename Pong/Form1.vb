@@ -946,25 +946,6 @@ Public Class Form1
             Return
         End If
 
-        'If Me.FormBorderStyle = FormBorderStyle.None AndAlso e.KeyCode = Keys.Escape Then
-        '    If escapeKeyDown Then Return
-        '    escapeKeyDown = True
-        '    AudioPlayer.PlayOverlapping("select")
-
-        '    ToggleFullScreen()
-        '    Return
-
-        'ElseIf Me.FormBorderStyle <> FormBorderStyle.None AndAlso e.KeyCode = Keys.Escape AndAlso physicsTimer IsNot stoped Then
-        '    If escapeKeyDown Then Return
-        '    escapeKeyDown = True
-        '    AudioPlayer.PlayOverlapping("select")
-        '    PauseGame()
-
-        '    'Me.Close()
-        '    Return
-        'End If
-
-
 
         ' ============================
         ' ESC pressed while fullscreen
@@ -1013,13 +994,13 @@ Public Class Form1
 
     Private Sub HandleStartScreenInput(e As KeyEventArgs)
         Select Case e.KeyCode
-            Case Keys.Up
+            Case Keys.Up, Keys.W
                 If selectedOption <> 0 Then
                     AudioPlayer.PlayOverlapping("arrow_up")
                     selectedOption = 0
                 End If
 
-            Case Keys.Down
+            Case Keys.Down, Keys.S
                 If selectedOption <> 1 Then
                     AudioPlayer.PlayOverlapping("arrow_down")
                     selectedOption = 1
@@ -1042,12 +1023,6 @@ Public Class Form1
                 playerMode = If(selectedOption = 0, 1, 2)
                 StartNewMatch()
 
-            'Case Keys.S
-            '    AudioPlayer.PlayOverlapping("select")
-            '    playerMode = If(selectedOption = 0, 1, 2)
-            '    StartNewMatch()
-
-
             Case Keys.Escape
                 If escapeKeyDown Then Return
                 escapeKeyDown = True
@@ -1069,6 +1044,8 @@ Public Class Form1
         If e.KeyCode = Keys.P Then
             If pKeyDown Then Return
             pKeyDown = True
+            AudioPlayer.PlayOverlapping("select")
+
             PauseGame()
             Return
         End If
@@ -1076,6 +1053,8 @@ Public Class Form1
         If e.KeyCode = Keys.Pause Then
             If pauseKeyDown Then Return
             pauseKeyDown = True
+            AudioPlayer.PlayOverlapping("select")
+
             PauseGame()
             Return
         End If
@@ -1083,6 +1062,7 @@ Public Class Form1
         If e.KeyCode = Keys.MediaPlayPause Then
             If mediaPlayPauseKeyDown Then Return
             mediaPlayPauseKeyDown = True
+            AudioPlayer.PlayOverlapping("select")
             PauseGame()
             Return
         End If
@@ -1108,6 +1088,7 @@ Public Class Form1
         If e.KeyCode = Keys.P Then
             If pKeyDown Then Return
             pKeyDown = True
+            AudioPlayer.PlayOverlapping("select")
             UnpauseGame()
             Return
         End If
@@ -1115,6 +1096,8 @@ Public Class Form1
         If e.KeyCode = Keys.Pause Then
             If pauseKeyDown Then Return
             pauseKeyDown = True
+            AudioPlayer.PlayOverlapping("select")
+
             UnpauseGame()
             Return
         End If
@@ -1122,14 +1105,17 @@ Public Class Form1
         If e.KeyCode = Keys.MediaPlayPause Then
             If mediaPlayPauseKeyDown Then Return
             mediaPlayPauseKeyDown = True
+            AudioPlayer.PlayOverlapping("select")
+
             UnpauseGame()
             Return
         End If
 
         If e.KeyCode = Keys.Up Then
             If pauseMenuIndex > 0 Then
-                pauseMenuIndex = Math.Max(0, pauseMenuIndex - 1)
                 AudioPlayer.PlayOverlapping("arrow_up")
+
+                pauseMenuIndex = Math.Max(0, pauseMenuIndex - 1)
                 Invalidate()
             End If
             Return
@@ -1137,8 +1123,9 @@ Public Class Form1
 
         If e.KeyCode = Keys.Down Then
             If pauseMenuIndex < 2 Then
-                pauseMenuIndex = Math.Min(2, pauseMenuIndex + 1)
                 AudioPlayer.PlayOverlapping("arrow_down")
+
+                pauseMenuIndex = Math.Min(2, pauseMenuIndex + 1)
                 Invalidate()
             End If
             Return
