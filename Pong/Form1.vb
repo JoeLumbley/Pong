@@ -1089,26 +1089,6 @@ Public Class Form1
                     Return
 
                 Case 2
-
-                    '' Quit to Start Screen
-                    'AudioPlayer.PauseSound("pause")
-                    'MovePointerOffScreen()
-
-                    'speed = 200 * (ClientSize.Height / 1080.0)
-
-                    'winnerText = ""
-                    'scoreLeft = 0
-                    'scoreRight = 0
-
-                    'CenterBall()
-                    'MoveBallRandom()
-
-                    'currentState = GameState.StartScreen
-                    'physicsTimer.Start()
-                    'Invalidate()
-
-                    'AudioPlayer.LoopSound("start")
-
                     Quit2StartScreen()
                     Return
 
