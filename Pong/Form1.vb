@@ -156,6 +156,8 @@ Public Class Form1
     Private pKeyDown As Boolean = False
     Private mediaPlayPauseKeyDown As Boolean = False
     Private f11KeyDown As Boolean = False
+    Private escapeKeyDown As Boolean = False
+
 
     ' -------------------------------
     '  AI Difficulty
@@ -701,7 +703,7 @@ Public Class Form1
         ' -------------------------------
         Dim fsText As String =
         If(Me.FormBorderStyle = FormBorderStyle.None,
-           "F11 Exit Fullscreen",
+           "ESC Exit Fullscreen",
            "F11 Fullscreen")
 
 
@@ -944,6 +946,42 @@ Public Class Form1
             Return
         End If
 
+        'If Me.FormBorderStyle = FormBorderStyle.None AndAlso e.KeyCode = Keys.Escape Then
+        '    If escapeKeyDown Then Return
+        '    escapeKeyDown = True
+        '    AudioPlayer.PlayOverlapping("select")
+
+        '    ToggleFullScreen()
+        '    Return
+
+        'ElseIf Me.FormBorderStyle <> FormBorderStyle.None AndAlso e.KeyCode = Keys.Escape AndAlso physicsTimer IsNot stoped Then
+        '    If escapeKeyDown Then Return
+        '    escapeKeyDown = True
+        '    AudioPlayer.PlayOverlapping("select")
+        '    PauseGame()
+
+        '    'Me.Close()
+        '    Return
+        'End If
+
+
+
+        ' ============================
+        ' ESC pressed while fullscreen
+        ' ============================
+        If Me.FormBorderStyle = FormBorderStyle.None AndAlso e.KeyCode = Keys.Escape Then
+            If escapeKeyDown Then Return
+            escapeKeyDown = True
+
+            AudioPlayer.PlayOverlapping("select")
+            ToggleFullScreen()
+            Return
+        End If
+
+
+
+
+
         ' START SCREEN INPUT
         If currentState = GameState.StartScreen Then
             HandleStartScreenInput(e)
@@ -1045,6 +1083,22 @@ Public Class Form1
             PauseGame()
             Return
         End If
+
+
+        ' ============================================
+        ' ESC pressed while windowed AND game is running
+        ' ============================================
+        If Me.FormBorderStyle <> FormBorderStyle.None AndAlso
+           e.KeyCode = Keys.Escape Then
+
+            If escapeKeyDown Then Return
+            escapeKeyDown = True
+
+            AudioPlayer.PlayOverlapping("select")
+            PauseGame()
+            Return
+        End If
+
     End Sub
 
     Private Sub HandlePauseInput(e As KeyEventArgs)
@@ -1107,6 +1161,9 @@ Public Class Form1
         End If
 
         If e.KeyCode = Keys.Escape Then
+            If escapeKeyDown Then Return
+            escapeKeyDown = True
+
             AudioPlayer.PlayOverlapping("select")
 
             UnpauseGame()
@@ -1182,6 +1239,10 @@ Public Class Form1
 
         If e.KeyCode = Keys.F11 Then
             f11KeyDown = False
+        End If
+
+        If e.KeyCode = Keys.Escape Then
+            escapeKeyDown = False
         End If
 
     End Sub
