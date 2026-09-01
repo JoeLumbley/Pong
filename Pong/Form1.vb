@@ -1002,6 +1002,12 @@ Public Class Form1
                 playerMode = If(selectedOption = 0, 1, 2)
                 StartNewMatch()
 
+            Case Keys.S
+                AudioPlayer.PlayOverlapping("select")
+                playerMode = If(selectedOption = 0, 1, 2)
+                StartNewMatch()
+
+
             Case Keys.Escape
                 Me.Close()
         End Select
