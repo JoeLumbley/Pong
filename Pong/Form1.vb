@@ -1009,6 +1009,7 @@ Public Class Form1
 
 
             Case Keys.Escape
+                AudioPlayer.PlayOverlapping("select")
                 Me.Close()
         End Select
     End Sub
