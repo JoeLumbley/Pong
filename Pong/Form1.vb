@@ -156,6 +156,7 @@ Public Class Form1
     Private pKeyDown As Boolean = False
     Private mediaPlayPauseKeyDown As Boolean = False
     Private f11KeyDown As Boolean = False
+    Private fKeyDown As Boolean = False
     Private escapeKeyDown As Boolean = False
 
 
@@ -946,6 +947,17 @@ Public Class Form1
             Return
         End If
 
+        If e.KeyCode = Keys.F Then
+            If fKeyDown Then Return
+            fKeyDown = True
+
+            ToggleFullScreen()
+            Return
+        End If
+
+
+
+
 
         ' ============================
         ' ESC pressed while fullscreen
@@ -1236,6 +1248,11 @@ Public Class Form1
         If e.KeyCode = Keys.Escape Then
             escapeKeyDown = False
         End If
+
+        If e.KeyCode = Keys.F Then
+            fKeyDown = False
+        End If
+
 
     End Sub
 
