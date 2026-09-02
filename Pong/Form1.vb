@@ -1131,7 +1131,6 @@ Public Class Form1
         ' ============================================
         If Me.FormBorderStyle <> FormBorderStyle.None AndAlso
            e.KeyCode = Keys.Escape Then
-
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
@@ -1142,37 +1141,166 @@ Public Class Form1
 
     End Sub
 
+    'Private Sub HandlePauseInput(e As KeyEventArgs)
+
+    '    If e.KeyCode = Keys.P Then
+    '        If pKeyDown Then Return
+    '        pKeyDown = True
+
+    '        AudioPlayer.PlaySound("select")
+    '        UnpauseGame()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.Pause Then
+    '        If pauseKeyDown Then Return
+    '        pauseKeyDown = True
+
+    '        AudioPlayer.PlaySound("select")
+    '        UnpauseGame()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.MediaPlayPause Then
+    '        If mediaPlayPauseKeyDown Then Return
+    '        mediaPlayPauseKeyDown = True
+
+    '        AudioPlayer.PlaySound("select")
+    '        UnpauseGame()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W Then
+    '        If pauseMenuIndex > 0 Then
+    '            AudioPlayer.PlayOverlapping("arrow_up")
+    '            pauseMenuIndex = Math.Max(0, pauseMenuIndex - 1)
+    '            Invalidate()
+    '        End If
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S Then
+    '        If pauseMenuIndex < 2 Then
+    '            AudioPlayer.PlayOverlapping("arrow_down")
+    '            pauseMenuIndex = Math.Min(2, pauseMenuIndex + 1)
+    '            Invalidate()
+    '        End If
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.R Then
+    '        AudioPlayer.PlaySound("select")
+    '        UnpauseGame()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.N Then
+    '        AudioPlayer.PlaySound("select")
+    '        StartNewMatch()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.Q Then
+    '        AudioPlayer.PlaySound("select")
+    '        Quit2StartScreen()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.Escape Then
+    '        If escapeKeyDown Then Return
+    '        escapeKeyDown = True
+
+    '        AudioPlayer.PlaySound("select")
+    '        Quit2StartScreen()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.Enter Then
+    '        If enterKeyDown Then Return
+    '        enterKeyDown = True
+
+    '        AudioPlayer.PlaySound("select")
+
+    '        Select Case pauseMenuIndex
+    '            Case 0
+    '                UnpauseGame()
+    '                Return
+
+    '            Case 1
+    '                StartNewMatch()
+    '                Return
+
+    '            Case 2
+    '                Quit2StartScreen()
+    '                Return
+
+    '        End Select
+    '    End If
+
+    '    If e.KeyCode = Keys.Space Then
+    '        If spaceKeyDown Then Return
+    '        spaceKeyDown = True
+
+    '        AudioPlayer.PlaySound("select")
+
+    '        Select Case pauseMenuIndex
+    '            Case 0
+    '                UnpauseGame()
+    '                Return
+
+    '            Case 1
+    '                StartNewMatch()
+    '                Return
+
+    '            Case 2
+    '                Quit2StartScreen()
+    '                Return
+
+    '        End Select
+    '    End If
+
+    'End Sub
+
+
     Private Sub HandlePauseInput(e As KeyEventArgs)
+
+        ' ============================================================
+        ' 1. Resume Game (P, Pause/Break, MediaPlayPause)
+        ' ============================================================
         If e.KeyCode = Keys.P Then
             If pKeyDown Then Return
             pKeyDown = True
+
             AudioPlayer.PlaySound("select")
-            UnpauseGame()
+            ResumeGame()
             Return
         End If
 
         If e.KeyCode = Keys.Pause Then
             If pauseKeyDown Then Return
             pauseKeyDown = True
-            AudioPlayer.PlaySound("select")
 
-            UnpauseGame()
+            AudioPlayer.PlaySound("select")
+            ResumeGame()
             Return
         End If
 
         If e.KeyCode = Keys.MediaPlayPause Then
             If mediaPlayPauseKeyDown Then Return
             mediaPlayPauseKeyDown = True
-            AudioPlayer.PlaySound("select")
 
-            UnpauseGame()
+            AudioPlayer.PlaySound("select")
+            ResumeGame()
             Return
         End If
 
+
+        ' ============================================================
+        ' 2. Pause Menu Navigation (Up/W and Down/S)
+        ' ============================================================
         If e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W Then
             If pauseMenuIndex > 0 Then
                 AudioPlayer.PlayOverlapping("arrow_up")
-
                 pauseMenuIndex = Math.Max(0, pauseMenuIndex - 1)
                 Invalidate()
             End If
@@ -1182,16 +1310,19 @@ Public Class Form1
         If e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S Then
             If pauseMenuIndex < 2 Then
                 AudioPlayer.PlayOverlapping("arrow_down")
-
                 pauseMenuIndex = Math.Min(2, pauseMenuIndex + 1)
                 Invalidate()
             End If
             Return
         End If
 
+
+        ' ============================================================
+        ' 3. Direct Hotkeys (R = Resume, N = New Match, Q = Quit)
+        ' ============================================================
         If e.KeyCode = Keys.R Then
             AudioPlayer.PlaySound("select")
-            UnpauseGame()
+            ResumeGame()
             Return
         End If
 
@@ -1203,70 +1334,59 @@ Public Class Form1
 
         If e.KeyCode = Keys.Q Then
             AudioPlayer.PlaySound("select")
-
             Quit2StartScreen()
             Return
         End If
 
+
+        ' ============================================================
+        ' 4. Escape Key (Quit to Start Screen)
+        ' ============================================================
         If e.KeyCode = Keys.Escape Then
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
             AudioPlayer.PlaySound("select")
-
-            'UnpauseGame()
             Quit2StartScreen()
-
             Return
         End If
 
+
+        ' ============================================================
+        ' 5. Confirm Selection (Enter / Space)
+        ' ============================================================
         If e.KeyCode = Keys.Enter Then
             If enterKeyDown Then Return
             enterKeyDown = True
 
-
             AudioPlayer.PlaySound("select")
 
             Select Case pauseMenuIndex
-                Case 0
-                    UnpauseGame()
-                    Return
-
-                Case 1
-                    StartNewMatch()
-                    Return
-
-                Case 2
-                    Quit2StartScreen()
-                    Return
-
+                Case 0 : ResumeGame()
+                Case 1 : StartNewMatch()
+                Case 2 : Quit2StartScreen()
             End Select
+
+            Return
         End If
 
         If e.KeyCode = Keys.Space Then
             If spaceKeyDown Then Return
             spaceKeyDown = True
 
-
             AudioPlayer.PlaySound("select")
 
             Select Case pauseMenuIndex
-                Case 0
-                    UnpauseGame()
-                    Return
-
-                Case 1
-                    StartNewMatch()
-                    Return
-
-                Case 2
-                    Quit2StartScreen()
-                    Return
-
+                Case 0 : ResumeGame()
+                Case 1 : StartNewMatch()
+                Case 2 : Quit2StartScreen()
             End Select
+
+            Return
         End If
 
     End Sub
+
 
     Private Sub Quit2StartScreen()
         ' Quit to Start Screen
@@ -1373,7 +1493,7 @@ Public Class Form1
         AudioPlayer.LoopSound("pause")
     End Sub
 
-    Private Sub UnpauseGame()
+    Private Sub ResumeGame()
         AudioPlayer.PauseSound("pause")
         currentState = GameState.Playing
         physicsTimer.Start()
