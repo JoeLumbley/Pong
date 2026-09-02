@@ -1038,32 +1038,123 @@ Public Class Form1
 
     End Sub
 
+    'Private Sub HandleStartScreenInput(e As KeyEventArgs)
+
+    '    Select Case e.KeyCode
+    '        Case Keys.Up, Keys.W
+    '            If selectedOption <> 0 Then
+    '                AudioPlayer.PlayOverlapping("arrow_up")
+    '                selectedOption = 0
+    '                Invalidate()
+    '            End If
+    '            Return
+    '        Case Keys.Down, Keys.S
+    '            If selectedOption <> 1 Then
+    '                AudioPlayer.PlayOverlapping("arrow_down")
+    '                selectedOption = 1
+    '                Invalidate()
+    '            End If
+    '            Return
+    '        Case Keys.D1, Keys.NumPad1
+    '            If selectedOption <> 0 Then
+    '                AudioPlayer.PlayOverlapping("arrow_up")
+    '                selectedOption = 0
+    '                Invalidate()
+    '            End If
+    '            Return
+    '        Case Keys.D2, Keys.NumPad2
+    '            If selectedOption <> 1 Then
+    '                AudioPlayer.PlayOverlapping("arrow_down")
+    '                selectedOption = 1
+    '                Invalidate()
+    '            End If
+    '            Return
+    '        Case Keys.Space
+    '            If spaceKeyDown Then Return
+    '            spaceKeyDown = True
+
+    '            AudioPlayer.PlaySound("select")
+    '            playerMode = If(selectedOption = 0, 1, 2)
+    '            StartNewMatch()
+    '            Invalidate()
+    '            Return
+    '        Case Keys.Enter
+    '            If enterKeyDown Then Return
+    '            enterKeyDown = True
+
+    '            AudioPlayer.PlaySound("select")
+    '            playerMode = If(selectedOption = 0, 1, 2)
+    '            StartNewMatch()
+    '            Invalidate()
+    '            Return
+    '        Case Keys.Escape
+    '            If escapeKeyDown Then Return
+    '            escapeKeyDown = True
+
+    '            AudioPlayer.PlaySound("select")
+    '            Me.Close()
+
+    '    End Select
+
+    'End Sub
+
+
+
+
+
+
+
     Private Sub HandleStartScreenInput(e As KeyEventArgs)
+
+        ' ============================================================
+        ' 1. Menu Navigation (Up/W and Down/S)
+        ' ============================================================
         Select Case e.KeyCode
+
             Case Keys.Up, Keys.W
+                ' Move selection to "1‑Player"
                 If selectedOption <> 0 Then
                     AudioPlayer.PlayOverlapping("arrow_up")
                     selectedOption = 0
+                    Invalidate()
                 End If
+                Return
 
             Case Keys.Down, Keys.S
+                ' Move selection to "2‑Player"
                 If selectedOption <> 1 Then
                     AudioPlayer.PlayOverlapping("arrow_down")
                     selectedOption = 1
+                    Invalidate()
                 End If
+                Return
 
+
+        ' ============================================================
+        ' 2. Direct Selection via Number Keys (1 or 2)
+        ' ============================================================
             Case Keys.D1, Keys.NumPad1
+                ' Select "1‑Player"
                 If selectedOption <> 0 Then
                     AudioPlayer.PlayOverlapping("arrow_up")
                     selectedOption = 0
+                    Invalidate()
                 End If
+                Return
 
             Case Keys.D2, Keys.NumPad2
+                ' Select "2‑Player"
                 If selectedOption <> 1 Then
                     AudioPlayer.PlayOverlapping("arrow_down")
                     selectedOption = 1
+                    Invalidate()
                 End If
+                Return
 
+
+        ' ============================================================
+        ' 3. Confirm Selection (Space / Enter)
+        ' ============================================================
             Case Keys.Space
                 If spaceKeyDown Then Return
                 spaceKeyDown = True
@@ -1071,7 +1162,8 @@ Public Class Form1
                 AudioPlayer.PlaySound("select")
                 playerMode = If(selectedOption = 0, 1, 2)
                 StartNewMatch()
-
+                Invalidate()
+                Return
 
             Case Keys.Enter
                 If enterKeyDown Then Return
@@ -1080,15 +1172,25 @@ Public Class Form1
                 AudioPlayer.PlaySound("select")
                 playerMode = If(selectedOption = 0, 1, 2)
                 StartNewMatch()
+                Invalidate()
+                Return
 
+
+        ' ============================================================
+        ' 4. Escape (Exit Game)
+        ' ============================================================
             Case Keys.Escape
                 If escapeKeyDown Then Return
                 escapeKeyDown = True
 
-                AudioPlayer.PlaySound("select")
+                'AudioPlayer.PlaySound("select")
                 Me.Close()
+                Return
+
         End Select
+
     End Sub
+
 
     Private Sub HandleGameplayInput(e As KeyEventArgs)
         If e.KeyCode = Keys.W Then moveLeftPaddleUp = True
@@ -1273,6 +1375,7 @@ Public Class Form1
 
             AudioPlayer.PlaySound("select")
             ResumeGame()
+            Invalidate()
             Return
         End If
 
@@ -1282,6 +1385,7 @@ Public Class Form1
 
             AudioPlayer.PlaySound("select")
             ResumeGame()
+            Invalidate()
             Return
         End If
 
@@ -1291,6 +1395,7 @@ Public Class Form1
 
             AudioPlayer.PlaySound("select")
             ResumeGame()
+            Invalidate()
             Return
         End If
 
@@ -1323,18 +1428,21 @@ Public Class Form1
         If e.KeyCode = Keys.R Then
             AudioPlayer.PlaySound("select")
             ResumeGame()
+            Invalidate()
             Return
         End If
 
         If e.KeyCode = Keys.N Then
             AudioPlayer.PlaySound("select")
             StartNewMatch()
+            Invalidate()
             Return
         End If
 
         If e.KeyCode = Keys.Q Then
             AudioPlayer.PlaySound("select")
             Quit2StartScreen()
+            Invalidate()
             Return
         End If
 
@@ -1348,6 +1456,7 @@ Public Class Form1
 
             AudioPlayer.PlaySound("select")
             Quit2StartScreen()
+            Invalidate()
             Return
         End If
 
@@ -1366,7 +1475,7 @@ Public Class Form1
                 Case 1 : StartNewMatch()
                 Case 2 : Quit2StartScreen()
             End Select
-
+            Invalidate()
             Return
         End If
 
@@ -1381,7 +1490,7 @@ Public Class Form1
                 Case 1 : StartNewMatch()
                 Case 2 : Quit2StartScreen()
             End Select
-
+            Invalidate()
             Return
         End If
 
@@ -1405,7 +1514,7 @@ Public Class Form1
 
         currentState = GameState.StartScreen
         physicsTimer.Start()
-        Invalidate()
+        'Invalidate()
 
         AudioPlayer.LoopSound("start")
 
@@ -1497,7 +1606,7 @@ Public Class Form1
         AudioPlayer.PauseSound("pause")
         currentState = GameState.Playing
         physicsTimer.Start()
-        Invalidate()
+        'Invalidate()
 
         AudioPlayer.LoopSound("loop")
     End Sub
@@ -1526,7 +1635,7 @@ Public Class Form1
 
         currentState = GameState.Playing
         physicsTimer.Start()
-        Invalidate()
+        'Invalidate()
 
         AudioPlayer.LoopSound("loop")
     End Sub
