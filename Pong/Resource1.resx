@@ -139,6 +139,9 @@
   <data name="bounce3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Music\bounce3.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="FullScreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Music\FullScreen.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="hit3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Music\hit3.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

@@ -333,6 +333,10 @@ Public Class Form1
 
         AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
         AudioPlayer.SetVolume("pause", 800)
+
+        AudioPlayer.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
+        AudioPlayer.SetVolume("fullscreen", 300)
+
     End Sub
 
     ' ===============================
@@ -949,7 +953,7 @@ Public Class Form1
             If f11KeyDown Then Return
             f11KeyDown = True
 
-            AudioPlayer.PlaySound("select")
+            AudioPlayer.PlaySound("fullscreen")
             ToggleFullScreen()
             Return
         End If
@@ -958,7 +962,7 @@ Public Class Form1
             If fKeyDown Then Return
             fKeyDown = True
 
-            AudioPlayer.PlaySound("select")
+            AudioPlayer.PlaySound("fullscreen")
 
 
             ToggleFullScreen()
@@ -1686,6 +1690,8 @@ Public Class Form1
         CreateFileFromResource(Path.Combine(Application.StartupPath, "arrow_down.mp3"), My.Resources.Resource1.ArrowDown2)
         CreateFileFromResource(Path.Combine(Application.StartupPath, "select.mp3"), My.Resources.Resource1.Select2)
         CreateFileFromResource(Path.Combine(Application.StartupPath, "pause.mp3"), My.Resources.Resource1.PauseMusic2)
+        CreateFileFromResource(Path.Combine(Application.StartupPath, "fullscreen.mp3"), My.Resources.Resource1.FullScreen)
+
     End Sub
 
     Private Sub CreateFileFromResource(filepath As String, resource As Byte())
