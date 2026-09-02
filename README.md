@@ -21,35 +21,79 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 - Learn how to implement user input handling, game states, sound effects, and graphical rendering.
 
 ---
-
-
-
+---
 ---
 
 
 
----
 
+
+
+
+
+
+# Keyboard Controls
 
 <img width="1920" height="1080" alt="033" src="https://github.com/user-attachments/assets/5d5d6885-5a64-4747-b7a6-e5a8c0715e6e" />
 
+---
 
-# ⌨️ Keyboard Controls
 
-To play using your keyboard, use the following controls:
+## Global Controls
+| Key | Action |
+|-----|--------|
+| **F11** | Toggle fullscreen mode |
+| **F** | Toggle fullscreen mode (secondary shortcut) |
+| **Escape** | Context‑sensitive: fullscreen exit, pause, or return to start screen |
 
-- **Player 1 ( 🏓 Left Paddle )**
-  - **W** : Move Up
-  - **S** : Move Down
+---
 
-- **Player 2 ( Right Paddle 🏓 )**
-  - **Up Arrow** ⬆️ : Move Up
-  - **Down Arrow** ⬇️ : Move Down
+## Start Screen
+| Key | Action |
+|-----|--------|
+| **Up / W** | Move selection up |
+| **Down / S** | Move selection down |
+| **1 / NumPad1** | Select “1‑Player” |
+| **2 / NumPad2** | Select “2‑Player” |
+| **Space / Enter / S** | Confirm selection and start match |
+| **Escape** | Exit the game |
 
-- **Pause/Resume Game**
-  - **P** : **Pause** or **Resume** the game
-  - **Escape** : From start screen **Quits** the game
- 
+---
+
+## Gameplay
+| Key | Action |
+|-----|--------|
+| **W** | Move left paddle up |
+| **S** | Move left paddle down |
+| **Up Arrow** | Move right paddle up (2‑Player mode only) |
+| **Down Arrow** | Move right paddle down (2‑Player mode only) |
+| **P** | Pause the game |
+| **Pause / Break** | Pause the game |
+| **MediaPlayPause** | Pause the game |
+| **Escape** | Pause the game (windowed mode) or exit fullscreen |
+
+---
+
+## Pause Menu
+| Key | Action |
+|-----|--------|
+| **Up Arrow** | Move menu selection up |
+| **Down Arrow** | Move menu selection down |
+| **Enter / Space** | Activate selected menu option |
+| **P** | Resume game |
+| **Pause / Break** | Resume game |
+| **MediaPlayPause** | Resume game |
+| **R** | Resume game |
+| **N** | Start a new match |
+| **Q** | Quit to Start Screen |
+| **Escape** | Quit to Start Screen |
+
+---
+
+## End Screen
+| Key | Action |
+|-----|--------|
+| **Space / Enter** | Return to Start Screen |
 
 ---
 
