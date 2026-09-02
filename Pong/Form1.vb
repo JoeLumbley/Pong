@@ -947,6 +947,7 @@ Public Class Form1
             If f11KeyDown Then Return
             f11KeyDown = True
 
+            AudioPlayer.PlaySound("select")
             ToggleFullScreen()
             Return
         End If
@@ -954,6 +955,9 @@ Public Class Form1
         If e.KeyCode = Keys.F Then
             If fKeyDown Then Return
             fKeyDown = True
+
+            AudioPlayer.PlaySound("select")
+
 
             ToggleFullScreen()
             Return
@@ -1124,7 +1128,7 @@ Public Class Form1
             Return
         End If
 
-        If e.KeyCode = Keys.Up Then
+        If e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W Then
             If pauseMenuIndex > 0 Then
                 AudioPlayer.PlayOverlapping("arrow_up")
 
@@ -1134,7 +1138,7 @@ Public Class Form1
             Return
         End If
 
-        If e.KeyCode = Keys.Down Then
+        If e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S Then
             If pauseMenuIndex < 2 Then
                 AudioPlayer.PlayOverlapping("arrow_down")
 
