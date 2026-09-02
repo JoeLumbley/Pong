@@ -307,7 +307,7 @@ Public Class Form1
         AudioPlayer.SetVolume("loop", 100)
 
         AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
-        AudioPlayer.SetVolume("point", 500)
+        AudioPlayer.SetVolume("point", 300)
 
         AudioPlayer.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
         AudioPlayer.SetVolumeOverlapping("bounce", 150)
@@ -322,8 +322,12 @@ Public Class Form1
         AudioPlayer.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
         AudioPlayer.SetVolumeOverlapping("arrow_down", 200)
 
-        AudioPlayer.AddOverlapping("select", Path.Combine(Application.StartupPath, "select.mp3"))
-        AudioPlayer.SetVolumeOverlapping("select", 100)
+        'AudioPlayer.AddOverlapping("select", Path.Combine(Application.StartupPath, "select.mp3"))
+        'AudioPlayer.SetVolumeOverlapping("select", 100)
+
+        AudioPlayer.AddSound("select", Path.Combine(Application.StartupPath, "select.mp3"))
+        AudioPlayer.SetVolume("select", 100)
+
 
         AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
         AudioPlayer.SetVolume("pause", 800)
@@ -704,8 +708,8 @@ Public Class Form1
         ' -------------------------------
         Dim fsText As String =
         If(Me.FormBorderStyle = FormBorderStyle.None,
-           "ESC Exit Fullscreen",
-           "F11 Fullscreen")
+           "F - Exit Fullscreen",
+           "F - Fullscreen")
 
 
 
@@ -963,7 +967,8 @@ Public Class Form1
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
-            AudioPlayer.PlayOverlapping("select")
+            'AudioPlayer.PlayOverlapping("select")
+            AudioPlayer.PlaySound("select")
             ToggleFullScreen()
             Return
         End If
@@ -978,7 +983,9 @@ Public Class Form1
         ' END SCREEN INPUT
         If currentState = GameState.EndScreen Then
             If e.KeyCode = Keys.Space OrElse e.KeyCode = Keys.Enter Then
-                AudioPlayer.PlayOverlapping("select")
+                'AudioPlayer.PlayOverlapping("select")
+                AudioPlayer.PlaySound("select")
+
                 currentState = GameState.StartScreen
                 winnerText = ""
             End If
@@ -1025,7 +1032,7 @@ Public Class Form1
                 End If
 
             Case Keys.Space, Keys.Enter, Keys.S
-                AudioPlayer.PlayOverlapping("select")
+                AudioPlayer.PlaySound("select")
                 playerMode = If(selectedOption = 0, 1, 2)
                 StartNewMatch()
 
@@ -1033,7 +1040,7 @@ Public Class Form1
                 If escapeKeyDown Then Return
                 escapeKeyDown = True
 
-                AudioPlayer.PlayOverlapping("select")
+                AudioPlayer.PlaySound("select")
                 Me.Close()
         End Select
     End Sub
@@ -1050,7 +1057,7 @@ Public Class Form1
         If e.KeyCode = Keys.P Then
             If pKeyDown Then Return
             pKeyDown = True
-            AudioPlayer.PlayOverlapping("select")
+            AudioPlayer.PlaySound("select")
 
             PauseGame()
             Return
@@ -1059,7 +1066,7 @@ Public Class Form1
         If e.KeyCode = Keys.Pause Then
             If pauseKeyDown Then Return
             pauseKeyDown = True
-            AudioPlayer.PlayOverlapping("select")
+            AudioPlayer.PlaySound("select")
 
             PauseGame()
             Return
@@ -1068,7 +1075,7 @@ Public Class Form1
         If e.KeyCode = Keys.MediaPlayPause Then
             If mediaPlayPauseKeyDown Then Return
             mediaPlayPauseKeyDown = True
-            AudioPlayer.PlayOverlapping("select")
+            AudioPlayer.PlaySound("select")
             PauseGame()
             Return
         End If
@@ -1083,7 +1090,7 @@ Public Class Form1
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
-            AudioPlayer.PlayOverlapping("select")
+            AudioPlayer.PlaySound("select")
             PauseGame()
             Return
         End If
@@ -1094,7 +1101,7 @@ Public Class Form1
         If e.KeyCode = Keys.P Then
             If pKeyDown Then Return
             pKeyDown = True
-            AudioPlayer.PlayOverlapping("select")
+            AudioPlayer.PlaySound("select")
             UnpauseGame()
             Return
         End If
@@ -1102,7 +1109,7 @@ Public Class Form1
         If e.KeyCode = Keys.Pause Then
             If pauseKeyDown Then Return
             pauseKeyDown = True
-            AudioPlayer.PlayOverlapping("select")
+            AudioPlayer.PlaySound("select")
 
             UnpauseGame()
             Return
@@ -1111,7 +1118,7 @@ Public Class Form1
         If e.KeyCode = Keys.MediaPlayPause Then
             If mediaPlayPauseKeyDown Then Return
             mediaPlayPauseKeyDown = True
-            AudioPlayer.PlayOverlapping("select")
+            AudioPlayer.PlaySound("select")
 
             UnpauseGame()
             Return
@@ -1138,19 +1145,19 @@ Public Class Form1
         End If
 
         If e.KeyCode = Keys.R Then
-            AudioPlayer.PlayOverlapping("select")
+            AudioPlayer.PlaySound("select")
             UnpauseGame()
             Return
         End If
 
         If e.KeyCode = Keys.N Then
-            AudioPlayer.PlayOverlapping("select")
+            AudioPlayer.PlaySound("select")
             StartNewMatch()
             Return
         End If
 
         If e.KeyCode = Keys.Q Then
-            AudioPlayer.PlayOverlapping("select")
+            AudioPlayer.PlaySound("select")
 
             Quit2StartScreen()
             Return
@@ -1160,7 +1167,7 @@ Public Class Form1
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
-            AudioPlayer.PlayOverlapping("select")
+            AudioPlayer.PlaySound("select")
 
             'UnpauseGame()
             Quit2StartScreen()
@@ -1169,7 +1176,7 @@ Public Class Form1
         End If
 
         If e.KeyCode = Keys.Enter OrElse e.KeyCode = Keys.Space Then
-            AudioPlayer.PlayOverlapping("select")
+            AudioPlayer.PlaySound("select")
 
             Select Case pauseMenuIndex
                 Case 0
@@ -1390,6 +1397,19 @@ Public Class Form1
     Private Sub MovePointerCenterScreen()
         Cursor.Position = New Point(Screen.PrimaryScreen.WorkingArea.Right \ 2,
                                     Screen.PrimaryScreen.WorkingArea.Height \ 2)
+    End Sub
+
+    Public Sub RestartLoops()
+        AudioPlayer.PauseSound("loop")
+        AudioPlayer.PauseSound("start")
+        AudioPlayer.PauseSound("pause")
+        If currentState = GameState.StartScreen OrElse currentState = GameState.EndScreen Then
+            AudioPlayer.LoopSound("start")
+        ElseIf currentState = GameState.Playing Then
+            AudioPlayer.LoopSound("loop")
+        ElseIf currentState = GameState.Pause Then
+            AudioPlayer.LoopSound("pause")
+        End If
     End Sub
 
 End Class
