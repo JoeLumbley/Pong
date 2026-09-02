@@ -6,7 +6,7 @@ This project isn’t just Pong.
 It’s a compact 2D game engine demonstrating real‑time rendering, delta‑time physics, state‑driven UI, and responsive design.
 
 
-<img width="1920" height="1080" alt="031" src="https://github.com/user-attachments/assets/bc5b7cd8-cc00-4261-b936-596f9f35e8cb" />
+<img width="1920" height="1080" alt="034" src="https://github.com/user-attachments/assets/40523aea-56e8-495d-9957-e2d3b06f856a" />
 
 
 ### Key Features
