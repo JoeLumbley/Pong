@@ -34,7 +34,7 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 
 # Keyboard Controls
 
-<img width="1920" height="1080" alt="033" src="https://github.com/user-attachments/assets/5d5d6885-5a64-4747-b7a6-e5a8c0715e6e" />
+<img width="1920" height="1080" alt="035" src="https://github.com/user-attachments/assets/5059bff0-d55b-4009-9088-d71d735b5a8d" />
 
 ---
 
