@@ -158,6 +158,8 @@ Public Class Form1
     Private f11KeyDown As Boolean = False
     Private fKeyDown As Boolean = False
     Private escapeKeyDown As Boolean = False
+    Private spaceKeyDown As Boolean = False
+    Private enterKeyDown As Boolean = False
 
 
     ' -------------------------------
@@ -986,13 +988,8 @@ Public Class Form1
 
         ' END SCREEN INPUT
         If currentState = GameState.EndScreen Then
-            If e.KeyCode = Keys.Space OrElse e.KeyCode = Keys.Enter Then
-                'AudioPlayer.PlayOverlapping("select")
-                AudioPlayer.PlaySound("select")
 
-                currentState = GameState.StartScreen
-                winnerText = ""
-            End If
+            HandleEndScreenInput(e)
             Return
         End If
 
@@ -1007,6 +1004,38 @@ Public Class Form1
             HandlePauseInput(e)
             Return
         End If
+    End Sub
+
+    Private Sub HandleEndScreenInput(e As KeyEventArgs)
+
+        If e.KeyCode = Keys.Space Then
+            If spaceKeyDown Then Return
+            spaceKeyDown = True
+
+            AudioPlayer.PlaySound("select")
+
+            currentState = GameState.StartScreen
+            winnerText = ""
+
+            Return
+
+        End If
+
+        If e.KeyCode = Keys.Enter Then
+            If enterKeyDown Then Return
+            enterKeyDown = True
+
+            AudioPlayer.PlaySound("select")
+
+            currentState = GameState.StartScreen
+            winnerText = ""
+
+            Return
+
+        End If
+
+        Return
+
     End Sub
 
     Private Sub HandleStartScreenInput(e As KeyEventArgs)
@@ -1035,7 +1064,19 @@ Public Class Form1
                     selectedOption = 1
                 End If
 
-            Case Keys.Space, Keys.Enter, Keys.S
+            Case Keys.Space
+                If spaceKeyDown Then Return
+                spaceKeyDown = True
+
+                AudioPlayer.PlaySound("select")
+                playerMode = If(selectedOption = 0, 1, 2)
+                StartNewMatch()
+
+
+            Case Keys.Enter
+                If enterKeyDown Then Return
+                enterKeyDown = True
+
                 AudioPlayer.PlaySound("select")
                 playerMode = If(selectedOption = 0, 1, 2)
                 StartNewMatch()
@@ -1179,7 +1220,34 @@ Public Class Form1
             Return
         End If
 
-        If e.KeyCode = Keys.Enter OrElse e.KeyCode = Keys.Space Then
+        If e.KeyCode = Keys.Enter Then
+            If enterKeyDown Then Return
+            enterKeyDown = True
+
+
+            AudioPlayer.PlaySound("select")
+
+            Select Case pauseMenuIndex
+                Case 0
+                    UnpauseGame()
+                    Return
+
+                Case 1
+                    StartNewMatch()
+                    Return
+
+                Case 2
+                    Quit2StartScreen()
+                    Return
+
+            End Select
+        End If
+
+        If e.KeyCode = Keys.Space Then
+            If spaceKeyDown Then Return
+            spaceKeyDown = True
+
+
             AudioPlayer.PlaySound("select")
 
             Select Case pauseMenuIndex
@@ -1256,6 +1324,14 @@ Public Class Form1
 
         If e.KeyCode = Keys.F Then
             fKeyDown = False
+        End If
+
+        If e.KeyCode = Keys.Enter Then
+            enterKeyDown = False
+        End If
+
+        If e.KeyCode = Keys.Space Then
+            spaceKeyDown = False
         End If
 
 
