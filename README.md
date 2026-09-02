@@ -20,6 +20,9 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 - Gain hands-on experience with game development concepts, such as state management and event handling.
 - Learn how to implement user input handling, game states, sound effects, and graphical rendering.
 
+
+<img width="1920" height="1080" alt="036" src="https://github.com/user-attachments/assets/4c1e1c0f-05d6-4cf5-9c77-640033da44d9" />
+
 ---
 ---
 ---
