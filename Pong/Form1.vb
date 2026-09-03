@@ -306,7 +306,7 @@ Public Class Form1
         CreateSoundFiles()
 
         AudioPlayer.AddSound("loop", Path.Combine(Application.StartupPath, "loop.mp3"))
-        AudioPlayer.SetVolume("loop", 100)
+        AudioPlayer.SetVolume("loop", 75)
 
         AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
         AudioPlayer.SetVolume("point", 300)
