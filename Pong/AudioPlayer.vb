@@ -33,13 +33,6 @@ Public Module AudioPlayer
         cleanupTimer = New Timer() With {
             .Interval = 5 * 60 * 1000 ' 5 minutes
         }
-        'cleanupTimer = New Timer() With {
-        '    .Interval = 15 * 1000 ' 15 seconds
-        '}
-        'cleanupTimer = New Timer() With {
-        '    .Interval = 1 * 60 * 1000 ' 1 minute
-        '}
-
 
         AddHandler cleanupTimer.Tick, AddressOf CleanupTick
         cleanupTimer.Start()

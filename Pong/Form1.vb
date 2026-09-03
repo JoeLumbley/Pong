@@ -1139,26 +1139,30 @@ Public Class Form1
         If e.KeyCode = Keys.P Then
             If pKeyDown Then Return
             pKeyDown = True
-            AudioPlayer.PlaySound("select")
 
+            AudioPlayer.PlaySound("select")
             PauseGame()
+            Invalidate()
             Return
         End If
 
         If e.KeyCode = Keys.Pause Then
             If pauseKeyDown Then Return
             pauseKeyDown = True
-            AudioPlayer.PlaySound("select")
 
+            AudioPlayer.PlaySound("select")
             PauseGame()
+            Invalidate()
             Return
         End If
 
         If e.KeyCode = Keys.MediaPlayPause Then
             If mediaPlayPauseKeyDown Then Return
             mediaPlayPauseKeyDown = True
+
             AudioPlayer.PlaySound("select")
             PauseGame()
+            Invalidate()
             Return
         End If
 
@@ -1173,6 +1177,7 @@ Public Class Form1
 
             AudioPlayer.PlaySound("select")
             PauseGame()
+            Invalidate()
             Return
         End If
 
@@ -1330,7 +1335,6 @@ Public Class Form1
 
         currentState = GameState.StartScreen
         physicsTimer.Start()
-        'Invalidate()
 
         AudioPlayer.LoopSound("start")
 
@@ -1413,7 +1417,7 @@ Public Class Form1
         moveRightPaddleDown = False
 
         pauseMenuIndex = 0
-        Invalidate()
+        'Invalidate()
 
         AudioPlayer.LoopSound("pause")
     End Sub
@@ -1422,7 +1426,6 @@ Public Class Form1
         AudioPlayer.PauseSound("pause")
         currentState = GameState.Playing
         physicsTimer.Start()
-        'Invalidate()
 
         AudioPlayer.LoopSound("loop")
     End Sub
@@ -1451,7 +1454,6 @@ Public Class Form1
 
         currentState = GameState.Playing
         physicsTimer.Start()
-        'Invalidate()
 
         AudioPlayer.LoopSound("loop")
     End Sub
