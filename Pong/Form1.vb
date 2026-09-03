@@ -1127,15 +1127,93 @@ Public Class Form1
     End Sub
 
 
-    Private Sub HandleGameplayInput(e As KeyEventArgs)
-        If e.KeyCode = Keys.W Then moveLeftPaddleUp = True
-        If e.KeyCode = Keys.S Then moveLeftPaddleDown = True
+    'Private Sub HandleGameplayInput(e As KeyEventArgs)
+    '    If e.KeyCode = Keys.W Then moveLeftPaddleUp = True
+    '    If e.KeyCode = Keys.S Then moveLeftPaddleDown = True
 
-        If playerMode = 2 Then
-            If e.KeyCode = Keys.Up Then moveRightPaddleUp = True
-            If e.KeyCode = Keys.Down Then moveRightPaddleDown = True
+    '    If playerMode = 2 Then
+    '        If e.KeyCode = Keys.Up Then moveRightPaddleUp = True
+    '        If e.KeyCode = Keys.Down Then moveRightPaddleDown = True
+    '    End If
+
+    '    If e.KeyCode = Keys.P Then
+    '        If pKeyDown Then Return
+    '        pKeyDown = True
+
+    '        AudioPlayer.PlaySound("select")
+    '        PauseGame()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.Pause Then
+    '        If pauseKeyDown Then Return
+    '        pauseKeyDown = True
+
+    '        AudioPlayer.PlaySound("select")
+    '        PauseGame()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.MediaPlayPause Then
+    '        If mediaPlayPauseKeyDown Then Return
+    '        mediaPlayPauseKeyDown = True
+
+    '        AudioPlayer.PlaySound("select")
+    '        PauseGame()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+
+    '    ' ============================================
+    '    ' ESC pressed while windowed AND game is running
+    '    ' ============================================
+    '    If Me.FormBorderStyle <> FormBorderStyle.None AndAlso
+    '       e.KeyCode = Keys.Escape Then
+    '        If escapeKeyDown Then Return
+    '        escapeKeyDown = True
+
+    '        AudioPlayer.PlaySound("select")
+    '        PauseGame()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    'End Sub
+
+    Private Sub HandleGameplayInput(e As KeyEventArgs)
+
+        ' ============================================================
+        ' 1. Paddle Movement (Left Player: W/S)
+        ' ============================================================
+        If e.KeyCode = Keys.W Then
+            moveLeftPaddleUp = True
         End If
 
+        If e.KeyCode = Keys.S Then
+            moveLeftPaddleDown = True
+        End If
+
+
+        ' ============================================================
+        ' 2. Paddle Movement (Right Player: Up/Down in 2‑Player mode)
+        ' ============================================================
+        If playerMode = 2 Then
+            If e.KeyCode = Keys.Up Then
+                moveRightPaddleUp = True
+            End If
+
+            If e.KeyCode = Keys.Down Then
+                moveRightPaddleDown = True
+            End If
+        End If
+
+
+        ' ============================================================
+        ' 3. Pause Game (P, Pause/Break, MediaPlayPause)
+        ' ============================================================
         If e.KeyCode = Keys.P Then
             If pKeyDown Then Return
             pKeyDown = True
@@ -1167,9 +1245,9 @@ Public Class Form1
         End If
 
 
-        ' ============================================
-        ' ESC pressed while windowed AND game is running
-        ' ============================================
+        ' ============================================================
+        ' 4. Escape (Pause only when windowed)
+        ' ============================================================
         If Me.FormBorderStyle <> FormBorderStyle.None AndAlso
            e.KeyCode = Keys.Escape Then
             If escapeKeyDown Then Return
@@ -1180,6 +1258,7 @@ Public Class Form1
             Invalidate()
             Return
         End If
+
 
     End Sub
 
