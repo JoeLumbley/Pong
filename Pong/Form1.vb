@@ -1019,6 +1019,7 @@ Public Class Form1
 
             AudioPlayer.PlaySound("fullscreen")
             ToggleFullScreen()
+            Invalidate()
             Return
         End If
 
@@ -1028,6 +1029,7 @@ Public Class Form1
 
             AudioPlayer.PlaySound("fullscreen")
             ToggleFullScreen()
+            Invalidate()
             Return
         End If
 
@@ -1042,6 +1044,7 @@ Public Class Form1
 
             AudioPlayer.PlaySound("select")
             ToggleFullScreen()
+            Invalidate()
             Return
         End If
 
@@ -1693,11 +1696,11 @@ Public Class Form1
             Dim centerY As Integer = (screenBounds.Height - Me.Height) \ 2
             Me.Location = New Point(centerX, centerY)
 
-            Invalidate()
+            'Invalidate()
         Else
             Me.FormBorderStyle = FormBorderStyle.None
             Me.WindowState = FormWindowState.Maximized
-            Invalidate()
+            'Invalidate()
         End If
     End Sub
 
