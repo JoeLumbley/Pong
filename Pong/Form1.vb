@@ -942,9 +942,77 @@ Public Class Form1
     '  INPUT
     ' ===============================
 
+    'Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
+    '    MyBase.OnKeyDown(e)
+
+    '    If e.KeyCode = Keys.F11 Then
+    '        If f11KeyDown Then Return
+    '        f11KeyDown = True
+
+    '        AudioPlayer.PlaySound("fullscreen")
+    '        ToggleFullScreen()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.F Then
+    '        If fKeyDown Then Return
+    '        fKeyDown = True
+
+    '        AudioPlayer.PlaySound("fullscreen")
+
+
+    '        ToggleFullScreen()
+    '        Return
+    '    End If
+
+
+    '    ' ============================
+    '    ' ESC pressed while fullscreen
+    '    ' ============================
+    '    If Me.FormBorderStyle = FormBorderStyle.None AndAlso e.KeyCode = Keys.Escape Then
+    '        If escapeKeyDown Then Return
+    '        escapeKeyDown = True
+
+    '        'AudioPlayer.PlayOverlapping("select")
+    '        AudioPlayer.PlaySound("select")
+    '        ToggleFullScreen()
+    '        Return
+    '    End If
+
+
+    '    ' START SCREEN INPUT
+    '    If currentState = GameState.StartScreen Then
+    '        HandleStartScreenInput(e)
+    '        Return
+    '    End If
+
+    '    ' END SCREEN INPUT
+    '    If currentState = GameState.EndScreen Then
+
+    '        HandleEndScreenInput(e)
+    '        Return
+    '    End If
+
+    '    ' GAMEPLAY INPUT
+    '    If currentState = GameState.Playing Then
+    '        HandleGameplayInput(e)
+    '        Return
+    '    End If
+
+    '    ' PAUSE MENU INPUT
+    '    If currentState = GameState.Pause Then
+    '        HandlePauseInput(e)
+    '        Return
+    '    End If
+    'End Sub
+
+
     Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
         MyBase.OnKeyDown(e)
 
+        ' ============================================================
+        ' 1. Fullscreen Toggle (F11 / F)
+        ' ============================================================
         If e.KeyCode = Keys.F11 Then
             If f11KeyDown Then Return
             f11KeyDown = True
@@ -959,84 +1027,151 @@ Public Class Form1
             fKeyDown = True
 
             AudioPlayer.PlaySound("fullscreen")
-
-
             ToggleFullScreen()
             Return
         End If
 
 
-        ' ============================
-        ' ESC pressed while fullscreen
-        ' ============================
-        If Me.FormBorderStyle = FormBorderStyle.None AndAlso e.KeyCode = Keys.Escape Then
+        ' ============================================================
+        ' 2. Escape pressed while fullscreen (exit fullscreen)
+        ' ============================================================
+        If Me.FormBorderStyle = FormBorderStyle.None AndAlso
+        e.KeyCode = Keys.Escape Then
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
-            'AudioPlayer.PlayOverlapping("select")
             AudioPlayer.PlaySound("select")
             ToggleFullScreen()
             Return
         End If
 
 
-        ' START SCREEN INPUT
+        ' ============================================================
+        ' 3. State‑based Input Dispatch
+        ' ============================================================
+
+        ' --- Start Screen ---
         If currentState = GameState.StartScreen Then
             HandleStartScreenInput(e)
             Return
         End If
 
-        ' END SCREEN INPUT
+        ' --- End Screen ---
         If currentState = GameState.EndScreen Then
-
             HandleEndScreenInput(e)
             Return
         End If
 
-        ' GAMEPLAY INPUT
+        ' --- Gameplay ---
         If currentState = GameState.Playing Then
             HandleGameplayInput(e)
             Return
         End If
 
-        ' PAUSE MENU INPUT
+        ' --- Pause Menu ---
         If currentState = GameState.Pause Then
             HandlePauseInput(e)
             Return
         End If
+
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    'Private Sub HandleEndScreenInput(e As KeyEventArgs)
+
+    '    If e.KeyCode = Keys.Space Then
+    '        If spaceKeyDown Then Return
+    '        spaceKeyDown = True
+
+    '        AudioPlayer.PlaySound("select")
+
+    '        currentState = GameState.StartScreen
+    '        winnerText = ""
+
+    '        Return
+
+    '    End If
+
+    '    If e.KeyCode = Keys.Enter Then
+    '        If enterKeyDown Then Return
+    '        enterKeyDown = True
+
+    '        AudioPlayer.PlaySound("select")
+
+    '        currentState = GameState.StartScreen
+    '        winnerText = ""
+
+    '        Return
+
+    '    End If
+
+    '    Return
+
+    'End Sub
+
 
     Private Sub HandleEndScreenInput(e As KeyEventArgs)
 
+        ' ============================================================
+        ' 1. Confirm Return to Start Screen (Space)
+        ' ============================================================
         If e.KeyCode = Keys.Space Then
             If spaceKeyDown Then Return
             spaceKeyDown = True
 
             AudioPlayer.PlaySound("select")
 
+            ' Reset state and return to Start Screen
             currentState = GameState.StartScreen
             winnerText = ""
 
             Return
-
         End If
 
+
+        ' ============================================================
+        ' 2. Confirm Return to Start Screen (Enter)
+        ' ============================================================
         If e.KeyCode = Keys.Enter Then
             If enterKeyDown Then Return
             enterKeyDown = True
 
             AudioPlayer.PlaySound("select")
 
+            ' Reset state and return to Start Screen
             currentState = GameState.StartScreen
             winnerText = ""
 
             Return
-
         End If
 
-        Return
-
     End Sub
+
 
 
     Private Sub HandleStartScreenInput(e As KeyEventArgs)
