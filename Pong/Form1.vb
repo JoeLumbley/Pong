@@ -324,12 +324,8 @@ Public Class Form1
         AudioPlayer.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
         AudioPlayer.SetVolumeOverlapping("arrow_down", 200)
 
-        'AudioPlayer.AddOverlapping("select", Path.Combine(Application.StartupPath, "select.mp3"))
-        'AudioPlayer.SetVolumeOverlapping("select", 100)
-
         AudioPlayer.AddSound("select", Path.Combine(Application.StartupPath, "select.mp3"))
         AudioPlayer.SetVolume("select", 100)
-
 
         AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
         AudioPlayer.SetVolume("pause", 800)
