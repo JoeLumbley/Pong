@@ -232,6 +232,7 @@ Public Class Form1
 
     Private Sub InitTimers()
         physicsTimer.Interval = 15
+
         AddHandler physicsTimer.Tick, AddressOf PhysicsTick
 
         physicsStopwatch.Start()
@@ -309,29 +310,29 @@ Public Class Form1
         AudioPlayer.SetVolume("loop", 75)
 
         AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
-        AudioPlayer.SetVolume("point", 300)
+        AudioPlayer.SetVolume("point", 1000)
 
         AudioPlayer.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
-        AudioPlayer.SetVolumeOverlapping("bounce", 150)
+        AudioPlayer.SetVolumeOverlapping("bounce", 1000)
 
         AudioPlayer.AddSound("start", Path.Combine(Application.StartupPath, "start.mp3"))
-        AudioPlayer.SetVolume("start", 100)
+        AudioPlayer.SetVolume("start", 75)
         AudioPlayer.LoopSound("start")
 
         AudioPlayer.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
-        AudioPlayer.SetVolumeOverlapping("arrow_up", 200)
+        AudioPlayer.SetVolumeOverlapping("arrow_up", 1000)
 
         AudioPlayer.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
-        AudioPlayer.SetVolumeOverlapping("arrow_down", 200)
+        AudioPlayer.SetVolumeOverlapping("arrow_down", 1000)
 
         AudioPlayer.AddSound("select", Path.Combine(Application.StartupPath, "select.mp3"))
-        AudioPlayer.SetVolume("select", 100)
+        AudioPlayer.SetVolume("select", 1000)
 
         AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
-        AudioPlayer.SetVolume("pause", 800)
+        AudioPlayer.SetVolume("pause", 300)
 
         AudioPlayer.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
-        AudioPlayer.SetVolume("fullscreen", 300)
+        AudioPlayer.SetVolume("fullscreen", 800)
 
     End Sub
 
@@ -1695,17 +1696,15 @@ Public Class Form1
             Dim centerX As Integer = (screenBounds.Width - Me.Width) \ 2
             Dim centerY As Integer = (screenBounds.Height - Me.Height) \ 2
             Me.Location = New Point(centerX, centerY)
-
-            'Invalidate()
         Else
             Me.FormBorderStyle = FormBorderStyle.None
             Me.WindowState = FormWindowState.Maximized
-            'Invalidate()
         End If
     End Sub
 
     Private Sub PauseGame()
         AudioPlayer.PauseSound("loop")
+
         currentState = GameState.Pause
         physicsTimer.Stop()
 
@@ -1715,13 +1714,13 @@ Public Class Form1
         moveRightPaddleDown = False
 
         pauseMenuIndex = 0
-        'Invalidate()
 
         AudioPlayer.LoopSound("pause")
     End Sub
 
     Private Sub ResumeGame()
         AudioPlayer.PauseSound("pause")
+
         currentState = GameState.Playing
         physicsTimer.Start()
 
@@ -1754,6 +1753,7 @@ Public Class Form1
         physicsTimer.Start()
 
         AudioPlayer.LoopSound("loop")
+
     End Sub
 
     ' ===============================
