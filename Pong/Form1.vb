@@ -1554,17 +1554,82 @@ Public Class Form1
 
     End Sub
 
+    'Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
+    '    MyBase.OnKeyUp(e)
+
+    '    If e.KeyCode = Keys.W Then moveLeftPaddleUp = False
+    '    If e.KeyCode = Keys.S Then moveLeftPaddleDown = False
+
+    '    If playerMode = 2 Then
+    '        If e.KeyCode = Keys.Up Then moveRightPaddleUp = False
+    '        If e.KeyCode = Keys.Down Then moveRightPaddleDown = False
+    '    End If
+
+    '    If e.KeyCode = Keys.P Then
+    '        pKeyDown = False
+    '    End If
+
+    '    If e.KeyCode = Keys.Pause Then
+    '        pauseKeyDown = False
+    '    End If
+
+    '    If e.KeyCode = Keys.MediaPlayPause Then
+    '        mediaPlayPauseKeyDown = False
+    '    End If
+
+    '    If e.KeyCode = Keys.F11 Then
+    '        f11KeyDown = False
+    '    End If
+
+    '    If e.KeyCode = Keys.Escape Then
+    '        escapeKeyDown = False
+    '    End If
+
+    '    If e.KeyCode = Keys.F Then
+    '        fKeyDown = False
+    '    End If
+
+    '    If e.KeyCode = Keys.Enter Then
+    '        enterKeyDown = False
+    '    End If
+
+    '    If e.KeyCode = Keys.Space Then
+    '        spaceKeyDown = False
+    '    End If
+
+
+    'End Sub
+
+
+
     Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
         MyBase.OnKeyUp(e)
 
-        If e.KeyCode = Keys.W Then moveLeftPaddleUp = False
-        If e.KeyCode = Keys.S Then moveLeftPaddleDown = False
-
-        If playerMode = 2 Then
-            If e.KeyCode = Keys.Up Then moveRightPaddleUp = False
-            If e.KeyCode = Keys.Down Then moveRightPaddleDown = False
+        ' ============================================================
+        ' 1. Release Paddle Movement Keys
+        ' ============================================================
+        If e.KeyCode = Keys.W Then
+            moveLeftPaddleUp = False
         End If
 
+        If e.KeyCode = Keys.S Then
+            moveLeftPaddleDown = False
+        End If
+
+        If playerMode = 2 Then
+            If e.KeyCode = Keys.Up Then
+                moveRightPaddleUp = False
+            End If
+
+            If e.KeyCode = Keys.Down Then
+                moveRightPaddleDown = False
+            End If
+        End If
+
+
+        ' ============================================================
+        ' 2. Release Pause / Resume Keys
+        ' ============================================================
         If e.KeyCode = Keys.P Then
             pKeyDown = False
         End If
@@ -1577,18 +1642,30 @@ Public Class Form1
             mediaPlayPauseKeyDown = False
         End If
 
+
+        ' ============================================================
+        ' 3. Release Fullscreen Toggle Keys
+        ' ============================================================
         If e.KeyCode = Keys.F11 Then
             f11KeyDown = False
-        End If
-
-        If e.KeyCode = Keys.Escape Then
-            escapeKeyDown = False
         End If
 
         If e.KeyCode = Keys.F Then
             fKeyDown = False
         End If
 
+
+        ' ============================================================
+        ' 4. Release Escape Key
+        ' ============================================================
+        If e.KeyCode = Keys.Escape Then
+            escapeKeyDown = False
+        End If
+
+
+        ' ============================================================
+        ' 5. Release Confirm Keys (Enter / Space)
+        ' ============================================================
         If e.KeyCode = Keys.Enter Then
             enterKeyDown = False
         End If
@@ -1597,8 +1674,12 @@ Public Class Form1
             spaceKeyDown = False
         End If
 
-
     End Sub
+
+
+
+
+
 
     Private Sub ToggleFullScreen()
         If Me.FormBorderStyle = FormBorderStyle.None Then
