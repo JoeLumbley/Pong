@@ -18,19 +18,20 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 - **Resizable and Pausable**: Enjoy a flexible gameplay experience that can be paused at any time, allowing players to take breaks without losing progress.
 - **Single and Multiplayer Modes**: Challenge yourself against a computer player or compete with friends, making the game versatile for different play styles.
 
+
+<img width="1920" height="1080" alt="036" src="https://github.com/user-attachments/assets/4c1e1c0f-05d6-4cf5-9c77-640033da44d9" />
+
 ### Learning Objectives
 - Understand the basics of game mechanics and physics, including how to simulate movement and collisions.
 - Gain hands-on experience with game development concepts, such as state management and event handling.
 - Learn how to implement user input handling, game states, sound effects, and graphical rendering.
 
 
-[Keyboard Controls](#keyboard-controls) 
-
-[Fixed: Audio Playback Issues](#audio-playback-issues)
 
 
-<img width="1920" height="1080" alt="036" src="https://github.com/user-attachments/assets/4c1e1c0f-05d6-4cf5-9c77-640033da44d9" />
 
+
+[Keyboard Controls](#keyboard-controls) | [Fixed: Audio Playback Issues](#audio-playback-issues)
 
 ---
 ---
