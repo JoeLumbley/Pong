@@ -24,7 +24,7 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 - Learn how to implement user input handling, game states, sound effects, and graphical rendering.
 
 
-[Keyboard Controls](#keyboard-ontrols) 
+[Keyboard Controls](#keyboard-controls) 
 
 [Fixed: Audio Playback Issues](#audio-playback-issues)
 
@@ -322,7 +322,7 @@ After applying all fixes:
 Our PONG game now runs for hours with **stable sound**.
 
 
-[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-ontrols)
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls)
 
 
 ---
