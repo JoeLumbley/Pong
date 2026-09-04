@@ -2,6 +2,9 @@
 # PONG - Code with Joe
 A modern, full‑screen remake of the classic Pong arcade game. Rebuilt from scratch with smooth physics, glowing motion trails, dynamic paddle spin, an AI opponent, animated menus, and a fully‑featured audio system.
 
+
+
+
 This project isn’t just Pong.
 It’s a compact 2D game engine demonstrating real‑time rendering, delta‑time physics, state‑driven UI, and responsive design.
 
@@ -104,6 +107,9 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 |-----|--------|
 | **Space / Enter** | Return to Start Screen |
 
+
+[Top](#pong---code-with-joe) | [Fixed: Audio Playback Issues](#audio-playback-issues)
+
 ---
 ---
 ---
@@ -128,6 +134,7 @@ Why Our PONG Game’s Sound Became Garbled Over Time
 During development, we discovered that our PONG game’s audio would slowly degrade during long play sessions. After 10–20 minutes, sound effects became distorted, crackly, or randomly cut off. This wasn’t a bug in our game logic. It was a limitation of the legacy Windows **MCI (winmm.dll)** audio subsystem.
 
 Together, we investigated the root causes and implemented a full set of fixes that stabilized audio playback without replacing the entire audio engine.
+
 
 ---
 
@@ -315,12 +322,12 @@ After applying all fixes:
 Our PONG game now runs for hours with **stable sound**.
 
 
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-ontrols)
 
 
-
-
-
-
+---
+---
+---
 
 
 
