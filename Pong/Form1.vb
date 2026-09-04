@@ -703,9 +703,6 @@ Public Class Form1
 
         g.DrawString($"FPS: {fps}", fpsFont, fpsBrush, 10, 10)
 
-
-
-
         ' -------------------------------
         '  Fullscreen Indicator
         ' -------------------------------
@@ -723,9 +720,6 @@ Public Class Form1
              grayBrush,
              ClientSize.Width - fsSize.Width - 10,
              10)
-
-
-
 
 
         Dim halfWidth As Single = ClientSize.Width / 2.0F
