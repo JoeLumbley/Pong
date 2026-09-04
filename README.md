@@ -108,7 +108,7 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 | **Space / Enter** | Return to Start Screen |
 
 
-[Top](#pong---code-with-joe) | [Fixed: Audio Playback Issues](#audio-playback-issues)
+[Top](#pong---code-with-joe)
 
 ---
 ---
