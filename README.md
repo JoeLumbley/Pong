@@ -31,7 +31,7 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 
 
 
-[Keyboard Controls](#keyboard-controls) | [Fixed: Audio Playback Issues](#audio-playback-issues)
+[Fixed: Audio Playback Issues](#audio-playback-issues)
 
 ---
 ---
