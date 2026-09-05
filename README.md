@@ -147,7 +147,7 @@ Together, we investigated the root causes and implemented a full set of fixes th
 
 MCI is a **1990s-era multimedia API**, and while it still works, it has several well‑documented failure modes. Our game happened to hit *all* of them.
 
-### **1. Too Many Open Aliases**
+### **Too Many Open Aliases**
 Our overlapping playback system opened **24 copies** of each sound:
 
 ```vb
@@ -178,7 +178,7 @@ MCI cannot handle this load. Buffers corrupt, handles leak, and playback becomes
 
 ---
 
-### **2. MCI Doesn’t Actually Stop Playback Reliably**
+### **MCI Doesn’t Actually Stop Playback Reliably**
 We relied on:
 
 ```vb
@@ -204,7 +204,7 @@ to reuse aliases that were still busy → corrupted audio buffers.
 
 ---
 
-### **3. MCI Has No Real Mixing**
+### **MCI Has No Real Mixing**
 We simulated mixing by opening many copies of the same WAV.  
 MCI was never designed for this, and rapid overlapping playback (menu navigation, paddle hits, ball bounces) overwhelmed the mixer.
 
@@ -259,7 +259,7 @@ are known to cause buffer corruption unless you handle MCI notifications. We did
 
 ## How We Fixed It
 
-### **Fix 1 Reduce Overlapping Channels**
+### **Reduce Overlapping Channels**
 We lowered the channel count from 24 → 8:
 
 ```vb
@@ -271,7 +271,7 @@ This alone dramatically reduced corruption.
 
 ---
 
-### **Fix 2 Remove `notify`**
+### **Remove `notify`**
 We replaced:
 
 ```vb
@@ -288,7 +288,7 @@ This eliminated a major source of buffer corruption.
 
 ---
 
-### **Fix 3 Safe MCI Usage**
+### **Safe MCI Usage**
 We added:
 
 - `stop` before `seek`  
@@ -300,7 +300,7 @@ This prevented buffer reuse issues.
 
 ---
 
-### **Fix 4 Automatic Cleanup Every 5 Minutes**
+### **Automatic Cleanup Every 5 Minutes**
 We implemented a timer that:
 
 1. Saves alias file paths and volume  
