@@ -544,9 +544,8 @@ Despite MCI’s age, this module makes it robust enough for a modern WinForms ga
 
 
 
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls) | [AudioPlayer Module](#audioplayer-module) | [Cleanuptick Walkthrough](#cleanuptick-walkthrough) | [Fixed Audio Playback Issues](#audio-playback-issues) 
 
-
-[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls)
 
 
 ---
