@@ -614,9 +614,9 @@ Comment: we’re about to gather all data needed to reopen aliases later.
 ```
 Creates a list of **tuples**, each holding:
 
-- `aliasName` — the MCI alias  
-- `filePath` — the WAV or MP3 file path  
-- `volume` — the current volume  
+- `aliasName` - the MCI alias  
+- `filePath` - the WAV or MP3 file path  
+- `volume` - the current volume  
 
 A **tuple** in VB.NET is a lightweight way to store multiple values together without creating a class or structure.  
 Example:
