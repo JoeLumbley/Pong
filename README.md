@@ -113,8 +113,8 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 | **Space / Enter** | Return to Start Screen |
 
 
-[Top](#pong---code-with-joe)
 
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls) | [AudioPlayer Module](#audioplayer-module) | [Cleanuptick Walkthrough](#cleanuptick-walkthrough) | [Fixed: Audio Playback Issues](#audio-playback-issues) 
 ---
 ---
 ---
@@ -327,7 +327,8 @@ After applying all fixes:
 Our PONG game now runs for hours with **stable sound**.
 
 
-[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls)
+
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls) | [AudioPlayer Module](#audioplayer-module) | [Cleanuptick Walkthrough](#cleanuptick-walkthrough) | [Fixed: Audio Playback Issues](#audio-playback-issues) 
 
 
 ---
