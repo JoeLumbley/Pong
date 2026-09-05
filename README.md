@@ -170,7 +170,7 @@ selectZ
 ```
 
 With ~10 sound effects, this meant **240 active audio devices**.  
-MCI cannot handle this load — buffers corrupt, handles leak, and playback becomes garbled.
+MCI cannot handle this load. Buffers corrupt, handles leak, and playback becomes garbled.
 
 ---
 
