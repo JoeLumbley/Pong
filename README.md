@@ -31,7 +31,7 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 
 
 
-[Fixed: Audio Playback Issues](#audio-playback-issues)
+[Fixed: Audio Playback Issues](#audio-playback-issues) | [AudioPlayer Module](#audioplayer-module)
 
 ---
 ---
@@ -356,7 +356,7 @@ Our PONG game now runs for hours with **stable sound**.
 
 ---
 
-# 🎧 AudioPlayer Module
+# AudioPlayer Module
 
 The `AudioPlayer` module is our custom sound engine built on top of the legacy Windows **MCI (Media Control Interface)** subsystem.  
 Although MCI is decades old, this module wraps it in a safe, stable, modernized interface suitable for real‑time game audio in our PONG project.
