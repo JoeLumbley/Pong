@@ -620,7 +620,7 @@ Creates a list of **tuples**, each holding:
 - `filePath` - the WAV or MP3 file path  
 - `volume` - the current volume  
 
-A **tuple** in VB.NET is a lightweight way to store multiple values together without creating a class or structure.  
+A **tuple** is a lightweight way to store multiple values together without creating a class or structure.  
 Example:
 
 ```vb
