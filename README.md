@@ -340,3 +340,217 @@ Our PONG game now runs for hours with **stable sound**.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+# 🎧 AudioPlayer Module
+
+The `AudioPlayer` module is our custom sound engine built on top of the legacy Windows **MCI (Media Control Interface)** subsystem.  
+Although MCI is decades old, this module wraps it in a safe, stable, modernized interface suitable for real‑time game audio in our PONG project.
+
+This document explains **what the module does**, **how it works**, and **why certain design decisions were made**, including the fixes that prevent long‑session audio corruption.
+
+---
+
+## Overview
+
+The module provides:
+
+- Loading WAV files into named aliases  
+- Playing, looping, pausing, and stopping sounds  
+- Overlapping playback (multiple rapid sound effects)  
+- Volume control  
+- Automatic cleanup every 5 minutes  
+- Full recovery of alias state (file path + volume)  
+- Loop restoration after cleanup  
+- Safe MCI usage that avoids corruption
+
+This module is globally accessible and requires no instantiation.
+
+---
+
+## Architecture Breakdown
+
+### 1. **MCI API Binding**
+
+We bind directly to `mciSendStringW`, the Unicode version of the MCI command interface.  
+All audio operations are performed by sending text commands like:
+
+```
+open
+play
+pause
+stop
+status
+close
+```
+
+This is the foundation of the module.
+
+---
+
+### 2. **Internal State**
+
+We maintain:
+
+- A `HashSet` of active aliases  
+- A fixed set of suffixes (`A`–`H`) for overlapping playback  
+- A cleanup timer that refreshes MCI state every 5 minutes  
+
+The overlapping suffixes allow rapid sound effects (menu clicks, paddle hits) without corrupting MCI.
+
+---
+
+### 3. **Lazy Initialization**
+
+The cleanup timer is created only when the first audio command is sent.  
+This avoids unnecessary initialization and ensures cleanup is always active.
+
+---
+
+### 4. **Helper Methods**
+
+#### `Normalize(name)`
+Ensures alias names contain no spaces.
+
+#### `Send(command)`
+Sends an MCI command and returns success/failure.
+
+#### `Query(command)`
+Sends an MCI command and returns the string result.
+
+These helpers centralize all MCI communication.
+
+---
+
+### 5. **Core Audio API**
+
+#### `AddSound(soundName, filePath)`
+Loads a WAV or MP3 file and assigns it an alias.
+
+#### `PlaySound(soundName)`
+Stops, rewinds, and plays a sound once.
+
+#### `LoopSound(soundName)`
+Same as `PlaySound`, but loops indefinitely.
+
+#### `PauseSound(soundName)`
+Pauses playback.
+
+#### `SetVolume(soundName, level)`
+Sets volume from 0–1000 (MCI’s native range).
+
+#### `IsPlaying(soundName)`
+Checks whether a sound is currently playing.
+
+These functions form the basic building blocks of the audio system.
+
+---
+
+### 6. **Overlapping Playback**
+
+#### `AddOverlapping(baseName, filePath)`
+Loads 8 copies of the same sound:
+
+```
+selectA
+selectB
+...
+selectH
+```
+
+This allows rapid overlapping playback without corrupting MCI.
+
+#### `PlayOverlapping(baseName)`
+Finds the first non‑playing alias and plays it.
+
+#### `SetVolumeOverlapping(baseName, level)`
+Sets volume for all overlapping channels.
+
+This simulates mixing in an API that does not support mixing.
+
+---
+
+### 7. **Cleanup System**
+
+#### `CloseAll()`
+Stops and closes all aliases used when exiting the game.
+
+---
+
+### 8. **Automatic Cleanup (Every 5 Minutes)**
+
+The cleanup routine:
+
+1. Saves alias name, file path, and volume  
+2. Stops and closes all aliases  
+3. Reopens each alias fresh  
+4. Restores volume  
+5. Restarts looping sounds  
+
+This prevents:
+
+- buffer corruption  
+- alias leakage  
+- distorted audio  
+- long‑session instability  
+
+This is the fix that made MCI stable enough for real‑time gameplay.
+
+---
+
+## Why Automatic Cleanup Matters
+
+MCI is old.  
+It leaks handles, corrupts buffers, and becomes unstable after long sessions. Especially when simulating mixing with overlapping playback.
+
+Our cleanup system resets MCI’s internal state before corruption accumulates.
+
+This is the key reason our audio engine stays stable for hours.
+
+---
+
+## Summary
+
+The `AudioPlayer` module transforms the fragile MCI subsystem into a reliable game audio engine by adding:
+
+- Safe command handling  
+- Overlapping playback  
+- Looping support  
+- Volume control  
+- Automatic corruption recovery  
+- Long‑session stability  
+
+Despite MCI’s age, this module makes it robust enough for a modern WinForms game.
+
+
+
+
+
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls)
+
+
+---
+---
+---
+
+
+
+
+
+
+
+
