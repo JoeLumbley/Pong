@@ -554,3 +554,297 @@ Despite MCI’s age, this module makes it robust enough for a modern WinForms ga
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+# CleanupTick Walkthrough
+
+```vb
+Private Sub CleanupTick(sender As Object, e As EventArgs)
+```
+Defines the cleanup routine that runs every 5 minutes via a timer.
+
+---
+
+```vb
+        ' Store alias info before closing
+```
+Comment: we’re about to gather all data needed to reopen aliases later.
+
+---
+
+```vb
+        Dim reopenList As New List(Of (aliasName As String, filePath As String, volume As Integer))
+```
+Creates a list of **tuples**, each holding:
+
+- `aliasName` — the MCI alias  
+- `filePath` — the WAV or MP3 file path  
+- `volume` — the current volume  
+
+A **tuple** in VB.NET is a lightweight way to store multiple values together without creating a class or structure.  
+Example:
+
+```vb
+(aliasName:="selectA", filePath:="sounds/select.wav", volume:=700)
+```
+
+This is a single item containing **three fields**.  
+We use tuples to temporarily store alias data during cleanup.
+
+This lets us close everything and reopen it cleanly.
+
+---
+
+```vb
+        ' Collect file paths + volume levels
+```
+Comment: next loop gathers alias metadata.
+
+---
+
+```vb
+        For Each aliasName In Aliases.ToList()
+```
+Iterates over a **copy** of the alias list so we can safely modify the original later.
+
+---
+
+```vb
+            Dim path = Query($"info {aliasName} file")
+```
+Asks MCI for the file path associated with this alias.
+
+---
+
+```vb
+            If String.IsNullOrWhiteSpace(path) Then Continue For
+```
+If MCI returns nothing, skip this alias.
+
+---
+
+```vb
+            Dim volStr = Query($"status {aliasName} volume")
+```
+Queries MCI for the alias’s current volume.
+
+---
+
+```vb
+            Dim vol As Integer = 500 ' default fallback
+```
+Sets a default volume in case parsing fails.
+
+---
+
+```vb
+            Integer.TryParse(volStr, vol)
+```
+Attempts to convert the volume string into an integer.
+
+---
+
+```vb
+            reopenList.Add((aliasName, path, vol))
+```
+Adds a **tuple** containing all three values to `reopenList`.
+
+---
+
+```vb
+        Next
+```
+Ends the metadata‑collection loop.
+
+---
+
+```vb
+        ' Close all aliases
+```
+Comment: next loop shuts down all audio devices.
+
+---
+
+```vb
+        For Each aliasName In Aliases.ToList()
+```
+Iterates over a copy of the alias list again.
+
+---
+
+```vb
+            Send($"stop {aliasName}")
+```
+Stops playback for the alias.
+
+---
+
+```vb
+            Send($"close {aliasName}")
+```
+Closes the alias’s audio device.
+
+---
+
+```vb
+            Aliases.Remove(aliasName)
+```
+Removes the alias from the active alias set.
+
+---
+
+```vb
+        Next
+```
+Ends the closing loop.
+
+---
+
+```vb
+        ' Reopen aliases
+```
+Comment: now we reopen everything using the stored tuple data.
+
+---
+
+```vb
+        For Each item In reopenList
+```
+Iterates over each tuple we saved earlier.
+
+---
+
+```vb
+            If Send($"open ""{item.filePath}"" alias {item.aliasName}") Then
+```
+Reopens the WAV file using its original alias name.
+
+---
+
+```vb
+                Aliases.Add(item.aliasName)
+```
+Adds the alias back to the active alias set.
+
+---
+
+```vb
+            End If
+```
+Ends the conditional reopen block.
+
+---
+
+```vb
+        Next
+```
+Ends the reopen loop.
+
+---
+
+```vb
+        ' Restore volume levels
+```
+Comment: next loop restores each alias’s original volume.
+
+---
+
+```vb
+        For Each item In reopenList
+```
+Iterates over each tuple again.
+
+---
+
+```vb
+            SetVolume(item.aliasName, item.volume)
+```
+Restores the volume stored in the tuple.
+
+---
+
+```vb
+        Next
+```
+Ends the volume‑restore loop.
+
+---
+
+```vb
+        ' Restart any looping sounds (only once)
+```
+Comment: looping sounds (like background music) need to be restarted manually.
+
+---
+
+```vb
+        Form1.RestartLoops()
+```
+Calls back into the main form to restart any looping audio.
+
+---
+
+```vb
+    End Sub
+```
+Ends the cleanup routine.
+
+---
+
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls)
+
+---
+---
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
