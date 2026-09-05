@@ -31,10 +31,9 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 
 
 
-[Fixed: Audio Playback Issues](#audio-playback-issues) | [AudioPlayer Module](#audioplayer-module) | [Cleanuptick Walkthrough](#cleanuptick-walkthrough)
 
 
-
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls) | [AudioPlayer Module](#audioplayer-module) | [Cleanuptick Walkthrough](#cleanuptick-walkthrough) | [Fixed Audio Playback Issues](#audio-playback-issues) 
 
 
 ---
@@ -114,7 +113,9 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 
 
 
-[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls) | [AudioPlayer Module](#audioplayer-module) | [Cleanuptick Walkthrough](#cleanuptick-walkthrough) | [Fixed: Audio Playback Issues](#audio-playback-issues) 
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls) | [AudioPlayer Module](#audioplayer-module) | [Cleanuptick Walkthrough](#cleanuptick-walkthrough) | [Fixed Audio Playback Issues](#audio-playback-issues) 
+
+
 ---
 ---
 ---
