@@ -754,7 +754,7 @@ Iterates over each tuple we saved earlier.
 ```vb
             If Send($"open ""{item.filePath}"" alias {item.aliasName}") Then
 ```
-Reopens the WAV file using its original alias name.
+Reopens the WAV or MP3 file using its original alias name.
 
 ---
 
