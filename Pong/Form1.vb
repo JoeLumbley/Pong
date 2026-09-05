@@ -711,8 +711,6 @@ Public Class Form1
            "F - Exit Fullscreen",
            "F - Fullscreen")
 
-
-
         Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
 
         g.DrawString(fsText,
@@ -720,7 +718,6 @@ Public Class Form1
              grayBrush,
              ClientSize.Width - fsSize.Width - 10,
              10)
-
 
         Dim halfWidth As Single = ClientSize.Width / 2.0F
 
