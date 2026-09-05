@@ -369,7 +369,7 @@ This document explains **what the module does**, **how it works**, and **why cer
 
 The module provides:
 
-- Loading WAV files into named aliases  
+- Loading WAV or MP3 files into named aliases  
 - Playing, looping, pausing, and stopping sounds  
 - Overlapping playback (multiple rapid sound effects)  
 - Volume control  
