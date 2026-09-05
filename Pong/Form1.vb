@@ -307,32 +307,32 @@ Public Class Form1
         CreateSoundFiles()
 
         AudioPlayer.AddSound("loop", Path.Combine(Application.StartupPath, "loop.mp3"))
-        AudioPlayer.SetVolume("loop", 15)
+        AudioPlayer.SetVolume("loop", 8)
 
         AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
-        AudioPlayer.SetVolume("point", 100)
+        AudioPlayer.SetVolume("point", 300)
 
         AudioPlayer.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
-        AudioPlayer.SetVolumeOverlapping("bounce", 75)
+        AudioPlayer.SetVolumeOverlapping("bounce", 500)
 
         AudioPlayer.AddSound("start", Path.Combine(Application.StartupPath, "start.mp3"))
-        AudioPlayer.SetVolume("start", 20)
+        AudioPlayer.SetVolume("start", 16)
         AudioPlayer.LoopSound("start")
 
         AudioPlayer.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
-        AudioPlayer.SetVolumeOverlapping("arrow_up", 100)
+        AudioPlayer.SetVolumeOverlapping("arrow_up", 600)
 
         AudioPlayer.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
-        AudioPlayer.SetVolumeOverlapping("arrow_down", 75)
+        AudioPlayer.SetVolumeOverlapping("arrow_down", 300)
 
         AudioPlayer.AddSound("select", Path.Combine(Application.StartupPath, "select.mp3"))
-        AudioPlayer.SetVolume("select", 75)
+        AudioPlayer.SetVolume("select", 500)
 
         AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
-        AudioPlayer.SetVolume("pause", 200)
+        AudioPlayer.SetVolume("pause", 100)
 
         AudioPlayer.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
-        AudioPlayer.SetVolume("fullscreen", 50)
+        AudioPlayer.SetVolume("fullscreen", 300)
 
     End Sub
 
