@@ -31,7 +31,10 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 
 
 
-[Fixed: Audio Playback Issues](#audio-playback-issues)
+
+
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls) | [AudioPlayer Module](#audioplayer-module) | [Cleanuptick Walkthrough](#cleanuptick-walkthrough) | [Fixed Audio Playback Issues](#audio-playback-issues) 
+
 
 ---
 ---
@@ -109,7 +112,9 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 | **Space / Enter** | Return to Start Screen |
 
 
-[Top](#pong---code-with-joe)
+
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls) | [AudioPlayer Module](#audioplayer-module) | [Cleanuptick Walkthrough](#cleanuptick-walkthrough) | [Fixed Audio Playback Issues](#audio-playback-issues) 
+
 
 ---
 ---
@@ -143,7 +148,7 @@ Together, we investigated the root causes and implemented a full set of fixes th
 
 MCI is a **1990s-era multimedia API**, and while it still works, it has several well‑documented failure modes. Our game happened to hit *all* of them.
 
-### **1. Too Many Open Aliases**
+### **Too Many Open Aliases**
 Our overlapping playback system opened **24 copies** of each sound:
 
 ```vb
@@ -170,11 +175,11 @@ selectZ
 ```
 
 With ~10 sound effects, this meant **240 active audio devices**.  
-MCI cannot handle this load — buffers corrupt, handles leak, and playback becomes garbled.
+MCI cannot handle this load. Buffers corrupt, handles leak, and playback becomes garbled.
 
 ---
 
-### **2. MCI Doesn’t Actually Stop Playback Reliably**
+### **MCI Doesn’t Actually Stop Playback Reliably**
 We relied on:
 
 ```vb
@@ -200,7 +205,7 @@ to reuse aliases that were still busy → corrupted audio buffers.
 
 ---
 
-### **3. MCI Has No Real Mixing**
+### **MCI Has No Real Mixing**
 We simulated mixing by opening many copies of the same WAV.  
 MCI was never designed for this, and rapid overlapping playback (menu navigation, paddle hits, ball bounces) overwhelmed the mixer.
 
@@ -255,7 +260,7 @@ are known to cause buffer corruption unless you handle MCI notifications. We did
 
 ## How We Fixed It
 
-### **Fix 1 Reduce Overlapping Channels**
+### **Reduce Overlapping Channels**
 We lowered the channel count from 24 → 8:
 
 ```vb
@@ -267,7 +272,7 @@ This alone dramatically reduced corruption.
 
 ---
 
-### **Fix 2 Remove `notify`**
+### **Remove `notify`**
 We replaced:
 
 ```vb
@@ -284,7 +289,7 @@ This eliminated a major source of buffer corruption.
 
 ---
 
-### **Fix 3 Safe MCI Usage**
+### **Safe MCI Usage**
 We added:
 
 - `stop` before `seek`  
@@ -296,7 +301,7 @@ This prevented buffer reuse issues.
 
 ---
 
-### **Fix 4 Automatic Cleanup Every 5 Minutes**
+### **Automatic Cleanup Every 5 Minutes**
 We implemented a timer that:
 
 1. Saves alias file paths and volume  
@@ -323,12 +328,522 @@ After applying all fixes:
 Our PONG game now runs for hours with **stable sound**.
 
 
-[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls)
+
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls) | [AudioPlayer Module](#audioplayer-module) | [Cleanuptick Walkthrough](#cleanuptick-walkthrough) | [Fixed: Audio Playback Issues](#audio-playback-issues) 
 
 
 ---
 ---
 ---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+# AudioPlayer Module
+
+The `AudioPlayer` module is our custom sound engine built on top of the legacy Windows **MCI (Media Control Interface)** subsystem.  
+Although MCI is decades old, this module wraps it in a safe, stable, modernized interface suitable for real‑time game audio in our PONG project.
+
+This document explains **what the module does**, **how it works**, and **why certain design decisions were made**, including the fixes that prevent long‑session audio corruption.
+
+---
+
+## Overview
+
+The module provides:
+
+- Loading WAV or MP3 files into named aliases  
+- Playing, looping, pausing, and stopping sounds  
+- Overlapping playback (multiple rapid sound effects)  
+- Volume control  
+- Automatic cleanup every 5 minutes  
+- Full recovery of alias state (file path + volume)  
+- Loop restoration after cleanup  
+- Safe MCI usage that avoids corruption
+
+This module is globally accessible and requires no instantiation.
+
+---
+
+## Architecture Breakdown
+
+### 1. **MCI API Binding**
+
+We bind directly to `mciSendStringW`, the Unicode version of the MCI command interface.  
+All audio operations are performed by sending text commands like:
+
+```
+open
+play
+pause
+stop
+status
+close
+```
+
+This is the foundation of the module.
+
+---
+
+### 2. **Internal State**
+
+We maintain:
+
+- A `HashSet` of active aliases  
+- A fixed set of suffixes (`A`–`H`) for overlapping playback  
+- A cleanup timer that refreshes MCI state every 5 minutes  
+
+The overlapping suffixes allow rapid sound effects (menu clicks, paddle hits) without corrupting MCI.
+
+---
+
+### 3. **Lazy Initialization**
+
+The cleanup timer is created only when the first audio command is sent.  
+This avoids unnecessary initialization and ensures cleanup is always active.
+
+---
+
+### 4. **Helper Methods**
+
+#### `Normalize(name)`
+Ensures alias names contain no spaces.
+
+#### `Send(command)`
+Sends an MCI command and returns success/failure.
+
+#### `Query(command)`
+Sends an MCI command and returns the string result.
+
+These helpers centralize all MCI communication.
+
+---
+
+### 5. **Core Audio API**
+
+#### `AddSound(soundName, filePath)`
+Loads a WAV or MP3 file and assigns it an alias.
+
+#### `PlaySound(soundName)`
+Stops, rewinds, and plays a sound once.
+
+#### `LoopSound(soundName)`
+Same as `PlaySound`, but loops indefinitely.
+
+#### `PauseSound(soundName)`
+Pauses playback.
+
+#### `SetVolume(soundName, level)`
+Sets volume from 0–1000 (MCI’s native range).
+
+#### `IsPlaying(soundName)`
+Checks whether a sound is currently playing.
+
+These functions form the basic building blocks of the audio system.
+
+---
+
+### 6. **Overlapping Playback**
+
+#### `AddOverlapping(baseName, filePath)`
+Loads 8 copies of the same sound:
+
+```
+selectA
+selectB
+...
+selectH
+```
+
+This allows rapid overlapping playback without corrupting MCI.
+
+#### `PlayOverlapping(baseName)`
+Finds the first non‑playing alias and plays it.
+
+#### `SetVolumeOverlapping(baseName, level)`
+Sets volume for all overlapping channels.
+
+This simulates mixing in an API that does not support mixing.
+
+---
+
+### 7. **Cleanup System**
+
+#### `CloseAll()`
+Stops and closes all aliases used when exiting the game.
+
+---
+
+### 8. **Automatic Cleanup (Every 5 Minutes)**
+
+The cleanup routine:
+
+1. Saves alias name, file path, and volume  
+2. Stops and closes all aliases  
+3. Reopens each alias fresh  
+4. Restores volume  
+5. Restarts looping sounds  
+
+This prevents:
+
+- buffer corruption  
+- alias leakage  
+- distorted audio  
+- long‑session instability  
+
+This is the fix that made MCI stable enough for real‑time gameplay.
+
+---
+
+## Why Automatic Cleanup Matters
+
+MCI is old.  
+It leaks handles, corrupts buffers, and becomes unstable after long sessions. Especially when simulating mixing with overlapping playback.
+
+Our cleanup system resets MCI’s internal state before corruption accumulates.
+
+This is the key reason our audio engine stays stable for hours.
+
+---
+
+## Summary
+
+The `AudioPlayer` module transforms the fragile MCI subsystem into a reliable game audio engine by adding:
+
+- Safe command handling  
+- Overlapping playback  
+- Looping support  
+- Volume control  
+- Automatic corruption recovery  
+- Long‑session stability  
+
+Despite MCI’s age, this module makes it robust enough for a modern WinForms game.
+
+
+
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls) | [AudioPlayer Module](#audioplayer-module) | [Cleanuptick Walkthrough](#cleanuptick-walkthrough) | [Fixed Audio Playback Issues](#audio-playback-issues) 
+
+
+
+---
+---
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+# CleanupTick Walkthrough
+
+```vb
+Private Sub CleanupTick(sender As Object, e As EventArgs)
+```
+Defines the cleanup routine that runs every 5 minutes via a timer.
+
+---
+
+```vb
+        ' Store alias info before closing
+```
+Comment: we’re about to gather all data needed to reopen aliases later.
+
+---
+
+```vb
+        Dim reopenList As New List(Of (aliasName As String, filePath As String, volume As Integer))
+```
+Creates a list of **tuples**, each holding:
+
+- `aliasName` - the MCI alias  
+- `filePath` - the WAV or MP3 file path  
+- `volume` - the current volume  
+
+A **tuple** is a lightweight way to store multiple values together without creating a class or structure.  
+Example:
+
+```vb
+(aliasName:="selectA", filePath:="sounds/select.wav", volume:=700)
+```
+
+This is a single item containing **three fields**.  
+We use tuples to temporarily store alias data during cleanup.
+
+This lets us close everything and reopen it cleanly.
+
+---
+
+```vb
+        ' Collect file paths + volume levels
+```
+Comment: next loop gathers alias metadata.
+
+---
+
+```vb
+        For Each aliasName In Aliases.ToList()
+```
+Iterates over a **copy** of the alias list so we can safely modify the original later.
+
+---
+
+```vb
+            Dim path = Query($"info {aliasName} file")
+```
+Asks MCI for the file path associated with this alias.
+
+---
+
+```vb
+            If String.IsNullOrWhiteSpace(path) Then Continue For
+```
+If MCI returns nothing, skip this alias.
+
+---
+
+```vb
+            Dim volStr = Query($"status {aliasName} volume")
+```
+Queries MCI for the alias’s current volume.
+
+---
+
+```vb
+            Dim vol As Integer = 500 ' default fallback
+```
+Sets a default volume in case parsing fails.
+
+---
+
+```vb
+            Integer.TryParse(volStr, vol)
+```
+Attempts to convert the volume string into an integer.
+
+---
+
+```vb
+            reopenList.Add((aliasName, path, vol))
+```
+Adds a **tuple** containing all three values to `reopenList`.
+
+---
+
+```vb
+        Next
+```
+Ends the metadata‑collection loop.
+
+---
+
+```vb
+        ' Close all aliases
+```
+Comment: next loop shuts down all audio devices.
+
+---
+
+```vb
+        For Each aliasName In Aliases.ToList()
+```
+Iterates over a copy of the alias list again.
+
+---
+
+```vb
+            Send($"stop {aliasName}")
+```
+Stops playback for the alias.
+
+---
+
+```vb
+            Send($"close {aliasName}")
+```
+Closes the alias’s audio device.
+
+---
+
+```vb
+            Aliases.Remove(aliasName)
+```
+Removes the alias from the active alias set.
+
+---
+
+```vb
+        Next
+```
+Ends the closing loop.
+
+---
+
+```vb
+        ' Reopen aliases
+```
+Comment: now we reopen everything using the stored tuple data.
+
+---
+
+```vb
+        For Each item In reopenList
+```
+Iterates over each tuple we saved earlier.
+
+---
+
+```vb
+            If Send($"open ""{item.filePath}"" alias {item.aliasName}") Then
+```
+Reopens the WAV or MP3 file using its original alias name.
+
+---
+
+```vb
+                Aliases.Add(item.aliasName)
+```
+Adds the alias back to the active alias set.
+
+---
+
+```vb
+            End If
+```
+Ends the conditional reopen block.
+
+---
+
+```vb
+        Next
+```
+Ends the reopen loop.
+
+---
+
+```vb
+        ' Restore volume levels
+```
+Comment: next loop restores each alias’s original volume.
+
+---
+
+```vb
+        For Each item In reopenList
+```
+Iterates over each tuple again.
+
+---
+
+```vb
+            SetVolume(item.aliasName, item.volume)
+```
+Restores the volume stored in the tuple.
+
+---
+
+```vb
+        Next
+```
+Ends the volume‑restore loop.
+
+---
+
+```vb
+        ' Restart any looping sounds (only once)
+```
+Comment: looping sounds (like background music) need to be restarted manually.
+
+---
+
+```vb
+        Form1.RestartLoops()
+```
+Calls back into the main form to restart any looping audio.
+
+---
+
+```vb
+    End Sub
+```
+Ends the cleanup routine.
+
+---
+
+
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls) | [AudioPlayer Module](#audioplayer-module) | [Cleanuptick Walkthrough](#cleanuptick-walkthrough) | [Fixed Audio Playback Issues](#audio-playback-issues) 
+
+
+---
+---
+---
+
+
+
+
+
+
+
+
 
 
 
