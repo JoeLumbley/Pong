@@ -307,7 +307,7 @@ Public Class Form1
         CreateSoundFiles()
 
         AudioPlayer.AddSound("loop", Path.Combine(Application.StartupPath, "loop.mp3"))
-        AudioPlayer.SetVolume("loop", 900)
+        AudioPlayer.SetVolume("loop", 300)
 
         AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
         AudioPlayer.SetVolume("point", 500)
@@ -329,7 +329,7 @@ Public Class Form1
         AudioPlayer.SetVolume("select", 500)
 
         AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
-        AudioPlayer.SetVolume("pause", 500)
+        AudioPlayer.SetVolume("pause", 75)
 
         AudioPlayer.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
         AudioPlayer.SetVolume("fullscreen", 500)
