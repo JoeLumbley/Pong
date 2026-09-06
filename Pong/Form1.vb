@@ -307,7 +307,7 @@ Public Class Form1
         CreateSoundFiles()
 
         AudioPlayer.AddSound("loop", Path.Combine(Application.StartupPath, "loop.mp3"))
-        AudioPlayer.SetVolume("loop", 300)
+        AudioPlayer.SetVolume("loop", 200)
 
         AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
         AudioPlayer.SetVolume("point", 500)
@@ -316,7 +316,7 @@ Public Class Form1
         AudioPlayer.SetVolumeOverlapping("bounce", 500)
 
         AudioPlayer.AddSound("start", Path.Combine(Application.StartupPath, "start.mp3"))
-        AudioPlayer.SetVolume("start", 16)
+        AudioPlayer.SetVolume("start", 300)
         AudioPlayer.LoopSound("start")
 
         AudioPlayer.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
@@ -329,7 +329,7 @@ Public Class Form1
         AudioPlayer.SetVolume("select", 500)
 
         AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
-        AudioPlayer.SetVolume("pause", 75)
+        AudioPlayer.SetVolume("pause", 300)
 
         AudioPlayer.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
         AudioPlayer.SetVolume("fullscreen", 500)
@@ -622,6 +622,7 @@ Public Class Form1
                 DrawTrail(g)
                 DrawBall(g)
                 DrawPaddles(g)
+                DrawFPS(g)
                 DrawHUD(g)
 
             Case GameState.EndScreen
@@ -699,9 +700,7 @@ Public Class Form1
     End Sub
 
     Private Sub DrawHUD(g As Graphics)
-        UpdateFPS()
-
-        g.DrawString($"FPS: {fps}", fpsFont, fpsBrush, 10, 10)
+        'DrawFPS(g)        
 
         ' -------------------------------
         '  Fullscreen Indicator
@@ -744,6 +743,13 @@ Public Class Form1
 
         g.DrawString(leftScoreText, hudScoreFont, scoreBrush, leftScoreX, scoreY)
         g.DrawString(rightScoreText, hudScoreFont, scoreBrush, rightScoreX, scoreY)
+    End Sub
+
+    Private Sub DrawFPS(g As Graphics)
+        UpdateFPS()
+
+        g.DrawString($"FPS: {fps}", fpsFont, fpsBrush, 10, 10)
+
     End Sub
 
     Private Sub DrawStartScreen(g As Graphics)
@@ -1787,7 +1793,7 @@ Public Class Form1
     Private Sub CreateSoundFiles()
         CreateFileFromResource(Path.Combine(Application.StartupPath, "loop.mp3"), My.Resources.Resource1.PlayLoop)
         CreateFileFromResource(Path.Combine(Application.StartupPath, "bounce.mp3"), My.Resources.Resource1.bounce3)
-        CreateFileFromResource(Path.Combine(Application.StartupPath, "start.mp3"), My.Resources.Resource1.Start_loop)
+        CreateFileFromResource(Path.Combine(Application.StartupPath, "start.mp3"), My.Resources.Resource1.StartLoop)
         CreateFileFromResource(Path.Combine(Application.StartupPath, "point.mp3"), My.Resources.Resource1.hit4)
         CreateFileFromResource(Path.Combine(Application.StartupPath, "arrow_up.mp3"), My.Resources.Resource1.ArrowUp2)
         CreateFileFromResource(Path.Combine(Application.StartupPath, "arrow_down.mp3"), My.Resources.Resource1.ArrowDown2)
