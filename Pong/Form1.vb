@@ -307,7 +307,7 @@ Public Class Form1
         CreateSoundFiles()
 
         AudioPlayer.AddSound("loop", Path.Combine(Application.StartupPath, "loop.mp3"))
-        AudioPlayer.SetVolume("loop", 400)
+        AudioPlayer.SetVolume("loop", 900)
 
         AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
         AudioPlayer.SetVolume("point", 500)
@@ -329,7 +329,7 @@ Public Class Form1
         AudioPlayer.SetVolume("select", 500)
 
         AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
-        AudioPlayer.SetVolume("pause", 100)
+        AudioPlayer.SetVolume("pause", 500)
 
         AudioPlayer.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
         AudioPlayer.SetVolume("fullscreen", 500)
@@ -1792,7 +1792,7 @@ Public Class Form1
         CreateFileFromResource(Path.Combine(Application.StartupPath, "arrow_up.mp3"), My.Resources.Resource1.ArrowUp2)
         CreateFileFromResource(Path.Combine(Application.StartupPath, "arrow_down.mp3"), My.Resources.Resource1.ArrowDown2)
         CreateFileFromResource(Path.Combine(Application.StartupPath, "select.mp3"), My.Resources.Resource1.Select2)
-        CreateFileFromResource(Path.Combine(Application.StartupPath, "pause.mp3"), My.Resources.Resource1.PauseMusic2)
+        CreateFileFromResource(Path.Combine(Application.StartupPath, "pause.mp3"), My.Resources.Resource1.PauseLoop)
         CreateFileFromResource(Path.Combine(Application.StartupPath, "fullscreen.mp3"), My.Resources.Resource1.FullScreen)
 
     End Sub
