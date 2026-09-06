@@ -206,6 +206,9 @@ Public Class Form1
         InitBall()
 
         blinkStopwatch.Start()
+
+        MovePointerOffScreen()
+
     End Sub
 
     Private Sub InitWindow()
@@ -316,7 +319,7 @@ Public Class Form1
         AudioPlayer.SetVolumeOverlapping("bounce", 500)
 
         AudioPlayer.AddSound("start", Path.Combine(Application.StartupPath, "start.mp3"))
-        AudioPlayer.SetVolume("start", 300)
+        AudioPlayer.SetVolume("start", 400)
         AudioPlayer.LoopSound("start")
 
         AudioPlayer.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
