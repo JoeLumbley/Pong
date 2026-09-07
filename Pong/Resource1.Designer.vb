@@ -197,16 +197,6 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Byte[].
         '''</summary>
-        Friend Shared ReadOnly Property PlayingLoop() As Byte()
-            Get
-                Dim obj As Object = ResourceManager.GetObject("PlayingLoop", resourceCulture)
-                Return CType(obj,Byte())
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Byte[].
-        '''</summary>
         Friend Shared ReadOnly Property PlayLoop() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("PlayLoop", resourceCulture)

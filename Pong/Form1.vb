@@ -319,7 +319,7 @@ Public Class Form1
         AudioPlayer.SetVolumeOverlapping("bounce", 500)
 
         AudioPlayer.AddSound("start", Path.Combine(Application.StartupPath, "start.mp3"))
-        AudioPlayer.SetVolume("start", 75)
+        AudioPlayer.SetVolume("start", 200)
         AudioPlayer.LoopSound("start")
 
         AudioPlayer.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
