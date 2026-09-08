@@ -44,6 +44,8 @@ Public Class Form1
         Playing
         EndScreen
         Pause
+        AIDifficulty
+
     End Enum
 
     Private currentState As GameState = GameState.StartScreen
@@ -143,6 +145,11 @@ Public Class Form1
     ' -------------------------------
     Private pauseMenuIndex As Integer = 0
 
+
+
+    Private aiMenuIndex As Integer = 0
+    Private aiOptions() As String = {"Easy", "Normal", "Hard"}
+
     ' -------------------------------
     '  Player Names
     ' -------------------------------
@@ -160,6 +167,8 @@ Public Class Form1
     Private escapeKeyDown As Boolean = False
     Private spaceKeyDown As Boolean = False
     Private enterKeyDown As Boolean = False
+    Private upKeyDown As Boolean = False
+    Private downKeyDown As Boolean = False
 
 
     ' -------------------------------
@@ -370,6 +379,13 @@ Public Class Form1
 
                 HandlePaddleCollisions()
                 CheckScore()
+
+            Case GameState.AIDifficulty
+                ' No updates needed for AI Difficulty screen
+            Case GameState.Pause
+                ' No updates needed for Pause screen
+            Case GameState.EndScreen
+
         End Select
 
         ' Track paddle velocities for spin
@@ -472,24 +488,56 @@ Public Class Form1
         End If
     End Sub
 
+    'Private Sub HandleWallCollisions()
+    '    ' Vertical bounce
+    '    If ballPos.Y <= 0 Then
+    '        ballPos.Y = 0
+    '        velY = Math.Abs(velY)
+    '        PlayWithCooldown("bounce", 100)
+    '    ElseIf ballPos.Y >= ClientSize.Height - ballDiameter Then
+    '        ballPos.Y = ClientSize.Height - ballDiameter
+    '        velY = -Math.Abs(velY)
+    '        PlayWithCooldown("bounce", 100)
+    '    End If
+
+    '    ' Horizontal bounce only on Start / End screens
+    '    If currentState = GameState.StartScreen OrElse currentState = GameState.EndScreen OrElse GameState.AIDifficulty Then
+    '        If ballPos.X <= 0 Then
+    '            ballPos.X = 0
+    '            velX = Math.Abs(velX)
+    '            PlayWithCooldown("bounce", 100)
+    '        ElseIf ballPos.X >= ClientSize.Width - ballDiameter Then
+    '            ballPos.X = ClientSize.Width - ballDiameter
+    '            velX = -Math.Abs(velX)
+    '            PlayWithCooldown("bounce", 100)
+    '        End If
+    '    End If
+    'End Sub
+
+
     Private Sub HandleWallCollisions()
         ' Vertical bounce
         If ballPos.Y <= 0 Then
             ballPos.Y = 0
             velY = Math.Abs(velY)
             PlayWithCooldown("bounce", 100)
+
         ElseIf ballPos.Y >= ClientSize.Height - ballDiameter Then
             ballPos.Y = ClientSize.Height - ballDiameter
             velY = -Math.Abs(velY)
             PlayWithCooldown("bounce", 100)
         End If
 
-        ' Horizontal bounce only on Start / End screens
-        If currentState = GameState.StartScreen OrElse currentState = GameState.EndScreen Then
+        ' Horizontal bounce only on Start / End / AI Difficulty screens
+        If currentState = GameState.StartScreen OrElse
+           currentState = GameState.EndScreen OrElse
+           currentState = GameState.AIDifficulty Then
+
             If ballPos.X <= 0 Then
                 ballPos.X = 0
                 velX = Math.Abs(velX)
                 PlayWithCooldown("bounce", 100)
+
             ElseIf ballPos.X >= ClientSize.Width - ballDiameter Then
                 ballPos.X = ClientSize.Width - ballDiameter
                 velX = -Math.Abs(velX)
@@ -497,6 +545,20 @@ Public Class Form1
             End If
         End If
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Sub CheckScore()
         If currentState = GameState.Pause Then Return
@@ -639,6 +701,13 @@ Public Class Form1
                 DrawPaddles(g)
                 DrawHUD(g)
                 DrawPauseScreen(g)
+
+
+            Case GameState.AIDifficulty
+                DrawTrail(g)
+                DrawBall(g)
+                DrawAIDifficultyScreen(g)
+
         End Select
     End Sub
 
@@ -793,6 +862,39 @@ Public Class Form1
         End If
     End Sub
 
+
+    Private Sub DrawAIDifficultyScreen(g As Graphics)
+        Dim title As String = "AI Difficulty"
+        Dim titleSize = g.MeasureString(title, startTitleFont)
+
+        g.DrawString(title, startTitleFont, whiteBrush,
+                 CSng((ClientSize.Width - titleSize.Width) / 2.0F),
+                 CSng(ClientSize.Height * 0.2F))
+
+        For i As Integer = 0 To aiOptions.Length - 1
+            Dim text = aiOptions(i)
+            Dim size = g.MeasureString(text, startMenuFont)
+
+            Dim brush As SolidBrush = If(i = aiMenuIndex, whiteBrush, grayBrush)
+
+            g.DrawString(text, startMenuFont, brush,
+                     CSng((ClientSize.Width - size.Width) / 2.0F),
+                     CSng(ClientSize.Height * 0.45F + i * (size.Height + 10)))
+        Next
+
+        Dim info As String = "Press SPACE to Confirm"
+        Dim infoSize = g.MeasureString(info, startInfoFont)
+
+        g.DrawString(info, startInfoFont, whiteBrush,
+                 CSng((ClientSize.Width - infoSize.Width) / 2.0F),
+                 CSng(ClientSize.Height * 0.75F))
+    End Sub
+
+
+
+
+
+
     Private Sub DrawGameOver(g As Graphics)
         Dim size = g.MeasureString(winnerText, gameOverFont)
         Dim info As String = "Press SPACE to Restart"
@@ -838,7 +940,7 @@ Public Class Form1
         ScaleBallDiameter()
         ScaleBallSpeed()
         ScalePaddleSpeed()
-        aiDifficulty = ClientSize.Height / 1080.0
+        'aiDifficulty = ClientSize.Height / 1080.0
 
         paddleHeight = ClientSize.Height / 8
         paddleWidth = ClientSize.Height / 25
@@ -1078,6 +1180,60 @@ Public Class Form1
             Return
         End If
 
+
+        If currentState = GameState.AIDifficulty Then
+
+            If e.KeyCode = Keys.Up AndAlso Not upKeyDown Then
+                aiMenuIndex = (aiMenuIndex - 1 + aiOptions.Length) Mod aiOptions.Length
+                upKeyDown = True
+                AudioPlayer.PlayOverlapping("arrow_up")
+            End If
+
+            'If e.KeyCode = Keys.Up Then
+            '    aiMenuIndex = (aiMenuIndex - 1 + aiOptions.Length) Mod aiOptions.Length
+            '    AudioPlayer.PlayOverlapping("arrow_up")
+            'End If
+
+            If e.KeyCode = Keys.Down AndAlso Not downKeyDown Then
+                aiMenuIndex = (aiMenuIndex + 1) Mod aiOptions.Length
+                downKeyDown = True
+                AudioPlayer.PlayOverlapping("arrow_down")
+            End If
+
+            'If e.KeyCode = Keys.Down Then
+            '    aiMenuIndex = (aiMenuIndex + 1) Mod aiOptions.Length
+            '    AudioPlayer.PlayOverlapping("arrow_down")
+            'End If
+
+            If e.KeyCode = Keys.Space AndAlso Not spaceKeyDown Then
+                Select Case aiMenuIndex
+                    Case 0 : aiDifficulty = 0.7   ' Easy
+                    Case 1 : aiDifficulty = 0.8  ' Normal
+                    Case 2 : aiDifficulty = 0.9   ' Hard
+                End Select
+
+                currentState = GameState.Playing
+                StartNewMatch()
+                spaceKeyDown = True
+                AudioPlayer.PlaySound("select")
+            End If
+
+            If e.KeyCode = Keys.Enter AndAlso Not enterKeyDown Then
+                Select Case aiMenuIndex
+                    Case 0 : aiDifficulty = 0.7   ' Easy
+                    Case 1 : aiDifficulty = 0.8   ' Normal
+                    Case 2 : aiDifficulty = 0.9   ' Hard
+                End Select
+                currentState = GameState.Playing
+                StartNewMatch()
+                enterKeyDown = True
+                AudioPlayer.PlaySound("select")
+            End If
+
+            Return
+        End If
+
+
     End Sub
 
 
@@ -1178,6 +1334,95 @@ Public Class Form1
 
 
 
+    'Private Sub HandleStartScreenInput(e As KeyEventArgs)
+
+    '    ' ============================================================
+    '    ' 1. Menu Navigation (Up/W and Down/S)
+    '    ' ============================================================
+    '    Select Case e.KeyCode
+
+    '        Case Keys.Up, Keys.W
+    '            ' Move selection to "1‑Player"
+    '            If selectedOption <> 0 Then
+    '                AudioPlayer.PlayOverlapping("arrow_up")
+    '                selectedOption = 0
+    '                Invalidate()
+    '            End If
+    '            Return
+
+    '        Case Keys.Down, Keys.S
+    '            ' Move selection to "2‑Player"
+    '            If selectedOption <> 1 Then
+    '                AudioPlayer.PlayOverlapping("arrow_down")
+    '                selectedOption = 1
+    '                Invalidate()
+    '            End If
+    '            Return
+
+
+    '    ' ============================================================
+    '    ' 2. Direct Selection via Number Keys (1 or 2)
+    '    ' ============================================================
+    '        Case Keys.D1, Keys.NumPad1
+    '            ' Select "1‑Player"
+    '            If selectedOption <> 0 Then
+    '                AudioPlayer.PlayOverlapping("arrow_up")
+    '                selectedOption = 0
+    '                Invalidate()
+    '            End If
+    '            Return
+
+    '        Case Keys.D2, Keys.NumPad2
+    '            ' Select "2‑Player"
+    '            If selectedOption <> 1 Then
+    '                AudioPlayer.PlayOverlapping("arrow_down")
+    '                selectedOption = 1
+    '                Invalidate()
+    '            End If
+    '            Return
+
+
+    '    ' ============================================================
+    '    ' 3. Confirm Selection (Space / Enter)
+    '    ' ============================================================
+    '        Case Keys.Space
+    '            If spaceKeyDown Then Return
+    '            spaceKeyDown = True
+
+    '            AudioPlayer.PlaySound("select")
+    '            playerMode = If(selectedOption = 0, 1, 2)
+    '            StartNewMatch()
+    '            Invalidate()
+    '            Return
+
+    '        Case Keys.Enter
+    '            If enterKeyDown Then Return
+    '            enterKeyDown = True
+
+    '            AudioPlayer.PlaySound("select")
+    '            playerMode = If(selectedOption = 0, 1, 2)
+    '            StartNewMatch()
+    '            Invalidate()
+    '            Return
+
+
+    '    ' ============================================================
+    '    ' 4. Escape (Exit Game)
+    '    ' ============================================================
+    '        Case Keys.Escape
+    '            If escapeKeyDown Then Return
+    '            escapeKeyDown = True
+
+    '            'AudioPlayer.PlaySound("select")
+    '            Me.Close()
+    '            Return
+
+    '    End Select
+
+    'End Sub
+
+
+
     Private Sub HandleStartScreenInput(e As KeyEventArgs)
 
         ' ============================================================
@@ -1186,7 +1431,6 @@ Public Class Form1
         Select Case e.KeyCode
 
             Case Keys.Up, Keys.W
-                ' Move selection to "1‑Player"
                 If selectedOption <> 0 Then
                     AudioPlayer.PlayOverlapping("arrow_up")
                     selectedOption = 0
@@ -1195,7 +1439,6 @@ Public Class Form1
                 Return
 
             Case Keys.Down, Keys.S
-                ' Move selection to "2‑Player"
                 If selectedOption <> 1 Then
                     AudioPlayer.PlayOverlapping("arrow_down")
                     selectedOption = 1
@@ -1208,7 +1451,6 @@ Public Class Form1
         ' 2. Direct Selection via Number Keys (1 or 2)
         ' ============================================================
             Case Keys.D1, Keys.NumPad1
-                ' Select "1‑Player"
                 If selectedOption <> 0 Then
                     AudioPlayer.PlayOverlapping("arrow_up")
                     selectedOption = 0
@@ -1217,7 +1459,6 @@ Public Class Form1
                 Return
 
             Case Keys.D2, Keys.NumPad2
-                ' Select "2‑Player"
                 If selectedOption <> 1 Then
                     AudioPlayer.PlayOverlapping("arrow_down")
                     selectedOption = 1
@@ -1234,8 +1475,16 @@ Public Class Form1
                 spaceKeyDown = True
 
                 AudioPlayer.PlaySound("select")
-                playerMode = If(selectedOption = 0, 1, 2)
-                StartNewMatch()
+
+                ' 1‑Player → AI Difficulty Menu
+                If selectedOption = 0 Then
+                    playerMode = 1
+                    currentState = GameState.AIDifficulty
+                Else
+                    playerMode = 2
+                    StartNewMatch()
+                End If
+
                 Invalidate()
                 Return
 
@@ -1244,8 +1493,15 @@ Public Class Form1
                 enterKeyDown = True
 
                 AudioPlayer.PlaySound("select")
-                playerMode = If(selectedOption = 0, 1, 2)
-                StartNewMatch()
+
+                If selectedOption = 0 Then
+                    playerMode = 1
+                    currentState = GameState.AIDifficulty
+                Else
+                    playerMode = 2
+                    StartNewMatch()
+                End If
+
                 Invalidate()
                 Return
 
@@ -1257,7 +1513,6 @@ Public Class Form1
                 If escapeKeyDown Then Return
                 escapeKeyDown = True
 
-                'AudioPlayer.PlaySound("select")
                 Me.Close()
                 Return
 
@@ -1677,6 +1932,18 @@ Public Class Form1
         If e.KeyCode = Keys.Space Then
             spaceKeyDown = False
         End If
+
+        ' ============================================================
+        ' 6. Release Menu Navigation Keys (Up / Down)
+        ' ============================================================
+        If e.KeyCode = Keys.Up Then
+            upKeyDown = False
+        End If
+
+        If e.KeyCode = Keys.Down Then
+            downKeyDown = False
+        End If
+
 
     End Sub
 
