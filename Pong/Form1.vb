@@ -1189,21 +1189,12 @@ Public Class Form1
                 AudioPlayer.PlayOverlapping("arrow_up")
             End If
 
-            'If e.KeyCode = Keys.Up Then
-            '    aiMenuIndex = (aiMenuIndex - 1 + aiOptions.Length) Mod aiOptions.Length
-            '    AudioPlayer.PlayOverlapping("arrow_up")
-            'End If
-
             If e.KeyCode = Keys.Down AndAlso Not downKeyDown Then
                 aiMenuIndex = (aiMenuIndex + 1) Mod aiOptions.Length
                 downKeyDown = True
                 AudioPlayer.PlayOverlapping("arrow_down")
             End If
 
-            'If e.KeyCode = Keys.Down Then
-            '    aiMenuIndex = (aiMenuIndex + 1) Mod aiOptions.Length
-            '    AudioPlayer.PlayOverlapping("arrow_down")
-            'End If
 
             If e.KeyCode = Keys.Space AndAlso Not spaceKeyDown Then
                 Select Case aiMenuIndex
