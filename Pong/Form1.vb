@@ -1209,7 +1209,7 @@ Public Class Form1
                 Select Case aiMenuIndex
                     Case 0 : aiDifficulty = 0.7   ' Easy
                     Case 1 : aiDifficulty = 0.8  ' Normal
-                    Case 2 : aiDifficulty = 0.9   ' Hard
+                    Case 2 : aiDifficulty = 0.95   ' Hard
                 End Select
 
                 currentState = GameState.Playing
@@ -1222,7 +1222,7 @@ Public Class Form1
                 Select Case aiMenuIndex
                     Case 0 : aiDifficulty = 0.7   ' Easy
                     Case 1 : aiDifficulty = 0.8   ' Normal
-                    Case 2 : aiDifficulty = 0.9   ' Hard
+                    Case 2 : aiDifficulty = 0.95   ' Hard
                 End Select
                 currentState = GameState.Playing
                 StartNewMatch()
