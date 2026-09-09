@@ -170,6 +170,10 @@ Public Class Form1
     Private upKeyDown As Boolean = False
     Private downKeyDown As Boolean = False
 
+    Private wKeyDown As Boolean = False
+    Private sKeyDown As Boolean = False
+
+
 
     ' -------------------------------
     '  AI Difficulty
@@ -1255,25 +1259,41 @@ Public Class Form1
 
     Private Sub HandleAIDifficultyInput(e As KeyEventArgs)
 
-        ' ============================
-        '   NAVIGATION: UP / DOWN
-        ' ============================
 
-        ' Arrow Up or W
-        If (e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W) AndAlso Not upKeyDown Then
+        ' -------------------------------
+        '  AI Difficulty Menu Navigation
+        ' -------------------------------
+
+        ' Move Up (Arrow Up or W)
+        If e.KeyCode = Keys.Up AndAlso Not upKeyDown Then
             aiMenuIndex = (aiMenuIndex - 1 + aiOptions.Length) Mod aiOptions.Length
             upKeyDown = True
             AudioPlayer.PlayOverlapping("arrow_up")
             Return
         End If
 
-        ' Arrow Down or S
-        If (e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S) AndAlso Not downKeyDown Then
+        If e.KeyCode = Keys.W AndAlso Not wKeyDown Then
+            aiMenuIndex = (aiMenuIndex - 1 + aiOptions.Length) Mod aiOptions.Length
+            wKeyDown = True
+            AudioPlayer.PlayOverlapping("arrow_up")
+            Return
+        End If
+
+        ' Move Down (Arrow Down or S)
+        If e.KeyCode = Keys.Down AndAlso Not downKeyDown Then
             aiMenuIndex = (aiMenuIndex + 1) Mod aiOptions.Length
             downKeyDown = True
             AudioPlayer.PlayOverlapping("arrow_down")
             Return
         End If
+
+        If e.KeyCode = Keys.S AndAlso Not sKeyDown Then
+            aiMenuIndex = (aiMenuIndex + 1) Mod aiOptions.Length
+            sKeyDown = True
+            AudioPlayer.PlayOverlapping("arrow_down")
+            Return
+        End If
+
 
 
         ' ============================
@@ -2043,6 +2063,11 @@ Public Class Form1
         If e.KeyCode = Keys.Down Then
             downKeyDown = False
         End If
+
+
+        If e.KeyCode = Keys.W Then wKeyDown = False
+
+        If e.KeyCode = Keys.S Then sKeyDown = False
 
 
     End Sub
