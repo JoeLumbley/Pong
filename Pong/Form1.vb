@@ -964,6 +964,7 @@ Public Class Form1
             MoveBallRandom()
         End If
 
+
         Dim newLength As Integer = CInt(ClientSize.Height / 30)
         If newLength < 5 Then newLength = 5
 
@@ -1021,11 +1022,26 @@ Public Class Form1
     End Sub
 
     Private Sub ScaleBallSpeed()
-        If currentState = GameState.StartScreen OrElse currentState = GameState.EndScreen Then
+
+
+        If currentState = GameState.StartScreen OrElse currentState = GameState.EndScreen OrElse currentState = GameState.AIDifficulty Then
             speed = 200 * (ClientSize.Height / 1080.0)
         Else
             speed = 800 * (ClientSize.Height / 1080.0)
         End If
+
+
+
+
+
+
+
+
+
+
+
+
+
     End Sub
 
     Private Sub ScalePaddleSpeed()
@@ -1180,55 +1196,148 @@ Public Class Form1
             Return
         End If
 
-
+        ' --- AI Difficulty Menu ---
         If currentState = GameState.AIDifficulty Then
-
-            If e.KeyCode = Keys.Up AndAlso Not upKeyDown Then
-                aiMenuIndex = (aiMenuIndex - 1 + aiOptions.Length) Mod aiOptions.Length
-                upKeyDown = True
-                AudioPlayer.PlayOverlapping("arrow_up")
-            End If
-
-            If e.KeyCode = Keys.Down AndAlso Not downKeyDown Then
-                aiMenuIndex = (aiMenuIndex + 1) Mod aiOptions.Length
-                downKeyDown = True
-                AudioPlayer.PlayOverlapping("arrow_down")
-            End If
-
-
-            If e.KeyCode = Keys.Space AndAlso Not spaceKeyDown Then
-                Select Case aiMenuIndex
-                    Case 0 : aiDifficulty = 0.7   ' Easy
-                    Case 1 : aiDifficulty = 0.8  ' Normal
-                    Case 2 : aiDifficulty = 0.95   ' Hard
-                End Select
-
-                currentState = GameState.Playing
-                StartNewMatch()
-                spaceKeyDown = True
-                AudioPlayer.PlaySound("select")
-            End If
-
-            If e.KeyCode = Keys.Enter AndAlso Not enterKeyDown Then
-                Select Case aiMenuIndex
-                    Case 0 : aiDifficulty = 0.7   ' Easy
-                    Case 1 : aiDifficulty = 0.8   ' Normal
-                    Case 2 : aiDifficulty = 0.95   ' Hard
-                End Select
-                currentState = GameState.Playing
-                StartNewMatch()
-                enterKeyDown = True
-                AudioPlayer.PlaySound("select")
-            End If
-
+            HandleAIDifficultyInput(e)
             Return
         End If
 
 
     End Sub
 
+    'Private Sub HandleAIDifficultyInput(e As KeyEventArgs)
+
+    '    If e.KeyCode = Keys.Up AndAlso Not upKeyDown Then
+    '        aiMenuIndex = (aiMenuIndex - 1 + aiOptions.Length) Mod aiOptions.Length
+    '        upKeyDown = True
+    '        AudioPlayer.PlayOverlapping("arrow_up")
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.Down AndAlso Not downKeyDown Then
+    '        aiMenuIndex = (aiMenuIndex + 1) Mod aiOptions.Length
+    '        downKeyDown = True
+    '        AudioPlayer.PlayOverlapping("arrow_down")
+    '        Return
+    '    End If
 
 
+    '    If e.KeyCode = Keys.Space AndAlso Not spaceKeyDown Then
+    '        Select Case aiMenuIndex
+    '            Case 0 : aiDifficulty = 0.7   ' Easy
+    '            Case 1 : aiDifficulty = 0.8  ' Normal
+    '            Case 2 : aiDifficulty = 0.95   ' Hard
+    '        End Select
+
+    '        currentState = GameState.Playing
+    '        StartNewMatch()
+    '        spaceKeyDown = True
+    '        AudioPlayer.PlaySound("select")
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.Enter AndAlso Not enterKeyDown Then
+    '        Select Case aiMenuIndex
+    '            Case 0 : aiDifficulty = 0.7   ' Easy
+    '            Case 1 : aiDifficulty = 0.8   ' Normal
+    '            Case 2 : aiDifficulty = 0.95   ' Hard
+    '        End Select
+    '        currentState = GameState.Playing
+    '        StartNewMatch()
+    '        enterKeyDown = True
+    '        AudioPlayer.PlaySound("select")
+    '        Return
+    '    End If
+
+    'End Sub
+
+
+
+    Private Sub HandleAIDifficultyInput(e As KeyEventArgs)
+
+        ' ============================
+        '   NAVIGATION: UP / DOWN
+        ' ============================
+
+        ' Arrow Up or W
+        If (e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W) AndAlso Not upKeyDown Then
+            aiMenuIndex = (aiMenuIndex - 1 + aiOptions.Length) Mod aiOptions.Length
+            upKeyDown = True
+            AudioPlayer.PlayOverlapping("arrow_up")
+            Return
+        End If
+
+        ' Arrow Down or S
+        If (e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S) AndAlso Not downKeyDown Then
+            aiMenuIndex = (aiMenuIndex + 1) Mod aiOptions.Length
+            downKeyDown = True
+            AudioPlayer.PlayOverlapping("arrow_down")
+            Return
+        End If
+
+
+        ' ============================
+        '   NUMBER SHORTCUTS: 1 / 2 / 3
+        ' ============================
+
+        If (e.KeyCode = Keys.D1 OrElse e.KeyCode = Keys.NumPad1) AndAlso aiMenuIndex <> 0 Then
+            aiMenuIndex = 0
+            AudioPlayer.PlayOverlapping("arrow_up")
+            Return
+        End If
+
+        If (e.KeyCode = Keys.D2 OrElse e.KeyCode = Keys.NumPad2) AndAlso aiMenuIndex <> 1 Then
+            aiMenuIndex = 1
+            AudioPlayer.PlayOverlapping("arrow_down")
+            Return
+        End If
+
+        If (e.KeyCode = Keys.D3 OrElse e.KeyCode = Keys.NumPad3) AndAlso aiMenuIndex <> 2 Then
+            aiMenuIndex = 2
+            AudioPlayer.PlayOverlapping("arrow_down")
+            Return
+        End If
+
+
+        ' ============================
+        '   SELECT: SPACE / ENTER
+        ' ============================
+
+        If (e.KeyCode = Keys.Space AndAlso Not spaceKeyDown) OrElse
+           (e.KeyCode = Keys.Enter AndAlso Not enterKeyDown) Then
+
+            Select Case aiMenuIndex
+                Case 0 : aiDifficulty = 0.7
+                Case 1 : aiDifficulty = 0.8
+                Case 2 : aiDifficulty = 0.95
+            End Select
+
+            currentState = GameState.Playing
+            StartNewMatch()
+            AudioPlayer.PlaySound("select")
+
+            If e.KeyCode = Keys.Space Then
+                spaceKeyDown = True
+            Else
+                enterKeyDown = True
+            End If
+
+            Return
+        End If
+
+
+        ' ============================
+        '   ESCAPE → RETURN TO START
+        ' ============================
+
+        If e.KeyCode = Keys.Escape AndAlso Not escapeKeyDown Then
+            escapeKeyDown = True
+            currentState = GameState.StartScreen
+            AudioPlayer.PlaySound("select")
+            Return
+        End If
+
+    End Sub
 
 
 
