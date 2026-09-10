@@ -329,7 +329,7 @@ Public Class Form1
         AudioPlayer.SetVolume("point", 1000)
 
         AudioPlayer.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
-        AudioPlayer.SetVolumeOverlapping("bounce", 450)
+        AudioPlayer.SetVolumeOverlapping("bounce", 400)
 
         AudioPlayer.AddSound("start", Path.Combine(Application.StartupPath, "start.mp3"))
         AudioPlayer.SetVolume("start", 300)
@@ -491,32 +491,6 @@ Public Class Form1
             PlayWithCooldown("bounce", 100)
         End If
     End Sub
-
-    'Private Sub HandleWallCollisions()
-    '    ' Vertical bounce
-    '    If ballPos.Y <= 0 Then
-    '        ballPos.Y = 0
-    '        velY = Math.Abs(velY)
-    '        PlayWithCooldown("bounce", 100)
-    '    ElseIf ballPos.Y >= ClientSize.Height - ballDiameter Then
-    '        ballPos.Y = ClientSize.Height - ballDiameter
-    '        velY = -Math.Abs(velY)
-    '        PlayWithCooldown("bounce", 100)
-    '    End If
-
-    '    ' Horizontal bounce only on Start / End screens
-    '    If currentState = GameState.StartScreen OrElse currentState = GameState.EndScreen OrElse GameState.AIDifficulty Then
-    '        If ballPos.X <= 0 Then
-    '            ballPos.X = 0
-    '            velX = Math.Abs(velX)
-    '            PlayWithCooldown("bounce", 100)
-    '        ElseIf ballPos.X >= ClientSize.Width - ballDiameter Then
-    '            ballPos.X = ClientSize.Width - ballDiameter
-    '            velX = -Math.Abs(velX)
-    '            PlayWithCooldown("bounce", 100)
-    '        End If
-    '    End If
-    'End Sub
 
 
     Private Sub HandleWallCollisions()
@@ -1005,7 +979,40 @@ Public Class Form1
         Invalidate()
     End Sub
 
+    'Private Sub RescaleFonts()
+    '    hudScoreFont = New Font("Segoe UI", CSng(ClientSize.Height / 12.0F), FontStyle.Bold)
+    '    hudLabelFont = New Font("Segoe UI", CSng(ClientSize.Height / 50.0F), FontStyle.Regular)
+
+    '    pauseTitleFont = New Font("Segoe UI", CSng(ClientSize.Height / 18.0F), FontStyle.Bold)
+    '    pauseMenuFont = New Font("Segoe UI", CSng(ClientSize.Height / 28.0F), FontStyle.Regular)
+
+    '    startTitleFont = New Font("Segoe UI", CSng(ClientSize.Height / 10.0F), FontStyle.Bold)
+    '    startMenuFont = New Font("Segoe UI", CSng(ClientSize.Height / 30.0F), FontStyle.Regular)
+    '    startInfoFont = New Font("Segoe UI", CSng(ClientSize.Height / 35.0F), FontStyle.Regular)
+
+    '    gameOverFont = New Font("Segoe UI", CSng(ClientSize.Height / 20.0F), FontStyle.Bold)
+    '    gameOverInfoFont = New Font("Segoe UI", CSng(ClientSize.Height / 35.0F), FontStyle.Regular)
+
+    '    fullscreenIndicatorFont = New Font("Segoe UI", CSng(ClientSize.Height / 75.0F), FontStyle.Regular)
+    '    fpsFont = New Font("Segoe UI", CSng(ClientSize.Height / 75.0F), FontStyle.Bold)
+
+
+    'End Sub
+
+
     Private Sub RescaleFonts()
+        hudScoreFont?.Dispose()
+        hudLabelFont?.Dispose()
+        pauseTitleFont?.Dispose()
+        pauseMenuFont?.Dispose()
+        startTitleFont?.Dispose()
+        startMenuFont?.Dispose()
+        startInfoFont?.Dispose()
+        gameOverFont?.Dispose()
+        gameOverInfoFont?.Dispose()
+        fullscreenIndicatorFont?.Dispose()
+        fpsFont?.Dispose()
+
         hudScoreFont = New Font("Segoe UI", CSng(ClientSize.Height / 12.0F), FontStyle.Bold)
         hudLabelFont = New Font("Segoe UI", CSng(ClientSize.Height / 50.0F), FontStyle.Regular)
 
@@ -1022,8 +1029,21 @@ Public Class Form1
         fullscreenIndicatorFont = New Font("Segoe UI", CSng(ClientSize.Height / 75.0F), FontStyle.Regular)
         fpsFont = New Font("Segoe UI", CSng(ClientSize.Height / 75.0F), FontStyle.Bold)
 
-
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Sub ScaleBallSpeed()
 
@@ -1061,74 +1081,13 @@ Public Class Form1
         Me.WindowState = FormWindowState.Maximized
     End Sub
 
+
+
+
+
     ' ===============================
     '  INPUT
     ' ===============================
-
-    'Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
-    '    MyBase.OnKeyDown(e)
-
-    '    If e.KeyCode = Keys.F11 Then
-    '        If f11KeyDown Then Return
-    '        f11KeyDown = True
-
-    '        AudioPlayer.PlaySound("fullscreen")
-    '        ToggleFullScreen()
-    '        Return
-    '    End If
-
-    '    If e.KeyCode = Keys.F Then
-    '        If fKeyDown Then Return
-    '        fKeyDown = True
-
-    '        AudioPlayer.PlaySound("fullscreen")
-
-
-    '        ToggleFullScreen()
-    '        Return
-    '    End If
-
-
-    '    ' ============================
-    '    ' ESC pressed while fullscreen
-    '    ' ============================
-    '    If Me.FormBorderStyle = FormBorderStyle.None AndAlso e.KeyCode = Keys.Escape Then
-    '        If escapeKeyDown Then Return
-    '        escapeKeyDown = True
-
-    '        'AudioPlayer.PlayOverlapping("select")
-    '        AudioPlayer.PlaySound("select")
-    '        ToggleFullScreen()
-    '        Return
-    '    End If
-
-
-    '    ' START SCREEN INPUT
-    '    If currentState = GameState.StartScreen Then
-    '        HandleStartScreenInput(e)
-    '        Return
-    '    End If
-
-    '    ' END SCREEN INPUT
-    '    If currentState = GameState.EndScreen Then
-
-    '        HandleEndScreenInput(e)
-    '        Return
-    '    End If
-
-    '    ' GAMEPLAY INPUT
-    '    If currentState = GameState.Playing Then
-    '        HandleGameplayInput(e)
-    '        Return
-    '    End If
-
-    '    ' PAUSE MENU INPUT
-    '    If currentState = GameState.Pause Then
-    '        HandlePauseInput(e)
-    '        Return
-    '    End If
-    'End Sub
-
 
     Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
         MyBase.OnKeyDown(e)
@@ -1208,52 +1167,6 @@ Public Class Form1
 
 
     End Sub
-
-    'Private Sub HandleAIDifficultyInput(e As KeyEventArgs)
-
-    '    If e.KeyCode = Keys.Up AndAlso Not upKeyDown Then
-    '        aiMenuIndex = (aiMenuIndex - 1 + aiOptions.Length) Mod aiOptions.Length
-    '        upKeyDown = True
-    '        AudioPlayer.PlayOverlapping("arrow_up")
-    '        Return
-    '    End If
-
-    '    If e.KeyCode = Keys.Down AndAlso Not downKeyDown Then
-    '        aiMenuIndex = (aiMenuIndex + 1) Mod aiOptions.Length
-    '        downKeyDown = True
-    '        AudioPlayer.PlayOverlapping("arrow_down")
-    '        Return
-    '    End If
-
-
-    '    If e.KeyCode = Keys.Space AndAlso Not spaceKeyDown Then
-    '        Select Case aiMenuIndex
-    '            Case 0 : aiDifficulty = 0.7   ' Easy
-    '            Case 1 : aiDifficulty = 0.8  ' Normal
-    '            Case 2 : aiDifficulty = 0.95   ' Hard
-    '        End Select
-
-    '        currentState = GameState.Playing
-    '        StartNewMatch()
-    '        spaceKeyDown = True
-    '        AudioPlayer.PlaySound("select")
-    '        Return
-    '    End If
-
-    '    If e.KeyCode = Keys.Enter AndAlso Not enterKeyDown Then
-    '        Select Case aiMenuIndex
-    '            Case 0 : aiDifficulty = 0.7   ' Easy
-    '            Case 1 : aiDifficulty = 0.8   ' Normal
-    '            Case 2 : aiDifficulty = 0.95   ' Hard
-    '        End Select
-    '        currentState = GameState.Playing
-    '        StartNewMatch()
-    '        enterKeyDown = True
-    '        AudioPlayer.PlaySound("select")
-    '        Return
-    '    End If
-
-    'End Sub
 
 
 
@@ -1382,38 +1295,6 @@ Public Class Form1
 
 
 
-    'Private Sub HandleEndScreenInput(e As KeyEventArgs)
-
-    '    If e.KeyCode = Keys.Space Then
-    '        If spaceKeyDown Then Return
-    '        spaceKeyDown = True
-
-    '        AudioPlayer.PlaySound("select")
-
-    '        currentState = GameState.StartScreen
-    '        winnerText = ""
-
-    '        Return
-
-    '    End If
-
-    '    If e.KeyCode = Keys.Enter Then
-    '        If enterKeyDown Then Return
-    '        enterKeyDown = True
-
-    '        AudioPlayer.PlaySound("select")
-
-    '        currentState = GameState.StartScreen
-    '        winnerText = ""
-
-    '        Return
-
-    '    End If
-
-    '    Return
-
-    'End Sub
-
 
     Private Sub HandleEndScreenInput(e As KeyEventArgs)
 
@@ -1452,94 +1333,6 @@ Public Class Form1
 
     End Sub
 
-
-
-    'Private Sub HandleStartScreenInput(e As KeyEventArgs)
-
-    '    ' ============================================================
-    '    ' 1. Menu Navigation (Up/W and Down/S)
-    '    ' ============================================================
-    '    Select Case e.KeyCode
-
-    '        Case Keys.Up, Keys.W
-    '            ' Move selection to "1‑Player"
-    '            If selectedOption <> 0 Then
-    '                AudioPlayer.PlayOverlapping("arrow_up")
-    '                selectedOption = 0
-    '                Invalidate()
-    '            End If
-    '            Return
-
-    '        Case Keys.Down, Keys.S
-    '            ' Move selection to "2‑Player"
-    '            If selectedOption <> 1 Then
-    '                AudioPlayer.PlayOverlapping("arrow_down")
-    '                selectedOption = 1
-    '                Invalidate()
-    '            End If
-    '            Return
-
-
-    '    ' ============================================================
-    '    ' 2. Direct Selection via Number Keys (1 or 2)
-    '    ' ============================================================
-    '        Case Keys.D1, Keys.NumPad1
-    '            ' Select "1‑Player"
-    '            If selectedOption <> 0 Then
-    '                AudioPlayer.PlayOverlapping("arrow_up")
-    '                selectedOption = 0
-    '                Invalidate()
-    '            End If
-    '            Return
-
-    '        Case Keys.D2, Keys.NumPad2
-    '            ' Select "2‑Player"
-    '            If selectedOption <> 1 Then
-    '                AudioPlayer.PlayOverlapping("arrow_down")
-    '                selectedOption = 1
-    '                Invalidate()
-    '            End If
-    '            Return
-
-
-    '    ' ============================================================
-    '    ' 3. Confirm Selection (Space / Enter)
-    '    ' ============================================================
-    '        Case Keys.Space
-    '            If spaceKeyDown Then Return
-    '            spaceKeyDown = True
-
-    '            AudioPlayer.PlaySound("select")
-    '            playerMode = If(selectedOption = 0, 1, 2)
-    '            StartNewMatch()
-    '            Invalidate()
-    '            Return
-
-    '        Case Keys.Enter
-    '            If enterKeyDown Then Return
-    '            enterKeyDown = True
-
-    '            AudioPlayer.PlaySound("select")
-    '            playerMode = If(selectedOption = 0, 1, 2)
-    '            StartNewMatch()
-    '            Invalidate()
-    '            Return
-
-
-    '    ' ============================================================
-    '    ' 4. Escape (Exit Game)
-    '    ' ============================================================
-    '        Case Keys.Escape
-    '            If escapeKeyDown Then Return
-    '            escapeKeyDown = True
-
-    '            'AudioPlayer.PlaySound("select")
-    '            Me.Close()
-    '            Return
-
-    '    End Select
-
-    'End Sub
 
 
 
@@ -1641,61 +1434,6 @@ Public Class Form1
     End Sub
 
 
-    'Private Sub HandleGameplayInput(e As KeyEventArgs)
-    '    If e.KeyCode = Keys.W Then moveLeftPaddleUp = True
-    '    If e.KeyCode = Keys.S Then moveLeftPaddleDown = True
-
-    '    If playerMode = 2 Then
-    '        If e.KeyCode = Keys.Up Then moveRightPaddleUp = True
-    '        If e.KeyCode = Keys.Down Then moveRightPaddleDown = True
-    '    End If
-
-    '    If e.KeyCode = Keys.P Then
-    '        If pKeyDown Then Return
-    '        pKeyDown = True
-
-    '        AudioPlayer.PlaySound("select")
-    '        PauseGame()
-    '        Invalidate()
-    '        Return
-    '    End If
-
-    '    If e.KeyCode = Keys.Pause Then
-    '        If pauseKeyDown Then Return
-    '        pauseKeyDown = True
-
-    '        AudioPlayer.PlaySound("select")
-    '        PauseGame()
-    '        Invalidate()
-    '        Return
-    '    End If
-
-    '    If e.KeyCode = Keys.MediaPlayPause Then
-    '        If mediaPlayPauseKeyDown Then Return
-    '        mediaPlayPauseKeyDown = True
-
-    '        AudioPlayer.PlaySound("select")
-    '        PauseGame()
-    '        Invalidate()
-    '        Return
-    '    End If
-
-
-    '    ' ============================================
-    '    ' ESC pressed while windowed AND game is running
-    '    ' ============================================
-    '    If Me.FormBorderStyle <> FormBorderStyle.None AndAlso
-    '       e.KeyCode = Keys.Escape Then
-    '        If escapeKeyDown Then Return
-    '        escapeKeyDown = True
-
-    '        AudioPlayer.PlaySound("select")
-    '        PauseGame()
-    '        Invalidate()
-    '        Return
-    '    End If
-
-    'End Sub
 
     Private Sub HandleGameplayInput(e As KeyEventArgs)
 
@@ -1932,145 +1670,6 @@ Public Class Form1
         AudioPlayer.LoopSound("start")
 
     End Sub
-
-    'Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
-    '    MyBase.OnKeyUp(e)
-
-    '    If e.KeyCode = Keys.W Then moveLeftPaddleUp = False
-    '    If e.KeyCode = Keys.S Then moveLeftPaddleDown = False
-
-    '    If playerMode = 2 Then
-    '        If e.KeyCode = Keys.Up Then moveRightPaddleUp = False
-    '        If e.KeyCode = Keys.Down Then moveRightPaddleDown = False
-    '    End If
-
-    '    If e.KeyCode = Keys.P Then
-    '        pKeyDown = False
-    '    End If
-
-    '    If e.KeyCode = Keys.Pause Then
-    '        pauseKeyDown = False
-    '    End If
-
-    '    If e.KeyCode = Keys.MediaPlayPause Then
-    '        mediaPlayPauseKeyDown = False
-    '    End If
-
-    '    If e.KeyCode = Keys.F11 Then
-    '        f11KeyDown = False
-    '    End If
-
-    '    If e.KeyCode = Keys.Escape Then
-    '        escapeKeyDown = False
-    '    End If
-
-    '    If e.KeyCode = Keys.F Then
-    '        fKeyDown = False
-    '    End If
-
-    '    If e.KeyCode = Keys.Enter Then
-    '        enterKeyDown = False
-    '    End If
-
-    '    If e.KeyCode = Keys.Space Then
-    '        spaceKeyDown = False
-    '    End If
-
-
-    'End Sub
-
-
-
-    'Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
-    '    MyBase.OnKeyUp(e)
-
-    '    ' ============================================================
-    '    ' 1. Release Paddle Movement Keys
-    '    ' ============================================================
-    '    If e.KeyCode = Keys.W Then
-    '        moveLeftPaddleUp = False
-    '    End If
-
-    '    If e.KeyCode = Keys.S Then
-    '        moveLeftPaddleDown = False
-    '    End If
-
-    '    If playerMode = 2 Then
-    '        If e.KeyCode = Keys.Up Then
-    '            moveRightPaddleUp = False
-    '        End If
-
-    '        If e.KeyCode = Keys.Down Then
-    '            moveRightPaddleDown = False
-    '        End If
-    '    End If
-
-
-    '    ' ============================================================
-    '    ' 2. Release Pause / Resume Keys
-    '    ' ============================================================
-    '    If e.KeyCode = Keys.P Then
-    '        pKeyDown = False
-    '    End If
-
-    '    If e.KeyCode = Keys.Pause Then
-    '        pauseKeyDown = False
-    '    End If
-
-    '    If e.KeyCode = Keys.MediaPlayPause Then
-    '        mediaPlayPauseKeyDown = False
-    '    End If
-
-
-    '    ' ============================================================
-    '    ' 3. Release Fullscreen Toggle Keys
-    '    ' ============================================================
-    '    If e.KeyCode = Keys.F11 Then
-    '        f11KeyDown = False
-    '    End If
-
-    '    If e.KeyCode = Keys.F Then
-    '        fKeyDown = False
-    '    End If
-
-
-    '    ' ============================================================
-    '    ' 4. Release Escape Key
-    '    ' ============================================================
-    '    If e.KeyCode = Keys.Escape Then
-    '        escapeKeyDown = False
-    '    End If
-
-
-    '    ' ============================================================
-    '    ' 5. Release Confirm Keys (Enter / Space)
-    '    ' ============================================================
-    '    If e.KeyCode = Keys.Enter Then
-    '        enterKeyDown = False
-    '    End If
-
-    '    If e.KeyCode = Keys.Space Then
-    '        spaceKeyDown = False
-    '    End If
-
-    '    ' ============================================================
-    '    ' 6. Release Menu Navigation Keys (Up / Down)
-    '    ' ============================================================
-    '    If e.KeyCode = Keys.Up Then
-    '        upKeyDown = False
-    '    End If
-
-    '    If e.KeyCode = Keys.Down Then
-    '        downKeyDown = False
-    '    End If
-
-
-    '    If e.KeyCode = Keys.W Then wKeyDown = False
-
-    '    If e.KeyCode = Keys.S Then sKeyDown = False
-
-
-    'End Sub
 
 
     Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
