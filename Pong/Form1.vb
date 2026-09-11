@@ -1833,7 +1833,10 @@ Public Class Form1
 
         PauseAllLoops()
 
-        If currentState = GameState.StartScreen OrElse currentState = GameState.EndScreen Then
+        If currentState = GameState.StartScreen OrElse
+           currentState = GameState.EndScreen OrElse
+           currentState = GameState.AIDifficulty Then
+
             PlayStartLoop()
         ElseIf currentState = GameState.Playing Then
             PlayGamePlayLoop()
