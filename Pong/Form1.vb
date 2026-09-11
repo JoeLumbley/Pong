@@ -1869,7 +1869,7 @@ Public Class Form1
     End Sub
 
 
-    Private Sub PlayBounceOverlapping()
+    Private Sub PlayBounce()
         AudioPlayer.PlayOverlapping("bounce")
     End Sub
 
