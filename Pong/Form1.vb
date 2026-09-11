@@ -188,6 +188,7 @@ Public Class Form1
     Private pauseTitleFont As Font
     Private pauseMenuFont As Font
     Private startTitleFont As Font
+    Private aiDifficultyTitleFont As Font
     Private startMenuFont As Font
     Private startInfoFont As Font
     Private gameOverFont As Font
@@ -831,12 +832,20 @@ Public Class Form1
 
 
     Private Sub DrawAIDifficultyScreen(g As Graphics)
-        Dim title As String = "AI Difficulty"
-        Dim titleSize = g.MeasureString(title, startTitleFont)
 
-        g.DrawString(title, startTitleFont, whiteBrush,
+        Dim title As String = "Difficulty"
+        Dim titleSize = g.MeasureString(title, aiDifficultyTitleFont)
+
+
+
+
+
+        g.DrawString(title, aiDifficultyTitleFont, whiteBrush,
                  CSng((ClientSize.Width - titleSize.Width) / 2.0F),
                  CSng(ClientSize.Height * 0.2F))
+
+
+
 
         For i As Integer = 0 To aiOptions.Length - 1
             Dim text = aiOptions(i)
@@ -844,10 +853,18 @@ Public Class Form1
 
             Dim brush As SolidBrush = If(i = aiMenuIndex, whiteBrush, grayBrush)
 
+            'g.DrawString(text, startMenuFont, brush,
+            '         CSng((ClientSize.Width - size.Width) / 2.0F),
+            '         CSng(ClientSize.Height * 0.45F + i * (size.Height + 10)))
+
             g.DrawString(text, startMenuFont, brush,
                      CSng((ClientSize.Width - size.Width) / 2.0F),
-                     CSng(ClientSize.Height * 0.45F + i * (size.Height + 10)))
+                     CSng(ClientSize.Height * 0.36F + i * (size.Height + 10)))
+
         Next
+
+
+
 
         Dim info As String = "Press SPACE to Confirm"
         Dim infoSize = g.MeasureString(info, startInfoFont)
@@ -965,6 +982,7 @@ Public Class Form1
         hudScoreFont?.Dispose()
         hudLabelFont?.Dispose()
         pauseTitleFont?.Dispose()
+        aiDifficultyTitleFont?.Dispose()
         pauseMenuFont?.Dispose()
         startTitleFont?.Dispose()
         startMenuFont?.Dispose()
@@ -981,6 +999,8 @@ Public Class Form1
         pauseMenuFont = New Font("Segoe UI", CSng(ClientSize.Height / 28.0F), FontStyle.Regular)
 
         startTitleFont = New Font("Segoe UI", CSng(ClientSize.Height / 10.0F), FontStyle.Bold)
+        aiDifficultyTitleFont = New Font("Segoe UI", CSng(ClientSize.Height / 18.0F), FontStyle.Bold)
+
         startMenuFont = New Font("Segoe UI", CSng(ClientSize.Height / 30.0F), FontStyle.Regular)
         startInfoFont = New Font("Segoe UI", CSng(ClientSize.Height / 35.0F), FontStyle.Regular)
 
@@ -1779,6 +1799,7 @@ Public Class Form1
         pauseTitleFont?.Dispose()
         pauseMenuFont?.Dispose()
         startTitleFont?.Dispose()
+        aiDifficultyTitleFont?.Dispose()
         startMenuFont?.Dispose()
         startInfoFont?.Dispose()
         gameOverFont?.Dispose()
