@@ -329,10 +329,10 @@ Public Class Form1
 
     Private Sub LoadAndRegisterSounds()
         AudioPlayer.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
-        AudioPlayer.SetVolumeOverlapping("bounce", 400)
+        AudioPlayer.SetVolumeOverlapping("bounce", 300)
 
         AudioPlayer.AddSound("startloop", Path.Combine(Application.StartupPath, "startloop.mp3"))
-        AudioPlayer.SetVolume("startloop", 300)
+        AudioPlayer.SetVolume("startloop", 75)
         PlayStartLoop()
 
         AudioPlayer.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
@@ -351,10 +351,10 @@ Public Class Form1
         AudioPlayer.SetVolume("point", 1000)
 
         AudioPlayer.AddSound("gameplayloop", Path.Combine(Application.StartupPath, "gameplayloop.mp3"))
-        AudioPlayer.SetVolume("gameplayloop", 600)
+        AudioPlayer.SetVolume("gameplayloop", 150)
 
         AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
-        AudioPlayer.SetVolume("pause", 150)
+        AudioPlayer.SetVolume("pause", 40)
     End Sub
 
     ' ===============================
