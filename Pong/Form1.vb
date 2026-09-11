@@ -1028,42 +1028,45 @@ Public Class Form1
     Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
         MyBase.OnKeyDown(e)
 
+
         ' ============================================================
         ' 1. Fullscreen Toggle (F11 / F)
         ' ============================================================
-        If e.KeyCode = Keys.F11 Then
-            If f11KeyDown Then Return
-            f11KeyDown = True
+        If e.KeyCode = Keys.F11 OrElse e.KeyCode = Keys.F Then
+
+            ' Repeat‑guard
+            If (e.KeyCode = Keys.F11 AndAlso f11KeyDown) OrElse
+               (e.KeyCode = Keys.F AndAlso fKeyDown) Then Return
+
+            ' Mark the correct key as down
+            If e.KeyCode = Keys.F11 Then
+                f11KeyDown = True
+            Else
+                fKeyDown = True
+            End If
 
             PlayFullscreen()
             ToggleFullScreen()
             Invalidate()
+
             Return
         End If
-
-        If e.KeyCode = Keys.F Then
-            If fKeyDown Then Return
-            fKeyDown = True
-
-            PlayFullscreen()
-            ToggleFullScreen()
-            Invalidate()
-            Return
-        End If
-
 
         ' ============================================================
         ' 2. Escape pressed while fullscreen (exit fullscreen)
         ' ============================================================
         If Me.FormBorderStyle = FormBorderStyle.None AndAlso
-        e.KeyCode = Keys.Escape Then
+           e.KeyCode = Keys.Escape Then
+
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
             PlaySelect()
             ToggleFullScreen()
             Invalidate()
+
             Return
+
         End If
 
 
