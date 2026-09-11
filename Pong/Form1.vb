@@ -1125,7 +1125,7 @@ Public Class Form1
 
             If aiMenuIndex > 0 Then
                 aiMenuIndex -= 1
-                PlayArrowUpOverlapping()
+                PlayMenuUp()
                 Invalidate()
             End If
 
@@ -1142,7 +1142,7 @@ Public Class Form1
 
             If aiMenuIndex < aiOptions.Length - 1 Then
                 aiMenuIndex += 1
-                PlayArrowDownOverlapping()
+                PlayMenuDown()
                 Invalidate()
             End If
 
@@ -1157,19 +1157,19 @@ Public Class Form1
 
         If (e.KeyCode = Keys.D1 OrElse e.KeyCode = Keys.NumPad1) AndAlso aiMenuIndex <> 0 Then
             aiMenuIndex = 0
-            PlayArrowUpOverlapping()
+            PlayMenuUp()
             Return
         End If
 
         If (e.KeyCode = Keys.D2 OrElse e.KeyCode = Keys.NumPad2) AndAlso aiMenuIndex <> 1 Then
             aiMenuIndex = 1
-            PlayArrowDownOverlapping()
+            PlayMenuDown()
             Return
         End If
 
         If (e.KeyCode = Keys.D3 OrElse e.KeyCode = Keys.NumPad3) AndAlso aiMenuIndex <> 2 Then
             aiMenuIndex = 2
-            PlayArrowDownOverlapping()
+            PlayMenuDown()
             Return
         End If
 
@@ -1265,7 +1265,7 @@ Public Class Form1
                 upKeyDown = True
 
                 If selectedOption <> 0 Then
-                    PlayArrowUpOverlapping()
+                    PlayMenuUp()
                     selectedOption = 0
                     Invalidate()
                 End If
@@ -1277,7 +1277,7 @@ Public Class Form1
                 wKeyDown = True
 
                 If selectedOption <> 0 Then
-                    PlayArrowUpOverlapping()
+                    PlayMenuUp()
                     selectedOption = 0
                     Invalidate()
                 End If
@@ -1289,7 +1289,7 @@ Public Class Form1
                 downKeyDown = True
 
                 If selectedOption <> 1 Then
-                    PlayArrowDownOverlapping()
+                    PlayMenuDown()
                     selectedOption = 1
                     Invalidate()
                 End If
@@ -1301,7 +1301,7 @@ Public Class Form1
                 sKeyDown = True
 
                 If selectedOption <> 1 Then
-                    PlayArrowDownOverlapping()
+                    PlayMenuDown()
                     selectedOption = 1
                     Invalidate()
                 End If
@@ -1313,7 +1313,7 @@ Public Class Form1
         ' ============================================================
             Case Keys.D1, Keys.NumPad1
                 If selectedOption <> 0 Then
-                    PlayArrowUpOverlapping()
+                    PlayMenuUp()
                     selectedOption = 0
                     Invalidate()
                 End If
@@ -1321,7 +1321,7 @@ Public Class Form1
 
             Case Keys.D2, Keys.NumPad2
                 If selectedOption <> 1 Then
-                    PlayArrowDownOverlapping()
+                    PlayMenuDown()
                     selectedOption = 1
                     Invalidate()
                 End If
@@ -1502,7 +1502,7 @@ Public Class Form1
         ' ============================================================
         If e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W Then
             If pauseMenuIndex > 0 Then
-                PlayArrowUpOverlapping()
+                PlayMenuUp()
                 pauseMenuIndex = Math.Max(0, pauseMenuIndex - 1)
                 Invalidate()
             End If
@@ -1511,7 +1511,7 @@ Public Class Form1
 
         If e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S Then
             If pauseMenuIndex < 2 Then
-                PlayArrowDownOverlapping()
+                PlayMenuDown()
                 pauseMenuIndex = Math.Min(2, pauseMenuIndex + 1)
                 Invalidate()
             End If
@@ -1873,11 +1873,11 @@ Public Class Form1
         AudioPlayer.PlayOverlapping("bounce")
     End Sub
 
-    Private Sub PlayArrowUpOverlapping()
+    Private Sub PlayMenuUp()
         AudioPlayer.PlayOverlapping("arrow_up")
     End Sub
 
-    Private Sub PlayArrowDownOverlapping()
+    Private Sub PlayMenuDown()
         AudioPlayer.PlayOverlapping("arrow_down")
     End Sub
 
