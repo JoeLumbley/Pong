@@ -1060,7 +1060,6 @@ Public Class Form1
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
-            'AudioPlayer.PlaySound("select")
             PlaySelect()
             ToggleFullScreen()
             Invalidate()
@@ -1155,21 +1154,18 @@ Public Class Form1
 
         If (e.KeyCode = Keys.D1 OrElse e.KeyCode = Keys.NumPad1) AndAlso aiMenuIndex <> 0 Then
             aiMenuIndex = 0
-            'AudioPlayer.PlayOverlapping("arrow_up")
             PlayArrowUpOverlapping()
             Return
         End If
 
         If (e.KeyCode = Keys.D2 OrElse e.KeyCode = Keys.NumPad2) AndAlso aiMenuIndex <> 1 Then
             aiMenuIndex = 1
-            'AudioPlayer.PlayOverlapping("arrow_down")
             PlayArrowDownOverlapping()
             Return
         End If
 
         If (e.KeyCode = Keys.D3 OrElse e.KeyCode = Keys.NumPad3) AndAlso aiMenuIndex <> 2 Then
             aiMenuIndex = 2
-            'AudioPlayer.PlayOverlapping("arrow_down")
             PlayArrowDownOverlapping()
             Return
         End If
@@ -1242,7 +1238,6 @@ Public Class Form1
             If enterKeyDown Then Return
             enterKeyDown = True
 
-            'AudioPlayer.PlaySound("select")
             PlaySelect()
 
             ' Reset state and return to Start Screen
@@ -1429,7 +1424,6 @@ Public Class Form1
             If pauseKeyDown Then Return
             pauseKeyDown = True
 
-            'AudioPlayer.PlaySound("select")
             PlaySelect()
             PauseGame()
             Invalidate()
@@ -1440,7 +1434,6 @@ Public Class Form1
             If mediaPlayPauseKeyDown Then Return
             mediaPlayPauseKeyDown = True
 
-            'AudioPlayer.PlaySound("select")
             PlaySelect()
             PauseGame()
             Invalidate()
@@ -1484,7 +1477,6 @@ Public Class Form1
             If pauseKeyDown Then Return
             pauseKeyDown = True
 
-            'AudioPlayer.PlaySound("select")
             PlaySelect()
             ResumeGame()
             Invalidate()
@@ -1507,7 +1499,6 @@ Public Class Form1
         ' ============================================================
         If e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W Then
             If pauseMenuIndex > 0 Then
-                'AudioPlayer.PlayOverlapping("arrow_up")
                 PlayArrowUpOverlapping()
                 pauseMenuIndex = Math.Max(0, pauseMenuIndex - 1)
                 Invalidate()
@@ -1517,7 +1508,6 @@ Public Class Form1
 
         If e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S Then
             If pauseMenuIndex < 2 Then
-                'AudioPlayer.PlayOverlapping("arrow_down")
                 PlayArrowDownOverlapping()
                 pauseMenuIndex = Math.Min(2, pauseMenuIndex + 1)
                 Invalidate()
@@ -1537,7 +1527,6 @@ Public Class Form1
         End If
 
         If e.KeyCode = Keys.N Then
-            'AudioPlayer.PlaySound("select")
             PlaySelect()
             StartNewMatch()
             Invalidate()
@@ -1545,7 +1534,6 @@ Public Class Form1
         End If
 
         If e.KeyCode = Keys.Q Then
-            'AudioPlayer.PlaySound("select")
             PlaySelect()
             Quit2StartScreen()
             Invalidate()
@@ -1843,7 +1831,6 @@ Public Class Form1
         PauseAllLoops()
 
         If currentState = GameState.StartScreen OrElse currentState = GameState.EndScreen Then
-            'AudioPlayer.LoopSound("startloop")
             PlayStartLoop()
         ElseIf currentState = GameState.Playing Then
             PlayGamePlayLoop()
