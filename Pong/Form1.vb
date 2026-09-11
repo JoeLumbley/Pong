@@ -529,19 +529,6 @@ Public Class Form1
     End Sub
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     Private Sub CheckScore()
         If currentState = GameState.Pause Then Return
 
@@ -596,7 +583,6 @@ Public Class Form1
         CenterBall()
         MoveBallRandom()
 
-        'AudioPlayer.LoopSound("startloop")
         PlayStartLoop()
     End Sub
 
@@ -685,7 +671,6 @@ Public Class Form1
                 DrawHUD(g)
                 DrawPauseScreen(g)
 
-
             Case GameState.AIDifficulty
                 DrawTrail(g)
                 DrawBall(g)
@@ -755,7 +740,6 @@ Public Class Form1
     End Sub
 
     Private Sub DrawHUD(g As Graphics)
-        'DrawFPS(g)        
 
         ' -------------------------------
         '  Fullscreen Indicator
@@ -873,11 +857,6 @@ Public Class Form1
                  CSng(ClientSize.Height * 0.75F))
     End Sub
 
-
-
-
-
-
     Private Sub DrawGameOver(g As Graphics)
         Dim size = g.MeasureString(winnerText, gameOverFont)
         Dim info As String = "Press SPACE to Restart"
@@ -921,9 +900,8 @@ Public Class Form1
         If trailSizes Is Nothing OrElse trailOffsets Is Nothing Then Return
 
         ScaleBallDiameter()
-        ScaleBallSpeed()
+        ScaleBallSpeed4State()
         ScalePaddleSpeed()
-        'aiDifficulty = ClientSize.Height / 1080.0
 
         paddleHeight = ClientSize.Height / 8
         paddleWidth = ClientSize.Height / 25
@@ -940,9 +918,7 @@ Public Class Form1
         CenterBall()
 
         If currentState = GameState.Playing Then
-            'ServeBall(If(velX < 0, -1, 1))
             ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
-
         Else
             MoveBallRandom()
         End If
@@ -984,26 +960,6 @@ Public Class Form1
         Invalidate()
     End Sub
 
-    'Private Sub RescaleFonts()
-    '    hudScoreFont = New Font("Segoe UI", CSng(ClientSize.Height / 12.0F), FontStyle.Bold)
-    '    hudLabelFont = New Font("Segoe UI", CSng(ClientSize.Height / 50.0F), FontStyle.Regular)
-
-    '    pauseTitleFont = New Font("Segoe UI", CSng(ClientSize.Height / 18.0F), FontStyle.Bold)
-    '    pauseMenuFont = New Font("Segoe UI", CSng(ClientSize.Height / 28.0F), FontStyle.Regular)
-
-    '    startTitleFont = New Font("Segoe UI", CSng(ClientSize.Height / 10.0F), FontStyle.Bold)
-    '    startMenuFont = New Font("Segoe UI", CSng(ClientSize.Height / 30.0F), FontStyle.Regular)
-    '    startInfoFont = New Font("Segoe UI", CSng(ClientSize.Height / 35.0F), FontStyle.Regular)
-
-    '    gameOverFont = New Font("Segoe UI", CSng(ClientSize.Height / 20.0F), FontStyle.Bold)
-    '    gameOverInfoFont = New Font("Segoe UI", CSng(ClientSize.Height / 35.0F), FontStyle.Regular)
-
-    '    fullscreenIndicatorFont = New Font("Segoe UI", CSng(ClientSize.Height / 75.0F), FontStyle.Regular)
-    '    fpsFont = New Font("Segoe UI", CSng(ClientSize.Height / 75.0F), FontStyle.Bold)
-
-
-    'End Sub
-
 
     Private Sub RescaleFonts()
         hudScoreFont?.Dispose()
@@ -1036,40 +992,19 @@ Public Class Form1
 
     End Sub
 
+    Private Sub ScaleBallSpeed4State()
 
+        If currentState = GameState.StartScreen OrElse
+           currentState = GameState.EndScreen OrElse
+           currentState = GameState.AIDifficulty Then
 
-
-
-
-
-
-
-
-
-
-
-
-
-    Private Sub ScaleBallSpeed()
-
-
-        If currentState = GameState.StartScreen OrElse currentState = GameState.EndScreen OrElse currentState = GameState.AIDifficulty Then
             speed = 200 * (ClientSize.Height / 1080.0)
+
         Else
+
             speed = 800 * (ClientSize.Height / 1080.0)
+
         End If
-
-
-
-
-
-
-
-
-
-
-
-
 
     End Sub
 
@@ -1085,10 +1020,6 @@ Public Class Form1
         ScaleBallDiameter()
         Me.WindowState = FormWindowState.Maximized
     End Sub
-
-
-
-
 
     ' ===============================
     '  INPUT
@@ -1178,64 +1109,6 @@ Public Class Form1
 
     Private Sub HandleAIDifficultyInput(e As KeyEventArgs)
 
-
-        '' -------------------------------
-        ''  AI Difficulty Menu Navigation
-        '' -------------------------------
-
-        '' Move Up (Arrow Up or W)
-        'If e.KeyCode = Keys.Up AndAlso Not upKeyDown Then
-        '    upKeyDown = True
-
-        '    If aiMenuIndex > 0 Then
-        '        aiMenuIndex -= 1
-        '        PlayArrowUpOverlapping()
-        '        Invalidate()
-        '    End If
-
-        '    Return
-
-        'End If
-
-        'If e.KeyCode = Keys.W AndAlso Not wKeyDown Then
-        '    wKeyDown = True
-
-        '    If aiMenuIndex > 0 Then
-        '        aiMenuIndex -= 1
-        '        PlayArrowUpOverlapping()
-        '        Invalidate()
-        '    End If
-
-        '    Return
-
-        'End If
-
-        '' Move Down (Arrow Down or S)
-        'If e.KeyCode = Keys.Down AndAlso Not downKeyDown Then
-        '    downKeyDown = True
-
-        '    If aiMenuIndex < aiOptions.Length - 1 Then
-        '        aiMenuIndex += 1
-        '        PlayArrowUpOverlapping()
-        '        Invalidate()
-        '    End If
-
-        '    Return
-
-        'End If
-
-        'If e.KeyCode = Keys.S AndAlso Not sKeyDown Then
-        '    sKeyDown = True
-
-        '    If aiMenuIndex < aiOptions.Length - 1 Then
-        '        aiMenuIndex += 1
-        '        PlayArrowUpOverlapping()
-        '        Invalidate()
-        '    End If
-
-        '    Return
-
-        'End If
         ' -------------------------------
         '  AI Difficulty Menu Navigation
         ' -------------------------------
@@ -1343,29 +1216,6 @@ Public Class Form1
     End Sub
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     Private Sub HandleEndScreenInput(e As KeyEventArgs)
 
         ' ============================================================
@@ -1405,15 +1255,12 @@ Public Class Form1
     End Sub
 
 
-
-
     Private Sub HandleStartScreenInput(e As KeyEventArgs)
 
         ' ============================================================
         ' 1. Menu Navigation (Up/W and Down/S)
         ' ============================================================
         Select Case e.KeyCode
-
 
             Case Keys.Up
                 If upKeyDown Then Return
@@ -1438,9 +1285,6 @@ Public Class Form1
                 End If
 
                 Return
-
-
-
 
             Case Keys.Down
                 If downKeyDown Then Return
@@ -1540,148 +1384,6 @@ Public Class Form1
     End Sub
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    'Private Sub HandleStartScreenInput(e As KeyEventArgs)
-
-    '    Select Case e.KeyCode
-
-    '    ' ============================================================
-    '    ' 1. Menu Navigation (Up/W and Down/S)
-    '    ' ============================================================
-    '        Case Keys.Up, Keys.W
-    '            If selectedOption <> 0 Then
-    '                selectedOption = 0
-    '                PlayArrowUpOverlapping()
-    '                Invalidate()
-    '            End If
-    '            Return
-
-    '        Case Keys.Down, Keys.S
-    '            If selectedOption <> 1 Then
-    '                selectedOption = 1
-    '                PlayArrowDownOverlapping()
-    '                Invalidate()
-    '            End If
-    '            Return
-
-
-    '    ' ============================================================
-    '    ' 2. Number Shortcuts (1 / 2)
-    '    ' ============================================================
-    '        Case Keys.D1, Keys.NumPad1
-    '            If selectedOption <> 0 Then
-    '                selectedOption = 0
-    '                PlayArrowUpOverlapping()
-    '                Invalidate()
-    '            End If
-    '            Return
-
-    '        Case Keys.D2, Keys.NumPad2
-    '            If selectedOption <> 1 Then
-    '                selectedOption = 1
-    '                PlayArrowDownOverlapping()
-    '                Invalidate()
-    '            End If
-    '            Return
-
-
-    '    ' ============================================================
-    '    ' 3. Confirm Selection (Space / Enter)
-    '    ' ============================================================
-    '        Case Keys.Space
-    '            If spaceKeyDown Then Return
-    '            spaceKeyDown = True
-    '            PlaySelect()
-
-    '        Case Keys.Enter
-    '            If enterKeyDown Then Return
-    '            enterKeyDown = True
-    '            PlaySelect()
-
-    '        Case Keys.Escape
-    '            If escapeKeyDown Then Return
-    '            escapeKeyDown = True
-    '            Me.Close()
-    '            Return
-
-    '        Case Else
-    '            Return
-    '    End Select
-
-    '    ' Shared confirm logic for Space/Enter
-    '    If selectedOption = 0 Then
-    '        playerMode = 1
-    '        currentState = GameState.AIDifficulty
-    '    Else
-    '        playerMode = 2
-    '        StartNewMatch()
-    '    End If
-
-    '    Invalidate()
-
-    'End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     Private Sub HandleGameplayInput(e As KeyEventArgs)
 
         ' ============================================================
@@ -1762,8 +1464,6 @@ Public Class Form1
 
 
     End Sub
-
-
 
     Private Sub HandlePauseInput(e As KeyEventArgs)
 
@@ -1994,9 +1694,6 @@ Public Class Form1
 
     End Sub
 
-
-
-
     Private Sub ToggleFullScreen()
 
         If Me.FormBorderStyle = FormBorderStyle.None Then
@@ -2017,9 +1714,8 @@ Public Class Form1
     End Sub
 
     Private Sub PauseGame()
-        'AudioPlayer.PauseSound("gameplayloop")
-        PauseGamePlayLoop()
 
+        PauseGamePlayLoop()
 
         currentState = GameState.Pause
         physicsTimer.Stop()
@@ -2040,7 +1736,6 @@ Public Class Form1
         currentState = GameState.Playing
         physicsTimer.Start()
 
-        'AudioPlayer.LoopSound("gameplayloop")
         PlayGamePlayLoop()
     End Sub
 
