@@ -55,7 +55,16 @@ Public Class Form1
     '  Player Mode
     ' -------------------------------
     Private playerMode As Integer = 1       ' 1 = Single Player (AI), 2 = Two Players
-    Private startMenuSelection As Integer = 0   ' 0 = "1 Player", 1 = "2 Players"
+    Private numberOfPlayersSelection As Integer = 0   ' 0 = "1 Player", 1 = "2 Players"
+
+    Private Enum NumberOfPlayers
+        OnePlayer
+        TwoPlayers
+    End Enum
+
+
+
+
 
     ' -------------------------------
     '  Ball / Physics
@@ -1039,8 +1048,8 @@ Public Class Form1
         Dim opt1Size = g.MeasureString(option1, startMenuFont)
         Dim opt2Size = g.MeasureString(option2, startMenuFont)
 
-        Dim opt1Brush As SolidBrush = If(startMenuSelection = 0, whiteBrush, grayBrush)
-        Dim opt2Brush As SolidBrush = If(startMenuSelection = 1, whiteBrush, grayBrush)
+        Dim opt1Brush As SolidBrush = If(numberOfPlayersSelection = 0, whiteBrush, grayBrush)
+        Dim opt2Brush As SolidBrush = If(numberOfPlayersSelection = 1, whiteBrush, grayBrush)
 
         g.DrawString(option1, startMenuFont, opt1Brush,
                      CSng((ClientSize.Width - opt1Size.Width) / 2.0F),
@@ -1341,7 +1350,7 @@ Public Class Form1
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
-            PlaySelect()
+            PlaySelectSound()
             ToggleFullScreen()
             Invalidate()
 
@@ -1405,7 +1414,7 @@ Public Class Form1
 
             If aiMenuIndex > 0 Then
                 aiMenuIndex -= 1
-                PlayMenuUp()
+                PlayMenuUpSound()
                 Invalidate()
             End If
 
@@ -1422,7 +1431,7 @@ Public Class Form1
 
             If aiMenuIndex < aiOptions.Length - 1 Then
                 aiMenuIndex += 1
-                PlayMenuDown()
+                PlayMenuDownSound()
                 Invalidate()
             End If
 
@@ -1437,19 +1446,19 @@ Public Class Form1
 
         If (e.KeyCode = Keys.D1 OrElse e.KeyCode = Keys.NumPad1) AndAlso aiMenuIndex <> 0 Then
             aiMenuIndex = 0
-            PlayMenuUp()
+            PlayMenuUpSound()
             Return
         End If
 
         If (e.KeyCode = Keys.D2 OrElse e.KeyCode = Keys.NumPad2) AndAlso aiMenuIndex <> 1 Then
             aiMenuIndex = 1
-            PlayMenuDown()
+            PlayMenuDownSound()
             Return
         End If
 
         If (e.KeyCode = Keys.D3 OrElse e.KeyCode = Keys.NumPad3) AndAlso aiMenuIndex <> 2 Then
             aiMenuIndex = 2
-            PlayMenuDown()
+            PlayMenuDownSound()
             Return
         End If
 
@@ -1469,7 +1478,7 @@ Public Class Form1
 
             currentState = GameState.Playing
             StartNewMatch()
-            PlaySelect()
+            PlaySelectSound()
 
             If e.KeyCode = Keys.Space Then
                 spaceKeyDown = True
@@ -1488,7 +1497,7 @@ Public Class Form1
         If e.KeyCode = Keys.Escape AndAlso Not escapeKeyDown Then
             escapeKeyDown = True
             currentState = GameState.StartScreen
-            PlaySelect()
+            PlaySelectSound()
             Return
         End If
 
@@ -1504,7 +1513,7 @@ Public Class Form1
             If spaceKeyDown Then Return
             spaceKeyDown = True
 
-            PlaySelect()
+            PlaySelectSound()
 
             ' Reset state and return to Start Screen
             currentState = GameState.StartScreen
@@ -1521,7 +1530,7 @@ Public Class Form1
             If enterKeyDown Then Return
             enterKeyDown = True
 
-            PlaySelect()
+            PlaySelectSound()
 
             ' Reset state and return to Start Screen
             currentState = GameState.StartScreen
@@ -1544,8 +1553,8 @@ Public Class Form1
                 If upKeyDown Then Return
                 upKeyDown = True
 
-                If startMenuSelection <> 0 Then
-                    PlayMenuUp()
+                If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
+                    PlayMenuUpSound()
                     SelectOnePlayerMode()
                     Invalidate()
                 End If
@@ -1556,8 +1565,8 @@ Public Class Form1
                 If wKeyDown Then Return
                 wKeyDown = True
 
-                If startMenuSelection <> 0 Then
-                    PlayMenuUp()
+                If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
+                    PlayMenuUpSound()
                     SelectOnePlayerMode()
                     Invalidate()
                 End If
@@ -1568,8 +1577,8 @@ Public Class Form1
                 If downKeyDown Then Return
                 downKeyDown = True
 
-                If startMenuSelection <> 1 Then
-                    PlayMenuDown()
+                If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
+                    PlayMenuDownSound()
                     SelectTwoPlayerMode()
                     Invalidate()
                 End If
@@ -1580,8 +1589,8 @@ Public Class Form1
                 If sKeyDown Then Return
                 sKeyDown = True
 
-                If startMenuSelection <> 1 Then
-                    PlayMenuDown()
+                If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
+                    PlayMenuDownSound()
                     SelectTwoPlayerMode()
                     Invalidate()
                 End If
@@ -1593,8 +1602,9 @@ Public Class Form1
         ' ============================================================
             Case Keys.D1, Keys.NumPad1
 
-                If startMenuSelection <> 0 Then
-                    PlayMenuUp()
+                ' Is one player mode NOT selected? If so, select it and play sound
+                If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
+                    PlayMenuUpSound()
                     SelectOnePlayerMode()
                     Invalidate()
                 End If
@@ -1603,8 +1613,9 @@ Public Class Form1
 
             Case Keys.D2, Keys.NumPad2
 
-                If startMenuSelection <> 1 Then
-                    PlayMenuDown()
+                ' Is two player mode NOT selected? If so, select it and play sound
+                If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
+                    PlayMenuDownSound()
                     SelectTwoPlayerMode()
                     Invalidate()
                 End If
@@ -1619,10 +1630,10 @@ Public Class Form1
                 If spaceKeyDown Then Return
                 spaceKeyDown = True
 
-                PlaySelect()
+                PlaySelectSound()
 
                 ' 1‑Player → AI Difficulty Menu
-                If startMenuSelection = 0 Then
+                If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
                     playerMode = 1
                     currentState = GameState.AIDifficulty
                 Else
@@ -1631,15 +1642,16 @@ Public Class Form1
                 End If
 
                 Invalidate()
+
                 Return
 
             Case Keys.Enter
                 If enterKeyDown Then Return
                 enterKeyDown = True
 
-                PlaySelect()
+                PlaySelectSound()
 
-                If startMenuSelection = 0 Then
+                If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
                     playerMode = 1
                     currentState = GameState.AIDifficulty
                 Else
@@ -1648,8 +1660,8 @@ Public Class Form1
                 End If
 
                 Invalidate()
-                Return
 
+                Return
 
         ' ============================================================
         ' 4. Escape (Exit Game)
@@ -1659,6 +1671,7 @@ Public Class Form1
                 escapeKeyDown = True
 
                 Me.Close()
+
                 Return
 
         End Select
@@ -1666,11 +1679,11 @@ Public Class Form1
     End Sub
 
     Private Sub SelectTwoPlayerMode()
-        startMenuSelection = 1 ' Two Players
+        numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
     End Sub
 
     Private Sub SelectOnePlayerMode()
-        startMenuSelection = 0 ' One Player
+        numberOfPlayersSelection = NumberOfPlayers.OnePlayer
     End Sub
 
     Private Sub HandleGameplayInput(e As KeyEventArgs)
@@ -1708,7 +1721,7 @@ Public Class Form1
             If pKeyDown Then Return
             pKeyDown = True
 
-            PlaySelect()
+            PlaySelectSound()
             PauseGame()
             Invalidate()
             Return
@@ -1718,7 +1731,7 @@ Public Class Form1
             If pauseKeyDown Then Return
             pauseKeyDown = True
 
-            PlaySelect()
+            PlaySelectSound()
             PauseGame()
             Invalidate()
             Return
@@ -1728,7 +1741,7 @@ Public Class Form1
             If mediaPlayPauseKeyDown Then Return
             mediaPlayPauseKeyDown = True
 
-            PlaySelect()
+            PlaySelectSound()
             PauseGame()
             Invalidate()
             Return
@@ -1743,7 +1756,7 @@ Public Class Form1
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
-            PlaySelect()
+            PlaySelectSound()
             PauseGame()
             Invalidate()
             Return
@@ -1761,7 +1774,7 @@ Public Class Form1
             If pKeyDown Then Return
             pKeyDown = True
 
-            PlaySelect()
+            PlaySelectSound()
             ResumeGame()
             Invalidate()
             Return
@@ -1771,7 +1784,7 @@ Public Class Form1
             If pauseKeyDown Then Return
             pauseKeyDown = True
 
-            PlaySelect()
+            PlaySelectSound()
             ResumeGame()
             Invalidate()
             Return
@@ -1781,7 +1794,7 @@ Public Class Form1
             If mediaPlayPauseKeyDown Then Return
             mediaPlayPauseKeyDown = True
 
-            PlaySelect()
+            PlaySelectSound()
             ResumeGame()
             Invalidate()
             Return
@@ -1793,7 +1806,7 @@ Public Class Form1
         ' ============================================================
         If e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W Then
             If pauseMenuSelection > 0 Then
-                PlayMenuUp()
+                PlayMenuUpSound()
                 pauseMenuSelection = Math.Max(0, pauseMenuSelection - 1)
 
 
@@ -1804,7 +1817,7 @@ Public Class Form1
 
         If e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S Then
             If pauseMenuSelection < 2 Then
-                PlayMenuDown()
+                PlayMenuDownSound()
                 pauseMenuSelection = Math.Min(2, pauseMenuSelection + 1)
 
                 Invalidate()
@@ -1817,21 +1830,21 @@ Public Class Form1
         ' 3. Direct Hotkeys (R = Resume, N = New Match, Q = Quit)
         ' ============================================================
         If e.KeyCode = Keys.R Then
-            PlaySelect()
+            PlaySelectSound()
             ResumeGame()
             Invalidate()
             Return
         End If
 
         If e.KeyCode = Keys.N Then
-            PlaySelect()
+            PlaySelectSound()
             StartNewMatch()
             Invalidate()
             Return
         End If
 
         If e.KeyCode = Keys.Q Then
-            PlaySelect()
+            PlaySelectSound()
             Quit2StartScreen()
             Invalidate()
             Return
@@ -1845,7 +1858,7 @@ Public Class Form1
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
-            PlaySelect()
+            PlaySelectSound()
             Quit2StartScreen()
             Invalidate()
             Return
@@ -1859,7 +1872,7 @@ Public Class Form1
             If enterKeyDown Then Return
             enterKeyDown = True
 
-            PlaySelect()
+            PlaySelectSound()
 
             Select Case pauseMenuSelection
                 Case 0 : ResumeGame()
@@ -1874,7 +1887,7 @@ Public Class Form1
             If spaceKeyDown Then Return
             spaceKeyDown = True
 
-            PlaySelect()
+            PlaySelectSound()
 
             Select Case pauseMenuSelection
                 Case 0 : ResumeGame()
@@ -2264,7 +2277,7 @@ Public Class Form1
         AudioPlayer.PlaySound("point")
     End Sub
 
-    Private Sub PlaySelect()
+    Private Sub PlaySelectSound()
         AudioPlayer.PlaySound("select")
     End Sub
 
@@ -2378,11 +2391,11 @@ Public Class Form1
         AudioPlayer.PlayOverlapping("bounce")
     End Sub
 
-    Private Sub PlayMenuUp()
+    Private Sub PlayMenuUpSound()
         AudioPlayer.PlayOverlapping("arrow_up")
     End Sub
 
-    Private Sub PlayMenuDown()
+    Private Sub PlayMenuDownSound()
         AudioPlayer.PlayOverlapping("arrow_down")
     End Sub
 
