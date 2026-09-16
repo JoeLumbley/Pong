@@ -194,6 +194,7 @@ Public Class Form1
     '  AI Difficulty
     ' -------------------------------
     Private aiDifficulty As Double = 1.0   ' 1.0 = normal
+    Private aiModeFactor As Double = 1.0         ' 1.0 = normal
 
     ' -------------------------------
     '  Cached Fonts
@@ -522,9 +523,26 @@ Public Class Form1
         paddleRight.Y = Math.Max(0, Math.Min(ClientSize.Height - paddleHeight, paddleRight.Y))
     End Sub
 
+    'Private Sub UpdateAI(dt As Double)
+    '    Dim targetY As Single = ballPos.Y + ballDiameter / 2
+    '    Dim difficultyFactor As Double = 0.7 * aiDifficulty
+
+    '    Dim paddleCenter As Single = paddleRight.Y + paddleHeight / 2
+
+    '    If targetY < paddleCenter Then
+    '        paddleRight.Y -= CSng(paddleSpeed * dt * difficultyFactor)
+    '    ElseIf targetY > paddleCenter Then
+    '        paddleRight.Y += CSng(paddleSpeed * dt * difficultyFactor)
+    '    End If
+
+    '    paddleRight.Y = Math.Max(0, Math.Min(ClientSize.Height - paddleHeight, paddleRight.Y))
+    'End Sub
+
     Private Sub UpdateAI(dt As Double)
         Dim targetY As Single = ballPos.Y + ballDiameter / 2
-        Dim difficultyFactor As Double = 0.7 * aiDifficulty
+
+        ' Difficulty = resolution scaling × difficulty mode
+        Dim difficultyFactor As Double = aiModeFactor * aiDifficulty
 
         Dim paddleCenter As Single = paddleRight.Y + paddleHeight / 2
 
@@ -536,6 +554,20 @@ Public Class Form1
 
         paddleRight.Y = Math.Max(0, Math.Min(ClientSize.Height - paddleHeight, paddleRight.Y))
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Sub HandlePaddleCollisions()
         Dim ballRect As New RectangleF(ballPos.X, ballPos.Y, ballDiameter, ballDiameter)
@@ -1219,6 +1251,9 @@ Public Class Form1
         trail.Clear()
         RescaleFonts()
 
+        aiDifficulty = ClientSize.Height / 1080.0
+
+
         Invalidate()
     End Sub
 
@@ -1498,11 +1533,18 @@ Public Class Form1
                 enterKeyDown = True
             End If
 
+            'Select Case aiDifficultySelection
+            '    Case AIDifficultyLevel.Easy : aiDifficulty = 0.7
+            '    Case AIDifficultyLevel.Normal : aiDifficulty = 0.8
+            '    Case AIDifficultyLevel.Hard : aiDifficulty = 0.95
+            'End Select
+
             Select Case aiDifficultySelection
-                Case AIDifficultyLevel.Easy : aiDifficulty = 0.7
-                Case AIDifficultyLevel.Normal : aiDifficulty = 0.8
-                Case AIDifficultyLevel.Hard : aiDifficulty = 0.95
+                Case AIDifficultyLevel.Easy : aiModeFactor = 0.65
+                Case AIDifficultyLevel.Normal : aiModeFactor = 0.7
+                Case AIDifficultyLevel.Hard : aiModeFactor = 0.75
             End Select
+
 
             currentState = GameState.Playing
             StartNewMatch()
