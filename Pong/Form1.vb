@@ -1687,13 +1687,6 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub SelectTwoPlayerMode()
-    '    numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
-    'End Sub
-
-    'Private Sub SelectOnePlayerMode()
-    '    numberOfPlayersSelection = NumberOfPlayers.OnePlayer
-    'End Sub
 
     Private Sub HandleGameplayInput(e As KeyEventArgs)
 
