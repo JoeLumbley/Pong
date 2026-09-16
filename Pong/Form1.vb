@@ -1611,7 +1611,7 @@ Public Class Form1
         ' ============================================================
         ' 2. Direct Selection via Number Keys (1 or 2)
         ' ============================================================
-            Case Keys.D1, Keys.NumPad1
+            Case Keys.D1, Keys.NumPad1 ' 1 Player Mode
 
                 ' Is one player mode NOT selected? If so, select it and play sound
                 If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
@@ -1622,7 +1622,7 @@ Public Class Form1
 
                 Return
 
-            Case Keys.D2, Keys.NumPad2
+            Case Keys.D2, Keys.NumPad2 ' 2 Player Mode
 
                 ' Is two player mode NOT selected? If so, select it and play sound
                 If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
