@@ -1544,16 +1544,10 @@ Public Class Form1
                 If upKeyDown Then Return
                 upKeyDown = True
 
-                ' StartMenuUp() is called only if the selection changes
-                ' Start Menu Selection: 0 = One Player, 1 = Two Players
-                'If startMenuSelection <> 0 Then
-                '    PlayMenuUp()
-                '    startMenuSelection = 0 ' One Player Mode
-                '    Invalidate()
-                'End If
-
                 If startMenuSelection <> 0 Then
+                    PlayMenuUp()
                     SelectOnePlayerMode()
+                    Invalidate()
                 End If
 
                 Return
@@ -1563,12 +1557,9 @@ Public Class Form1
                 wKeyDown = True
 
                 If startMenuSelection <> 0 Then
-                    'PlayMenuUp()
-                    'startMenuSelection = 0 ' One Player Mode
-                    'Invalidate()
-
+                    PlayMenuUp()
                     SelectOnePlayerMode()
-
+                    Invalidate()
                 End If
 
                 Return
@@ -1578,12 +1569,9 @@ Public Class Form1
                 downKeyDown = True
 
                 If startMenuSelection <> 1 Then
-                    'PlayMenuDown()
-                    'startMenuSelection = 1 ' Two Player Mode
-                    'Invalidate()
-
-                    ' SelectTwoPlayerMode()
+                    PlayMenuDown()
                     SelectTwoPlayerMode()
+                    Invalidate()
                 End If
 
                 Return
@@ -1593,11 +1581,9 @@ Public Class Form1
                 sKeyDown = True
 
                 If startMenuSelection <> 1 Then
-                    'PlayMenuDown()
-                    'startMenuSelection = 1 ' Two Player Mode
-                    'Invalidate()
+                    PlayMenuDown()
                     SelectTwoPlayerMode()
-
+                    Invalidate()
                 End If
 
                 Return
@@ -1606,24 +1592,23 @@ Public Class Form1
         ' 2. Direct Selection via Number Keys (1 or 2)
         ' ============================================================
             Case Keys.D1, Keys.NumPad1
+
                 If startMenuSelection <> 0 Then
-                    'PlayMenuUp()
-                    'startMenuSelection = 0 ' One Player Mode
-                    'Invalidate()
-
+                    PlayMenuUp()
                     SelectOnePlayerMode()
-
+                    Invalidate()
                 End If
+
                 Return
 
             Case Keys.D2, Keys.NumPad2
-                If startMenuSelection <> 1 Then
-                    'PlayMenuDown()
-                    'startMenuSelection = 1 ' Two Player Mode 
-                    'Invalidate()
-                    SelectTwoPlayerMode()
 
+                If startMenuSelection <> 1 Then
+                    PlayMenuDown()
+                    SelectTwoPlayerMode()
+                    Invalidate()
                 End If
+
                 Return
 
 
@@ -1681,15 +1666,11 @@ Public Class Form1
     End Sub
 
     Private Sub SelectTwoPlayerMode()
-        PlayMenuDown()
-        startMenuSelection = 1 ' Two Player Mode
-        Invalidate()
+        startMenuSelection = 1 ' Two Players
     End Sub
 
     Private Sub SelectOnePlayerMode()
-        PlayMenuUp()
-        startMenuSelection = 0 ' One Player Mode
-        Invalidate()
+        startMenuSelection = 0 ' One Player
     End Sub
 
     Private Sub HandleGameplayInput(e As KeyEventArgs)
