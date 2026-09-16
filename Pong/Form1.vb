@@ -1546,7 +1546,7 @@ Public Class Form1
 
                 If startMenuSelection <> 0 Then
                     PlayMenuUp()
-                    startMenuSelection = 0
+                    startMenuSelection = 0 ' One Player Mode
                     Invalidate()
                 End If
 
@@ -1558,7 +1558,7 @@ Public Class Form1
 
                 If startMenuSelection <> 0 Then
                     PlayMenuUp()
-                    startMenuSelection = 0
+                    startMenuSelection = 0 ' One Player Mode
                     Invalidate()
                 End If
 
@@ -1570,7 +1570,7 @@ Public Class Form1
 
                 If startMenuSelection <> 1 Then
                     PlayMenuDown()
-                    startMenuSelection = 1
+                    startMenuSelection = 1 ' Two Player Mode
                     Invalidate()
                 End If
 
@@ -1582,7 +1582,7 @@ Public Class Form1
 
                 If startMenuSelection <> 1 Then
                     PlayMenuDown()
-                    startMenuSelection = 1
+                    startMenuSelection = 1 ' Two Player Mode
                     Invalidate()
                 End If
 
