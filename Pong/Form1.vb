@@ -55,7 +55,7 @@ Public Class Form1
     '  Player Mode
     ' -------------------------------
     Private playerMode As Integer = 1       ' 1 = Single Player (AI), 2 = Two Players
-    Private selectedOption As Integer = 0   ' 0 = "1 Player", 1 = "2 Players"
+    Private startMenuSelection As Integer = 0   ' 0 = "1 Player", 1 = "2 Players"
 
     ' -------------------------------
     '  Ball / Physics
@@ -143,7 +143,7 @@ Public Class Form1
     ' -------------------------------
     '  Pause Menu
     ' -------------------------------
-    Private pauseMenuIndex As Integer = 0
+    Private pauseMenuSelection As Integer = 0
 
 
 
@@ -924,7 +924,7 @@ Public Class Form1
 
         ' Menu items (zero allocations, zero per-frame logic)
         For i As Integer = 0 To pauseMenuItems.Length - 1
-            Dim brush As SolidBrush = If(i = pauseMenuIndex, whiteBrush, grayBrush)
+            Dim brush As SolidBrush = If(i = pauseMenuSelection, whiteBrush, grayBrush)
             g.DrawString(pauseMenuItems(i), pauseMenuFont, brush,
                      pauseMenuItemX(i), pauseMenuItemY(i))
         Next
@@ -1039,8 +1039,8 @@ Public Class Form1
         Dim opt1Size = g.MeasureString(option1, startMenuFont)
         Dim opt2Size = g.MeasureString(option2, startMenuFont)
 
-        Dim opt1Brush As SolidBrush = If(selectedOption = 0, whiteBrush, grayBrush)
-        Dim opt2Brush As SolidBrush = If(selectedOption = 1, whiteBrush, grayBrush)
+        Dim opt1Brush As SolidBrush = If(startMenuSelection = 0, whiteBrush, grayBrush)
+        Dim opt2Brush As SolidBrush = If(startMenuSelection = 1, whiteBrush, grayBrush)
 
         g.DrawString(option1, startMenuFont, opt1Brush,
                      CSng((ClientSize.Width - opt1Size.Width) / 2.0F),
@@ -1544,9 +1544,9 @@ Public Class Form1
                 If upKeyDown Then Return
                 upKeyDown = True
 
-                If selectedOption <> 0 Then
+                If startMenuSelection <> 0 Then
                     PlayMenuUp()
-                    selectedOption = 0
+                    startMenuSelection = 0
                     Invalidate()
                 End If
 
@@ -1556,9 +1556,9 @@ Public Class Form1
                 If wKeyDown Then Return
                 wKeyDown = True
 
-                If selectedOption <> 0 Then
+                If startMenuSelection <> 0 Then
                     PlayMenuUp()
-                    selectedOption = 0
+                    startMenuSelection = 0
                     Invalidate()
                 End If
 
@@ -1568,9 +1568,9 @@ Public Class Form1
                 If downKeyDown Then Return
                 downKeyDown = True
 
-                If selectedOption <> 1 Then
+                If startMenuSelection <> 1 Then
                     PlayMenuDown()
-                    selectedOption = 1
+                    startMenuSelection = 1
                     Invalidate()
                 End If
 
@@ -1580,9 +1580,9 @@ Public Class Form1
                 If sKeyDown Then Return
                 sKeyDown = True
 
-                If selectedOption <> 1 Then
+                If startMenuSelection <> 1 Then
                     PlayMenuDown()
-                    selectedOption = 1
+                    startMenuSelection = 1
                     Invalidate()
                 End If
 
@@ -1592,17 +1592,17 @@ Public Class Form1
         ' 2. Direct Selection via Number Keys (1 or 2)
         ' ============================================================
             Case Keys.D1, Keys.NumPad1
-                If selectedOption <> 0 Then
+                If startMenuSelection <> 0 Then
                     PlayMenuUp()
-                    selectedOption = 0
+                    startMenuSelection = 0 ' One Player Mode
                     Invalidate()
                 End If
                 Return
 
             Case Keys.D2, Keys.NumPad2
-                If selectedOption <> 1 Then
+                If startMenuSelection <> 1 Then
                     PlayMenuDown()
-                    selectedOption = 1
+                    startMenuSelection = 1 ' Two Player Mode 
                     Invalidate()
                 End If
                 Return
@@ -1618,7 +1618,7 @@ Public Class Form1
                 PlaySelect()
 
                 ' 1‑Player → AI Difficulty Menu
-                If selectedOption = 0 Then
+                If startMenuSelection = 0 Then
                     playerMode = 1
                     currentState = GameState.AIDifficulty
                 Else
@@ -1635,7 +1635,7 @@ Public Class Form1
 
                 PlaySelect()
 
-                If selectedOption = 0 Then
+                If startMenuSelection = 0 Then
                     playerMode = 1
                     currentState = GameState.AIDifficulty
                 Else
@@ -1781,14 +1781,10 @@ Public Class Form1
         ' 2. Pause Menu Navigation (Up/W and Down/S)
         ' ============================================================
         If e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W Then
-            If pauseMenuIndex > 0 Then
+            If pauseMenuSelection > 0 Then
                 PlayMenuUp()
-                pauseMenuIndex = Math.Max(0, pauseMenuIndex - 1)
+                pauseMenuSelection = Math.Max(0, pauseMenuSelection - 1)
 
-                'ReDim pauseMenuItemBrush(pauseMenuItems.Length - 1)
-                'For i As Integer = 0 To pauseMenuItems.Length - 1
-                '    pauseMenuItemBrush(i) = If(i = pauseMenuIndex, whiteBrush, grayBrush)
-                'Next
 
                 Invalidate()
             End If
@@ -1796,13 +1792,9 @@ Public Class Form1
         End If
 
         If e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S Then
-            If pauseMenuIndex < 2 Then
+            If pauseMenuSelection < 2 Then
                 PlayMenuDown()
-                pauseMenuIndex = Math.Min(2, pauseMenuIndex + 1)
-                'ReDim pauseMenuItemBrush(pauseMenuItems.Length - 1)
-                'For i As Integer = 0 To pauseMenuItems.Length - 1
-                '    pauseMenuItemBrush(i) = If(i = pauseMenuIndex, whiteBrush, grayBrush)
-                'Next
+                pauseMenuSelection = Math.Min(2, pauseMenuSelection + 1)
 
                 Invalidate()
             End If
@@ -1858,7 +1850,7 @@ Public Class Form1
 
             PlaySelect()
 
-            Select Case pauseMenuIndex
+            Select Case pauseMenuSelection
                 Case 0 : ResumeGame()
                 Case 1 : StartNewMatch()
                 Case 2 : Quit2StartScreen()
@@ -1873,7 +1865,7 @@ Public Class Form1
 
             PlaySelect()
 
-            Select Case pauseMenuIndex
+            Select Case pauseMenuSelection
                 Case 0 : ResumeGame()
                 Case 1 : StartNewMatch()
                 Case 2 : Quit2StartScreen()
@@ -1999,6 +1991,8 @@ Public Class Form1
 
         PauseGamePlayLoop()
 
+        pauseMenuSelection = 0 ' Resume game
+
         currentState = GameState.Pause
         physicsTimer.Stop()
 
@@ -2007,13 +2001,8 @@ Public Class Form1
         moveRightPaddleUp = False
         moveRightPaddleDown = False
 
-        'ReDim pauseMenuItemBrush(pauseMenuItems.Length - 1)
-
-        'For i As Integer = 0 To pauseMenuItems.Length - 1
-        '    pauseMenuItemBrush(i) = If(i = pauseMenuIndex, whiteBrush, grayBrush)
-        'Next
-
         PlayPausedLoop()
+
     End Sub
 
     Private Sub ResumeGame()
