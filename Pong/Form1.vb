@@ -156,8 +156,14 @@ Public Class Form1
 
 
 
-    Private aiMenuIndex As Integer = 0
+    Private aiDifficultySelection As Integer = 0 ' 0 = Easy, 1 = Normal, 2 = Hard
     Private aiOptions() As String = {"Easy", "Normal", "Hard"}
+
+    Private Enum AIDifficultyLevel
+        Easy
+        Normal
+        Hard
+    End Enum
 
     ' -------------------------------
     '  Player Names
@@ -1090,7 +1096,7 @@ Public Class Form1
             Dim text = aiOptions(i)
             Dim size = g.MeasureString(text, startMenuFont)
 
-            Dim brush As SolidBrush = If(i = aiMenuIndex, whiteBrush, grayBrush)
+            Dim brush As SolidBrush = If(i = aiDifficultySelection, whiteBrush, grayBrush)
 
             'g.DrawString(text, startMenuFont, brush,
             '         CSng((ClientSize.Width - size.Width) / 2.0F),
@@ -1393,10 +1399,7 @@ Public Class Form1
             Return
         End If
 
-
     End Sub
-
-
 
     Private Sub HandleAIDifficultyInput(e As KeyEventArgs)
 
@@ -1404,7 +1407,7 @@ Public Class Form1
         '  AI Difficulty Menu Navigation
         ' -------------------------------
 
-        ' Move Up (Arrow Up or W)
+        ' Menu Up (Arrow Up or W)
         If (e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W) Then
 
             If (e.KeyCode = Keys.Up AndAlso upKeyDown) OrElse
@@ -1412,16 +1415,17 @@ Public Class Form1
 
             If e.KeyCode = Keys.Up Then upKeyDown = True Else wKeyDown = True
 
-            If aiMenuIndex > 0 Then
-                aiMenuIndex -= 1
+            If aiDifficultySelection > 0 Then
+                aiDifficultySelection -= 1
                 PlayMenuUpSound()
                 Invalidate()
             End If
 
             Return
+
         End If
 
-        ' Move Down (Arrow Down or S)
+        ' Menu Down (Arrow Down or S)
         If (e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S) Then
 
             If (e.KeyCode = Keys.Down AndAlso downKeyDown) OrElse
@@ -1429,64 +1433,84 @@ Public Class Form1
 
             If e.KeyCode = Keys.Down Then downKeyDown = True Else sKeyDown = True
 
-            If aiMenuIndex < aiOptions.Length - 1 Then
-                aiMenuIndex += 1
+            If aiDifficultySelection < aiOptions.Length - 1 Then
+                aiDifficultySelection += 1
                 PlayMenuDownSound()
                 Invalidate()
             End If
 
             Return
+
         End If
-
-
 
         ' ============================
         '   NUMBER SHORTCUTS: 1 / 2 / 3
         ' ============================
 
-        If (e.KeyCode = Keys.D1 OrElse e.KeyCode = Keys.NumPad1) AndAlso aiMenuIndex <> 0 Then
-            aiMenuIndex = 0
+        ' Is the 1 key pressed AND
+        ' Is the selected difficulty NOT already Easy? If so, select it and play sound
+        If (e.KeyCode = Keys.D1 OrElse e.KeyCode = Keys.NumPad1) AndAlso
+            aiDifficultySelection <> AIDifficultyLevel.Easy Then
+
+            aiDifficultySelection = AIDifficultyLevel.Easy
             PlayMenuUpSound()
+            Invalidate()
+
             Return
+
         End If
 
-        If (e.KeyCode = Keys.D2 OrElse e.KeyCode = Keys.NumPad2) AndAlso aiMenuIndex <> 1 Then
-            aiMenuIndex = 1
+        ' Is the 2 key pressed AND
+        ' Is the selected difficulty NOT already Normal? If so, select it and play sound
+        If (e.KeyCode = Keys.D2 OrElse e.KeyCode = Keys.NumPad2) AndAlso
+            aiDifficultySelection <> AIDifficultyLevel.Normal Then
+
+            aiDifficultySelection = AIDifficultyLevel.Normal
             PlayMenuDownSound()
+            Invalidate()
+
             Return
+
         End If
 
-        If (e.KeyCode = Keys.D3 OrElse e.KeyCode = Keys.NumPad3) AndAlso aiMenuIndex <> 2 Then
-            aiMenuIndex = 2
+        ' Is the 3 key pressed AND
+        ' Is the selected difficulty NOT already Hard? If so, select it and play sound
+        If (e.KeyCode = Keys.D3 OrElse e.KeyCode = Keys.NumPad3) AndAlso
+            aiDifficultySelection <> AIDifficultyLevel.Hard Then
+
+            aiDifficultySelection = AIDifficultyLevel.Hard
             PlayMenuDownSound()
+            Invalidate()
+
             Return
+
         End If
 
 
         ' ============================
         '   SELECT: SPACE / ENTER
         ' ============================
-
         If (e.KeyCode = Keys.Space AndAlso Not spaceKeyDown) OrElse
            (e.KeyCode = Keys.Enter AndAlso Not enterKeyDown) Then
-
-            Select Case aiMenuIndex
-                Case 0 : aiDifficulty = 0.7
-                Case 1 : aiDifficulty = 0.8
-                Case 2 : aiDifficulty = 0.95
-            End Select
-
-            currentState = GameState.Playing
-            StartNewMatch()
-            PlaySelectSound()
-
             If e.KeyCode = Keys.Space Then
                 spaceKeyDown = True
             Else
                 enterKeyDown = True
             End If
 
+            Select Case aiDifficultySelection
+                Case AIDifficultyLevel.Easy : aiDifficulty = 0.7
+                Case AIDifficultyLevel.Normal : aiDifficulty = 0.8
+                Case AIDifficultyLevel.Hard : aiDifficulty = 0.95
+            End Select
+
+            currentState = GameState.Playing
+            StartNewMatch()
+            PlaySelectSound()
+            Invalidate()
+
             Return
+
         End If
 
 
@@ -1496,9 +1520,13 @@ Public Class Form1
 
         If e.KeyCode = Keys.Escape AndAlso Not escapeKeyDown Then
             escapeKeyDown = True
+
             currentState = GameState.StartScreen
             PlaySelectSound()
+            Invalidate()
+
             Return
+
         End If
 
     End Sub
