@@ -197,6 +197,24 @@ Public Class Form1
     Private fullscreenIndicatorFont As Font
     Private fullscreenIndicatorBrush As SolidBrush
 
+
+    ' Cached pause layout
+    Private pauseTitle As String = "PAUSED"
+    Private pauseTitleSize As SizeF
+    Private pauseTitleX As Single
+    Private pauseTitleY As Single
+
+    Private pauseMenuItems() As String = {"Resume", "New Match", "Quit to Start Screen"}
+    Private pauseMenuItemSizes() As SizeF
+    Private pauseMenuItemX() As Single
+    Private pauseMenuItemY() As Single
+
+    Private pauseMenuStartY As Single
+    Private pauseMenuSpacing As Single
+
+    Private pauseMenuItemBrush() As SolidBrush
+
+
     'Private fpsFont As Font
 
     ' -------------------------------
@@ -327,16 +345,45 @@ Public Class Form1
         LoadAndRegisterSounds()
     End Sub
 
+    'Private Sub LoadAndRegisterSounds()
+    '    AudioPlayer.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
+    '    AudioPlayer.SetVolumeOverlapping("bounce", 250)
+
+    '    AudioPlayer.AddSound("startloop", Path.Combine(Application.StartupPath, "startloop.mp3"))
+    '    AudioPlayer.SetVolume("startloop", 75)
+    '    PlayStartLoop()
+
+    '    AudioPlayer.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
+    '    AudioPlayer.SetVolume("fullscreen", 300)
+
+    '    AudioPlayer.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
+    '    AudioPlayer.SetVolumeOverlapping("arrow_up", 400)
+
+    '    AudioPlayer.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
+    '    AudioPlayer.SetVolumeOverlapping("arrow_down", 300)
+
+    '    AudioPlayer.AddSound("select", Path.Combine(Application.StartupPath, "select.mp3"))
+    '    AudioPlayer.SetVolume("select", 300)
+
+    '    AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
+    '    AudioPlayer.SetVolume("point", 600)
+
+    '    AudioPlayer.AddSound("gameplayloop", Path.Combine(Application.StartupPath, "gameplayloop.mp3"))
+    '    AudioPlayer.SetVolume("gameplayloop", 200)
+
+    '    AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
+    '    AudioPlayer.SetVolume("pause", 40)
+    'End Sub
+
+
+
     Private Sub LoadAndRegisterSounds()
+
+        ' ---------------------------------------------------------
+        ' Overlapping SFX
+        ' ---------------------------------------------------------
         AudioPlayer.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
         AudioPlayer.SetVolumeOverlapping("bounce", 250)
-
-        AudioPlayer.AddSound("startloop", Path.Combine(Application.StartupPath, "startloop.mp3"))
-        AudioPlayer.SetVolume("startloop", 75)
-        PlayStartLoop()
-
-        AudioPlayer.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
-        AudioPlayer.SetVolume("fullscreen", 300)
 
         AudioPlayer.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
         AudioPlayer.SetVolumeOverlapping("arrow_up", 400)
@@ -344,18 +391,37 @@ Public Class Form1
         AudioPlayer.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
         AudioPlayer.SetVolumeOverlapping("arrow_down", 300)
 
+        ' ---------------------------------------------------------
+        ' Single‑instance SFX
+        ' ---------------------------------------------------------
+        AudioPlayer.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
+        AudioPlayer.SetVolume("fullscreen", 300)
+
         AudioPlayer.AddSound("select", Path.Combine(Application.StartupPath, "select.mp3"))
         AudioPlayer.SetVolume("select", 300)
 
         AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
         AudioPlayer.SetVolume("point", 600)
 
+        ' ---------------------------------------------------------
+        ' Loops (Start, Gameplay, Pause)
+        ' ---------------------------------------------------------
+        AudioPlayer.AddSound("startloop", Path.Combine(Application.StartupPath, "startloop.mp3"))
+        AudioPlayer.SetVolume("startloop", 75)
+
         AudioPlayer.AddSound("gameplayloop", Path.Combine(Application.StartupPath, "gameplayloop.mp3"))
-        AudioPlayer.SetVolume("gameplayloop", 200)
+        'AudioPlayer.SetVolume("gameplayloop", 200)
 
         AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
-        AudioPlayer.SetVolume("pause", 40)
+        'AudioPlayer.SetVolume("pause", 40)
+
+        ' ---------------------------------------------------------
+        ' Begin Start Screen Loop (with fade‑in)
+        ' ---------------------------------------------------------
+        PlayStartLoop()
+
     End Sub
+
 
     ' ===============================
     '  PHYSICS LOOP
@@ -680,29 +746,193 @@ Public Class Form1
         End Select
     End Sub
 
+    'Private Sub DrawPauseScreen(g As Graphics)
+    '    g.FillRectangle(dimBrush, ClientRectangle)
+
+    '    Dim title As String = "PAUSED"
+    '    Dim titleSize = g.MeasureString(title, pauseTitleFont)
+
+    '    g.DrawString(title, pauseTitleFont, whiteBrush,
+    '                 CSng((ClientSize.Width - titleSize.Width) / 2.0F),
+    '                 CSng(ClientSize.Height * 0.25F))
+
+    '    Dim items() As String = {"Resume", "New Match", "Quit to Start Screen"}
+
+    '    For i As Integer = 0 To items.Length - 1
+    '        Dim text = items(i)
+    '        Dim size = g.MeasureString(text, pauseMenuFont)
+
+    '        Dim brush As SolidBrush = If(i = pauseMenuIndex, whiteBrush, grayBrush)
+
+    '        g.DrawString(text, pauseMenuFont, brush,
+    '                     CSng((ClientSize.Width - size.Width) / 2.0F),
+    '                     CSng(ClientSize.Height * 0.4F + i * (size.Height + 10)))
+    '    Next
+    'End Sub
+
+
+    'Private Sub DrawPauseScreen(g As Graphics)
+    '    g.FillRectangle(dimBrush, ClientRectangle)
+
+    '    ' Title
+    '    Dim title As String = "PAUSED"
+    '    ' Dim pauseTitle As String = "PAUSED"
+
+
+    '    Dim titleSize = g.MeasureString(title, pauseTitleFont)
+    '    ' Dim pauseTitleSize as SizeF
+    '    ' pauseTitleSize = g.MeasureString(title, pauseTitleFont) ' Resize
+
+
+
+    '    Dim titleX As Single = (ClientSize.Width - titleSize.Width) / 2.0F
+    '    ' Dim pauseTitleX As Single
+    '    ' pauseTitleX = (ClientSize.Width - titleSize.Width) / 2.0F ' Resize
+
+    '    Dim titleY As Single = ClientSize.Height * 0.22F
+    '    ' Dim pauseTitleY As Single
+    '    ' Dim pauseTitleY = ClientSize.Height * 0.22F ' Resize
+
+
+
+
+    '    ' Optional soft shadow for readability
+    '    'g.DrawString(title, pauseTitleFont, grayBrush,
+    '    '         titleX + 2, titleY + 2)
+
+    '    g.DrawString(title, pauseTitleFont, whiteBrush,
+    '             titleX, titleY)
+
+
+    '    ' g.DrawString(pauseTitle, pauseTitleFont, whiteBrush,
+    '    '         pauseTitleX, pauseTitleY)
+
+
+
+
+
+
+
+
+
+    '    ' Menu items
+    '    Dim items() As String = {"Resume", "New Match", "Quit to Start Screen"}
+    '    ' Dim  pauseMenuItems() As String = {"Resume", "New Match", "Quit to Start Screen"}
+
+    '    Dim startY As Single = titleY + titleSize.Height + (ClientSize.Height * 0.05F)
+    '    ' Dim  pauseMenuStartY As Single
+    '    ' Dim  pauseMenuStartY = titleY + titleSize.Height + (ClientSize.Height * 0.05F) ' Resize
+
+
+
+    '    Dim spacing As Single = ClientSize.Height * 0.1F
+    '    ' Dim  pauseMenuSpacing As Single 
+    '    ' Dim  pauseMenuSpacing = ClientSize.Height * 0.1F ' Resize
+
+
+
+
+    '    For i As Integer = 0 To items.Length - 1
+    '        Dim text = items(i)
+    '        ' Dim pauseMenuText As String
+    '        ' Dim pauseMenuText = items(i)
+
+
+    '        Dim size = g.MeasureString(text, pauseMenuFont)
+    '        ' Dim size as SizeF 
+    '        ' Dim size = g.MeasureString(text, pauseMenuFont)
+
+
+
+    '        Dim brush As SolidBrush = If(i = pauseMenuIndex, whiteBrush, grayBrush)
+    '        ' Dim pauseMenubrush As SolidBrush
+    '        ' Dim pauseMenubrush = If(i = pauseMenuIndex, whiteBrush, grayBrush) ' OnKeyDown
+
+
+
+    '        Dim x As Single = (ClientSize.Width - size.Width) / 2.0F
+    '        'Dim pauseMenuX As Single
+    '        'Dim pauseMenuX = (ClientSize.Width - size.Width) / 2.0F ' Resize
+
+    '        Dim y As Single = startY + i * spacing
+    '        ' Dim pauseMenuY As Single 
+    '        ' Dim pauseMenuY = startY + i * spacing ' Resize
+
+
+    '        g.DrawString(text, pauseMenuFont, brush, x, y)
+    '        ' g.DrawString(pauseMenuText, pauseMenuFont, pauseMenubrush, pauseMenuX, pauseMenuY)
+
+
+
+
+    '    Next
+
+
+
+
+
+
+    'End Sub
+
+
+
+
+
+
+    'Private Sub DrawPauseScreen(g As Graphics)
+    '    g.FillRectangle(dimBrush, ClientRectangle)
+
+    '    ' Title
+    '    g.DrawString(pauseTitle, pauseTitleFont, whiteBrush,
+    '             pauseTitleX, pauseTitleY)
+
+    '    ' Menu items
+    '    'For i As Integer = 0 To pauseMenuItems.Length - 1
+    '    '    Dim brush As SolidBrush = If(i = pauseMenuIndex, whiteBrush, grayBrush)
+    '    '    g.DrawString(pauseMenuItems(i), pauseMenuFont, brush,
+    '    '             pauseMenuItemX(i), pauseMenuItemY(i))
+    '    'Next
+
+
+
+
+    '    'pauseMenuItemBrush(0) = If(0 = pauseMenuIndex, whiteBrush, grayBrush)
+
+    '    g.DrawString(pauseMenuItems(0), pauseMenuFont, pauseMenuItemBrush(0),
+    '                 pauseMenuItemX(0), pauseMenuItemY(0))
+
+    '    'pauseMenuItemBrush(1) = If(1 = pauseMenuIndex, whiteBrush, grayBrush)
+
+
+    '    g.DrawString(pauseMenuItems(1), pauseMenuFont, pauseMenuItemBrush(1),
+    '                 pauseMenuItemX(1), pauseMenuItemY(1))
+
+    '    'pauseMenuItemBrush(2) = If(2 = pauseMenuIndex, whiteBrush, grayBrush)
+
+    '    g.DrawString(pauseMenuItems(2), pauseMenuFont, pauseMenuItemBrush(2),
+    '                 pauseMenuItemX(2), pauseMenuItemY(2))
+
+    'End Sub
+
+
     Private Sub DrawPauseScreen(g As Graphics)
         g.FillRectangle(dimBrush, ClientRectangle)
 
-        Dim title As String = "PAUSED"
-        Dim titleSize = g.MeasureString(title, pauseTitleFont)
+        ' Title
+        g.DrawString(pauseTitle, pauseTitleFont, whiteBrush,
+                 pauseTitleX, pauseTitleY)
 
-        g.DrawString(title, pauseTitleFont, whiteBrush,
-                     CSng((ClientSize.Width - titleSize.Width) / 2.0F),
-                     CSng(ClientSize.Height * 0.25F))
-
-        Dim items() As String = {"Resume", "New Match", "Quit to Start Screen"}
-
-        For i As Integer = 0 To items.Length - 1
-            Dim text = items(i)
-            Dim size = g.MeasureString(text, pauseMenuFont)
-
+        ' Menu items (zero allocations, zero per-frame logic)
+        For i As Integer = 0 To pauseMenuItems.Length - 1
             Dim brush As SolidBrush = If(i = pauseMenuIndex, whiteBrush, grayBrush)
-
-            g.DrawString(text, pauseMenuFont, brush,
-                         CSng((ClientSize.Width - size.Width) / 2.0F),
-                         CSng(ClientSize.Height * 0.4F + i * (size.Height + 10)))
+            g.DrawString(pauseMenuItems(i), pauseMenuFont, brush,
+                     pauseMenuItemX(i), pauseMenuItemY(i))
         Next
+
+
     End Sub
+
+
 
     Private Sub DrawTrail(g As Graphics)
         If trail Is Nothing OrElse
@@ -1009,6 +1239,36 @@ Public Class Form1
 
         fullscreenIndicatorFont = New Font("Segoe UI", CSng(ClientSize.Height / 75.0F), FontStyle.Regular)
         fpsFont = New Font("Segoe UI", CSng(ClientSize.Height / 75.0F), FontStyle.Bold)
+
+
+
+
+        ' -------------------------------
+        ' Pause Screen Layout Cache
+        ' -------------------------------
+        Using g As Graphics = Me.CreateGraphics()
+
+            ' Title
+            pauseTitleSize = g.MeasureString(pauseTitle, pauseTitleFont)
+            pauseTitleX = (ClientSize.Width - pauseTitleSize.Width) / 2.0F
+            pauseTitleY = ClientSize.Height * 0.22F
+
+            ' Menu spacing
+            pauseMenuSpacing = ClientSize.Height * 0.1F
+            pauseMenuStartY = pauseTitleY + pauseTitleSize.Height + (ClientSize.Height * 0.05F)
+
+            ' Menu items
+            ReDim pauseMenuItemSizes(pauseMenuItems.Length - 1)
+            ReDim pauseMenuItemX(pauseMenuItems.Length - 1)
+            ReDim pauseMenuItemY(pauseMenuItems.Length - 1)
+
+            For i As Integer = 0 To pauseMenuItems.Length - 1
+                pauseMenuItemSizes(i) = g.MeasureString(pauseMenuItems(i), pauseMenuFont)
+                pauseMenuItemX(i) = (ClientSize.Width - pauseMenuItemSizes(i).Width) / 2.0F
+                pauseMenuItemY(i) = pauseMenuStartY + i * pauseMenuSpacing
+            Next
+
+        End Using
 
     End Sub
 
@@ -1524,6 +1784,12 @@ Public Class Form1
             If pauseMenuIndex > 0 Then
                 PlayMenuUp()
                 pauseMenuIndex = Math.Max(0, pauseMenuIndex - 1)
+
+                'ReDim pauseMenuItemBrush(pauseMenuItems.Length - 1)
+                'For i As Integer = 0 To pauseMenuItems.Length - 1
+                '    pauseMenuItemBrush(i) = If(i = pauseMenuIndex, whiteBrush, grayBrush)
+                'Next
+
                 Invalidate()
             End If
             Return
@@ -1533,6 +1799,11 @@ Public Class Form1
             If pauseMenuIndex < 2 Then
                 PlayMenuDown()
                 pauseMenuIndex = Math.Min(2, pauseMenuIndex + 1)
+                'ReDim pauseMenuItemBrush(pauseMenuItems.Length - 1)
+                'For i As Integer = 0 To pauseMenuItems.Length - 1
+                '    pauseMenuItemBrush(i) = If(i = pauseMenuIndex, whiteBrush, grayBrush)
+                'Next
+
                 Invalidate()
             End If
             Return
@@ -1736,7 +2007,11 @@ Public Class Form1
         moveRightPaddleUp = False
         moveRightPaddleDown = False
 
-        pauseMenuIndex = 0
+        'ReDim pauseMenuItemBrush(pauseMenuItems.Length - 1)
+
+        'For i As Integer = 0 To pauseMenuItems.Length - 1
+        '    pauseMenuItemBrush(i) = If(i = pauseMenuIndex, whiteBrush, grayBrush)
+        'Next
 
         PlayPausedLoop()
     End Sub
@@ -1850,22 +2125,139 @@ Public Class Form1
                                     Screen.PrimaryScreen.WorkingArea.Height \ 2)
     End Sub
 
-    Public Sub RestartLoops()
+    'Public Sub RestartLoops()
 
-        PauseAllLoops()
+    '    PauseAllLoops()
 
-        If currentState = GameState.StartScreen OrElse
-           currentState = GameState.EndScreen OrElse
-           currentState = GameState.AIDifficulty Then
+    '    If currentState = GameState.StartScreen OrElse
+    '       currentState = GameState.EndScreen OrElse
+    '       currentState = GameState.AIDifficulty Then
 
-            PlayStartLoop()
-        ElseIf currentState = GameState.Playing Then
-            PlayGamePlayLoop()
-        ElseIf currentState = GameState.Pause Then
-            PlayPausedLoop()
-        End If
+    '        PlayStartLoop()
+    '    ElseIf currentState = GameState.Playing Then
+    '        PlayGamePlayLoop()
+    '    ElseIf currentState = GameState.Pause Then
+    '        PlayPausedLoop()
+    '    End If
+
+    'End Sub
+    'Public Sub RestartLoops()
+
+    '    ' Stop whatever loop is currently active
+    '    AudioPlayer.StopSound("startloop")
+    '    AudioPlayer.StopSound("gameplayloop")
+    '    AudioPlayer.StopSound("pause")
+
+    '    treadingtimer wait 500ms 
+
+
+    '    Select Case currentState
+
+    '        Case GameState.StartScreen, GameState.EndScreen, GameState.AIDifficulty
+    '            PlayStartLoop()   ' includes fade-in
+
+    '        Case GameState.Playing
+    '            PlayGamePlayLoop()   ' includes fade-in
+
+    '        Case GameState.Pause
+    '            PlayPausedLoop()   ' includes fade-in
+
+    '    End Select
+
+    'End Sub
+
+
+
+    'Public Async Sub RestartLoops()
+
+    '    ' Fade-out and stop all loops
+    '    AudioPlayer.StopSound("startloop")
+    '    AudioPlayer.StopSound("gameplayloop")
+    '    AudioPlayer.StopSound("pause")
+
+    '    ' Non-blocking 500ms delay for clean transitions
+    '    Await Task.Delay(1000)
+
+    '    Select Case currentState
+
+    '        Case GameState.StartScreen, GameState.EndScreen, GameState.AIDifficulty
+    '            PlayStartLoop()   ' includes fade-in
+
+    '        Case GameState.Playing
+    '            PlayGamePlayLoop()   ' includes fade-in
+
+    '        Case GameState.Pause
+    '            PlayPausedLoop()     ' includes fade-in
+
+    '    End Select
+
+    'End Sub
+
+
+    'Public Async Sub RestartLoops()
+
+    '    ' Fade-out and stop only loops that are actually playing
+    '    If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
+    '    If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
+    '    If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
+
+    '    ' Non-blocking delay for clean transitions
+    '    Await Task.Delay(3000)
+
+    '    Select Case currentState
+
+    '        Case GameState.StartScreen, GameState.EndScreen, GameState.AIDifficulty
+    '            PlayStartLoop()   ' includes fade-in
+
+    '        Case GameState.Playing
+
+
+    '            PlayGamePlayLoop()   ' includes fade-in
+
+    '        Case GameState.Pause
+
+    '            AudioPlayer.CloseByAlias("pause")
+
+    '            Await Task.Delay(3000)
+
+
+    '            'AudioPlayer.AddSound("pause",)
+
+    '            AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
+
+
+    '            PlayPausedLoop()     ' includes fade-in
+
+    '    End Select
+
+    'End Sub
+
+    Public Async Sub RestartLoops()
+
+        ' Fade-out and stop only loops that are actually playing
+        If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
+        If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
+        If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
+
+        ' Non-blocking delay for clean transitions
+        Await Task.Delay(3000)
+
+        Select Case currentState
+
+            Case GameState.StartScreen, GameState.EndScreen, GameState.AIDifficulty
+                PlayStartLoop()   ' includes fade-in
+
+            Case GameState.Playing
+                PlayGamePlayLoop()   ' includes fade-in
+
+            Case GameState.Pause
+                PlayPausedLoop()     ' includes fade-in
+
+        End Select
 
     End Sub
+
+
 
 
     Private Sub PlayPoint()
@@ -1876,17 +2268,106 @@ Public Class Form1
         AudioPlayer.PlaySound("select")
     End Sub
 
+    'Private Sub PlayPausedLoop()
+    '    AudioPlayer.LoopSound("pause")
+    'End Sub
+
+    'Private Sub PlayStartLoop()
+    '    AudioPlayer.LoopSound("startloop")
+    'End Sub
+
+    'Private Sub PlayGamePlayLoop()
+    '    AudioPlayer.LoopSound("gameplayloop")
+    'End Sub
+    'Private Sub PlayPausedLoop()
+    '    ' Smooth transition: stop other loops first
+    '    AudioPlayer.StopSound("startloop")
+    '    AudioPlayer.StopSound("gameplayloop")
+
+    '    ' Fade‑in loop
+    '    AudioPlayer.SetVolume("pause", 0)
+    '    AudioPlayer.LoopSound("pause")
+    '    AudioPlayer.FadeVolume("pause", 0, 40, 2000)
+    'End Sub
+
+    'Private Sub PlayStartLoop()
+    '    ' Smooth transition: stop other loops first
+    '    AudioPlayer.StopSound("pause")
+    '    AudioPlayer.StopSound("gameplayloop")
+
+    '    ' Fade‑in loop
+    '    AudioPlayer.SetVolume("startloop", 0)
+    '    AudioPlayer.LoopSound("startloop")
+    '    AudioPlayer.FadeVolume("startloop", 0, 75, 2000)
+    'End Sub
+
+    'Private Sub PlayGamePlayLoop()
+    '    ' Smooth transition: stop other loops first
+    '    AudioPlayer.StopSound("pause")
+    '    AudioPlayer.StopSound("startloop")
+
+    '    ' Fade‑in loop
+    '    AudioPlayer.SetVolume("gameplayloop", 0)
+    '    AudioPlayer.LoopSound("gameplayloop")
+    '    AudioPlayer.FadeVolume("gameplayloop", 0, 200, 2000)
+    'End Sub
+
+
+
+
+
+
     Private Sub PlayPausedLoop()
+
+        ' Stop other loops safely
+        If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
+        If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
+
+        ' Fade‑in loop
+        AudioPlayer.SetVolume("pause", 0)
         AudioPlayer.LoopSound("pause")
+        AudioPlayer.FadeVolume("pause", 0, 40, 2000)
+
     End Sub
+
+
+
 
     Private Sub PlayStartLoop()
+
+        ' Stop other loops safely
+        If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
+        If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
+
+        ' Fade‑in loop
+        AudioPlayer.SetVolume("startloop", 0)
         AudioPlayer.LoopSound("startloop")
+        AudioPlayer.FadeVolume("startloop", 0, 75, 2000)
+
     End Sub
 
+
     Private Sub PlayGamePlayLoop()
+
+        ' Stop other loops safely
+        If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
+        If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
+
+        ' Fade‑in loop
+        AudioPlayer.SetVolume("gameplayloop", 0)
         AudioPlayer.LoopSound("gameplayloop")
+        AudioPlayer.FadeVolume("gameplayloop", 0, 200, 2000)
+
     End Sub
+
+
+
+
+
+
+
+
+
 
     Private Sub PlayFullscreen()
         AudioPlayer.PlaySound("fullscreen")
@@ -1905,24 +2386,55 @@ Public Class Form1
         AudioPlayer.PlayOverlapping("arrow_down")
     End Sub
 
+    'Private Sub PauseAllLoops()
+    '    AudioPlayer.PauseSound("gameplayloop")
+    '    AudioPlayer.PauseSound("startloop")
+    '    AudioPlayer.PauseSound("pause")
+    'End Sub
+
     Private Sub PauseAllLoops()
-        AudioPlayer.PauseSound("gameplayloop")
-        AudioPlayer.PauseSound("startloop")
-        AudioPlayer.PauseSound("pause")
+
+        If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
+        If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
+        If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
+
     End Sub
+
+
+    'Private Sub PauseGamePlayLoop()
+    '    AudioPlayer.PauseSound("gameplayloop")
+    'End Sub
+
 
     Private Sub PauseGamePlayLoop()
-        AudioPlayer.PauseSound("gameplayloop")
+        If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
     End Sub
+
+
+    'Private Sub PauseStartLoop()
+    '    AudioPlayer.PauseSound("startloop")
+    'End Sub
 
     Private Sub PauseStartLoop()
-        AudioPlayer.PauseSound("startloop")
+        If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
     End Sub
+
+
+
+
+
+
+
+
+
+
+    'Private Sub PausePausedLoop()
+    '    AudioPlayer.PauseSound("pause")
+    'End Sub
 
     Private Sub PausePausedLoop()
-        AudioPlayer.PauseSound("pause")
+        If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
     End Sub
-
 
 
 
