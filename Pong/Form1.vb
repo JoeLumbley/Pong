@@ -1640,8 +1640,6 @@ Public Class Form1
                 If spaceKeyDown Then Return
                 spaceKeyDown = True
 
-                PlaySelectSound()
-
                 ' Is one player mode selected? If so, go to AI Difficulty Menu.
                 If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
                     playerMode = 1
@@ -1651,6 +1649,7 @@ Public Class Form1
                     StartNewMatch()
                 End If
 
+                PlaySelectSound()
                 Invalidate()
 
                 Return
@@ -1658,8 +1657,6 @@ Public Class Form1
             Case Keys.Enter
                 If enterKeyDown Then Return
                 enterKeyDown = True
-
-                PlaySelectSound()
 
                 ' Is one player mode selected? If so, go to AI Difficulty Menu.
                 If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
@@ -1670,6 +1667,7 @@ Public Class Form1
                     StartNewMatch()
                 End If
 
+                PlaySelectSound()
                 Invalidate()
 
                 Return
