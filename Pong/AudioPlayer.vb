@@ -46,6 +46,8 @@ Public Module AudioPlayer
 
             ' Fire cleanup every 6 minutes (360000 ms)
             cleanupTimer = New System.Threading.Timer(AddressOf CleanupTick, Nothing, 360000, 360000)
+            'cleanupTimer = New System.Threading.Timer(AddressOf CleanupTick, Nothing, 15000, 15000)
+
 
             cleanupInitialized = True
         End SyncLock

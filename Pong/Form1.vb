@@ -1954,8 +1954,8 @@ Public Class Form1
             If pKeyDown Then Return
             pKeyDown = True
 
-            PlaySelectSound()
             ResumeGame()
+            PlaySelectSound()
             Invalidate()
             Return
         End If
@@ -1964,8 +1964,8 @@ Public Class Form1
             If pauseKeyDown Then Return
             pauseKeyDown = True
 
-            PlaySelectSound()
             ResumeGame()
+            PlaySelectSound()
             Invalidate()
             Return
         End If
@@ -1974,8 +1974,8 @@ Public Class Form1
             If mediaPlayPauseKeyDown Then Return
             mediaPlayPauseKeyDown = True
 
-            PlaySelectSound()
             ResumeGame()
+            PlaySelectSound()
             Invalidate()
             Return
         End If
@@ -1986,10 +1986,9 @@ Public Class Form1
         ' ============================================================
         If e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W Then
             If pauseMenuSelection > 0 Then
-                PlayMenuUpSound()
                 pauseMenuSelection = Math.Max(0, pauseMenuSelection - 1)
 
-
+                PlayMenuUpSound()
                 Invalidate()
             End If
             Return
@@ -1997,9 +1996,9 @@ Public Class Form1
 
         If e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S Then
             If pauseMenuSelection < 2 Then
-                PlayMenuDownSound()
                 pauseMenuSelection = Math.Min(2, pauseMenuSelection + 1)
 
+                PlayMenuDownSound()
                 Invalidate()
             End If
             Return
@@ -2010,22 +2009,22 @@ Public Class Form1
         ' 3. Direct Hotkeys (R = Resume, N = New Match, Q = Quit)
         ' ============================================================
         If e.KeyCode = Keys.R Then
-            PlaySelectSound()
             ResumeGame()
+            PlaySelectSound()
             Invalidate()
             Return
         End If
 
         If e.KeyCode = Keys.N Then
-            PlaySelectSound()
             StartNewMatch()
+            PlaySelectSound()
             Invalidate()
             Return
         End If
 
         If e.KeyCode = Keys.Q Then
-            PlaySelectSound()
             Quit2StartScreen()
+            PlaySelectSound()
             Invalidate()
             Return
         End If
@@ -2038,8 +2037,8 @@ Public Class Form1
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
-            PlaySelectSound()
             Quit2StartScreen()
+            PlaySelectSound()
             Invalidate()
             Return
         End If
@@ -2052,13 +2051,12 @@ Public Class Form1
             If enterKeyDown Then Return
             enterKeyDown = True
 
-            PlaySelectSound()
-
             Select Case pauseMenuSelection
                 Case 0 : ResumeGame()
                 Case 1 : StartNewMatch()
                 Case 2 : Quit2StartScreen()
             End Select
+            PlaySelectSound()
             Invalidate()
             Return
         End If
@@ -2067,22 +2065,19 @@ Public Class Form1
             If spaceKeyDown Then Return
             spaceKeyDown = True
 
-            PlaySelectSound()
-
             Select Case pauseMenuSelection
                 Case 0 : ResumeGame()
                 Case 1 : StartNewMatch()
                 Case 2 : Quit2StartScreen()
             End Select
+            PlaySelectSound()
             Invalidate()
             Return
         End If
 
     End Sub
 
-
     Private Sub Quit2StartScreen()
-        ' Quit to Start Screen
 
         PausePausedLoop()
 
@@ -2102,82 +2097,6 @@ Public Class Form1
         PlayStartLoop()
 
     End Sub
-
-
-    'Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
-    '    MyBase.OnKeyUp(e)
-
-    '    ' ============================================================
-    '    ' 1. Release Paddle Movement Keys
-    '    ' ============================================================
-    '    If e.KeyCode = Keys.W Then
-    '        moveLeftPaddleUp = False
-    '        wKeyDown = False
-    '    End If
-
-    '    If e.KeyCode = Keys.S Then
-    '        moveLeftPaddleDown = False
-    '        sKeyDown = False
-    '    End If
-
-    '    If playerMode = 2 Then
-    '        If e.KeyCode = Keys.Up Then
-    '            moveRightPaddleUp = False
-    '            upKeyDown = False
-    '        End If
-
-    '        If e.KeyCode = Keys.Down Then
-    '            moveRightPaddleDown = False
-    '            downKeyDown = False
-    '        End If
-    '    End If
-
-
-    '    ' ============================================================
-    '    ' 2. Release Pause / Resume Keys
-    '    ' ============================================================
-    '    If e.KeyCode = Keys.P Then pKeyDown = False
-    '    If e.KeyCode = Keys.Pause Then pauseKeyDown = False
-    '    If e.KeyCode = Keys.MediaPlayPause Then mediaPlayPauseKeyDown = False
-
-
-    '    ' ============================================================
-    '    ' 3. Release Fullscreen Toggle Keys
-    '    ' ============================================================
-    '    If e.KeyCode = Keys.F11 Then f11KeyDown = False
-    '    If e.KeyCode = Keys.F Then fKeyDown = False
-
-
-    '    ' ============================================================
-    '    ' 4. Release Escape Key
-    '    ' ============================================================
-    '    If e.KeyCode = Keys.Escape Then escapeKeyDown = False
-
-
-    '    ' ============================================================
-    '    ' 5. Release Confirm Keys (Enter / Space)
-    '    ' ============================================================
-    '    If e.KeyCode = Keys.Enter Then enterKeyDown = False
-    '    If e.KeyCode = Keys.Space Then spaceKeyDown = False
-
-
-    '    ' ============================================================
-    '    ' 6. Release Menu Navigation Keys (Up / Down / W / S)
-    '    ' ============================================================
-    '    If e.KeyCode = Keys.Up Then upKeyDown = False
-    '    If e.KeyCode = Keys.Down Then downKeyDown = False
-
-    '    If e.KeyCode = Keys.W Then wKeyDown = False
-    '    If e.KeyCode = Keys.S Then sKeyDown = False
-
-
-    '    If e.Control AndAlso e.KeyCode = Keys.Q Then
-    '        ctrlQDown = False
-    '    End If
-
-
-    'End Sub
-
 
     Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
         MyBase.OnKeyUp(e)
@@ -2248,18 +2167,25 @@ Public Class Form1
 
     End Sub
 
-
-
-
-
-
-
     Private Sub QuitGame()
 
         PlayExitSound()
 
+        If AudioPlayer.IsPlaying("startloop") Then
+            AudioPlayer.FadeOutAndStop("startloop", 800)
+        End If
+        If AudioPlayer.IsPlaying("gameplayloop") Then
+            AudioPlayer.FadeOutAndStop("gameplayloop", 800)
+        End If
+        If AudioPlayer.IsPlaying("pause") Then
+            AudioPlayer.FadeOutAndStop("pause", 800)
+        End If
+        If AudioPlayer.IsPlaying("bounce") Then
+            AudioPlayer.FadeOutAndStop("bounce", 800)
+        End If
+
         ' Wait for the sound to finish before closing
-        Dim t As New Timer() With {.Interval = 500}
+        Dim t As New Timer() With {.Interval = 1000}
         AddHandler t.Tick,
         Sub()
             t.Stop()
@@ -2272,22 +2198,6 @@ Public Class Form1
         t.Start()
 
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     Private Sub ToggleFullScreen()
 
@@ -2372,8 +2282,6 @@ Public Class Form1
 
         AudioPlayer.CloseAll()
 
-
-
         ballBrush?.Dispose()
         fpsBrush?.Dispose()
         fpsFont?.Dispose()
@@ -2390,7 +2298,6 @@ Public Class Form1
             Next
         End If
 
-
         hudScoreFont?.Dispose()
         hudLabelFont?.Dispose()
         pauseTitleFont?.Dispose()
@@ -2403,10 +2310,7 @@ Public Class Form1
         gameOverInfoFont?.Dispose()
         fullscreenIndicatorFont?.Dispose()
 
-
         physicsTimer?.Dispose()
-
-
 
     End Sub
 
@@ -2443,119 +2347,23 @@ Public Class Form1
                                     Screen.PrimaryScreen.WorkingArea.Height \ 2)
     End Sub
 
-    'Public Sub RestartLoops()
-
-    '    PauseAllLoops()
-
-    '    If currentState = GameState.StartScreen OrElse
-    '       currentState = GameState.EndScreen OrElse
-    '       currentState = GameState.AIDifficulty Then
-
-    '        PlayStartLoop()
-    '    ElseIf currentState = GameState.Playing Then
-    '        PlayGamePlayLoop()
-    '    ElseIf currentState = GameState.Pause Then
-    '        PlayPausedLoop()
-    '    End If
-
-    'End Sub
-    'Public Sub RestartLoops()
-
-    '    ' Stop whatever loop is currently active
-    '    AudioPlayer.StopSound("startloop")
-    '    AudioPlayer.StopSound("gameplayloop")
-    '    AudioPlayer.StopSound("pause")
-
-    '    treadingtimer wait 500ms 
-
-
-    '    Select Case currentState
-
-    '        Case GameState.StartScreen, GameState.EndScreen, GameState.AIDifficulty
-    '            PlayStartLoop()   ' includes fade-in
-
-    '        Case GameState.Playing
-    '            PlayGamePlayLoop()   ' includes fade-in
-
-    '        Case GameState.Pause
-    '            PlayPausedLoop()   ' includes fade-in
-
-    '    End Select
-
-    'End Sub
-
-
-
-    'Public Async Sub RestartLoops()
-
-    '    ' Fade-out and stop all loops
-    '    AudioPlayer.StopSound("startloop")
-    '    AudioPlayer.StopSound("gameplayloop")
-    '    AudioPlayer.StopSound("pause")
-
-    '    ' Non-blocking 500ms delay for clean transitions
-    '    Await Task.Delay(1000)
-
-    '    Select Case currentState
-
-    '        Case GameState.StartScreen, GameState.EndScreen, GameState.AIDifficulty
-    '            PlayStartLoop()   ' includes fade-in
-
-    '        Case GameState.Playing
-    '            PlayGamePlayLoop()   ' includes fade-in
-
-    '        Case GameState.Pause
-    '            PlayPausedLoop()     ' includes fade-in
-
-    '    End Select
-
-    'End Sub
-
-
-    'Public Async Sub RestartLoops()
-
-    '    ' Fade-out and stop only loops that are actually playing
-    '    If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
-    '    If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
-    '    If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
-
-    '    ' Non-blocking delay for clean transitions
-    '    Await Task.Delay(3000)
-
-    '    Select Case currentState
-
-    '        Case GameState.StartScreen, GameState.EndScreen, GameState.AIDifficulty
-    '            PlayStartLoop()   ' includes fade-in
-
-    '        Case GameState.Playing
-
-
-    '            PlayGamePlayLoop()   ' includes fade-in
-
-    '        Case GameState.Pause
-
-    '            AudioPlayer.CloseByAlias("pause")
-
-    '            Await Task.Delay(3000)
-
-
-    '            'AudioPlayer.AddSound("pause",)
-
-    '            AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
-
-
-    '            PlayPausedLoop()     ' includes fade-in
-
-    '    End Select
-
-    'End Sub
-
     Public Async Sub RestartLoops()
 
         ' Fade-out and stop only loops that are actually playing
-        If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
-        If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
-        If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
+        'If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
+        'If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
+        'If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
+
+        If AudioPlayer.IsPlaying("startloop") Then
+            AudioPlayer.FadeOutAndStop("startloop", 2000)
+        End If
+        If AudioPlayer.IsPlaying("gameplayloop") Then
+            AudioPlayer.FadeOutAndStop("gameplayloop", 2000)
+        End If
+        If AudioPlayer.IsPlaying("pause") Then
+            AudioPlayer.FadeOutAndStop("pause", 2000)
+        End If
+
 
         ' Non-blocking delay for clean transitions
         Await Task.Delay(3000)
@@ -2574,9 +2382,6 @@ Public Class Form1
         End Select
 
     End Sub
-
-
-
 
     Private Sub PlayPoint()
         AudioPlayer.PlaySound("point")
