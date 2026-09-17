@@ -2171,15 +2171,18 @@ Public Class Form1
 
         PlayExitSound()
 
-        If AudioPlayer.IsPlaying("startloop") Then
-            AudioPlayer.FadeOutAndStop("startloop", 800)
-        End If
-        If AudioPlayer.IsPlaying("gameplayloop") Then
-            AudioPlayer.FadeOutAndStop("gameplayloop", 800)
-        End If
-        If AudioPlayer.IsPlaying("pause") Then
-            AudioPlayer.FadeOutAndStop("pause", 800)
-        End If
+        'If AudioPlayer.IsPlaying("startloop") Then
+        '    AudioPlayer.FadeOutAndStop("startloop", 800)
+        'End If
+        'If AudioPlayer.IsPlaying("gameplayloop") Then
+        '    AudioPlayer.FadeOutAndStop("gameplayloop", 800)
+        'End If
+        'If AudioPlayer.IsPlaying("pause") Then
+        '    AudioPlayer.FadeOutAndStop("pause", 800)
+        'End If
+
+        FadeOutAndStopActiveLoops(800)
+
         If AudioPlayer.IsPlaying("bounce") Then
             AudioPlayer.FadeOutAndStop("bounce", 800)
         End If
@@ -2349,38 +2352,37 @@ Public Class Form1
 
     Public Async Sub RestartLoops()
 
-        ' Fade-out and stop only loops that are actually playing
-        'If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
-        'If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
-        'If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
-
-        If AudioPlayer.IsPlaying("startloop") Then
-            AudioPlayer.FadeOutAndStop("startloop", 2000)
-        End If
-        If AudioPlayer.IsPlaying("gameplayloop") Then
-            AudioPlayer.FadeOutAndStop("gameplayloop", 2000)
-        End If
-        If AudioPlayer.IsPlaying("pause") Then
-            AudioPlayer.FadeOutAndStop("pause", 2000)
-        End If
-
+        FadeOutAndStopActiveLoops(2000)
 
         ' Non-blocking delay for clean transitions
-        Await Task.Delay(3000)
+        Await Task.Delay(4000)
 
         Select Case currentState
 
             Case GameState.StartScreen, GameState.EndScreen, GameState.AIDifficulty
-                PlayStartLoop()   ' includes fade-in
+                PlayStartLoop() ' includes fade-in
 
             Case GameState.Playing
-                PlayGamePlayLoop()   ' includes fade-in
+                PlayGamePlayLoop() ' includes fade-in
 
             Case GameState.Pause
-                PlayPausedLoop()     ' includes fade-in
+                PlayPausedLoop()  ' includes fade-in
 
         End Select
 
+    End Sub
+
+    Private Shared Sub FadeOutAndStopActiveLoops(duration As Integer)
+        ' Fade-out and stop only loops that are actually playing
+        If AudioPlayer.IsPlaying("startloop") Then
+            AudioPlayer.FadeOutAndStop("startloop", duration)
+        End If
+        If AudioPlayer.IsPlaying("gameplayloop") Then
+            AudioPlayer.FadeOutAndStop("gameplayloop", duration)
+        End If
+        If AudioPlayer.IsPlaying("pause") Then
+            AudioPlayer.FadeOutAndStop("pause", duration)
+        End If
     End Sub
 
     Private Sub PlayPoint()
