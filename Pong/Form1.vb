@@ -187,6 +187,7 @@ Public Class Form1
 
     Private wKeyDown As Boolean = False
     Private sKeyDown As Boolean = False
+    Private ctrlQDown As Boolean = False
 
 
 
@@ -1355,9 +1356,90 @@ Public Class Form1
     '  INPUT
     ' ===============================
 
+    'Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
+    '    MyBase.OnKeyDown(e)
+
+
+    '    ' ============================================================
+    '    ' 1. Fullscreen Toggle (F11 / F)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.F11 OrElse e.KeyCode = Keys.F Then
+
+    '        ' Repeat‑guard
+    '        If (e.KeyCode = Keys.F11 AndAlso f11KeyDown) OrElse
+    '           (e.KeyCode = Keys.F AndAlso fKeyDown) Then Return
+
+    '        ' Mark the correct key as down
+    '        If e.KeyCode = Keys.F11 Then
+    '            f11KeyDown = True
+    '        Else
+    '            fKeyDown = True
+    '        End If
+
+    '        PlayFullscreen()
+    '        ToggleFullScreen()
+    '        Invalidate()
+
+    '        Return
+    '    End If
+
+    '    ' ============================================================
+    '    ' 2. Escape pressed while fullscreen (exit fullscreen)
+    '    ' ============================================================
+    '    If Me.FormBorderStyle = FormBorderStyle.None AndAlso
+    '       e.KeyCode = Keys.Escape Then
+
+    '        If escapeKeyDown Then Return
+    '        escapeKeyDown = True
+
+    '        PlaySelectSound()
+    '        ToggleFullScreen()
+    '        Invalidate()
+
+    '        Return
+
+    '    End If
+
+
+    '    ' ============================================================
+    '    ' 3. State‑based Input Dispatch
+    '    ' ============================================================
+
+    '    ' --- Start Screen ---
+    '    If currentState = GameState.StartScreen Then
+    '        HandleStartScreenInput(e)
+    '        Return
+    '    End If
+
+    '    ' --- End Screen ---
+    '    If currentState = GameState.EndScreen Then
+    '        HandleEndScreenInput(e)
+    '        Return
+    '    End If
+
+    '    ' --- Gameplay ---
+    '    If currentState = GameState.Playing Then
+    '        HandleGameplayInput(e)
+    '        Return
+    '    End If
+
+    '    ' --- Pause Menu ---
+    '    If currentState = GameState.Pause Then
+    '        HandlePauseInput(e)
+    '        Return
+    '    End If
+
+    '    ' --- AI Difficulty Menu ---
+    '    If currentState = GameState.AIDifficulty Then
+    '        HandleAIDifficultyInput(e)
+    '        Return
+    '    End If
+
+    'End Sub
+
+
     Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
         MyBase.OnKeyDown(e)
-
 
         ' ============================================================
         ' 1. Fullscreen Toggle (F11 / F)
@@ -1368,7 +1450,7 @@ Public Class Form1
             If (e.KeyCode = Keys.F11 AndAlso f11KeyDown) OrElse
                (e.KeyCode = Keys.F AndAlso fKeyDown) Then Return
 
-            ' Mark the correct key as down
+            ' Mark correct key as down
             If e.KeyCode = Keys.F11 Then
                 f11KeyDown = True
             Else
@@ -1381,6 +1463,7 @@ Public Class Form1
 
             Return
         End If
+
 
         ' ============================================================
         ' 2. Escape pressed while fullscreen (exit fullscreen)
@@ -1396,45 +1479,66 @@ Public Class Form1
             Invalidate()
 
             Return
-
         End If
-
 
         ' ============================================================
-        ' 3. State‑based Input Dispatch
+        ' 3. Quit Game (Ctrl + Q)
+        ' ============================================================
+        If e.Control AndAlso e.KeyCode = Keys.Q Then
+
+            If ctrlQDown Then Return
+            ctrlQDown = True
+
+            PlaySelectSound()
+            QuitGame()
+            Return
+
+        End If
+
+        ' ============================================================
+        ' 4. State‑based Input Dispatch
         ' ============================================================
 
-        ' --- Start Screen ---
-        If currentState = GameState.StartScreen Then
-            HandleStartScreenInput(e)
-            Return
-        End If
+        Select Case currentState
 
-        ' --- End Screen ---
-        If currentState = GameState.EndScreen Then
-            HandleEndScreenInput(e)
-            Return
-        End If
+            Case GameState.StartScreen
+                HandleStartScreenInput(e)
+                Return
 
-        ' --- Gameplay ---
-        If currentState = GameState.Playing Then
-            HandleGameplayInput(e)
-            Return
-        End If
+            Case GameState.EndScreen
+                HandleEndScreenInput(e)
+                Return
 
-        ' --- Pause Menu ---
-        If currentState = GameState.Pause Then
-            HandlePauseInput(e)
-            Return
-        End If
+            Case GameState.Playing
+                HandleGameplayInput(e)
+                Return
 
-        ' --- AI Difficulty Menu ---
-        If currentState = GameState.AIDifficulty Then
-            HandleAIDifficultyInput(e)
-            Return
-        End If
+            Case GameState.Pause
+                HandlePauseInput(e)
+                Return
+
+            Case GameState.AIDifficulty
+                HandleAIDifficultyInput(e)
+                Return
+
+        End Select
 
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Sub HandleAIDifficultyInput(e As KeyEventArgs)
 
@@ -1540,9 +1644,9 @@ Public Class Form1
             'End Select
 
             Select Case aiDifficultySelection
-                Case AIDifficultyLevel.Easy : aiModeFactor = 0.65
+                Case AIDifficultyLevel.Easy : aiModeFactor = 0.6
                 Case AIDifficultyLevel.Normal : aiModeFactor = 0.7
-                Case AIDifficultyLevel.Hard : aiModeFactor = 0.75
+                Case AIDifficultyLevel.Hard : aiModeFactor = 0.8
             End Select
 
 
@@ -1996,6 +2100,81 @@ Public Class Form1
     End Sub
 
 
+    'Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
+    '    MyBase.OnKeyUp(e)
+
+    '    ' ============================================================
+    '    ' 1. Release Paddle Movement Keys
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.W Then
+    '        moveLeftPaddleUp = False
+    '        wKeyDown = False
+    '    End If
+
+    '    If e.KeyCode = Keys.S Then
+    '        moveLeftPaddleDown = False
+    '        sKeyDown = False
+    '    End If
+
+    '    If playerMode = 2 Then
+    '        If e.KeyCode = Keys.Up Then
+    '            moveRightPaddleUp = False
+    '            upKeyDown = False
+    '        End If
+
+    '        If e.KeyCode = Keys.Down Then
+    '            moveRightPaddleDown = False
+    '            downKeyDown = False
+    '        End If
+    '    End If
+
+
+    '    ' ============================================================
+    '    ' 2. Release Pause / Resume Keys
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.P Then pKeyDown = False
+    '    If e.KeyCode = Keys.Pause Then pauseKeyDown = False
+    '    If e.KeyCode = Keys.MediaPlayPause Then mediaPlayPauseKeyDown = False
+
+
+    '    ' ============================================================
+    '    ' 3. Release Fullscreen Toggle Keys
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.F11 Then f11KeyDown = False
+    '    If e.KeyCode = Keys.F Then fKeyDown = False
+
+
+    '    ' ============================================================
+    '    ' 4. Release Escape Key
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Escape Then escapeKeyDown = False
+
+
+    '    ' ============================================================
+    '    ' 5. Release Confirm Keys (Enter / Space)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Enter Then enterKeyDown = False
+    '    If e.KeyCode = Keys.Space Then spaceKeyDown = False
+
+
+    '    ' ============================================================
+    '    ' 6. Release Menu Navigation Keys (Up / Down / W / S)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Up Then upKeyDown = False
+    '    If e.KeyCode = Keys.Down Then downKeyDown = False
+
+    '    If e.KeyCode = Keys.W Then wKeyDown = False
+    '    If e.KeyCode = Keys.S Then sKeyDown = False
+
+
+    '    If e.Control AndAlso e.KeyCode = Keys.Q Then
+    '        ctrlQDown = False
+    '    End If
+
+
+    'End Sub
+
+
     Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
         MyBase.OnKeyUp(e)
 
@@ -2024,7 +2203,6 @@ Public Class Form1
             End If
         End If
 
-
         ' ============================================================
         ' 2. Release Pause / Resume Keys
         ' ============================================================
@@ -2032,26 +2210,22 @@ Public Class Form1
         If e.KeyCode = Keys.Pause Then pauseKeyDown = False
         If e.KeyCode = Keys.MediaPlayPause Then mediaPlayPauseKeyDown = False
 
-
         ' ============================================================
         ' 3. Release Fullscreen Toggle Keys
         ' ============================================================
         If e.KeyCode = Keys.F11 Then f11KeyDown = False
         If e.KeyCode = Keys.F Then fKeyDown = False
 
-
         ' ============================================================
         ' 4. Release Escape Key
         ' ============================================================
         If e.KeyCode = Keys.Escape Then escapeKeyDown = False
-
 
         ' ============================================================
         ' 5. Release Confirm Keys (Enter / Space)
         ' ============================================================
         If e.KeyCode = Keys.Enter Then enterKeyDown = False
         If e.KeyCode = Keys.Space Then spaceKeyDown = False
-
 
         ' ============================================================
         ' 6. Release Menu Navigation Keys (Up / Down / W / S)
@@ -2061,6 +2235,59 @@ Public Class Form1
 
         If e.KeyCode = Keys.W Then wKeyDown = False
         If e.KeyCode = Keys.S Then sKeyDown = False
+
+        ' ============================================================
+        ' 7. Release Quit Game Key (Ctrl + Q)
+        ' ============================================================
+        If e.KeyCode = Keys.Q Then ctrlQDown = False
+        If e.KeyCode = Keys.ControlKey Then ctrlQDown = False
+
+    End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Private Sub QuitGame()
+
+        'Try
+        '    ' Stop timers if you use any
+        '    If gameTimer IsNot Nothing Then gameTimer.Stop()
+        '    If aiTimer IsNot Nothing Then aiTimer.Stop()
+
+        '    ' Play exit sound
+        '    PlayExitSound()
+
+        '    ' Dispose graphics or audio resources if needed
+        '    If renderer IsNot Nothing Then renderer.Dispose()
+
+        'Catch ex As Exception
+        '    ' Optional: log or ignore
+        'End Try
+
+        ' Close the form (safe WinForms exit)
+        Me.Close()
 
     End Sub
 
