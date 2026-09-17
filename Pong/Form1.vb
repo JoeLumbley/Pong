@@ -2079,7 +2079,7 @@ Public Class Form1
 
     Private Sub Quit2StartScreen()
 
-        PausePausedLoop()
+        FadeOutAndStopPausedLoop()
 
         MovePointerOffScreen()
 
@@ -2231,7 +2231,7 @@ Public Class Form1
     End Sub
 
     Private Sub ResumeGame()
-        PausePausedLoop()
+        FadeOutAndStopPausedLoop()
 
         currentState = GameState.Playing
         physicsTimer.Start()
@@ -2240,8 +2240,8 @@ Public Class Form1
     End Sub
 
     Private Sub StartNewMatch()
-        PauseStartLoop()
-        PausePausedLoop()
+        FadeOutAndStopStartLoop()
+        FadeOutAndStopPausedLoop()
 
         MovePointerOffScreen()
 
@@ -2389,60 +2389,11 @@ Public Class Form1
         AudioPlayer.PlaySound("select")
     End Sub
 
-    'Private Sub PlayPausedLoop()
-    '    AudioPlayer.LoopSound("pause")
-    'End Sub
-
-    'Private Sub PlayStartLoop()
-    '    AudioPlayer.LoopSound("startloop")
-    'End Sub
-
-    'Private Sub PlayGamePlayLoop()
-    '    AudioPlayer.LoopSound("gameplayloop")
-    'End Sub
-    'Private Sub PlayPausedLoop()
-    '    ' Smooth transition: stop other loops first
-    '    AudioPlayer.StopSound("startloop")
-    '    AudioPlayer.StopSound("gameplayloop")
-
-    '    ' Fade‑in loop
-    '    AudioPlayer.SetVolume("pause", 0)
-    '    AudioPlayer.LoopSound("pause")
-    '    AudioPlayer.FadeVolume("pause", 0, 40, 2000)
-    'End Sub
-
-    'Private Sub PlayStartLoop()
-    '    ' Smooth transition: stop other loops first
-    '    AudioPlayer.StopSound("pause")
-    '    AudioPlayer.StopSound("gameplayloop")
-
-    '    ' Fade‑in loop
-    '    AudioPlayer.SetVolume("startloop", 0)
-    '    AudioPlayer.LoopSound("startloop")
-    '    AudioPlayer.FadeVolume("startloop", 0, 75, 2000)
-    'End Sub
-
-    'Private Sub PlayGamePlayLoop()
-    '    ' Smooth transition: stop other loops first
-    '    AudioPlayer.StopSound("pause")
-    '    AudioPlayer.StopSound("startloop")
-
-    '    ' Fade‑in loop
-    '    AudioPlayer.SetVolume("gameplayloop", 0)
-    '    AudioPlayer.LoopSound("gameplayloop")
-    '    AudioPlayer.FadeVolume("gameplayloop", 0, 200, 2000)
-    'End Sub
-
-
-
-
-
-
     Private Sub PlayPausedLoop()
 
         ' Stop other loops safely
-        If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
-        If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
+        'If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
+        'If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
 
         ' Fade‑in loop
         AudioPlayer.SetVolume("pause", 0)
@@ -2451,14 +2402,11 @@ Public Class Form1
 
     End Sub
 
-
-
-
     Private Sub PlayStartLoop()
 
         ' Stop other loops safely
-        If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
-        If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
+        'If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
+        'If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
 
         ' Fade‑in loop
         AudioPlayer.SetVolume("startloop", 0)
@@ -2471,8 +2419,8 @@ Public Class Form1
     Private Sub PlayGamePlayLoop()
 
         ' Stop other loops safely
-        If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
-        If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
+        'If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
+        'If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
 
         ' Fade‑in loop
         AudioPlayer.SetVolume("gameplayloop", 0)
@@ -2528,7 +2476,7 @@ Public Class Form1
 
 
     Private Sub PauseGamePlayLoop()
-        If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
+        If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.FadeOutAndStop("gameplayloop", 800)
     End Sub
 
 
@@ -2536,8 +2484,8 @@ Public Class Form1
     '    AudioPlayer.PauseSound("startloop")
     'End Sub
 
-    Private Sub PauseStartLoop()
-        If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
+    Private Sub FadeOutAndStopStartLoop()
+        If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.FadeOutAndStop("startloop", 800)
     End Sub
 
 
@@ -2553,8 +2501,8 @@ Public Class Form1
     '    AudioPlayer.PauseSound("pause")
     'End Sub
 
-    Private Sub PausePausedLoop()
-        If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
+    Private Sub FadeOutAndStopPausedLoop()
+        If AudioPlayer.IsPlaying("pause") Then AudioPlayer.FadeOutAndStop("pause", 800)
     End Sub
 
 
