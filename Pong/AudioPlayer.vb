@@ -183,6 +183,34 @@ Public Module AudioPlayer
 
     End Sub
 
+
+    ' ============================================================
+    ' Fade Out (Async Wrapper)
+    ' ============================================================
+    Public Sub FadeOut(soundName As String, durationMs As Integer)
+        soundName = Normalize(soundName)
+
+        SyncLock syncRoot
+            If Not Aliases.Contains(soundName) Then Exit Sub
+        End SyncLock
+
+        Dim info = SoundInfo(soundName)
+        Dim currentVol = info.volume
+
+        ' Fade from current volume to 0
+        FadeVolume(soundName, currentVol, 0, durationMs)
+    End Sub
+
+    Public Sub FadeOutAndStop(soundName As String, durationMs As Integer)
+        FadeOut(soundName, durationMs)
+
+        ' Stop AFTER fade completes
+        Task.Run(Async Function()
+                     Await Task.Delay(durationMs)
+                     Send($"stop {Normalize(soundName)}")
+                 End Function)
+    End Sub
+
     ' ============================================================
     ' Core API
     ' ============================================================

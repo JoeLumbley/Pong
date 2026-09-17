@@ -2254,84 +2254,24 @@ Public Class Form1
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    'Private Sub QuitGame()
-
-    '    'Try
-    '    '    ' Stop timers if you use any
-    '    '    If gameTimer IsNot Nothing Then gameTimer.Stop()
-    '    '    If aiTimer IsNot Nothing Then aiTimer.Stop()
-
-    '    '    ' Play exit sound
-    '    '    PlayExitSound()
-
-    '    '    ' Dispose graphics or audio resources if needed
-    '    '    If renderer IsNot Nothing Then renderer.Dispose()
-
-    '    'Catch ex As Exception
-    '    '    ' Optional: log or ignore
-    '    'End Try
-
-    '    ' Close the form (safe WinForms exit)
-    '    Me.Close()
-
-    'End Sub
-
-
-    'Private Sub QuitGame()
-
-    '    Try
-    '        'PlayExitSound()
-
-    '        physicsTimer?.Stop()
-
-    '    Catch
-    '        ' ignore
-    '    End Try
-
-    '    Me.Close()
-
-    'End Sub
-
-
     Private Sub QuitGame()
 
-        PlaySelectSound()
+        PlayExitSound()
 
-        ' Use a timer to delay the form closing, allowing the sound to play
-        Dim t As New Timer() With {.Interval = 300}
+        ' Wait for the sound to finish before closing
+        Dim t As New Timer() With {.Interval = 500}
         AddHandler t.Tick,
         Sub()
             t.Stop()
             t.Dispose()
 
+            physicsTimer?.Stop()
             Me.Close()
-
         End Sub
+
         t.Start()
 
     End Sub
-
-
-
 
 
 
@@ -2635,6 +2575,11 @@ Public Class Form1
     End Sub
 
     Private Sub PlaySelectSound()
+        AudioPlayer.PlaySound("select")
+    End Sub
+
+
+    Private Sub PlayExitSound()
         AudioPlayer.PlaySound("select")
     End Sub
 
