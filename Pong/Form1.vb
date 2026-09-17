@@ -2171,16 +2171,6 @@ Public Class Form1
 
         PlayExitSound()
 
-        'If AudioPlayer.IsPlaying("startloop") Then
-        '    AudioPlayer.FadeOutAndStop("startloop", 800)
-        'End If
-        'If AudioPlayer.IsPlaying("gameplayloop") Then
-        '    AudioPlayer.FadeOutAndStop("gameplayloop", 800)
-        'End If
-        'If AudioPlayer.IsPlaying("pause") Then
-        '    AudioPlayer.FadeOutAndStop("pause", 800)
-        'End If
-
         FadeOutAndStopActiveLoops(800)
 
         If AudioPlayer.IsPlaying("bounce") Then
@@ -2196,6 +2186,7 @@ Public Class Form1
 
             physicsTimer?.Stop()
             Me.Close()
+
         End Sub
 
         t.Start()
@@ -2372,16 +2363,16 @@ Public Class Form1
 
     End Sub
 
-    Private Shared Sub FadeOutAndStopActiveLoops(duration As Integer)
+    Private Shared Sub FadeOutAndStopActiveLoops(durationMs As Integer)
         ' Fade-out and stop only loops that are actually playing
         If AudioPlayer.IsPlaying("startloop") Then
-            AudioPlayer.FadeOutAndStop("startloop", duration)
+            AudioPlayer.FadeOutAndStop("startloop", durationMs)
         End If
         If AudioPlayer.IsPlaying("gameplayloop") Then
-            AudioPlayer.FadeOutAndStop("gameplayloop", duration)
+            AudioPlayer.FadeOutAndStop("gameplayloop", durationMs)
         End If
         If AudioPlayer.IsPlaying("pause") Then
-            AudioPlayer.FadeOutAndStop("pause", duration)
+            AudioPlayer.FadeOutAndStop("pause", durationMs)
         End If
     End Sub
 
