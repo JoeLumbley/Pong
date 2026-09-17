@@ -2322,7 +2322,9 @@ Public Class Form1
         Sub()
             t.Stop()
             t.Dispose()
+
             Me.Close()
+
         End Sub
         t.Start()
 
