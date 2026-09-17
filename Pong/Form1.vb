@@ -1457,7 +1457,7 @@ Public Class Form1
                 fKeyDown = True
             End If
 
-            PlayFullscreen()
+            PlayFullScreenSound()
             ToggleFullScreen()
             Invalidate()
 
@@ -1474,7 +1474,7 @@ Public Class Form1
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
-            PlaySelectSound()
+            PlayFullScreenSound()
             ToggleFullScreen()
             Invalidate()
 
@@ -1489,7 +1489,7 @@ Public Class Form1
             If ctrlQDown Then Return
             ctrlQDown = True
 
-            PlaySelectSound()
+            'PlaySelectSound()
             QuitGame()
             Return
 
@@ -1853,7 +1853,11 @@ Public Class Form1
                 If escapeKeyDown Then Return
                 escapeKeyDown = True
 
-                Me.Close()
+
+                QuitGame()
+
+
+                'Me.Close()
 
                 Return
 
@@ -2269,27 +2273,79 @@ Public Class Form1
 
 
 
+    'Private Sub QuitGame()
+
+    '    'Try
+    '    '    ' Stop timers if you use any
+    '    '    If gameTimer IsNot Nothing Then gameTimer.Stop()
+    '    '    If aiTimer IsNot Nothing Then aiTimer.Stop()
+
+    '    '    ' Play exit sound
+    '    '    PlayExitSound()
+
+    '    '    ' Dispose graphics or audio resources if needed
+    '    '    If renderer IsNot Nothing Then renderer.Dispose()
+
+    '    'Catch ex As Exception
+    '    '    ' Optional: log or ignore
+    '    'End Try
+
+    '    ' Close the form (safe WinForms exit)
+    '    Me.Close()
+
+    'End Sub
+
+
+    'Private Sub QuitGame()
+
+    '    Try
+    '        'PlayExitSound()
+
+    '        physicsTimer?.Stop()
+
+    '    Catch
+    '        ' ignore
+    '    End Try
+
+    '    Me.Close()
+
+    'End Sub
+
+
     Private Sub QuitGame()
 
-        'Try
-        '    ' Stop timers if you use any
-        '    If gameTimer IsNot Nothing Then gameTimer.Stop()
-        '    If aiTimer IsNot Nothing Then aiTimer.Stop()
+        PlaySelectSound()
 
-        '    ' Play exit sound
-        '    PlayExitSound()
-
-        '    ' Dispose graphics or audio resources if needed
-        '    If renderer IsNot Nothing Then renderer.Dispose()
-
-        'Catch ex As Exception
-        '    ' Optional: log or ignore
-        'End Try
-
-        ' Close the form (safe WinForms exit)
-        Me.Close()
+        ' Use a timer to delay the form closing, allowing the sound to play
+        Dim t As New Timer() With {.Interval = 300}
+        AddHandler t.Tick,
+        Sub()
+            t.Stop()
+            t.Dispose()
+            Me.Close()
+        End Sub
+        t.Start()
 
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Sub ToggleFullScreen()
 
@@ -2681,7 +2737,7 @@ Public Class Form1
 
 
 
-    Private Sub PlayFullscreen()
+    Private Sub PlayFullScreenSound()
         AudioPlayer.PlaySound("fullscreen")
     End Sub
 
