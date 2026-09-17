@@ -2369,6 +2369,11 @@ Public Class Form1
     ' ===============================
 
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+
+        AudioPlayer.CloseAll()
+
+
+
         ballBrush?.Dispose()
         fpsBrush?.Dispose()
         fpsFont?.Dispose()
@@ -2378,6 +2383,13 @@ Public Class Form1
         whiteBrush?.Dispose()
         grayBrush?.Dispose()
         dimBrush?.Dispose()
+
+        If trailBrushes IsNot Nothing Then
+            For Each b In trailBrushes
+                b?.Dispose()
+            Next
+        End If
+
 
         hudScoreFont?.Dispose()
         hudLabelFont?.Dispose()
@@ -2391,15 +2403,11 @@ Public Class Form1
         gameOverInfoFont?.Dispose()
         fullscreenIndicatorFont?.Dispose()
 
+
         physicsTimer?.Dispose()
 
-        If trailBrushes IsNot Nothing Then
-            For Each b In trailBrushes
-                b?.Dispose()
-            Next
-        End If
 
-        AudioPlayer.CloseAll()
+
     End Sub
 
     Private Sub CreateSoundFiles()
