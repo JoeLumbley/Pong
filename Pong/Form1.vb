@@ -235,6 +235,29 @@ Public Class Form1
     ' -------------------------------
     Private rng As New Random()
 
+    Private Audio As AudioPlayer
+
+    Private WithEvents AudioRestartTimer As New Timer With {
+        .Interval = 360000,
+        .Enabled = True
+    }
+    'Private WithEvents AudioRestartTimer As New Timer With {
+    '    .Interval = 15000,
+    '    .Enabled = True
+    '}
+
+
+
+
+
+
+
+
+
+
+
+
+
     ' ===============================
     '  FORM LIFECYCLE
     ' ===============================
@@ -353,10 +376,136 @@ Public Class Form1
 
     Private Sub InitAudio()
 
+        Audio = New AudioPlayer()
+
         CreateSoundFiles()
 
         LoadAndRegisterSounds()
+
+        PlayStartLoop()
+
     End Sub
+
+    Private Sub AudioRestartTimer_Tick(sender As Object, e As EventArgs) Handles AudioRestartTimer.Tick
+        RestartAudioEngine()
+    End Sub
+
+
+    'Private Sub RestartAudioEngine()
+
+    '    FadeOutAndStopActiveLoops(2000)
+
+
+
+    '    ' Wait for the sound to finish before closing
+    '    Dim t As New Timer() With {.Interval = 2000}
+    '    AddHandler t.Tick,
+    '    Sub()
+    '        t.Stop()
+    '        t.Dispose()
+
+    '        ' Dispose old engine
+    '        'If Audio IsNot Nothing Then
+    '        '    Audio.Dispose()
+    '        'End If
+
+    '        Audio?.Dispose()
+
+    '        ' Create new engine
+    '        Audio = New AudioPlayer()
+
+    '        ' Reload all sounds
+    '        'LoadAllSounds()
+    '        LoadAndRegisterSounds()
+
+    '        ' Restore loops based on game state
+    '        RestartLoops()
+
+
+    '    End Sub
+
+    '    t.Start()
+
+
+
+
+
+
+
+
+
+
+    '    '' Non-blocking delay for clean transitions
+    '    'Await Task.Delay(2000)
+
+    '    '' Dispose old engine
+    '    'If Audio IsNot Nothing Then
+    '    '    Audio.Dispose()
+    '    'End If
+
+    '    'Await Task.Delay(100) ' Small delay to ensure resources are released
+
+    '    '' Create new engine
+    '    'Audio = New AudioPlayer()
+
+    '    '' Reload all sounds
+    '    ''LoadAllSounds()
+    '    'LoadAndRegisterSounds()
+
+    '    '' Restore loops based on game state
+    '    'RestartLoops()
+    'End Sub
+
+    Private Sub RestartAudioEngine()
+
+        FadeOutAndStopActiveLoops(800)
+
+        ' Wait for fade-out to complete before restarting engine
+        Dim t As New Timer() With {.Interval = 900}
+
+        AddHandler t.Tick, Sub()
+                               t.Stop()
+                               t.Dispose()
+
+                               ' Dispose old engine
+                               Audio?.Dispose()
+
+                               ' Create new engine
+                               Audio = New AudioPlayer()
+
+                               ' Reload all sounds
+                               LoadAndRegisterSounds()
+
+                               ' Restore loops based on game state
+                               RestartLoops()
+                           End Sub
+
+        t.Start()
+
+    End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -365,43 +514,43 @@ Public Class Form1
         ' ---------------------------------------------------------
         ' Overlapping SFX
         ' ---------------------------------------------------------
-        AudioPlayer.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
-        AudioPlayer.SetVolumeOverlapping("bounce", 250)
+        Audio.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
+        Audio.SetVolumeOverlapping("bounce", 250)
 
-        AudioPlayer.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
-        AudioPlayer.SetVolumeOverlapping("arrow_up", 400)
+        Audio.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
+        Audio.SetVolumeOverlapping("arrow_up", 400)
 
-        AudioPlayer.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
-        AudioPlayer.SetVolumeOverlapping("arrow_down", 300)
+        Audio.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
+        Audio.SetVolumeOverlapping("arrow_down", 300)
 
         ' ---------------------------------------------------------
         ' Single‑instance SFX
         ' ---------------------------------------------------------
-        AudioPlayer.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
-        AudioPlayer.SetVolume("fullscreen", 300)
+        Audio.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
+        Audio.SetVolume("fullscreen", 300)
 
-        AudioPlayer.AddSound("select", Path.Combine(Application.StartupPath, "select.mp3"))
-        AudioPlayer.SetVolume("select", 300)
+        Audio.AddSound("select", Path.Combine(Application.StartupPath, "select.mp3"))
+        Audio.SetVolume("select", 300)
 
-        AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
-        AudioPlayer.SetVolume("point", 600)
+        Audio.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
+        Audio.SetVolume("point", 600)
 
         ' ---------------------------------------------------------
         ' Loops (Start, Gameplay, Pause)
         ' ---------------------------------------------------------
-        AudioPlayer.AddSound("startloop", Path.Combine(Application.StartupPath, "startloop.mp3"))
-        AudioPlayer.SetVolume("startloop", 75)
+        Audio.AddSound("startloop", Path.Combine(Application.StartupPath, "startloop.mp3"))
+        Audio.SetVolume("startloop", 75)
 
-        AudioPlayer.AddSound("gameplayloop", Path.Combine(Application.StartupPath, "gameplayloop.mp3"))
-        'AudioPlayer.SetVolume("gameplayloop", 200)
+        Audio.AddSound("gameplayloop", Path.Combine(Application.StartupPath, "gameplayloop.mp3"))
+        Audio.SetVolume("gameplayloop", 200)
 
-        AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
-        'AudioPlayer.SetVolume("pause", 40)
+        Audio.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
+        Audio.SetVolume("pause", 40)
 
         ' ---------------------------------------------------------
         ' Begin Start Screen Loop (with fade‑in)
         ' ---------------------------------------------------------
-        PlayStartLoop()
+        'PlayStartLoop()
 
     End Sub
 
@@ -671,7 +820,7 @@ Public Class Form1
         End If
 
         lastPlay(name) = now
-        AudioPlayer.PlayOverlapping(name)
+        Audio.PlayOverlapping(name)
     End Sub
 
     ' ===============================
@@ -1811,8 +1960,8 @@ Public Class Form1
 
         FadeOutAndStopActiveLoops(800)
 
-        If AudioPlayer.IsPlaying("bounce") Then
-            AudioPlayer.FadeOutAndStop("bounce", 800)
+        If Audio.IsPlaying("bounce") Then
+            Audio.FadeOutAndStop("bounce", 800)
         End If
 
         ' Wait for the sound to finish before closing
@@ -1912,7 +2061,7 @@ Public Class Form1
 
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        AudioPlayer.CloseAll()
+        Audio.CloseAll()
 
         ballBrush?.Dispose()
         fpsBrush?.Dispose()
@@ -1979,12 +2128,12 @@ Public Class Form1
                                     Screen.PrimaryScreen.WorkingArea.Height \ 2)
     End Sub
 
-    Public Async Sub RestartLoops()
+    Public Sub RestartLoops()
 
-        FadeOutAndStopActiveLoops(2000)
+        'FadeOutAndStopActiveLoops(2000)
 
-        ' Non-blocking delay for clean transitions
-        Await Task.Delay(4000)
+        '' Non-blocking delay for clean transitions
+        'Await Task.Delay(4000)
 
         Select Case currentState
 
@@ -2001,47 +2150,47 @@ Public Class Form1
 
     End Sub
 
-    Private Shared Sub FadeOutAndStopActiveLoops(durationMs As Integer)
+    Private Sub FadeOutAndStopActiveLoops(durationMs As Integer)
         ' Fade-out and stop only loops that are actually playing
-        If AudioPlayer.IsPlaying("startloop") Then
-            AudioPlayer.FadeOutAndStop("startloop", durationMs)
+        If Audio.IsPlaying("startloop") Then
+            Audio.FadeOutAndStop("startloop", durationMs)
         End If
-        If AudioPlayer.IsPlaying("gameplayloop") Then
-            AudioPlayer.FadeOutAndStop("gameplayloop", durationMs)
+        If Audio.IsPlaying("gameplayloop") Then
+            Audio.FadeOutAndStop("gameplayloop", durationMs)
         End If
-        If AudioPlayer.IsPlaying("pause") Then
-            AudioPlayer.FadeOutAndStop("pause", durationMs)
+        If Audio.IsPlaying("pause") Then
+            Audio.FadeOutAndStop("pause", durationMs)
         End If
     End Sub
 
     Private Sub PlayPoint()
-        AudioPlayer.PlaySound("point")
+        Audio.PlaySound("point")
     End Sub
 
     Private Sub PlaySelectSound()
-        AudioPlayer.PlaySound("select")
+        Audio.PlaySound("select")
     End Sub
 
 
     Private Sub PlayExitSound()
-        AudioPlayer.PlaySound("select")
+        Audio.PlaySound("select")
     End Sub
 
     Private Sub PlayPausedLoop()
 
         ' Fade‑in loop
-        AudioPlayer.SetVolume("pause", 0)
-        AudioPlayer.LoopSound("pause")
-        AudioPlayer.FadeVolume("pause", 0, 40, 2000)
+        Audio.SetVolume("pause", 0)
+        Audio.LoopSound("pause")
+        Audio.FadeVolume("pause", 0, 40, 2000)
 
     End Sub
 
     Private Sub PlayStartLoop()
 
         ' Fade‑in loop
-        AudioPlayer.SetVolume("startloop", 0)
-        AudioPlayer.LoopSound("startloop")
-        AudioPlayer.FadeVolume("startloop", 0, 75, 2000)
+        Audio.SetVolume("startloop", 0)
+        Audio.LoopSound("startloop")
+        Audio.FadeVolume("startloop", 0, 75, 2000)
 
     End Sub
 
@@ -2049,42 +2198,42 @@ Public Class Form1
     Private Sub PlayGamePlayLoop()
 
         ' Fade‑in loop
-        AudioPlayer.SetVolume("gameplayloop", 0)
-        AudioPlayer.LoopSound("gameplayloop")
-        AudioPlayer.FadeVolume("gameplayloop", 0, 200, 2000)
+        Audio.SetVolume("gameplayloop", 0)
+        Audio.LoopSound("gameplayloop")
+        Audio.FadeVolume("gameplayloop", 0, 200, 2000)
 
     End Sub
 
 
     Private Sub PlayFullScreenSound()
-        AudioPlayer.PlaySound("fullscreen")
+        Audio.PlaySound("fullscreen")
     End Sub
 
 
     Private Sub PlayBounce()
-        AudioPlayer.PlayOverlapping("bounce")
+        Audio.PlayOverlapping("bounce")
     End Sub
 
     Private Sub PlayMenuUpSound()
-        AudioPlayer.PlayOverlapping("arrow_up")
+        Audio.PlayOverlapping("arrow_up")
     End Sub
 
     Private Sub PlayMenuDownSound()
-        AudioPlayer.PlayOverlapping("arrow_down")
+        Audio.PlayOverlapping("arrow_down")
     End Sub
 
 
     Private Sub FadeOutAndStopGamePlayLoop()
-        If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.FadeOutAndStop("gameplayloop", 800)
+        If Audio.IsPlaying("gameplayloop") Then Audio.FadeOutAndStop("gameplayloop", 800)
     End Sub
 
 
     Private Sub FadeOutAndStopStartLoop()
-        If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.FadeOutAndStop("startloop", 800)
+        If Audio.IsPlaying("startloop") Then Audio.FadeOutAndStop("startloop", 800)
     End Sub
 
     Private Sub FadeOutAndStopPausedLoop()
-        If AudioPlayer.IsPlaying("pause") Then AudioPlayer.FadeOutAndStop("pause", 800)
+        If Audio.IsPlaying("pause") Then Audio.FadeOutAndStop("pause", 800)
     End Sub
 
 
