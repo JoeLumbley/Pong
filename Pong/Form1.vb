@@ -62,10 +62,6 @@ Public Class Form1
         TwoPlayers
     End Enum
 
-
-
-
-
     ' -------------------------------
     '  Ball / Physics
     ' -------------------------------
@@ -362,36 +358,6 @@ Public Class Form1
         LoadAndRegisterSounds()
     End Sub
 
-    'Private Sub LoadAndRegisterSounds()
-    '    AudioPlayer.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
-    '    AudioPlayer.SetVolumeOverlapping("bounce", 250)
-
-    '    AudioPlayer.AddSound("startloop", Path.Combine(Application.StartupPath, "startloop.mp3"))
-    '    AudioPlayer.SetVolume("startloop", 75)
-    '    PlayStartLoop()
-
-    '    AudioPlayer.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
-    '    AudioPlayer.SetVolume("fullscreen", 300)
-
-    '    AudioPlayer.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
-    '    AudioPlayer.SetVolumeOverlapping("arrow_up", 400)
-
-    '    AudioPlayer.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
-    '    AudioPlayer.SetVolumeOverlapping("arrow_down", 300)
-
-    '    AudioPlayer.AddSound("select", Path.Combine(Application.StartupPath, "select.mp3"))
-    '    AudioPlayer.SetVolume("select", 300)
-
-    '    AudioPlayer.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
-    '    AudioPlayer.SetVolume("point", 600)
-
-    '    AudioPlayer.AddSound("gameplayloop", Path.Combine(Application.StartupPath, "gameplayloop.mp3"))
-    '    AudioPlayer.SetVolume("gameplayloop", 200)
-
-    '    AudioPlayer.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
-    '    AudioPlayer.SetVolume("pause", 40)
-    'End Sub
-
 
 
     Private Sub LoadAndRegisterSounds()
@@ -524,20 +490,6 @@ Public Class Form1
         paddleRight.Y = Math.Max(0, Math.Min(ClientSize.Height - paddleHeight, paddleRight.Y))
     End Sub
 
-    'Private Sub UpdateAI(dt As Double)
-    '    Dim targetY As Single = ballPos.Y + ballDiameter / 2
-    '    Dim difficultyFactor As Double = 0.7 * aiDifficulty
-
-    '    Dim paddleCenter As Single = paddleRight.Y + paddleHeight / 2
-
-    '    If targetY < paddleCenter Then
-    '        paddleRight.Y -= CSng(paddleSpeed * dt * difficultyFactor)
-    '    ElseIf targetY > paddleCenter Then
-    '        paddleRight.Y += CSng(paddleSpeed * dt * difficultyFactor)
-    '    End If
-
-    '    paddleRight.Y = Math.Max(0, Math.Min(ClientSize.Height - paddleHeight, paddleRight.Y))
-    'End Sub
 
     Private Sub UpdateAI(dt As Double)
         Dim targetY As Single = ballPos.Y + ballDiameter / 2
@@ -555,19 +507,6 @@ Public Class Form1
 
         paddleRight.Y = Math.Max(0, Math.Min(ClientSize.Height - paddleHeight, paddleRight.Y))
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     Private Sub HandlePaddleCollisions()
@@ -691,7 +630,7 @@ Public Class Form1
     End Sub
 
     Private Sub EndMatch()
-        PauseGamePlayLoop()
+        FadeOutAndStopGamePlayLoop()
 
         speed = 200 * (ClientSize.Height / 1080.0)
 
@@ -794,174 +733,6 @@ Public Class Form1
         End Select
     End Sub
 
-    'Private Sub DrawPauseScreen(g As Graphics)
-    '    g.FillRectangle(dimBrush, ClientRectangle)
-
-    '    Dim title As String = "PAUSED"
-    '    Dim titleSize = g.MeasureString(title, pauseTitleFont)
-
-    '    g.DrawString(title, pauseTitleFont, whiteBrush,
-    '                 CSng((ClientSize.Width - titleSize.Width) / 2.0F),
-    '                 CSng(ClientSize.Height * 0.25F))
-
-    '    Dim items() As String = {"Resume", "New Match", "Quit to Start Screen"}
-
-    '    For i As Integer = 0 To items.Length - 1
-    '        Dim text = items(i)
-    '        Dim size = g.MeasureString(text, pauseMenuFont)
-
-    '        Dim brush As SolidBrush = If(i = pauseMenuIndex, whiteBrush, grayBrush)
-
-    '        g.DrawString(text, pauseMenuFont, brush,
-    '                     CSng((ClientSize.Width - size.Width) / 2.0F),
-    '                     CSng(ClientSize.Height * 0.4F + i * (size.Height + 10)))
-    '    Next
-    'End Sub
-
-
-    'Private Sub DrawPauseScreen(g As Graphics)
-    '    g.FillRectangle(dimBrush, ClientRectangle)
-
-    '    ' Title
-    '    Dim title As String = "PAUSED"
-    '    ' Dim pauseTitle As String = "PAUSED"
-
-
-    '    Dim titleSize = g.MeasureString(title, pauseTitleFont)
-    '    ' Dim pauseTitleSize as SizeF
-    '    ' pauseTitleSize = g.MeasureString(title, pauseTitleFont) ' Resize
-
-
-
-    '    Dim titleX As Single = (ClientSize.Width - titleSize.Width) / 2.0F
-    '    ' Dim pauseTitleX As Single
-    '    ' pauseTitleX = (ClientSize.Width - titleSize.Width) / 2.0F ' Resize
-
-    '    Dim titleY As Single = ClientSize.Height * 0.22F
-    '    ' Dim pauseTitleY As Single
-    '    ' Dim pauseTitleY = ClientSize.Height * 0.22F ' Resize
-
-
-
-
-    '    ' Optional soft shadow for readability
-    '    'g.DrawString(title, pauseTitleFont, grayBrush,
-    '    '         titleX + 2, titleY + 2)
-
-    '    g.DrawString(title, pauseTitleFont, whiteBrush,
-    '             titleX, titleY)
-
-
-    '    ' g.DrawString(pauseTitle, pauseTitleFont, whiteBrush,
-    '    '         pauseTitleX, pauseTitleY)
-
-
-
-
-
-
-
-
-
-    '    ' Menu items
-    '    Dim items() As String = {"Resume", "New Match", "Quit to Start Screen"}
-    '    ' Dim  pauseMenuItems() As String = {"Resume", "New Match", "Quit to Start Screen"}
-
-    '    Dim startY As Single = titleY + titleSize.Height + (ClientSize.Height * 0.05F)
-    '    ' Dim  pauseMenuStartY As Single
-    '    ' Dim  pauseMenuStartY = titleY + titleSize.Height + (ClientSize.Height * 0.05F) ' Resize
-
-
-
-    '    Dim spacing As Single = ClientSize.Height * 0.1F
-    '    ' Dim  pauseMenuSpacing As Single 
-    '    ' Dim  pauseMenuSpacing = ClientSize.Height * 0.1F ' Resize
-
-
-
-
-    '    For i As Integer = 0 To items.Length - 1
-    '        Dim text = items(i)
-    '        ' Dim pauseMenuText As String
-    '        ' Dim pauseMenuText = items(i)
-
-
-    '        Dim size = g.MeasureString(text, pauseMenuFont)
-    '        ' Dim size as SizeF 
-    '        ' Dim size = g.MeasureString(text, pauseMenuFont)
-
-
-
-    '        Dim brush As SolidBrush = If(i = pauseMenuIndex, whiteBrush, grayBrush)
-    '        ' Dim pauseMenubrush As SolidBrush
-    '        ' Dim pauseMenubrush = If(i = pauseMenuIndex, whiteBrush, grayBrush) ' OnKeyDown
-
-
-
-    '        Dim x As Single = (ClientSize.Width - size.Width) / 2.0F
-    '        'Dim pauseMenuX As Single
-    '        'Dim pauseMenuX = (ClientSize.Width - size.Width) / 2.0F ' Resize
-
-    '        Dim y As Single = startY + i * spacing
-    '        ' Dim pauseMenuY As Single 
-    '        ' Dim pauseMenuY = startY + i * spacing ' Resize
-
-
-    '        g.DrawString(text, pauseMenuFont, brush, x, y)
-    '        ' g.DrawString(pauseMenuText, pauseMenuFont, pauseMenubrush, pauseMenuX, pauseMenuY)
-
-
-
-
-    '    Next
-
-
-
-
-
-
-    'End Sub
-
-
-
-
-
-
-    'Private Sub DrawPauseScreen(g As Graphics)
-    '    g.FillRectangle(dimBrush, ClientRectangle)
-
-    '    ' Title
-    '    g.DrawString(pauseTitle, pauseTitleFont, whiteBrush,
-    '             pauseTitleX, pauseTitleY)
-
-    '    ' Menu items
-    '    'For i As Integer = 0 To pauseMenuItems.Length - 1
-    '    '    Dim brush As SolidBrush = If(i = pauseMenuIndex, whiteBrush, grayBrush)
-    '    '    g.DrawString(pauseMenuItems(i), pauseMenuFont, brush,
-    '    '             pauseMenuItemX(i), pauseMenuItemY(i))
-    '    'Next
-
-
-
-
-    '    'pauseMenuItemBrush(0) = If(0 = pauseMenuIndex, whiteBrush, grayBrush)
-
-    '    g.DrawString(pauseMenuItems(0), pauseMenuFont, pauseMenuItemBrush(0),
-    '                 pauseMenuItemX(0), pauseMenuItemY(0))
-
-    '    'pauseMenuItemBrush(1) = If(1 = pauseMenuIndex, whiteBrush, grayBrush)
-
-
-    '    g.DrawString(pauseMenuItems(1), pauseMenuFont, pauseMenuItemBrush(1),
-    '                 pauseMenuItemX(1), pauseMenuItemY(1))
-
-    '    'pauseMenuItemBrush(2) = If(2 = pauseMenuIndex, whiteBrush, grayBrush)
-
-    '    g.DrawString(pauseMenuItems(2), pauseMenuFont, pauseMenuItemBrush(2),
-    '                 pauseMenuItemX(2), pauseMenuItemY(2))
-
-    'End Sub
-
 
     Private Sub DrawPauseScreen(g As Graphics)
         g.FillRectangle(dimBrush, ClientRectangle)
@@ -979,8 +750,6 @@ Public Class Form1
 
 
     End Sub
-
-
 
     Private Sub DrawTrail(g As Graphics)
         If trail Is Nothing OrElse
@@ -1114,16 +883,9 @@ Public Class Form1
         Dim title As String = "Difficulty"
         Dim titleSize = g.MeasureString(title, aiDifficultyTitleFont)
 
-
-
-
-
         g.DrawString(title, aiDifficultyTitleFont, whiteBrush,
                  CSng((ClientSize.Width - titleSize.Width) / 2.0F),
                  CSng(ClientSize.Height * 0.2F))
-
-
-
 
         For i As Integer = 0 To aiOptions.Length - 1
             Dim text = aiOptions(i)
@@ -1140,9 +902,6 @@ Public Class Form1
                      CSng(ClientSize.Height * 0.36F + i * (size.Height + 10)))
 
         Next
-
-
-
 
         Dim info As String = "Press SPACE to Confirm"
         Dim infoSize = g.MeasureString(info, startInfoFont)
@@ -1291,9 +1050,6 @@ Public Class Form1
         fullscreenIndicatorFont = New Font("Segoe UI", CSng(ClientSize.Height / 75.0F), FontStyle.Regular)
         fpsFont = New Font("Segoe UI", CSng(ClientSize.Height / 75.0F), FontStyle.Bold)
 
-
-
-
         ' -------------------------------
         ' Pause Screen Layout Cache
         ' -------------------------------
@@ -1351,92 +1107,6 @@ Public Class Form1
         ScaleBallDiameter()
         Me.WindowState = FormWindowState.Maximized
     End Sub
-
-    ' ===============================
-    '  INPUT
-    ' ===============================
-
-    'Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
-    '    MyBase.OnKeyDown(e)
-
-
-    '    ' ============================================================
-    '    ' 1. Fullscreen Toggle (F11 / F)
-    '    ' ============================================================
-    '    If e.KeyCode = Keys.F11 OrElse e.KeyCode = Keys.F Then
-
-    '        ' Repeat‑guard
-    '        If (e.KeyCode = Keys.F11 AndAlso f11KeyDown) OrElse
-    '           (e.KeyCode = Keys.F AndAlso fKeyDown) Then Return
-
-    '        ' Mark the correct key as down
-    '        If e.KeyCode = Keys.F11 Then
-    '            f11KeyDown = True
-    '        Else
-    '            fKeyDown = True
-    '        End If
-
-    '        PlayFullscreen()
-    '        ToggleFullScreen()
-    '        Invalidate()
-
-    '        Return
-    '    End If
-
-    '    ' ============================================================
-    '    ' 2. Escape pressed while fullscreen (exit fullscreen)
-    '    ' ============================================================
-    '    If Me.FormBorderStyle = FormBorderStyle.None AndAlso
-    '       e.KeyCode = Keys.Escape Then
-
-    '        If escapeKeyDown Then Return
-    '        escapeKeyDown = True
-
-    '        PlaySelectSound()
-    '        ToggleFullScreen()
-    '        Invalidate()
-
-    '        Return
-
-    '    End If
-
-
-    '    ' ============================================================
-    '    ' 3. State‑based Input Dispatch
-    '    ' ============================================================
-
-    '    ' --- Start Screen ---
-    '    If currentState = GameState.StartScreen Then
-    '        HandleStartScreenInput(e)
-    '        Return
-    '    End If
-
-    '    ' --- End Screen ---
-    '    If currentState = GameState.EndScreen Then
-    '        HandleEndScreenInput(e)
-    '        Return
-    '    End If
-
-    '    ' --- Gameplay ---
-    '    If currentState = GameState.Playing Then
-    '        HandleGameplayInput(e)
-    '        Return
-    '    End If
-
-    '    ' --- Pause Menu ---
-    '    If currentState = GameState.Pause Then
-    '        HandlePauseInput(e)
-    '        Return
-    '    End If
-
-    '    ' --- AI Difficulty Menu ---
-    '    If currentState = GameState.AIDifficulty Then
-    '        HandleAIDifficultyInput(e)
-    '        Return
-    '    End If
-
-    'End Sub
-
 
     Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
         MyBase.OnKeyDown(e)
@@ -1525,21 +1195,6 @@ Public Class Form1
 
     End Sub
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     Private Sub HandleAIDifficultyInput(e As KeyEventArgs)
 
         ' -------------------------------
@@ -1625,7 +1280,6 @@ Public Class Form1
 
         End If
 
-
         ' ============================
         '   SELECT: SPACE / ENTER
         ' ============================
@@ -1637,18 +1291,11 @@ Public Class Form1
                 enterKeyDown = True
             End If
 
-            'Select Case aiDifficultySelection
-            '    Case AIDifficultyLevel.Easy : aiDifficulty = 0.7
-            '    Case AIDifficultyLevel.Normal : aiDifficulty = 0.8
-            '    Case AIDifficultyLevel.Hard : aiDifficulty = 0.95
-            'End Select
-
             Select Case aiDifficultySelection
                 Case AIDifficultyLevel.Easy : aiModeFactor = 0.6
                 Case AIDifficultyLevel.Normal : aiModeFactor = 0.7
                 Case AIDifficultyLevel.Hard : aiModeFactor = 0.8
             End Select
-
 
             currentState = GameState.Playing
             StartNewMatch()
@@ -1658,7 +1305,6 @@ Public Class Form1
             Return
 
         End If
-
 
         ' ============================
         '   ESCAPE → RETURN TO START
@@ -1676,7 +1322,6 @@ Public Class Form1
         End If
 
     End Sub
-
 
     Private Sub HandleEndScreenInput(e As KeyEventArgs)
 
@@ -1696,7 +1341,6 @@ Public Class Form1
             Return
         End If
 
-
         ' ============================================================
         ' 2. Confirm Return to Start Screen (Enter)
         ' ============================================================
@@ -1715,14 +1359,12 @@ Public Class Form1
 
     End Sub
 
-
     Private Sub HandleStartScreenInput(e As KeyEventArgs)
 
         ' ============================================================
         ' 1. Menu Navigation (Up/W and Down/S)
         ' ============================================================
         Select Case e.KeyCode
-
 
             ' ------------------------------
             '  Up / W   --   ↑ Menu Up ↑
@@ -1853,11 +1495,7 @@ Public Class Form1
                 If escapeKeyDown Then Return
                 escapeKeyDown = True
 
-
                 QuitGame()
-
-
-                'Me.Close()
 
                 Return
 
@@ -2214,7 +1852,7 @@ Public Class Form1
 
     Private Sub PauseGame()
 
-        PauseGamePlayLoop()
+        FadeOutAndStopGamePlayLoop()
 
         pauseMenuSelection = 0 ' Resume game
 
@@ -2391,10 +2029,6 @@ Public Class Form1
 
     Private Sub PlayPausedLoop()
 
-        ' Stop other loops safely
-        'If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
-        'If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
-
         ' Fade‑in loop
         AudioPlayer.SetVolume("pause", 0)
         AudioPlayer.LoopSound("pause")
@@ -2403,10 +2037,6 @@ Public Class Form1
     End Sub
 
     Private Sub PlayStartLoop()
-
-        ' Stop other loops safely
-        'If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
-        'If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
 
         ' Fade‑in loop
         AudioPlayer.SetVolume("startloop", 0)
@@ -2418,24 +2048,12 @@ Public Class Form1
 
     Private Sub PlayGamePlayLoop()
 
-        ' Stop other loops safely
-        'If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
-        'If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
-
         ' Fade‑in loop
         AudioPlayer.SetVolume("gameplayloop", 0)
         AudioPlayer.LoopSound("gameplayloop")
         AudioPlayer.FadeVolume("gameplayloop", 0, 200, 2000)
 
     End Sub
-
-
-
-
-
-
-
-
 
 
     Private Sub PlayFullScreenSound()
@@ -2455,51 +2073,15 @@ Public Class Form1
         AudioPlayer.PlayOverlapping("arrow_down")
     End Sub
 
-    'Private Sub PauseAllLoops()
-    '    AudioPlayer.PauseSound("gameplayloop")
-    '    AudioPlayer.PauseSound("startloop")
-    '    AudioPlayer.PauseSound("pause")
-    'End Sub
 
-    Private Sub PauseAllLoops()
-
-        If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.StopSound("gameplayloop")
-        If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.StopSound("startloop")
-        If AudioPlayer.IsPlaying("pause") Then AudioPlayer.StopSound("pause")
-
-    End Sub
-
-
-    'Private Sub PauseGamePlayLoop()
-    '    AudioPlayer.PauseSound("gameplayloop")
-    'End Sub
-
-
-    Private Sub PauseGamePlayLoop()
+    Private Sub FadeOutAndStopGamePlayLoop()
         If AudioPlayer.IsPlaying("gameplayloop") Then AudioPlayer.FadeOutAndStop("gameplayloop", 800)
     End Sub
 
 
-    'Private Sub PauseStartLoop()
-    '    AudioPlayer.PauseSound("startloop")
-    'End Sub
-
     Private Sub FadeOutAndStopStartLoop()
         If AudioPlayer.IsPlaying("startloop") Then AudioPlayer.FadeOutAndStop("startloop", 800)
     End Sub
-
-
-
-
-
-
-
-
-
-
-    'Private Sub PausePausedLoop()
-    '    AudioPlayer.PauseSound("pause")
-    'End Sub
 
     Private Sub FadeOutAndStopPausedLoop()
         If AudioPlayer.IsPlaying("pause") Then AudioPlayer.FadeOutAndStop("pause", 800)
