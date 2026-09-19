@@ -247,7 +247,9 @@ Public Class Form1
     '}
 
 
-
+    Private gameplayLoopVolume As Integer = 200
+    Private startLoopVolume As Integer = 75
+    Private pauseLoopVolume As Integer = 40
 
 
 
@@ -1866,7 +1868,7 @@ Public Class Form1
 
     Private Sub Quit2StartScreen()
 
-        FadeOutAndStopPausedLoop()
+        FadeOutAndStopPausedLoop(2000)
 
         MovePointerOffScreen()
 
@@ -2018,7 +2020,11 @@ Public Class Form1
     End Sub
 
     Private Sub ResumeGame()
-        FadeOutAndStopPausedLoop()
+
+        'Audio.StopSound("pause")
+        FadeOutAndStopPausedLoop(800)
+
+        'Await Task.Delay(2000) ' Wait for fade-out to complete
 
         currentState = GameState.Playing
         physicsTimer.Start()
@@ -2028,7 +2034,7 @@ Public Class Form1
 
     Private Sub StartNewMatch()
         FadeOutAndStopStartLoop()
-        FadeOutAndStopPausedLoop()
+        FadeOutAndStopPausedLoop(2000)
 
         MovePointerOffScreen()
 
@@ -2181,7 +2187,9 @@ Public Class Form1
         ' Fade‑in loop
         Audio.SetVolume("pause", 0)
         Audio.LoopSound("pause")
-        Audio.FadeVolume("pause", 0, 40, 2000)
+        Audio.FadeVolume("pause", 0, pauseLoopVolume, 2000)
+
+        'Audio.FadeInAndLoop("pause", 2000)
 
     End Sub
 
@@ -2190,7 +2198,9 @@ Public Class Form1
         ' Fade‑in loop
         Audio.SetVolume("startloop", 0)
         Audio.LoopSound("startloop")
-        Audio.FadeVolume("startloop", 0, 75, 2000)
+        Audio.FadeVolume("startloop", 0, startLoopVolume, 2000)
+
+        'Audio.FadeInAndLoop("startloop", 2000)
 
     End Sub
 
@@ -2200,7 +2210,9 @@ Public Class Form1
         ' Fade‑in loop
         Audio.SetVolume("gameplayloop", 0)
         Audio.LoopSound("gameplayloop")
-        Audio.FadeVolume("gameplayloop", 0, 200, 2000)
+        Audio.FadeVolume("gameplayloop", 0, gameplayLoopVolume, 2000)
+
+        'Audio.FadeIn("gameplayloop", 2000)
 
     End Sub
 
@@ -2232,8 +2244,8 @@ Public Class Form1
         If Audio.IsPlaying("startloop") Then Audio.FadeOutAndStop("startloop", 800)
     End Sub
 
-    Private Sub FadeOutAndStopPausedLoop()
-        If Audio.IsPlaying("pause") Then Audio.FadeOutAndStop("pause", 800)
+    Private Sub FadeOutAndStopPausedLoop(durationMs As Integer)
+        If Audio.IsPlaying("pause") Then Audio.FadeOutAndStop("pause", durationMs)
     End Sub
 
 

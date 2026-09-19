@@ -726,6 +726,60 @@ Public Class AudioPlayer
                  End Function)
     End Sub
 
+
+
+    ' ============================================================
+    ' Fade In
+    ' ============================================================
+    Public Sub FadeIn(soundName As String, durationMs As Integer)
+        soundName = Normalize(soundName)
+
+        SyncLock syncRoot
+            If Not Aliases.Contains(soundName) Then Exit Sub
+        End SyncLock
+
+        Dim info = SoundInfo(soundName)
+        Dim targetVol = info.volume
+
+        '' Start silent
+        'SetVolume(soundName, 0)
+
+        '' Begin playback
+        'Send($"play {soundName}")
+
+        ' Fade to target volume
+        FadeVolume(soundName, 0, targetVol, durationMs)
+    End Sub
+
+
+
+    Public Sub FadeInAndLoop(soundName As String, durationMs As Integer)
+        soundName = Normalize(soundName)
+
+        SyncLock syncRoot
+            If Not Aliases.Contains(soundName) Then Exit Sub
+        End SyncLock
+
+        Dim info = SoundInfo(soundName)
+        Dim targetVol = info.volume
+
+        SetVolume(soundName, 0)
+        Send($"play {soundName} repeat")
+
+        FadeVolume(soundName, 0, targetVol, durationMs)
+    End Sub
+
+
+
+
+
+
+
+
+
+
+
+
     ' ============================================================
     ' Core API
     ' ============================================================
@@ -795,8 +849,8 @@ Public Class AudioPlayer
             If Not Aliases.Contains(soundName) Then Return False
         End SyncLock
 
-        Dim info = SoundInfo(soundName)
-        FadeVolume(soundName, info.volume, 0, 2000)
+        'Dim info = SoundInfo(soundName)
+        'FadeVolume(soundName, info.volume, 0, 2000)
 
         Return Send($"stop {soundName}")
     End Function
