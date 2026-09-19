@@ -781,7 +781,7 @@ Public Class Form1
     End Sub
 
     Private Sub EndMatch()
-        FadeOutAndStopGamePlayLoop()
+        FadeOutAndStopGamePlayLoop(800)
 
         speed = 200 * (ClientSize.Height / 1080.0)
 
@@ -2003,7 +2003,7 @@ Public Class Form1
 
     Private Sub PauseGame()
 
-        FadeOutAndStopGamePlayLoop()
+        FadeOutAndStopGamePlayLoop(800)
 
         pauseMenuSelection = 0 ' Resume game
 
@@ -2033,8 +2033,8 @@ Public Class Form1
     End Sub
 
     Private Sub StartNewMatch()
-        FadeOutAndStopStartLoop()
-        FadeOutAndStopPausedLoop(2000)
+        FadeOutAndStopStartLoop(800)
+        FadeOutAndStopPausedLoop(800)
 
         MovePointerOffScreen()
 
@@ -2235,13 +2235,13 @@ Public Class Form1
     End Sub
 
 
-    Private Sub FadeOutAndStopGamePlayLoop()
-        If Audio.IsPlaying("gameplayloop") Then Audio.FadeOutAndStop("gameplayloop", 800)
+    Private Sub FadeOutAndStopGamePlayLoop(durationMs As Integer)
+        If Audio.IsPlaying("gameplayloop") Then Audio.FadeOutAndStop("gameplayloop", durationMs)
     End Sub
 
 
-    Private Sub FadeOutAndStopStartLoop()
-        If Audio.IsPlaying("startloop") Then Audio.FadeOutAndStop("startloop", 800)
+    Private Sub FadeOutAndStopStartLoop(durationMs As Integer)
+        If Audio.IsPlaying("startloop") Then Audio.FadeOutAndStop("startloop", durationMs)
     End Sub
 
     Private Sub FadeOutAndStopPausedLoop(durationMs As Integer)
