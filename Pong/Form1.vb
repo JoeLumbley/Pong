@@ -237,14 +237,18 @@ Public Class Form1
 
     Private Audio As AudioPlayer
 
-    Private WithEvents AudioRestartTimer As New Timer With {
-        .Interval = 360000,
-        .Enabled = True
-    }
+    'Private WithEvents AudioRestartTimer As New Timer With {
+    '    .Interval = 360000,
+    '    .Enabled = True
+    '}
     'Private WithEvents AudioRestartTimer As New Timer With {
     '    .Interval = 15000,
     '    .Enabled = True
     '}
+    Private WithEvents AudioRestartTimer As New Timer With {
+        .Interval = 180000,
+        .Enabled = True
+    }
 
 
     Private gameplayLoopVolume As Integer = 200
@@ -384,7 +388,7 @@ Public Class Form1
 
         LoadAndRegisterSounds()
 
-        PlayStartLoop()
+        PlayStartLoop(600)
 
     End Sub
 
@@ -462,6 +466,10 @@ Public Class Form1
 
         FadeOutAndStopActiveLoops(800)
 
+        If Audio.IsPlaying("bounce") Then
+            Audio.FadeOutAndStop("bounce", 800)
+        End If
+
         ' Wait for fade-out to complete before restarting engine
         Dim t As New Timer() With {.Interval = 900}
 
@@ -485,31 +493,6 @@ Public Class Form1
         t.Start()
 
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     Private Sub LoadAndRegisterSounds()
 
@@ -541,13 +524,13 @@ Public Class Form1
         ' Loops (Start, Gameplay, Pause)
         ' ---------------------------------------------------------
         Audio.AddSound("startloop", Path.Combine(Application.StartupPath, "startloop.mp3"))
-        Audio.SetVolume("startloop", 75)
+        Audio.SetVolume("startloop", startLoopVolume)
 
         Audio.AddSound("gameplayloop", Path.Combine(Application.StartupPath, "gameplayloop.mp3"))
-        Audio.SetVolume("gameplayloop", 200)
+        Audio.SetVolume("gameplayloop", gameplayLoopVolume)
 
         Audio.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
-        Audio.SetVolume("pause", 40)
+        Audio.SetVolume("pause", pauseLoopVolume)
 
         ' ---------------------------------------------------------
         ' Begin Start Screen Loop (with fade‑in)
@@ -781,14 +764,16 @@ Public Class Form1
     End Sub
 
     Private Sub EndMatch()
-        FadeOutAndStopGamePlayLoop(800)
+
+        FadeOutAndStopGamePlayLoop(600)
 
         speed = 200 * (ClientSize.Height / 1080.0)
 
         CenterBall()
         MoveBallRandom()
 
-        PlayStartLoop()
+        PlayStartLoop(600)
+
     End Sub
 
     Private Sub CenterBall()
@@ -1868,7 +1853,7 @@ Public Class Form1
 
     Private Sub Quit2StartScreen()
 
-        FadeOutAndStopPausedLoop(2000)
+        FadeOutAndStopPausedLoop(600)
 
         MovePointerOffScreen()
 
@@ -1883,7 +1868,7 @@ Public Class Form1
         currentState = GameState.StartScreen
         physicsTimer.Start()
 
-        PlayStartLoop()
+        PlayStartLoop(600)
 
     End Sub
 
@@ -2003,7 +1988,7 @@ Public Class Form1
 
     Private Sub PauseGame()
 
-        FadeOutAndStopGamePlayLoop(800)
+        FadeOutAndStopGamePlayLoop(600)
 
         pauseMenuSelection = 0 ' Resume game
 
@@ -2015,26 +2000,23 @@ Public Class Form1
         moveRightPaddleUp = False
         moveRightPaddleDown = False
 
-        PlayPausedLoop()
+        PlayPausedLoop(600)
 
     End Sub
 
     Private Sub ResumeGame()
 
-        'Audio.StopSound("pause")
-        FadeOutAndStopPausedLoop(800)
-
-        'Await Task.Delay(2000) ' Wait for fade-out to complete
+        FadeOutAndStopPausedLoop(600)
 
         currentState = GameState.Playing
         physicsTimer.Start()
 
-        PlayGamePlayLoop()
+        PlayGamePlayLoop(600)
     End Sub
 
     Private Sub StartNewMatch()
-        FadeOutAndStopStartLoop(800)
-        FadeOutAndStopPausedLoop(800)
+        FadeOutAndStopStartLoop(600)
+        FadeOutAndStopPausedLoop(600)
 
         MovePointerOffScreen()
 
@@ -2057,7 +2039,7 @@ Public Class Form1
         currentState = GameState.Playing
         physicsTimer.Start()
 
-        PlayGamePlayLoop()
+        PlayGamePlayLoop(600)
 
     End Sub
 
@@ -2136,21 +2118,17 @@ Public Class Form1
 
     Public Sub RestartLoops()
 
-        'FadeOutAndStopActiveLoops(2000)
-
-        '' Non-blocking delay for clean transitions
-        'Await Task.Delay(4000)
 
         Select Case currentState
 
             Case GameState.StartScreen, GameState.EndScreen, GameState.AIDifficulty
-                PlayStartLoop() ' includes fade-in
+                PlayStartLoop(600) ' includes fade-in
 
             Case GameState.Playing
-                PlayGamePlayLoop() ' includes fade-in
+                PlayGamePlayLoop(600) ' includes fade-in
 
             Case GameState.Pause
-                PlayPausedLoop()  ' includes fade-in
+                PlayPausedLoop(600)  ' includes fade-in
 
         End Select
 
@@ -2182,37 +2160,31 @@ Public Class Form1
         Audio.PlaySound("select")
     End Sub
 
-    Private Sub PlayPausedLoop()
+    Private Sub PlayPausedLoop(durationMs As Integer)
 
         ' Fade‑in loop
         Audio.SetVolume("pause", 0)
         Audio.LoopSound("pause")
-        Audio.FadeVolume("pause", 0, pauseLoopVolume, 2000)
-
-        'Audio.FadeInAndLoop("pause", 2000)
+        Audio.FadeVolume("pause", 0, pauseLoopVolume, durationMs)
 
     End Sub
 
-    Private Sub PlayStartLoop()
+    Private Sub PlayStartLoop(durationMs As Integer)
 
         ' Fade‑in loop
         Audio.SetVolume("startloop", 0)
         Audio.LoopSound("startloop")
-        Audio.FadeVolume("startloop", 0, startLoopVolume, 2000)
-
-        'Audio.FadeInAndLoop("startloop", 2000)
+        Audio.FadeVolume("startloop", 0, startLoopVolume, durationMs)
 
     End Sub
 
 
-    Private Sub PlayGamePlayLoop()
+    Private Sub PlayGamePlayLoop(durationMs As Integer)
 
         ' Fade‑in loop
         Audio.SetVolume("gameplayloop", 0)
         Audio.LoopSound("gameplayloop")
-        Audio.FadeVolume("gameplayloop", 0, gameplayLoopVolume, 2000)
-
-        'Audio.FadeIn("gameplayloop", 2000)
+        Audio.FadeVolume("gameplayloop", 0, gameplayLoopVolume, durationMs)
 
     End Sub
 
