@@ -19,7 +19,7 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 - **Single and Multiplayer Modes**: Challenge yourself against a computer player or compete with friends, making the game versatile for different play styles.
 
 
-<img width="1920" height="1080" alt="036" src="https://github.com/user-attachments/assets/4c1e1c0f-05d6-4cf5-9c77-640033da44d9" />
+<img width="1920" height="1080" alt="037" src="https://github.com/user-attachments/assets/ec7d6347-84ee-4e5d-82cf-03c80a9dbe90" />
 
 ### Learning Objectives
 - Understand the basics of game mechanics and physics, including how to simulate movement and collisions.
