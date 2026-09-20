@@ -27,6 +27,7 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 - Learn how to implement user input handling, game states, sound effects, and graphical rendering.
 
 
+<img width="1920" height="1080" alt="038" src="https://github.com/user-attachments/assets/d8046bf2-f6f2-488b-8531-3e21939749a6" />
 
 
 
