@@ -1874,7 +1874,7 @@ Public Class Form1
         End If
 
         ' Wait for the sound to finish before closing
-        Dim t As New Timer() With {.Interval = 1000}
+        Dim t As New Timer() With {.Interval = 700}
         AddHandler t.Tick,
         Sub()
             t.Stop()
