@@ -247,6 +247,8 @@ Public Class Form1
     '    .Interval = 15000,
     '    .Enabled = True
     '}
+
+
     Private WithEvents AudioRestartTimer As New Timer With {
         .Interval = 180000,
         .Enabled = True
@@ -256,6 +258,17 @@ Public Class Form1
     Private gameplayLoopVolume As Integer = 200
     Private startLoopVolume As Integer = 75
     Private pauseLoopVolume As Integer = 40
+
+
+
+
+
+
+
+
+
+
+
 
 
     Private Const DWMWA_USE_IMMERSIVE_DARK_MODE As Integer = 20
