@@ -262,15 +262,6 @@ Public Class Form1
 
 
 
-
-
-
-
-
-
-
-
-
     Private Const DWMWA_USE_IMMERSIVE_DARK_MODE As Integer = 20
 
     <DllImport("dwmapi.dll")>
@@ -281,16 +272,6 @@ Public Class Form1
         attrSize As Integer
     ) As Integer
     End Function
-
-
-
-
-
-
-
-
-
-
 
 
 
