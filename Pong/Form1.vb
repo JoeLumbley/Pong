@@ -464,14 +464,14 @@ Public Class Form1
 
     Private Sub RestartAudioEngine()
 
-        FadeOutAndStopActiveLoops(800)
+        FadeOutAndStopActiveLoops(600)
 
         If Audio.IsPlaying("bounce") Then
-            Audio.FadeOutAndStop("bounce", 800)
+            Audio.FadeOutAndStop("bounce", 600)
         End If
 
         ' Wait for fade-out to complete before restarting engine
-        Dim t As New Timer() With {.Interval = 900}
+        Dim t As New Timer() With {.Interval = 700}
 
         AddHandler t.Tick, Sub()
                                t.Stop()
