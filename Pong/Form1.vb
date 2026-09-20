@@ -258,12 +258,6 @@ Public Class Form1
 
 
 
-
-
-
-
-
-
     ' ===============================
     '  FORM LIFECYCLE
     ' ===============================
@@ -397,71 +391,6 @@ Public Class Form1
     End Sub
 
 
-    'Private Sub RestartAudioEngine()
-
-    '    FadeOutAndStopActiveLoops(2000)
-
-
-
-    '    ' Wait for the sound to finish before closing
-    '    Dim t As New Timer() With {.Interval = 2000}
-    '    AddHandler t.Tick,
-    '    Sub()
-    '        t.Stop()
-    '        t.Dispose()
-
-    '        ' Dispose old engine
-    '        'If Audio IsNot Nothing Then
-    '        '    Audio.Dispose()
-    '        'End If
-
-    '        Audio?.Dispose()
-
-    '        ' Create new engine
-    '        Audio = New AudioPlayer()
-
-    '        ' Reload all sounds
-    '        'LoadAllSounds()
-    '        LoadAndRegisterSounds()
-
-    '        ' Restore loops based on game state
-    '        RestartLoops()
-
-
-    '    End Sub
-
-    '    t.Start()
-
-
-
-
-
-
-
-
-
-
-    '    '' Non-blocking delay for clean transitions
-    '    'Await Task.Delay(2000)
-
-    '    '' Dispose old engine
-    '    'If Audio IsNot Nothing Then
-    '    '    Audio.Dispose()
-    '    'End If
-
-    '    'Await Task.Delay(100) ' Small delay to ensure resources are released
-
-    '    '' Create new engine
-    '    'Audio = New AudioPlayer()
-
-    '    '' Reload all sounds
-    '    ''LoadAllSounds()
-    '    'LoadAndRegisterSounds()
-
-    '    '' Restore loops based on game state
-    '    'RestartLoops()
-    'End Sub
-
     Private Sub RestartAudioEngine()
 
         FadeOutAndStopActiveLoops(600)
@@ -532,10 +461,6 @@ Public Class Form1
         Audio.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
         Audio.SetVolume("pause", pauseLoopVolume)
 
-        ' ---------------------------------------------------------
-        ' Begin Start Screen Loop (with fade‑in)
-        ' ---------------------------------------------------------
-        'PlayStartLoop()
 
     End Sub
 
@@ -1029,9 +954,6 @@ Public Class Form1
 
             Dim brush As SolidBrush = If(i = aiDifficultySelection, whiteBrush, grayBrush)
 
-            'g.DrawString(text, startMenuFont, brush,
-            '         CSng((ClientSize.Width - size.Width) / 2.0F),
-            '         CSng(ClientSize.Height * 0.45F + i * (size.Height + 10)))
 
             g.DrawString(text, startMenuFont, brush,
                      CSng((ClientSize.Width - size.Width) / 2.0F),
@@ -1945,10 +1867,10 @@ Public Class Form1
 
         PlayExitSound()
 
-        FadeOutAndStopActiveLoops(800)
+        FadeOutAndStopActiveLoops(600)
 
         If Audio.IsPlaying("bounce") Then
-            Audio.FadeOutAndStop("bounce", 800)
+            Audio.FadeOutAndStop("bounce", 600)
         End If
 
         ' Wait for the sound to finish before closing
