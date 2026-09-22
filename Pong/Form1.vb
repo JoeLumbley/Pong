@@ -875,6 +875,18 @@ Public Class Form1
 
     Private Sub DrawHUD(g As Graphics)
 
+
+
+
+
+
+
+
+
+
+
+
+
         ' -------------------------------
         '  Fullscreen Indicator
         ' -------------------------------
@@ -1076,6 +1088,27 @@ Public Class Form1
 
 
     Private Sub DrawAIDifficultyScreen(g As Graphics)
+
+
+        ' -------------------------------
+        '  Keyboard Hints (Top‑Left)
+        ' -------------------------------
+        Dim hintText As String = "E - Easy   N - Normal   H - Hard   SPACE - Start Match"
+        Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+        g.DrawString(hintText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 10,
+                 10)
+
+
+
+
+
+
+
+
 
 
         ' -------------------------------
@@ -1523,6 +1556,37 @@ Public Class Form1
             Return
 
         End If
+
+
+
+        ' ============================
+        '   LETTER SHORTCUTS: E / N / H
+        ' ============================
+
+        ' E → Easy
+        If e.KeyCode = Keys.E AndAlso aiDifficultySelection <> AIDifficultyLevel.Easy Then
+            aiDifficultySelection = AIDifficultyLevel.Easy
+            PlayMenuUpSound()
+            Invalidate()
+            Return
+        End If
+
+        ' N → Normal
+        If e.KeyCode = Keys.N AndAlso aiDifficultySelection <> AIDifficultyLevel.Normal Then
+            aiDifficultySelection = AIDifficultyLevel.Normal
+            PlayMenuDownSound()
+            Invalidate()
+            Return
+        End If
+
+        ' H → Hard
+        If e.KeyCode = Keys.H AndAlso aiDifficultySelection <> AIDifficultyLevel.Hard Then
+            aiDifficultySelection = AIDifficultyLevel.Hard
+            PlayMenuDownSound()
+            Invalidate()
+            Return
+        End If
+
 
         ' ============================
         '   SELECT: SPACE / ENTER
