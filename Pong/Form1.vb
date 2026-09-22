@@ -219,7 +219,7 @@ Public Class Form1
     Private pauseTitleX As Single
     Private pauseTitleY As Single
 
-    Private pauseMenuItems() As String = {"Resume", "New Match", "Quit to Start Screen"}
+    Private pauseMenuItems() As String = {"Resume", "New", "Quit"}
     Private pauseMenuItemSizes() As SizeF
     Private pauseMenuItemX() As Single
     Private pauseMenuItemY() As Single
@@ -796,8 +796,9 @@ Public Class Form1
                 DrawTrail(g)
                 DrawBall(g)
                 DrawPaddles(g)
-                DrawFPS(g)
+                'DrawFPS(g)
                 DrawHUD(g)
+                DrawKeyboardHintsGamePlayScreen(g)
 
             Case GameState.EndScreen
                 DrawTrail(g)
@@ -810,6 +811,8 @@ Public Class Form1
                 DrawPaddles(g)
                 DrawHUD(g)
                 DrawPauseScreen(g)
+                DrawKeyboardHintsPauseScreen(g)
+
 
             Case GameState.AIDifficulty
                 DrawTrail(g)
@@ -825,26 +828,6 @@ Public Class Form1
 
 
 
-        ' -------------------------------
-        '  Keyboard Hints (Top‑Left)
-        ' -------------------------------
-        Dim hintText As String
-
-        'If numberOfPlayersSelection = 0 Then
-        '    ' One Player selected → user will choose AI difficulty next
-        '    hintText = $"FPS: {fps}   W S - Move Paddle"
-        'Else
-        '    ' Two Players selected → match starts immediately
-        hintText = $"N - New Match   Q - Quit to Startscreen"
-        'End If
-
-        Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
-
-        g.DrawString(hintText,
-                 fullscreenIndicatorFont,
-                 grayBrush,
-                 10,
-                 10)
 
 
 
@@ -855,8 +838,11 @@ Public Class Form1
 
 
 
-
+        ' Dim 
         g.FillRectangle(dimBrush, ClientRectangle)
+
+
+
 
         ' Title
         g.DrawString(pauseTitle, pauseTitleFont, whiteBrush,
@@ -910,34 +896,6 @@ Public Class Form1
 
     Private Sub DrawHUD(g As Graphics)
 
-
-
-
-
-
-
-
-
-
-
-
-
-        ' -------------------------------
-        '  Fullscreen Indicator
-        ' -------------------------------
-        Dim fsText As String =
-        If(Me.FormBorderStyle = FormBorderStyle.None,
-           "F - Exit Fullscreen",
-           "F - Fullscreen")
-
-        Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
-
-        g.DrawString(fsText,
-             fullscreenIndicatorFont,
-             grayBrush,
-             ClientSize.Width - fsSize.Width - 10,
-             10)
-
         Dim halfWidth As Single = ClientSize.Width / 2.0F
 
         Dim leftScoreText As String = scoreLeft.ToString()
@@ -963,26 +921,6 @@ Public Class Form1
 
         g.DrawString(leftScoreText, hudScoreFont, scoreBrush, leftScoreX, scoreY)
         g.DrawString(rightScoreText, hudScoreFont, scoreBrush, rightScoreX, scoreY)
-
-
-
-        ' -------------------------------
-        '  Pause Match (Bottom‑Left)
-        ' -------------------------------
-        Dim quitText As String = "P - Pause Match"
-
-        If physicsTimer.Enabled = False Then
-            quitText = "R - Resume Match"
-        End If
-
-
-        Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
-
-        g.DrawString(quitText,
-                 fullscreenIndicatorFont,
-                 grayBrush,
-                 10,
-                 ClientSize.Height - quitSize.Height - 10)
 
     End Sub
 
@@ -1363,8 +1301,120 @@ Public Class Form1
 
 
 
+    Private Sub DrawKeyboardHintsPauseScreen(g As Graphics)
+
+        ' -------------------------------
+        '  Keyboard Hints (Top‑Left)
+        ' -------------------------------
+        Dim hintText As String
+        hintText = $"R - Resume Match   N - New Match"
+        Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+        g.DrawString(hintText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 10,
+                 10)
 
 
+        ' -------------------------------
+        '  Fullscreen Indicator (Top-Right)
+        ' -------------------------------
+        Dim fsText As String =
+        If(Me.FormBorderStyle = FormBorderStyle.None,
+           "F - Exit Fullscreen",
+           "F - Fullscreen")
+
+        Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
+
+        g.DrawString(fsText,
+             fullscreenIndicatorFont,
+             grayBrush,
+             ClientSize.Width - fsSize.Width - 10,
+             10)
+
+        ' -------------------------------
+        '  Quit Match (Bottom‑Left)
+        ' -------------------------------
+        Dim quitText As String = "Q - Quit Match"
+
+        Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
+
+        g.DrawString(quitText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 10,
+                 ClientSize.Height - quitSize.Height - 10)
+
+
+
+    End Sub
+
+
+    Private Sub DrawKeyboardHintsGamePlayScreen(g As Graphics)
+
+        UpdateFPS()
+
+        ' -------------------------------
+        '  Keyboard Hints (Top‑Left)
+        ' -------------------------------
+        Dim hintText As String
+
+        If numberOfPlayersSelection = 0 Then
+            ' One Player selected → user will choose AI difficulty next
+            hintText = $"FPS: {fps}   W S - Move Paddle"
+        Else
+            ' Two Players selected → match starts immediately
+            hintText = $"FPS: {fps}   W S - Left Paddle   Up Down Arrows - Right Paddle"
+        End If
+
+        Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+        g.DrawString(hintText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 10,
+                 10)
+
+
+
+        ' -------------------------------
+        '  Fullscreen Indicator (Top-Right)
+        ' -------------------------------
+        Dim fsText As String =
+        If(Me.FormBorderStyle = FormBorderStyle.None,
+           "F - Exit Fullscreen",
+           "F - Fullscreen")
+
+        Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
+
+        g.DrawString(fsText,
+             fullscreenIndicatorFont,
+             grayBrush,
+             ClientSize.Width - fsSize.Width - 10,
+             10)
+
+        ' -------------------------------
+        '  Pause Match (Bottom‑Left)
+        ' -------------------------------
+        Dim quitText As String = "P - Pause Match"
+
+        If physicsTimer.Enabled = False Then
+            quitText = "R - Resume Match"
+        End If
+
+
+        Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
+
+        g.DrawString(quitText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 10,
+                 ClientSize.Height - quitSize.Height - 10)
+
+
+
+    End Sub
 
 
 
