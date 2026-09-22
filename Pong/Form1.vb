@@ -914,7 +914,7 @@ Public Class Form1
         Dim leftLabelSize = g.MeasureString(leftPlayerName, hudLabelFont)
         Dim rightLabelSize = g.MeasureString(rightPlayerName, hudLabelFont)
 
-        Dim scoreY As Single = 10
+        Dim scoreY As Single = CSng(ClientSize.Height / 20)
         Dim labelY As Single = scoreY - CSng(ClientSize.Height / 200.0)
 
         Dim leftScoreX As Single = (halfWidth - leftScoreSize.Width) / 2.0F
@@ -933,7 +933,33 @@ Public Class Form1
     Private Sub DrawFPS(g As Graphics)
         UpdateFPS()
 
-        g.DrawString($"FPS: {fps}", fpsFont, fpsBrush, 10, 10)
+
+        ' -------------------------------
+        '  Keyboard Hints (Top‑Left)
+        ' -------------------------------
+        Dim hintText As String
+
+        If numberOfPlayersSelection = 0 Then
+            ' One Player selected → user will choose AI difficulty next
+            hintText = $"FPS: {fps}   W S - Move Paddle    P - Pause Match"
+        Else
+            ' Two Players selected → match starts immediately
+            hintText = $"FPS: {fps}   W S - Left Paddle   Up Down Arrows - Right Paddle   P - Pause Match"
+        End If
+
+        Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+        g.DrawString(hintText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 10,
+                 10)
+
+
+
+
+
+        'g.DrawString($"FPS: {fps}", fpsFont, fpsBrush, 10, 10)
 
     End Sub
 
@@ -1005,12 +1031,104 @@ Public Class Form1
 
 
 
+    'Private Sub DrawStartScreen(g As Graphics)
+
+    '    ' -------------------------------
+    '    '  Keyboard Hints (Top‑Left)
+    '    ' -------------------------------
+    '    Dim hintText As String = "1 - One Player   2 - Two Players   SPACE - Start Match"
+    '    Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+    '    g.DrawString(hintText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             10,
+    '             10)
+
+
+    '    ' -------------------------------
+    '    '  Fullscreen Indicator (Top‑Right)
+    '    ' -------------------------------
+    '    Dim fsText As String =
+    '    If(Me.FormBorderStyle = FormBorderStyle.None,
+    '       "F - Exit Fullscreen",
+    '       "F - Fullscreen")
+
+    '    Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
+
+    '    g.DrawString(fsText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             ClientSize.Width - fsSize.Width - 10,
+    '             10)
+
+
+    '    ' -------------------------------
+    '    '  Title
+    '    ' -------------------------------
+    '    Dim title As String = "PONG"
+    '    Dim titleSize = g.MeasureString(title, startTitleFont)
+    '    Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
+
+    '    Using titleBrush As New SolidBrush(titleColor)
+    '        g.DrawString(title, startTitleFont, titleBrush,
+    '                 CSng((ClientSize.Width - titleSize.Width) / 2.0F),
+    '                 CSng(ClientSize.Height * 0.15F))
+    '    End Using
+
+
+    '    ' -------------------------------
+    '    '  Menu Options
+    '    ' -------------------------------
+    '    Dim option1 As String = "1 Player"
+    '    Dim option2 As String = "2 Players"
+
+    '    Dim opt1Size = g.MeasureString(option1, startMenuFont)
+    '    Dim opt2Size = g.MeasureString(option2, startMenuFont)
+
+    '    Dim opt1Brush As SolidBrush = If(numberOfPlayersSelection = 0, whiteBrush, grayBrush)
+    '    Dim opt2Brush As SolidBrush = If(numberOfPlayersSelection = 1, whiteBrush, grayBrush)
+
+    '    g.DrawString(option1, startMenuFont, opt1Brush,
+    '             CSng((ClientSize.Width - opt1Size.Width) / 2.0F),
+    '             CSng(ClientSize.Height * 0.45F))
+
+    '    g.DrawString(option2, startMenuFont, opt2Brush,
+    '             CSng((ClientSize.Width - opt2Size.Width) / 2.0F),
+    '             CSng(ClientSize.Height * 0.55F))
+
+
+    '    ' -------------------------------
+    '    '  Blink "Press SPACE"
+    '    ' -------------------------------
+    '    If blinkVisible Then
+    '        Dim info As String = "Press SPACE to Start"
+    '        Dim infoSize = g.MeasureString(info, startInfoFont)
+
+    '        g.DrawString(info, startInfoFont, whiteBrush,
+    '                 CSng((ClientSize.Width - infoSize.Width) / 2.0F),
+    '                 CSng(ClientSize.Height * 0.75F))
+    '    End If
+
+    'End Sub
+
+
+
     Private Sub DrawStartScreen(g As Graphics)
 
         ' -------------------------------
         '  Keyboard Hints (Top‑Left)
         ' -------------------------------
-        Dim hintText As String = "1 - One Player   2 - Two Players   SPACE - Start Match"
+        Dim hintText As String
+
+        'If numberOfPlayersSelection = 0 Then
+        '    ' One Player selected → user will choose AI difficulty next
+        '    hintText = "1 - One Player   2 - Two Players   Enter - Select Difficulty   CTRL+Q - Quit Game"
+        'Else
+        ' Two Players selected → match starts immediately
+        hintText = "1 - One Player   2 - Two Players   Enter - Start Match   CTRL+Q - Quit Game"
+        'End If
+
         Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
 
         g.DrawString(hintText,
@@ -1087,13 +1205,28 @@ Public Class Form1
     End Sub
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     Private Sub DrawAIDifficultyScreen(g As Graphics)
 
 
         ' -------------------------------
         '  Keyboard Hints (Top‑Left)
         ' -------------------------------
-        Dim hintText As String = "E - Easy   N - Normal   H - Hard   SPACE - Start Match"
+        Dim hintText As String = "E - Easy   N - Normal   H - Hard   Enter - Start Match"
         Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
 
         g.DrawString(hintText,
@@ -1154,7 +1287,7 @@ Public Class Form1
 
         Next
 
-        Dim info As String = "Press SPACE to Confirm"
+        Dim info As String = "Press SPACE to Start"
         Dim infoSize = g.MeasureString(info, startInfoFont)
 
         g.DrawString(info, startInfoFont, whiteBrush,
@@ -1163,6 +1296,31 @@ Public Class Form1
     End Sub
 
     Private Sub DrawGameOver(g As Graphics)
+
+        ' -------------------------------
+        '  Keyboard Hints (Top‑Left)
+        ' -------------------------------
+        Dim hintText As String = "Enter - Start New Match"
+        Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+        g.DrawString(hintText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 10,
+                 10)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         ' -------------------------------
@@ -1631,41 +1789,126 @@ Public Class Form1
 
     End Sub
 
+    'Private Sub HandleEndScreenInput(e As KeyEventArgs)
+
+    '    ' ============================================================
+    '    ' 1. Confirm Return to Start Screen (Space)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Space Then
+    '        If spaceKeyDown Then Return
+    '        spaceKeyDown = True
+
+    '        PlaySelectSound()
+
+    '        ' Reset state and return to Start Screen
+    '        currentState = GameState.StartScreen
+    '        winnerText = ""
+
+    '        Return
+    '    End If
+
+    '    ' ============================================================
+    '    ' 2. Confirm Return to Start Screen (Enter)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Enter Then
+    '        If enterKeyDown Then Return
+    '        enterKeyDown = True
+
+    '        PlaySelectSound()
+
+    '        ' Reset state and return to Start Screen
+    '        currentState = GameState.StartScreen
+    '        winnerText = ""
+
+    '        Return
+    '    End If
+
+    '    ' ==
+    '    ' 3. Return to Start Screen (Escape)
+    '    ' ==
+
+    '    If e.KeyCode = Keys.Escape Then
+    '        If escapeKeyDown Then Return
+    '        escapeKeyDown = True
+
+    '        PlaySelectSound()
+
+    '        ' Reset state and return to Start Screen
+    '        currentState = GameState.StartScreen
+    '        winnerText = ""
+
+    '        Return
+    '    End If
+
+
+    'End Sub
+
+
     Private Sub HandleEndScreenInput(e As KeyEventArgs)
 
         ' ============================================================
-        ' 1. Confirm Return to Start Screen (Space)
+        ' 1. Return to Start Screen (Space)
         ' ============================================================
         If e.KeyCode = Keys.Space Then
             If spaceKeyDown Then Return
             spaceKeyDown = True
 
             PlaySelectSound()
-
-            ' Reset state and return to Start Screen
             currentState = GameState.StartScreen
             winnerText = ""
-
+            Invalidate()
             Return
         End If
 
+
         ' ============================================================
-        ' 2. Confirm Return to Start Screen (Enter)
+        ' 2. Return to Start Screen (Enter)
         ' ============================================================
         If e.KeyCode = Keys.Enter Then
             If enterKeyDown Then Return
             enterKeyDown = True
 
             PlaySelectSound()
-
-            ' Reset state and return to Start Screen
             currentState = GameState.StartScreen
             winnerText = ""
+            Invalidate()
+            Return
+        End If
 
+
+        ' ============================================================
+        ' 3. Return to Start Screen (Escape)
+        ' ============================================================
+        If e.KeyCode = Keys.Escape Then
+            If escapeKeyDown Then Return
+            escapeKeyDown = True
+
+            PlaySelectSound()
+            currentState = GameState.StartScreen
+            winnerText = ""
+            Invalidate()
             Return
         End If
 
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Sub HandleStartScreenInput(e As KeyEventArgs)
 
