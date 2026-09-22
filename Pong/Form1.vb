@@ -926,6 +926,34 @@ Public Class Form1
     End Sub
 
     Private Sub DrawStartScreen(g As Graphics)
+
+
+
+        ' -------------------------------
+        '  Fullscreen Indicator
+        ' -------------------------------
+        Dim fsText As String =
+        If(Me.FormBorderStyle = FormBorderStyle.None,
+           "F - Exit Fullscreen",
+           "F - Fullscreen")
+
+        Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
+
+        g.DrawString(fsText,
+             fullscreenIndicatorFont,
+             grayBrush,
+             ClientSize.Width - fsSize.Width - 10,
+             10)
+
+
+
+
+
+
+
+
+
+
         Dim title As String = "PONG"
         Dim titleSize = g.MeasureString(title, startTitleFont)
         Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
@@ -966,6 +994,30 @@ Public Class Form1
 
     Private Sub DrawAIDifficultyScreen(g As Graphics)
 
+
+        ' -------------------------------
+        '  Fullscreen Indicator
+        ' -------------------------------
+        Dim fsText As String =
+        If(Me.FormBorderStyle = FormBorderStyle.None,
+           "F - Exit Fullscreen",
+           "F - Fullscreen")
+
+        Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
+
+        g.DrawString(fsText,
+             fullscreenIndicatorFont,
+             grayBrush,
+             ClientSize.Width - fsSize.Width - 10,
+             10)
+
+
+
+
+
+
+
+
         Dim title As String = "Difficulty"
         Dim titleSize = g.MeasureString(title, aiDifficultyTitleFont)
 
@@ -995,6 +1047,32 @@ Public Class Form1
     End Sub
 
     Private Sub DrawGameOver(g As Graphics)
+
+
+        ' -------------------------------
+        '  Fullscreen Indicator
+        ' -------------------------------
+        Dim fsText As String =
+        If(Me.FormBorderStyle = FormBorderStyle.None,
+           "F - Exit Fullscreen",
+           "F - Fullscreen")
+
+        Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
+
+        g.DrawString(fsText,
+             fullscreenIndicatorFont,
+             grayBrush,
+             ClientSize.Width - fsSize.Width - 10,
+             10)
+
+
+
+
+
+
+
+
+
         Dim size = g.MeasureString(winnerText, gameOverFont)
         Dim info As String = "Press SPACE to Restart"
         Dim infoSize = g.MeasureString(info, gameOverInfoFont)
