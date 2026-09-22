@@ -1574,7 +1574,7 @@ Public Class Form1
 
 
         Dim size = g.MeasureString(winnerText, gameOverFont)
-        Dim info As String = "Press SPACE to Restart"
+        Dim info As String = "Press SPACE to Start"
         Dim infoSize = g.MeasureString(info, gameOverInfoFont)
 
         g.DrawString(winnerText, gameOverFont, whiteBrush,
