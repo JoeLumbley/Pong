@@ -821,6 +821,41 @@ Public Class Form1
 
 
     Private Sub DrawPauseScreen(g As Graphics)
+
+
+
+
+        ' -------------------------------
+        '  Keyboard Hints (Top‑Left)
+        ' -------------------------------
+        Dim hintText As String
+
+        'If numberOfPlayersSelection = 0 Then
+        '    ' One Player selected → user will choose AI difficulty next
+        '    hintText = $"FPS: {fps}   W S - Move Paddle"
+        'Else
+        '    ' Two Players selected → match starts immediately
+        hintText = $"N - New Match   Q - Quit to Startscreen"
+        'End If
+
+        Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+        g.DrawString(hintText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 10,
+                 10)
+
+
+
+
+
+
+
+
+
+
+
         g.FillRectangle(dimBrush, ClientRectangle)
 
         ' Title
@@ -928,6 +963,27 @@ Public Class Form1
 
         g.DrawString(leftScoreText, hudScoreFont, scoreBrush, leftScoreX, scoreY)
         g.DrawString(rightScoreText, hudScoreFont, scoreBrush, rightScoreX, scoreY)
+
+
+
+        ' -------------------------------
+        '  Pause Match (Bottom‑Left)
+        ' -------------------------------
+        Dim quitText As String = "P - Pause Match"
+
+        If physicsTimer.Enabled = False Then
+            quitText = "R - Resume Match"
+        End If
+
+
+        Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
+
+        g.DrawString(quitText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 10,
+                 ClientSize.Height - quitSize.Height - 10)
+
     End Sub
 
     Private Sub DrawFPS(g As Graphics)
@@ -941,10 +997,10 @@ Public Class Form1
 
         If numberOfPlayersSelection = 0 Then
             ' One Player selected → user will choose AI difficulty next
-            hintText = $"FPS: {fps}   W S - Move Paddle    P - Pause Match"
+            hintText = $"FPS: {fps}   W S - Move Paddle"
         Else
             ' Two Players selected → match starts immediately
-            hintText = $"FPS: {fps}   W S - Left Paddle   Up Down Arrows - Right Paddle   P - Pause Match"
+            hintText = $"FPS: {fps}   W S - Left Paddle   Up Down Arrows - Right Paddle"
         End If
 
         Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
@@ -1114,20 +1170,108 @@ Public Class Form1
 
 
 
+    'Private Sub DrawStartScreen(g As Graphics)
+
+    '    ' -------------------------------
+    '    '  Keyboard Hints (Top‑Left)
+    '    ' -------------------------------
+    '    Dim hintText As String
+
+    '    'If numberOfPlayersSelection = 0 Then
+    '    '    ' One Player selected → user will choose AI difficulty next
+    '    '    hintText = "1 - One Player   2 - Two Players   Enter - Select Difficulty   CTRL+Q - Quit Game"
+    '    'Else
+    '    ' Two Players selected → match starts immediately
+    '    hintText = "1 - One Player   2 - Two Players   Enter - Start Match   CTRL+Q - Quit Game"
+    '    'End If
+
+    '    Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+    '    g.DrawString(hintText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             10,
+    '             10)
+
+
+    '    ' -------------------------------
+    '    '  Fullscreen Indicator (Top‑Right)
+    '    ' -------------------------------
+    '    Dim fsText As String =
+    '    If(Me.FormBorderStyle = FormBorderStyle.None,
+    '       "F - Exit Fullscreen",
+    '       "F - Fullscreen")
+
+    '    Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
+
+    '    g.DrawString(fsText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             ClientSize.Width - fsSize.Width - 10,
+    '             10)
+
+
+    '    ' -------------------------------
+    '    '  Title
+    '    ' -------------------------------
+    '    Dim title As String = "PONG"
+    '    Dim titleSize = g.MeasureString(title, startTitleFont)
+    '    Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
+
+    '    Using titleBrush As New SolidBrush(titleColor)
+    '        g.DrawString(title, startTitleFont, titleBrush,
+    '                 CSng((ClientSize.Width - titleSize.Width) / 2.0F),
+    '                 CSng(ClientSize.Height * 0.15F))
+    '    End Using
+
+
+    '    ' -------------------------------
+    '    '  Menu Options
+    '    ' -------------------------------
+    '    Dim option1 As String = "1 Player"
+    '    Dim option2 As String = "2 Players"
+
+    '    Dim opt1Size = g.MeasureString(option1, startMenuFont)
+    '    Dim opt2Size = g.MeasureString(option2, startMenuFont)
+
+    '    Dim opt1Brush As SolidBrush = If(numberOfPlayersSelection = 0, whiteBrush, grayBrush)
+    '    Dim opt2Brush As SolidBrush = If(numberOfPlayersSelection = 1, whiteBrush, grayBrush)
+
+    '    g.DrawString(option1, startMenuFont, opt1Brush,
+    '             CSng((ClientSize.Width - opt1Size.Width) / 2.0F),
+    '             CSng(ClientSize.Height * 0.45F))
+
+    '    g.DrawString(option2, startMenuFont, opt2Brush,
+    '             CSng((ClientSize.Width - opt2Size.Width) / 2.0F),
+    '             CSng(ClientSize.Height * 0.55F))
+
+
+    '    ' -------------------------------
+    '    '  Blink "Press SPACE"
+    '    ' -------------------------------
+    '    If blinkVisible Then
+    '        Dim info As String = "Press SPACE to Start"
+    '        Dim infoSize = g.MeasureString(info, startInfoFont)
+
+    '        g.DrawString(info, startInfoFont, whiteBrush,
+    '                 CSng((ClientSize.Width - infoSize.Width) / 2.0F),
+    '                 CSng(ClientSize.Height * 0.75F))
+    '    End If
+
+    'End Sub
+
+
+
+
+
+
     Private Sub DrawStartScreen(g As Graphics)
 
         ' -------------------------------
         '  Keyboard Hints (Top‑Left)
         ' -------------------------------
-        Dim hintText As String
-
-        'If numberOfPlayersSelection = 0 Then
-        '    ' One Player selected → user will choose AI difficulty next
-        '    hintText = "1 - One Player   2 - Two Players   Enter - Select Difficulty   CTRL+Q - Quit Game"
-        'Else
-        ' Two Players selected → match starts immediately
-        hintText = "1 - One Player   2 - Two Players   Enter - Start Match   CTRL+Q - Quit Game"
-        'End If
+        Dim hintText As String =
+        "1 - One Player   2 - Two Players   Enter - Start Match"
 
         Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
 
@@ -1202,13 +1346,20 @@ Public Class Form1
                      CSng(ClientSize.Height * 0.75F))
         End If
 
+
+        ' -------------------------------
+        '  Quit Game (Bottom‑Left)
+        ' -------------------------------
+        Dim quitText As String = "CTRL+Q - Quit Game"
+        Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
+
+        g.DrawString(quitText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 10,
+                 ClientSize.Height - quitSize.Height - 10)
+
     End Sub
-
-
-
-
-
-
 
 
 
@@ -1293,6 +1444,31 @@ Public Class Form1
         g.DrawString(info, startInfoFont, whiteBrush,
                  CSng((ClientSize.Width - infoSize.Width) / 2.0F),
                  CSng(ClientSize.Height * 0.75F))
+
+
+
+
+
+        ' -------------------------------
+        '  Quit Game (Bottom‑Left)
+        ' -------------------------------
+        Dim quitText As String = "CTRL+Q - Quit Game"
+        Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
+
+        g.DrawString(quitText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 10,
+                 ClientSize.Height - quitSize.Height - 10)
+
+
+
+
+
+
+
+
+
     End Sub
 
     Private Sub DrawGameOver(g As Graphics)
