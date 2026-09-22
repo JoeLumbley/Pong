@@ -914,7 +914,7 @@ Public Class Form1
         Dim leftLabelSize = g.MeasureString(leftPlayerName, hudLabelFont)
         Dim rightLabelSize = g.MeasureString(rightPlayerName, hudLabelFont)
 
-        Dim scoreY As Single = CSng(ClientSize.Height / 20)
+        Dim scoreY As Single = 10 + CSng(ClientSize.Height / 25)
         Dim labelY As Single = scoreY - CSng(ClientSize.Height / 200.0)
 
         Dim leftScoreX As Single = (halfWidth - leftScoreSize.Width) / 2.0F
