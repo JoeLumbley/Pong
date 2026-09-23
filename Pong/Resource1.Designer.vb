@@ -147,6 +147,16 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Byte[].
         '''</summary>
+        Friend Shared ReadOnly Property ExitSound2() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("ExitSound2", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
         Friend Shared ReadOnly Property FullScreen() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("FullScreen", resourceCulture)

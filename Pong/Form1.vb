@@ -474,6 +474,9 @@ Public Class Form1
         Audio.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
         Audio.SetVolume("point", 600)
 
+        Audio.AddSound("exit", Path.Combine(Application.StartupPath, "exit.mp3"))
+        Audio.SetVolume("exit", 200)
+
         ' ---------------------------------------------------------
         ' Loops (Start, Gameplay, Pause)
         ' ---------------------------------------------------------
@@ -2346,14 +2349,14 @@ Public Class Form1
 
         PlayExitSound()
 
-        FadeOutAndStopActiveLoops(600)
+        FadeOutAndStopActiveLoops(800)
 
         If Audio.IsPlaying("bounce") Then
-            Audio.FadeOutAndStop("bounce", 600)
+            Audio.FadeOutAndStop("bounce", 800)
         End If
 
         ' Wait for the sound to finish before closing
-        Dim t As New Timer() With {.Interval = 700}
+        Dim t As New Timer() With {.Interval = 900}
         AddHandler t.Tick,
         Sub()
             t.Stop()
@@ -2494,6 +2497,7 @@ Public Class Form1
         CreateFileFromResource(Path.Combine(Application.StartupPath, "select.mp3"), My.Resources.Resource1.Select2)
         CreateFileFromResource(Path.Combine(Application.StartupPath, "pause.mp3"), My.Resources.Resource1.PauseLoop)
         CreateFileFromResource(Path.Combine(Application.StartupPath, "fullscreen.mp3"), My.Resources.Resource1.FullScreen)
+        CreateFileFromResource(Path.Combine(Application.StartupPath, "exit.mp3"), My.Resources.Resource1.ExitSound2)
 
     End Sub
 
@@ -2558,7 +2562,7 @@ Public Class Form1
 
 
     Private Sub PlayExitSound()
-        Audio.PlaySound("select")
+        Audio.PlaySound("exit")
     End Sub
 
     Private Sub PlayPausedLoop(durationMs As Integer)
