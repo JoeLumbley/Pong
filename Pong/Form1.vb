@@ -186,6 +186,7 @@ Public Class Form1
     Private wKeyDown As Boolean = False
     Private sKeyDown As Boolean = False
     Private ctrlQDown As Boolean = False
+    Private ctrlHDown As Boolean = False
 
 
 
@@ -272,6 +273,10 @@ Public Class Form1
         attrSize As Integer
     ) As Integer
     End Function
+
+
+
+    Private showKeyboardHints As Boolean = True
 
 
 
@@ -789,26 +794,28 @@ Public Class Form1
         g.InterpolationMode = InterpolationMode.HighQualityBicubic
         g.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
 
+        UpdateFPS()
+
         Select Case currentState
             Case GameState.StartScreen
                 DrawTrail(g)
                 DrawBall(g)
                 DrawStartScreen(g)
-                DrawKeyboardHintsStartScreen(g)
+                If showKeyboardHints Then DrawKeyboardHintsStartScreen(g)
 
             Case GameState.Playing
+
                 DrawTrail(g)
                 DrawBall(g)
                 DrawPaddles(g)
-                'DrawFPS(g)
                 DrawHUD(g)
-                DrawKeyboardHintsGamePlayScreen(g)
+                If showKeyboardHints Then DrawKeyboardHintsGamePlayScreen(g)
 
             Case GameState.EndScreen
                 DrawTrail(g)
                 DrawBall(g)
                 DrawGameOver(g)
-                DrawKeyboardHintsGameOverScreen(g)
+                If showKeyboardHints Then DrawKeyboardHintsGameOverScreen(g)
 
             Case GameState.Pause
                 DrawTrail(g)
@@ -816,14 +823,14 @@ Public Class Form1
                 DrawPaddles(g)
                 DrawHUD(g)
                 DrawPauseScreen(g)
-                DrawKeyboardHintsPauseScreen(g)
+                If showKeyboardHints Then DrawKeyboardHintsPauseScreen(g)
 
 
             Case GameState.AIDifficulty
                 DrawTrail(g)
                 DrawBall(g)
                 DrawAIDifficultyScreen(g)
-                DrawKeyboardHintsAIDifficultyScreen(g)
+                If showKeyboardHints Then DrawKeyboardHintsAIDifficultyScreen(g)
 
         End Select
     End Sub
@@ -950,9 +957,65 @@ Public Class Form1
 
     End Sub
 
+    'Private Sub DrawKeyboardHintsStartScreen(g As Graphics)
+
+
+
+    '    ' -------------------------------
+    '    '  Keyboard Hints (Top‑Left)
+    '    ' -------------------------------
+    '    Dim hintText As String =
+    '    "1 - One Player   2 - Two Players   Enter - Start Match"
+
+    '    Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+    '    g.DrawString(hintText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             10,
+    '             10)
+
+
+
+
+
+    '    ' -------------------------------
+    '    '  Fullscreen Indicator (Top-Right)
+    '    ' -------------------------------
+    '    Dim fsText As String =
+    '    If(Me.FormBorderStyle = FormBorderStyle.None,
+    '       "F - Exit Fullscreen",
+    '       "F - Fullscreen")
+
+    '    Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
+
+    '    g.DrawString(fsText,
+    '         fullscreenIndicatorFont,
+    '         grayBrush,
+    '         ClientSize.Width - fsSize.Width - 10,
+    '         10)
+
+
+
+    '    ' -------------------------------
+    '    '  Quit Game (Bottom‑Left)
+    '    ' -------------------------------
+    '    Dim quitText As String = "CTRL+Q - Quit Game"
+    '    Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
+
+    '    g.DrawString(quitText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             10,
+    '             ClientSize.Height - quitSize.Height - 10)
+
+
+
+
+    'End Sub
+
+
     Private Sub DrawKeyboardHintsStartScreen(g As Graphics)
-
-
 
         ' -------------------------------
         '  Keyboard Hints (Top‑Left)
@@ -969,11 +1032,8 @@ Public Class Form1
                  10)
 
 
-
-
-
         ' -------------------------------
-        '  Fullscreen Indicator (Top-Right)
+        '  Fullscreen Indicator (Top‑Right)
         ' -------------------------------
         Dim fsText As String =
         If(Me.FormBorderStyle = FormBorderStyle.None,
@@ -983,11 +1043,10 @@ Public Class Form1
         Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
 
         g.DrawString(fsText,
-             fullscreenIndicatorFont,
-             grayBrush,
-             ClientSize.Width - fsSize.Width - 10,
-             10)
-
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 ClientSize.Width - fsSize.Width - 10,
+                 10)
 
 
         ' -------------------------------
@@ -1003,9 +1062,39 @@ Public Class Form1
                  ClientSize.Height - quitSize.Height - 10)
 
 
+        ' -------------------------------
+        '  Hide Keyboard Hints (Bottom‑Right)
+        ' -------------------------------
+        Dim hideText As String = "CTRL+H Hide Keyboard Hints"
+        Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
 
+        g.DrawString(hideText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 ClientSize.Width - hideSize.Width - 10,
+                 ClientSize.Height - hideSize.Height - 10)
 
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1108,6 +1197,18 @@ Public Class Form1
                  10,
                  ClientSize.Height - quitSize.Height - 10)
 
+        ' -------------------------------
+        '  Hide Keyboard Hints (Bottom‑Right)
+        ' -------------------------------
+        Dim hideText As String = "CTRL+H Hide Keyboard Hints"
+        Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
+
+        g.DrawString(hideText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 ClientSize.Width - hideSize.Width - 10,
+                 ClientSize.Height - hideSize.Height - 10)
+
 
 
     End Sub
@@ -1115,7 +1216,7 @@ Public Class Form1
 
     Private Sub DrawKeyboardHintsGamePlayScreen(g As Graphics)
 
-        UpdateFPS()
+        'UpdateFPS()
 
         ' -------------------------------
         '  Keyboard Hints (Top‑Left)
@@ -1231,6 +1332,18 @@ Public Class Form1
                  ClientSize.Height - quitSize.Height - 10)
 
 
+        ' -------------------------------
+        '  Hide Keyboard Hints (Bottom‑Right)
+        ' -------------------------------
+        Dim hideText As String = "CTRL+H Hide Keyboard Hints"
+        Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
+
+        g.DrawString(hideText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 ClientSize.Width - hideSize.Width - 10,
+                 ClientSize.Height - hideSize.Height - 10)
+
 
 
     End Sub
@@ -1326,6 +1439,18 @@ Public Class Form1
                  10,
                  ClientSize.Height - quitSize.Height - 10)
 
+
+        ' -------------------------------
+        '  Hide Keyboard Hints (Bottom‑Right)
+        ' -------------------------------
+        Dim hideText As String = "CTRL+H Hide Keyboard Hints"
+        Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
+
+        g.DrawString(hideText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 ClientSize.Width - hideSize.Width - 10,
+                 ClientSize.Height - hideSize.Height - 10)
 
 
 
@@ -1532,6 +1657,122 @@ Public Class Form1
         Me.WindowState = FormWindowState.Maximized
     End Sub
 
+    'Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
+    '    MyBase.OnKeyDown(e)
+
+    '    ' ============================================================
+    '    ' 1. Fullscreen Toggle (F11 / F)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.F11 OrElse e.KeyCode = Keys.F Then
+
+    '        ' Repeat‑guard
+    '        If (e.KeyCode = Keys.F11 AndAlso f11KeyDown) OrElse
+    '           (e.KeyCode = Keys.F AndAlso fKeyDown) Then Return
+
+    '        ' Mark correct key as down
+    '        If e.KeyCode = Keys.F11 Then
+    '            f11KeyDown = True
+    '        Else
+    '            fKeyDown = True
+    '        End If
+
+    '        PlayFullScreenSound()
+    '        ToggleFullScreen()
+    '        Invalidate()
+
+    '        Return
+    '    End If
+
+
+    '    ' ============================================================
+    '    ' 2. Escape pressed while fullscreen (exit fullscreen)
+    '    ' ============================================================
+    '    If Me.FormBorderStyle = FormBorderStyle.None AndAlso
+    '       e.KeyCode = Keys.Escape Then
+
+    '        If escapeKeyDown Then Return
+    '        escapeKeyDown = True
+
+    '        PlayFullScreenSound()
+    '        ToggleFullScreen()
+    '        Invalidate()
+
+    '        Return
+    '    End If
+
+    '    ' ============================================================
+    '    ' 3. Quit Game (Ctrl + Q)
+    '    ' ============================================================
+    '    If e.Control AndAlso e.KeyCode = Keys.Q Then
+
+    '        If ctrlQDown Then Return
+    '        ctrlQDown = True
+
+    '        'PlaySelectSound()
+    '        QuitGame()
+    '        Return
+
+    '    End If
+
+
+
+    '    ' ============================================================
+    '    ' 4.  Keyboard Hints Toggle (Ctrl + H)
+    '    ' ============================================================
+    '    If e.Control AndAlso e.KeyCode = Keys.H Then
+
+    '        If ctrlHDown Then Return
+    '        ctrlHDown = True
+
+    '        'PlaySelectSound()
+    '        'QuitGame()
+
+    '        If showKeyboardHints Then
+    '            showKeyboardHints = False
+    '        Else
+    '            showKeyboardHints = True
+    '        End If
+
+
+
+
+
+    '        Return
+
+    '    End If
+
+
+    '    ' ============================================================
+    '    ' 5. State‑based Input Dispatch
+    '    ' ============================================================
+
+    '    Select Case currentState
+
+    '        Case GameState.StartScreen
+    '            HandleStartScreenInput(e)
+    '            Return
+
+    '        Case GameState.EndScreen
+    '            HandleEndScreenInput(e)
+    '            Return
+
+    '        Case GameState.Playing
+    '            HandleGameplayInput(e)
+    '            Return
+
+    '        Case GameState.Pause
+    '            HandlePauseInput(e)
+    '            Return
+
+    '        Case GameState.AIDifficulty
+    '            HandleAIDifficultyInput(e)
+    '            Return
+
+    '    End Select
+
+    'End Sub
+
+
     Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
         MyBase.OnKeyDown(e)
 
@@ -1542,7 +1783,7 @@ Public Class Form1
 
             ' Repeat‑guard
             If (e.KeyCode = Keys.F11 AndAlso f11KeyDown) OrElse
-               (e.KeyCode = Keys.F AndAlso fKeyDown) Then Return
+           (e.KeyCode = Keys.F AndAlso fKeyDown) Then Return
 
             ' Mark correct key as down
             If e.KeyCode = Keys.F11 Then
@@ -1554,7 +1795,6 @@ Public Class Form1
             PlayFullScreenSound()
             ToggleFullScreen()
             Invalidate()
-
             Return
         End If
 
@@ -1563,7 +1803,7 @@ Public Class Form1
         ' 2. Escape pressed while fullscreen (exit fullscreen)
         ' ============================================================
         If Me.FormBorderStyle = FormBorderStyle.None AndAlso
-           e.KeyCode = Keys.Escape Then
+       e.KeyCode = Keys.Escape Then
 
             If escapeKeyDown Then Return
             escapeKeyDown = True
@@ -1571,9 +1811,9 @@ Public Class Form1
             PlayFullScreenSound()
             ToggleFullScreen()
             Invalidate()
-
             Return
         End If
+
 
         ' ============================================================
         ' 3. Quit Game (Ctrl + Q)
@@ -1583,16 +1823,29 @@ Public Class Form1
             If ctrlQDown Then Return
             ctrlQDown = True
 
-            'PlaySelectSound()
             QuitGame()
             Return
-
         End If
 
-        ' ============================================================
-        ' 4. State‑based Input Dispatch
-        ' ============================================================
 
+        ' ============================================================
+        ' 4. Keyboard Hints Toggle (Ctrl + H)
+        ' ============================================================
+        If e.Control AndAlso e.KeyCode = Keys.H Then
+
+            If ctrlHDown Then Return
+            ctrlHDown = True
+
+            showKeyboardHints = Not showKeyboardHints
+            Invalidate()
+
+            Return
+        End If
+
+
+        ' ============================================================
+        ' 5. State‑based Input Dispatch
+        ' ============================================================
         Select Case currentState
 
             Case GameState.StartScreen
@@ -1618,6 +1871,94 @@ Public Class Form1
         End Select
 
     End Sub
+
+
+
+    Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
+        MyBase.OnKeyUp(e)
+
+        ' ============================================================
+        ' 1. Release Paddle Movement Keys
+        ' ============================================================
+        If e.KeyCode = Keys.W Then
+            moveLeftPaddleUp = False
+            wKeyDown = False
+        End If
+
+        If e.KeyCode = Keys.S Then
+            moveLeftPaddleDown = False
+            sKeyDown = False
+        End If
+
+        If playerMode = 2 Then
+            If e.KeyCode = Keys.Up Then
+                moveRightPaddleUp = False
+                upKeyDown = False
+            End If
+
+            If e.KeyCode = Keys.Down Then
+                moveRightPaddleDown = False
+                downKeyDown = False
+            End If
+        End If
+
+
+        ' ============================================================
+        ' 2. Release Pause / Resume Keys
+        ' ============================================================
+        If e.KeyCode = Keys.P Then pKeyDown = False
+        If e.KeyCode = Keys.Pause Then pauseKeyDown = False
+        If e.KeyCode = Keys.MediaPlayPause Then mediaPlayPauseKeyDown = False
+
+
+        ' ============================================================
+        ' 3. Release Fullscreen Toggle Keys
+        ' ============================================================
+        If e.KeyCode = Keys.F11 Then f11KeyDown = False
+        If e.KeyCode = Keys.F Then fKeyDown = False
+
+
+        ' ============================================================
+        ' 4. Release Escape Key
+        ' ============================================================
+        If e.KeyCode = Keys.Escape Then escapeKeyDown = False
+
+
+        ' ============================================================
+        ' 5. Release Confirm Keys (Enter / Space)
+        ' ============================================================
+        If e.KeyCode = Keys.Enter Then enterKeyDown = False
+        If e.KeyCode = Keys.Space Then spaceKeyDown = False
+
+
+        ' ============================================================
+        ' 6. Release Menu Navigation Keys (Up / Down / W / S)
+        ' ============================================================
+        If e.KeyCode = Keys.Up Then upKeyDown = False
+        If e.KeyCode = Keys.Down Then downKeyDown = False
+
+        If e.KeyCode = Keys.W Then wKeyDown = False
+        If e.KeyCode = Keys.S Then sKeyDown = False
+
+
+        ' ============================================================
+        ' 7. Release Quit Game Key (Ctrl + Q)
+        ' ============================================================
+        If e.KeyCode = Keys.Q Then ctrlQDown = False
+        If e.KeyCode = Keys.ControlKey Then ctrlQDown = False
+
+
+        ' ============================================================
+        ' 8. Release Keyboard Hints Key (Ctrl + H)
+        ' ============================================================
+        If e.KeyCode = Keys.H Then ctrlHDown = False
+        If e.KeyCode = Keys.ControlKey Then ctrlHDown = False
+
+    End Sub
+
+
+
+
 
     Private Sub HandleAIDifficultyInput(e As KeyEventArgs)
 
@@ -2276,74 +2617,81 @@ Public Class Form1
 
     End Sub
 
-    Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
-        MyBase.OnKeyUp(e)
+    'Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
+    '    MyBase.OnKeyUp(e)
 
-        ' ============================================================
-        ' 1. Release Paddle Movement Keys
-        ' ============================================================
-        If e.KeyCode = Keys.W Then
-            moveLeftPaddleUp = False
-            wKeyDown = False
-        End If
+    '    ' ============================================================
+    '    ' 1. Release Paddle Movement Keys
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.W Then
+    '        moveLeftPaddleUp = False
+    '        wKeyDown = False
+    '    End If
 
-        If e.KeyCode = Keys.S Then
-            moveLeftPaddleDown = False
-            sKeyDown = False
-        End If
+    '    If e.KeyCode = Keys.S Then
+    '        moveLeftPaddleDown = False
+    '        sKeyDown = False
+    '    End If
 
-        If playerMode = 2 Then
-            If e.KeyCode = Keys.Up Then
-                moveRightPaddleUp = False
-                upKeyDown = False
-            End If
+    '    If playerMode = 2 Then
+    '        If e.KeyCode = Keys.Up Then
+    '            moveRightPaddleUp = False
+    '            upKeyDown = False
+    '        End If
 
-            If e.KeyCode = Keys.Down Then
-                moveRightPaddleDown = False
-                downKeyDown = False
-            End If
-        End If
+    '        If e.KeyCode = Keys.Down Then
+    '            moveRightPaddleDown = False
+    '            downKeyDown = False
+    '        End If
+    '    End If
 
-        ' ============================================================
-        ' 2. Release Pause / Resume Keys
-        ' ============================================================
-        If e.KeyCode = Keys.P Then pKeyDown = False
-        If e.KeyCode = Keys.Pause Then pauseKeyDown = False
-        If e.KeyCode = Keys.MediaPlayPause Then mediaPlayPauseKeyDown = False
+    '    ' ============================================================
+    '    ' 2. Release Pause / Resume Keys
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.P Then pKeyDown = False
+    '    If e.KeyCode = Keys.Pause Then pauseKeyDown = False
+    '    If e.KeyCode = Keys.MediaPlayPause Then mediaPlayPauseKeyDown = False
 
-        ' ============================================================
-        ' 3. Release Fullscreen Toggle Keys
-        ' ============================================================
-        If e.KeyCode = Keys.F11 Then f11KeyDown = False
-        If e.KeyCode = Keys.F Then fKeyDown = False
+    '    ' ============================================================
+    '    ' 3. Release Fullscreen Toggle Keys
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.F11 Then f11KeyDown = False
+    '    If e.KeyCode = Keys.F Then fKeyDown = False
 
-        ' ============================================================
-        ' 4. Release Escape Key
-        ' ============================================================
-        If e.KeyCode = Keys.Escape Then escapeKeyDown = False
+    '    ' ============================================================
+    '    ' 4. Release Escape Key
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Escape Then escapeKeyDown = False
 
-        ' ============================================================
-        ' 5. Release Confirm Keys (Enter / Space)
-        ' ============================================================
-        If e.KeyCode = Keys.Enter Then enterKeyDown = False
-        If e.KeyCode = Keys.Space Then spaceKeyDown = False
+    '    ' ============================================================
+    '    ' 5. Release Confirm Keys (Enter / Space)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Enter Then enterKeyDown = False
+    '    If e.KeyCode = Keys.Space Then spaceKeyDown = False
 
-        ' ============================================================
-        ' 6. Release Menu Navigation Keys (Up / Down / W / S)
-        ' ============================================================
-        If e.KeyCode = Keys.Up Then upKeyDown = False
-        If e.KeyCode = Keys.Down Then downKeyDown = False
+    '    ' ============================================================
+    '    ' 6. Release Menu Navigation Keys (Up / Down / W / S)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Up Then upKeyDown = False
+    '    If e.KeyCode = Keys.Down Then downKeyDown = False
 
-        If e.KeyCode = Keys.W Then wKeyDown = False
-        If e.KeyCode = Keys.S Then sKeyDown = False
+    '    If e.KeyCode = Keys.W Then wKeyDown = False
+    '    If e.KeyCode = Keys.S Then sKeyDown = False
 
-        ' ============================================================
-        ' 7. Release Quit Game Key (Ctrl + Q)
-        ' ============================================================
-        If e.KeyCode = Keys.Q Then ctrlQDown = False
-        If e.KeyCode = Keys.ControlKey Then ctrlQDown = False
+    '    ' ============================================================
+    '    ' 7. Release Quit Game Key (Ctrl + Q)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Q Then ctrlQDown = False
+    '    If e.KeyCode = Keys.ControlKey Then ctrlQDown = False
 
-    End Sub
+    '    ' ============================================================
+    '    ' 8. Release Keyboard Hints Key (Ctrl + H)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Q Then ctrlHDown = False
+    '    If e.KeyCode = Keys.ControlKey Then ctrlQDown = False
+
+
+    'End Sub
 
     Private Sub QuitGame()
 
