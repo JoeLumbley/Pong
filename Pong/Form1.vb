@@ -791,6 +791,7 @@ Public Class Form1
                 DrawTrail(g)
                 DrawBall(g)
                 DrawStartScreen(g)
+                DrawKeyboardHintsStartScreen(g)
 
             Case GameState.Playing
                 DrawTrail(g)
@@ -804,6 +805,7 @@ Public Class Form1
                 DrawTrail(g)
                 DrawBall(g)
                 DrawGameOver(g)
+                DrawKeyboardHintsGameOverScreen(g)
 
             Case GameState.Pause
                 DrawTrail(g)
@@ -818,6 +820,7 @@ Public Class Form1
                 DrawTrail(g)
                 DrawBall(g)
                 DrawAIDifficultyScreen(g)
+                DrawKeyboardHintsAIDifficultyScreen(g)
 
         End Select
     End Sub
@@ -1203,7 +1206,22 @@ Public Class Form1
 
 
 
-    Private Sub DrawStartScreen(g As Graphics)
+    Private Sub DrawKeyboardHintsStartScreen(g As Graphics)
+
+
+
+
+        '' -------------------------------
+        ''  Keyboard Hints (Top‑Left)
+        '' -------------------------------
+        'Dim hintText As String = "E - Easy   N - Normal   H - Hard   Enter - Start Match"
+        'Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+        'g.DrawString(hintText,
+        '         fullscreenIndicatorFont,
+        '         grayBrush,
+        '         10,
+        '         10)
 
         ' -------------------------------
         '  Keyboard Hints (Top‑Left)
@@ -1220,8 +1238,11 @@ Public Class Form1
                  10)
 
 
+
+
+
         ' -------------------------------
-        '  Fullscreen Indicator (Top‑Right)
+        '  Fullscreen Indicator (Top-Right)
         ' -------------------------------
         Dim fsText As String =
         If(Me.FormBorderStyle = FormBorderStyle.None,
@@ -1231,10 +1252,64 @@ Public Class Form1
         Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
 
         g.DrawString(fsText,
+             fullscreenIndicatorFont,
+             grayBrush,
+             ClientSize.Width - fsSize.Width - 10,
+             10)
+
+
+
+        ' -------------------------------
+        '  Quit Game (Bottom‑Left)
+        ' -------------------------------
+        Dim quitText As String = "CTRL+Q - Quit Game"
+        Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
+
+        g.DrawString(quitText,
                  fullscreenIndicatorFont,
                  grayBrush,
-                 ClientSize.Width - fsSize.Width - 10,
-                 10)
+                 10,
+                 ClientSize.Height - quitSize.Height - 10)
+
+
+
+
+    End Sub
+
+
+
+    Private Sub DrawStartScreen(g As Graphics)
+
+        '' -------------------------------
+        ''  Keyboard Hints (Top‑Left)
+        '' -------------------------------
+        'Dim hintText As String =
+        '"1 - One Player   2 - Two Players   Enter - Start Match"
+
+        'Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+        'g.DrawString(hintText,
+        '         fullscreenIndicatorFont,
+        '         grayBrush,
+        '         10,
+        '         10)
+
+
+        '' -------------------------------
+        ''  Fullscreen Indicator (Top‑Right)
+        '' -------------------------------
+        'Dim fsText As String =
+        'If(Me.FormBorderStyle = FormBorderStyle.None,
+        '   "F - Exit Fullscreen",
+        '   "F - Fullscreen")
+
+        'Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
+
+        'g.DrawString(fsText,
+        '         fullscreenIndicatorFont,
+        '         grayBrush,
+        '         ClientSize.Width - fsSize.Width - 10,
+        '         10)
 
 
         ' -------------------------------
@@ -1285,17 +1360,17 @@ Public Class Form1
         End If
 
 
-        ' -------------------------------
-        '  Quit Game (Bottom‑Left)
-        ' -------------------------------
-        Dim quitText As String = "CTRL+Q - Quit Game"
-        Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
+        '' -------------------------------
+        ''  Quit Game (Bottom‑Left)
+        '' -------------------------------
+        'Dim quitText As String = "CTRL+Q - Quit Game"
+        'Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
 
-        g.DrawString(quitText,
-                 fullscreenIndicatorFont,
-                 grayBrush,
-                 10,
-                 ClientSize.Height - quitSize.Height - 10)
+        'g.DrawString(quitText,
+        '         fullscreenIndicatorFont,
+        '         grayBrush,
+        '         10,
+        '         ClientSize.Height - quitSize.Height - 10)
 
     End Sub
 
@@ -1417,11 +1492,9 @@ Public Class Form1
     End Sub
 
 
+    Private Sub DrawKeyboardHintsAIDifficultyScreen(g As Graphics)
 
 
-
-
-    Private Sub DrawAIDifficultyScreen(g As Graphics)
 
 
         ' -------------------------------
@@ -1440,13 +1513,8 @@ Public Class Form1
 
 
 
-
-
-
-
-
         ' -------------------------------
-        '  Fullscreen Indicator
+        '  Fullscreen Indicator (Top-Right)
         ' -------------------------------
         Dim fsText As String =
         If(Me.FormBorderStyle = FormBorderStyle.None,
@@ -1460,6 +1528,69 @@ Public Class Form1
              grayBrush,
              ClientSize.Width - fsSize.Width - 10,
              10)
+
+
+
+        ' -------------------------------
+        '  Quit Game (Bottom‑Left)
+        ' -------------------------------
+        Dim quitText As String = "CTRL+Q - Quit Game"
+        Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
+
+        g.DrawString(quitText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 10,
+                 ClientSize.Height - quitSize.Height - 10)
+
+
+
+
+    End Sub
+
+
+
+
+
+    Private Sub DrawAIDifficultyScreen(g As Graphics)
+
+
+        ' -------------------------------
+        ''  Keyboard Hints (Top‑Left)
+        '' -------------------------------
+        'Dim hintText As String = "E - Easy   N - Normal   H - Hard   Enter - Start Match"
+        'Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+        'g.DrawString(hintText,
+        '         fullscreenIndicatorFont,
+        '         grayBrush,
+        '         10,
+        '         10)
+
+
+
+
+
+
+
+
+
+
+        '' -------------------------------
+        ''  Fullscreen Indicator
+        '' -------------------------------
+        'Dim fsText As String =
+        'If(Me.FormBorderStyle = FormBorderStyle.None,
+        '   "F - Exit Fullscreen",
+        '   "F - Fullscreen")
+
+        'Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
+
+        'g.DrawString(fsText,
+        '     fullscreenIndicatorFont,
+        '     grayBrush,
+        '     ClientSize.Width - fsSize.Width - 10,
+        '     10)
 
 
 
@@ -1499,17 +1630,17 @@ Public Class Form1
 
 
 
-        ' -------------------------------
-        '  Quit Game (Bottom‑Left)
-        ' -------------------------------
-        Dim quitText As String = "CTRL+Q - Quit Game"
-        Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
+        '' -------------------------------
+        ''  Quit Game (Bottom‑Left)
+        '' -------------------------------
+        'Dim quitText As String = "CTRL+Q - Quit Game"
+        'Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
 
-        g.DrawString(quitText,
-                 fullscreenIndicatorFont,
-                 grayBrush,
-                 10,
-                 ClientSize.Height - quitSize.Height - 10)
+        'g.DrawString(quitText,
+        '         fullscreenIndicatorFont,
+        '         grayBrush,
+        '         10,
+        '         ClientSize.Height - quitSize.Height - 10)
 
 
 
@@ -1521,7 +1652,33 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DrawGameOver(g As Graphics)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Private Sub DrawKeyboardHintsGameOverScreen(g As Graphics)
+
+
 
         ' -------------------------------
         '  Keyboard Hints (Top‑Left)
@@ -1538,19 +1695,8 @@ Public Class Form1
 
 
 
-
-
-
-
-
-
-
-
-
-
-
         ' -------------------------------
-        '  Fullscreen Indicator
+        '  Fullscreen Indicator (Top-Right)
         ' -------------------------------
         Dim fsText As String =
         If(Me.FormBorderStyle = FormBorderStyle.None,
@@ -1564,6 +1710,67 @@ Public Class Form1
              grayBrush,
              ClientSize.Width - fsSize.Width - 10,
              10)
+
+
+
+        ' -------------------------------
+        '  Quit Game (Bottom‑Left)
+        ' -------------------------------
+        Dim quitText As String = "CTRL+Q - Quit Game"
+        Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
+
+        g.DrawString(quitText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 10,
+                 ClientSize.Height - quitSize.Height - 10)
+
+
+
+
+    End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Private Sub DrawGameOver(g As Graphics)
+
+        '' -------------------------------
+        ''  Keyboard Hints (Top‑Left)
+        '' -------------------------------
+        'Dim hintText As String = "Enter - Start New Match"
+        'Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+        'g.DrawString(hintText,
+        '         fullscreenIndicatorFont,
+        '         grayBrush,
+        '         10,
+        '         10)
+
+        '' -------------------------------
+        ''  Fullscreen Indicator
+        '' -------------------------------
+        'Dim fsText As String =
+        'If(Me.FormBorderStyle = FormBorderStyle.None,
+        '   "F - Exit Fullscreen",
+        '   "F - Fullscreen")
+
+        'Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
+
+        'g.DrawString(fsText,
+        '     fullscreenIndicatorFont,
+        '     grayBrush,
+        '     ClientSize.Width - fsSize.Width - 10,
+        '     10)
 
 
 
