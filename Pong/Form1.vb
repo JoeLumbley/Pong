@@ -1219,16 +1219,16 @@ Public Class Form1
         'UpdateFPS()
 
         ' -------------------------------
-        '  Keyboard Hints (Top‑Left)
+        '  Left Paddle Keyboard Hints (Top‑Left)
         ' -------------------------------
         Dim hintText As String
 
         If numberOfPlayersSelection = 0 Then
             ' One Player selected → user will choose AI difficulty next
-            hintText = $"FPS: {fps}   W S - Move Paddle"
+            hintText = $"W S - Move Paddle"
         Else
             ' Two Players selected → match starts immediately
-            hintText = $"FPS: {fps}   W S - Left Paddle   Up Down Arrows - Right Paddle"
+            hintText = $"W S - Move Paddle"
         End If
 
         Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
@@ -1239,41 +1239,122 @@ Public Class Form1
                  10,
                  10)
 
+        ' -------------------------------
+        ' Right Paddle Keyboard Hint (Top-Right)
+        ' -------------------------------
+        Dim rpText As String = "P - Pause Match"
+
+
+        If playerMode = 2 Then
+            rpText = "Arrows - Move Paddle"
+        End If
+
+        Dim rpSize = g.MeasureString(rpText, fullscreenIndicatorFont)
+
+        g.DrawString(rpText,
+             fullscreenIndicatorFont,
+             grayBrush,
+             ClientSize.Width - rpSize.Width - 10,
+             10)
+
+
+
 
 
         ' -------------------------------
         '  Fullscreen Indicator (Top-Right)
         ' -------------------------------
-        Dim fsText As String =
-        If(Me.FormBorderStyle = FormBorderStyle.None,
-           "F - Exit Fullscreen",
-           "F - Fullscreen")
+        'Dim fsText As String =
+        'If(Me.FormBorderStyle = FormBorderStyle.None,
+        '   "F - Exit Fullscreen",
+        '   "F - Fullscreen")
 
-        Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
+        'Dim fsText As String
 
-        g.DrawString(fsText,
-             fullscreenIndicatorFont,
-             grayBrush,
-             ClientSize.Width - fsSize.Width - 10,
-             10)
+        'If Me.FormBorderStyle = FormBorderStyle.None Then
+        '    fsText = "F - Exit Fullscreen"
+        '    If playerMode = 2 Then
+        '        fsText = " Up Down - Move   F - Exit Fullscreen"
+        '    End If
+
+
+        'Else
+        '    fsText = "F - Fullscreen"
+        '    If playerMode = 2 Then
+        '        fsText = " Up Down - Move   F - Fullscreen"
+        '    End If
+
+
+
+        'End If
+
+
+
+        '               fsText = "F - Exit Fullscreen"
+
+        'fsText = "F - Fullscreen"
+
+
+
+
+
+
+
+        '   "F - Exit Fullscreen",
+        '   "F - Fullscreen")
+
+
+
+
+        'Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
+
+        'g.DrawString(fsText,
+        '     fullscreenIndicatorFont,
+        '     grayBrush,
+        '     ClientSize.Width - fsSize.Width - 10,
+        '     10)
 
         ' -------------------------------
         '  Pause Match (Bottom‑Left)
         ' -------------------------------
-        Dim quitText As String = "P - Pause Match"
+        Dim pText As String = String.Empty
 
-        If physicsTimer.Enabled = False Then
-            quitText = "R - Resume Match"
+        If playerMode = 2 Then
+            pText = "P - Pause Match"
         End If
 
 
-        Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
 
-        g.DrawString(quitText,
+        'If physicsTimer.Enabled = False Then
+        '    quitText = "R - Resume Match"
+        'End If
+
+
+        Dim pSize = g.MeasureString(pText, fullscreenIndicatorFont)
+
+        g.DrawString(pText,
                  fullscreenIndicatorFont,
                  grayBrush,
                  10,
-                 ClientSize.Height - quitSize.Height - 10)
+                 ClientSize.Height - pSize.Height - 10)
+
+
+
+
+
+
+        ' -------------------------------
+        '  FPS Frame Per Second Display (Bottom‑Right)
+        ' -------------------------------
+        Dim fpsText As String = $"FPS: {fps} "
+        Dim fpsSize = g.MeasureString(fpsText, fullscreenIndicatorFont)
+
+        g.DrawString(fpsText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 ClientSize.Width - fpsSize.Width - 10,
+                 ClientSize.Height - fpsSize.Height - 10)
+
 
 
 
