@@ -9,7 +9,7 @@ This project isn’t just Pong.
 It’s a compact 2D game engine demonstrating real‑time rendering, delta‑time physics, state‑driven UI, and responsive design.
 
 
-<img width="1920" height="1080" alt="034" src="https://github.com/user-attachments/assets/40523aea-56e8-495d-9957-e2d3b06f856a" />
+<img width="1920" height="1080" alt="041" src="https://github.com/user-attachments/assets/ae74c5ef-c9fa-4f6d-9e30-1c5cbb8115f1" />
 
 
 ### Key Features
@@ -19,7 +19,7 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 - **Single and Multiplayer Modes**: Challenge yourself against a computer player or compete with friends, making the game versatile for different play styles.
 
 
-<img width="1920" height="1080" alt="037" src="https://github.com/user-attachments/assets/ec7d6347-84ee-4e5d-82cf-03c80a9dbe90" />
+<img width="1920" height="1080" alt="040" src="https://github.com/user-attachments/assets/4d2887e5-7769-4864-bded-5a322b1d1d04" />
 
 ### Learning Objectives
 - Understand the basics of game mechanics and physics, including how to simulate movement and collisions.
@@ -27,7 +27,7 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 - Learn how to implement user input handling, game states, sound effects, and graphical rendering.
 
 
-<img width="1920" height="1080" alt="038" src="https://github.com/user-attachments/assets/d8046bf2-f6f2-488b-8531-3e21939749a6" />
+<img width="1920" height="1080" alt="039" src="https://github.com/user-attachments/assets/f7152b0f-7a87-4586-98ed-005ed90427da" />
 
 
 
