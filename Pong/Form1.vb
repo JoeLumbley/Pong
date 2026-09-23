@@ -828,20 +828,7 @@ Public Class Form1
 
     Private Sub DrawPauseScreen(g As Graphics)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        ' Dim 
+        ' Dim the gamme
         g.FillRectangle(dimBrush, ClientRectangle)
 
 
@@ -960,268 +947,9 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub DrawStartScreen(g As Graphics)
-
-
-
-    '    ' -------------------------------
-    '    '  Fullscreen Indicator
-    '    ' -------------------------------
-    '    Dim fsText As String =
-    '    If(Me.FormBorderStyle = FormBorderStyle.None,
-    '       "F - Exit Fullscreen",
-    '       "F - Fullscreen")
-
-    '    Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
-
-    '    g.DrawString(fsText,
-    '         fullscreenIndicatorFont,
-    '         grayBrush,
-    '         ClientSize.Width - fsSize.Width - 10,
-    '         10)
-
-
-
-
-
-
-
-
-
-
-    '    Dim title As String = "PONG"
-    '    Dim titleSize = g.MeasureString(title, startTitleFont)
-    '    Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
-
-    '    Using titleBrush As New SolidBrush(titleColor)
-    '        g.DrawString(title, startTitleFont, titleBrush,
-    '                     CSng((ClientSize.Width - titleSize.Width) / 2.0F),
-    '                     CSng(ClientSize.Height * 0.15F))
-    '    End Using
-
-    '    Dim option1 As String = "1 Player"
-    '    Dim option2 As String = "2 Players"
-
-    '    Dim opt1Size = g.MeasureString(option1, startMenuFont)
-    '    Dim opt2Size = g.MeasureString(option2, startMenuFont)
-
-    '    Dim opt1Brush As SolidBrush = If(numberOfPlayersSelection = 0, whiteBrush, grayBrush)
-    '    Dim opt2Brush As SolidBrush = If(numberOfPlayersSelection = 1, whiteBrush, grayBrush)
-
-    '    g.DrawString(option1, startMenuFont, opt1Brush,
-    '                 CSng((ClientSize.Width - opt1Size.Width) / 2.0F),
-    '                 CSng(ClientSize.Height * 0.45F))
-
-    '    g.DrawString(option2, startMenuFont, opt2Brush,
-    '                 CSng((ClientSize.Width - opt2Size.Width) / 2.0F),
-    '                 CSng(ClientSize.Height * 0.55F))
-
-    '    If blinkVisible Then
-    '        Dim info As String = "Press SPACE to Start"
-    '        Dim infoSize = g.MeasureString(info, startInfoFont)
-
-    '        g.DrawString(info, startInfoFont, whiteBrush,
-    '                     CSng((ClientSize.Width - infoSize.Width) / 2.0F),
-    '                     CSng(ClientSize.Height * 0.75F))
-    '    End If
-    'End Sub
-
-
-
-    'Private Sub DrawStartScreen(g As Graphics)
-
-    '    ' -------------------------------
-    '    '  Keyboard Hints (Top‑Left)
-    '    ' -------------------------------
-    '    Dim hintText As String = "1 - One Player   2 - Two Players   SPACE - Start Match"
-    '    Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
-
-    '    g.DrawString(hintText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             10,
-    '             10)
-
-
-    '    ' -------------------------------
-    '    '  Fullscreen Indicator (Top‑Right)
-    '    ' -------------------------------
-    '    Dim fsText As String =
-    '    If(Me.FormBorderStyle = FormBorderStyle.None,
-    '       "F - Exit Fullscreen",
-    '       "F - Fullscreen")
-
-    '    Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
-
-    '    g.DrawString(fsText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             ClientSize.Width - fsSize.Width - 10,
-    '             10)
-
-
-    '    ' -------------------------------
-    '    '  Title
-    '    ' -------------------------------
-    '    Dim title As String = "PONG"
-    '    Dim titleSize = g.MeasureString(title, startTitleFont)
-    '    Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
-
-    '    Using titleBrush As New SolidBrush(titleColor)
-    '        g.DrawString(title, startTitleFont, titleBrush,
-    '                 CSng((ClientSize.Width - titleSize.Width) / 2.0F),
-    '                 CSng(ClientSize.Height * 0.15F))
-    '    End Using
-
-
-    '    ' -------------------------------
-    '    '  Menu Options
-    '    ' -------------------------------
-    '    Dim option1 As String = "1 Player"
-    '    Dim option2 As String = "2 Players"
-
-    '    Dim opt1Size = g.MeasureString(option1, startMenuFont)
-    '    Dim opt2Size = g.MeasureString(option2, startMenuFont)
-
-    '    Dim opt1Brush As SolidBrush = If(numberOfPlayersSelection = 0, whiteBrush, grayBrush)
-    '    Dim opt2Brush As SolidBrush = If(numberOfPlayersSelection = 1, whiteBrush, grayBrush)
-
-    '    g.DrawString(option1, startMenuFont, opt1Brush,
-    '             CSng((ClientSize.Width - opt1Size.Width) / 2.0F),
-    '             CSng(ClientSize.Height * 0.45F))
-
-    '    g.DrawString(option2, startMenuFont, opt2Brush,
-    '             CSng((ClientSize.Width - opt2Size.Width) / 2.0F),
-    '             CSng(ClientSize.Height * 0.55F))
-
-
-    '    ' -------------------------------
-    '    '  Blink "Press SPACE"
-    '    ' -------------------------------
-    '    If blinkVisible Then
-    '        Dim info As String = "Press SPACE to Start"
-    '        Dim infoSize = g.MeasureString(info, startInfoFont)
-
-    '        g.DrawString(info, startInfoFont, whiteBrush,
-    '                 CSng((ClientSize.Width - infoSize.Width) / 2.0F),
-    '                 CSng(ClientSize.Height * 0.75F))
-    '    End If
-
-    'End Sub
-
-
-
-    'Private Sub DrawStartScreen(g As Graphics)
-
-    '    ' -------------------------------
-    '    '  Keyboard Hints (Top‑Left)
-    '    ' -------------------------------
-    '    Dim hintText As String
-
-    '    'If numberOfPlayersSelection = 0 Then
-    '    '    ' One Player selected → user will choose AI difficulty next
-    '    '    hintText = "1 - One Player   2 - Two Players   Enter - Select Difficulty   CTRL+Q - Quit Game"
-    '    'Else
-    '    ' Two Players selected → match starts immediately
-    '    hintText = "1 - One Player   2 - Two Players   Enter - Start Match   CTRL+Q - Quit Game"
-    '    'End If
-
-    '    Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
-
-    '    g.DrawString(hintText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             10,
-    '             10)
-
-
-    '    ' -------------------------------
-    '    '  Fullscreen Indicator (Top‑Right)
-    '    ' -------------------------------
-    '    Dim fsText As String =
-    '    If(Me.FormBorderStyle = FormBorderStyle.None,
-    '       "F - Exit Fullscreen",
-    '       "F - Fullscreen")
-
-    '    Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
-
-    '    g.DrawString(fsText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             ClientSize.Width - fsSize.Width - 10,
-    '             10)
-
-
-    '    ' -------------------------------
-    '    '  Title
-    '    ' -------------------------------
-    '    Dim title As String = "PONG"
-    '    Dim titleSize = g.MeasureString(title, startTitleFont)
-    '    Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
-
-    '    Using titleBrush As New SolidBrush(titleColor)
-    '        g.DrawString(title, startTitleFont, titleBrush,
-    '                 CSng((ClientSize.Width - titleSize.Width) / 2.0F),
-    '                 CSng(ClientSize.Height * 0.15F))
-    '    End Using
-
-
-    '    ' -------------------------------
-    '    '  Menu Options
-    '    ' -------------------------------
-    '    Dim option1 As String = "1 Player"
-    '    Dim option2 As String = "2 Players"
-
-    '    Dim opt1Size = g.MeasureString(option1, startMenuFont)
-    '    Dim opt2Size = g.MeasureString(option2, startMenuFont)
-
-    '    Dim opt1Brush As SolidBrush = If(numberOfPlayersSelection = 0, whiteBrush, grayBrush)
-    '    Dim opt2Brush As SolidBrush = If(numberOfPlayersSelection = 1, whiteBrush, grayBrush)
-
-    '    g.DrawString(option1, startMenuFont, opt1Brush,
-    '             CSng((ClientSize.Width - opt1Size.Width) / 2.0F),
-    '             CSng(ClientSize.Height * 0.45F))
-
-    '    g.DrawString(option2, startMenuFont, opt2Brush,
-    '             CSng((ClientSize.Width - opt2Size.Width) / 2.0F),
-    '             CSng(ClientSize.Height * 0.55F))
-
-
-    '    ' -------------------------------
-    '    '  Blink "Press SPACE"
-    '    ' -------------------------------
-    '    If blinkVisible Then
-    '        Dim info As String = "Press SPACE to Start"
-    '        Dim infoSize = g.MeasureString(info, startInfoFont)
-
-    '        g.DrawString(info, startInfoFont, whiteBrush,
-    '                 CSng((ClientSize.Width - infoSize.Width) / 2.0F),
-    '                 CSng(ClientSize.Height * 0.75F))
-    '    End If
-
-    'End Sub
-
-
-
-
-
-
     Private Sub DrawKeyboardHintsStartScreen(g As Graphics)
 
 
-
-
-        '' -------------------------------
-        ''  Keyboard Hints (Top‑Left)
-        '' -------------------------------
-        'Dim hintText As String = "E - Easy   N - Normal   H - Hard   Enter - Start Match"
-        'Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
-
-        'g.DrawString(hintText,
-        '         fullscreenIndicatorFont,
-        '         grayBrush,
-        '         10,
-        '         10)
 
         ' -------------------------------
         '  Keyboard Hints (Top‑Left)
@@ -1280,38 +1008,6 @@ Public Class Form1
 
     Private Sub DrawStartScreen(g As Graphics)
 
-        '' -------------------------------
-        ''  Keyboard Hints (Top‑Left)
-        '' -------------------------------
-        'Dim hintText As String =
-        '"1 - One Player   2 - Two Players   Enter - Start Match"
-
-        'Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
-
-        'g.DrawString(hintText,
-        '         fullscreenIndicatorFont,
-        '         grayBrush,
-        '         10,
-        '         10)
-
-
-        '' -------------------------------
-        ''  Fullscreen Indicator (Top‑Right)
-        '' -------------------------------
-        'Dim fsText As String =
-        'If(Me.FormBorderStyle = FormBorderStyle.None,
-        '   "F - Exit Fullscreen",
-        '   "F - Fullscreen")
-
-        'Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
-
-        'g.DrawString(fsText,
-        '         fullscreenIndicatorFont,
-        '         grayBrush,
-        '         ClientSize.Width - fsSize.Width - 10,
-        '         10)
-
-
         ' -------------------------------
         '  Title
         ' -------------------------------
@@ -1359,18 +1055,6 @@ Public Class Form1
                      CSng(ClientSize.Height * 0.75F))
         End If
 
-
-        '' -------------------------------
-        ''  Quit Game (Bottom‑Left)
-        '' -------------------------------
-        'Dim quitText As String = "CTRL+Q - Quit Game"
-        'Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
-
-        'g.DrawString(quitText,
-        '         fullscreenIndicatorFont,
-        '         grayBrush,
-        '         10,
-        '         ClientSize.Height - quitSize.Height - 10)
 
     End Sub
 
@@ -1555,50 +1239,6 @@ Public Class Form1
     Private Sub DrawAIDifficultyScreen(g As Graphics)
 
 
-        ' -------------------------------
-        ''  Keyboard Hints (Top‑Left)
-        '' -------------------------------
-        'Dim hintText As String = "E - Easy   N - Normal   H - Hard   Enter - Start Match"
-        'Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
-
-        'g.DrawString(hintText,
-        '         fullscreenIndicatorFont,
-        '         grayBrush,
-        '         10,
-        '         10)
-
-
-
-
-
-
-
-
-
-
-        '' -------------------------------
-        ''  Fullscreen Indicator
-        '' -------------------------------
-        'Dim fsText As String =
-        'If(Me.FormBorderStyle = FormBorderStyle.None,
-        '   "F - Exit Fullscreen",
-        '   "F - Fullscreen")
-
-        'Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
-
-        'g.DrawString(fsText,
-        '     fullscreenIndicatorFont,
-        '     grayBrush,
-        '     ClientSize.Width - fsSize.Width - 10,
-        '     10)
-
-
-
-
-
-
-
-
         Dim title As String = "Difficulty"
         Dim titleSize = g.MeasureString(title, aiDifficultyTitleFont)
 
@@ -1629,49 +1269,7 @@ Public Class Form1
 
 
 
-
-        '' -------------------------------
-        ''  Quit Game (Bottom‑Left)
-        '' -------------------------------
-        'Dim quitText As String = "CTRL+Q - Quit Game"
-        'Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
-
-        'g.DrawString(quitText,
-        '         fullscreenIndicatorFont,
-        '         grayBrush,
-        '         10,
-        '         ClientSize.Height - quitSize.Height - 10)
-
-
-
-
-
-
-
-
-
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1732,52 +1330,7 @@ Public Class Form1
 
 
 
-
-
-
-
-
-
-
-
-
-
     Private Sub DrawGameOver(g As Graphics)
-
-        '' -------------------------------
-        ''  Keyboard Hints (Top‑Left)
-        '' -------------------------------
-        'Dim hintText As String = "Enter - Start New Match"
-        'Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
-
-        'g.DrawString(hintText,
-        '         fullscreenIndicatorFont,
-        '         grayBrush,
-        '         10,
-        '         10)
-
-        '' -------------------------------
-        ''  Fullscreen Indicator
-        '' -------------------------------
-        'Dim fsText As String =
-        'If(Me.FormBorderStyle = FormBorderStyle.None,
-        '   "F - Exit Fullscreen",
-        '   "F - Fullscreen")
-
-        'Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
-
-        'g.DrawString(fsText,
-        '     fullscreenIndicatorFont,
-        '     grayBrush,
-        '     ClientSize.Width - fsSize.Width - 10,
-        '     10)
-
-
-
-
-
-
-
 
 
         Dim size = g.MeasureString(winnerText, gameOverFont)
