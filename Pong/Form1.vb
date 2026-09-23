@@ -1520,7 +1520,7 @@ Public Class Form1
         ResetPaddles()
         CenterBall()
 
-        If currentState = GameState.Playing Then
+        If currentState = GameState.Playing OrElse currentState = GameState.Pause Then
             ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
         Else
             MoveBallRandom()
