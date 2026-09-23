@@ -480,7 +480,7 @@ Public Class Form1
         Audio.SetVolume("point", 600)
 
         Audio.AddSound("exit", Path.Combine(Application.StartupPath, "exit.mp3"))
-        Audio.SetVolume("exit", 200)
+        Audio.SetVolume("exit", 300)
 
         ' ---------------------------------------------------------
         ' Loops (Start, Gameplay, Pause)
@@ -2695,22 +2695,21 @@ Public Class Form1
 
     Private Sub QuitGame()
 
+        AudioRestartTimer?.Stop()
+
         PlayExitSound()
 
-        FadeOutAndStopActiveLoops(800)
+        FadeOutAndStopActiveLoops(700)
 
-        If Audio.IsPlaying("bounce") Then
-            Audio.FadeOutAndStop("bounce", 800)
-        End If
+        physicsTimer?.Stop()
 
         ' Wait for the sound to finish before closing
-        Dim t As New Timer() With {.Interval = 900}
+        Dim t As New Timer() With {.Interval = 800}
         AddHandler t.Tick,
         Sub()
             t.Stop()
             t.Dispose()
 
-            physicsTimer?.Stop()
             Me.Close()
 
         End Sub
@@ -2801,7 +2800,11 @@ Public Class Form1
 
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        Audio.CloseAll()
+        'Audio.CloseAll()
+
+        AudioRestartTimer?.Stop()
+        physicsTimer?.Stop()
+
 
         ballBrush?.Dispose()
         fpsBrush?.Dispose()
@@ -2832,6 +2835,12 @@ Public Class Form1
         fullscreenIndicatorFont?.Dispose()
 
         physicsTimer?.Dispose()
+        AudioRestartTimer?.Dispose()
+
+
+        Audio?.Dispose()
+        Audio = Nothing
+
 
     End Sub
 
