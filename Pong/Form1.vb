@@ -2321,6 +2321,169 @@ Public Class Form1
 
 
 
+    'Private Sub HandleStartScreenInput(e As KeyEventArgs)
+
+    '    ' ============================================================
+    '    ' 1. Menu Navigation (Up/W and Down/S)
+    '    ' ============================================================
+    '    Select Case e.KeyCode
+
+    '        ' ------------------------------
+    '        '  Up / W   --   ↑ Menu Up ↑
+    '        ' ------------------------------
+    '        Case Keys.Up ' ↑ Menu Up ↑
+    '            If upKeyDown Then Return
+    '            upKeyDown = True
+
+    '            ' Is one player mode NOT selected? If so, select it and play sound
+    '            If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
+    '                numberOfPlayersSelection = NumberOfPlayers.OnePlayer
+    '                PlayMenuUpSound()
+    '                Invalidate()
+    '            End If
+
+    '            Return
+
+    '        Case Keys.W ' W Menu Up ↑
+    '            If wKeyDown Then Return
+    '            wKeyDown = True
+
+    '            ' Is one player mode NOT selected? If so, select it and play sound
+    '            If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
+    '                numberOfPlayersSelection = NumberOfPlayers.OnePlayer
+    '                PlayMenuUpSound()
+    '                Invalidate()
+    '            End If
+
+    '            Return
+
+    '            ' ------------------------------
+    '            '  Down / S   --   ↓ Menu Down ↓
+    '            ' ------------------------------
+    '        Case Keys.Down ' ↓ Menu Down ↓
+    '            If downKeyDown Then Return
+    '            downKeyDown = True
+
+    '            ' Is two player mode NOT selected? If so, select it and play sound
+    '            If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
+    '                numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
+    '                PlayMenuDownSound()
+    '                Invalidate()
+    '            End If
+
+    '            Return
+
+    '        Case Keys.S ' S Menu Down ↓
+    '            If sKeyDown Then Return
+    '            sKeyDown = True
+
+    '            ' Is two player mode NOT selected? If so, select it and play sound
+    '            If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
+    '                numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
+    '                PlayMenuDownSound()
+    '                Invalidate()
+    '            End If
+
+    '            Return
+
+    '    ' ============================================================
+    '    ' 2. Direct Selection via Number Keys (1 or 2)
+    '    ' ============================================================
+    '        Case Keys.D1, Keys.NumPad1 ' 1 Player Mode
+
+    '            '' Is one player mode NOT selected? If so, select it and play sound
+    '            'If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
+    '            '    numberOfPlayersSelection = NumberOfPlayers.OnePlayer
+
+    '            playerMode = 1
+    '            currentState = GameState.AIDifficulty
+
+
+    '            'PlayMenuUpSound()
+    '            PlaySelectSound()
+
+    '            Invalidate()
+
+    '            'End If
+
+    '            Return
+
+
+    '        Case Keys.D2, Keys.NumPad2 ' 2 Player Mode
+
+    '            '' Is two player mode NOT selected? If so, select it and play sound
+    '            'If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
+    '            '    numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
+
+    '            playerMode = 2
+    '            StartNewMatch()
+
+
+    '            'PlayMenuDownSound()
+    '            PlaySelectSound()
+
+    '            Invalidate()
+
+    '            'End If
+
+    '            Return
+
+
+    '    ' ============================================================
+    '    ' 3. Confirm Selection (Space / Enter)
+    '    ' ============================================================
+    '        Case Keys.Space
+    '            If spaceKeyDown Then Return
+    '            spaceKeyDown = True
+
+    '            ' Is one player mode selected? If so, go to AI Difficulty Menu.
+    '            If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
+    '                playerMode = 1
+    '                currentState = GameState.AIDifficulty
+    '            Else  ' Otherwise, start a new match for 2 players.
+    '                playerMode = 2
+    '                StartNewMatch()
+    '            End If
+
+    '            PlaySelectSound()
+    '            Invalidate()
+
+    '            Return
+
+    '        Case Keys.Enter
+    '            If enterKeyDown Then Return
+    '            enterKeyDown = True
+
+    '            ' Is one player mode selected? If so, go to AI Difficulty Menu.
+    '            If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
+    '                playerMode = 1
+    '                currentState = GameState.AIDifficulty
+    '            Else ' Otherwise, start a new match for 2 players.
+    '                playerMode = 2
+    '                StartNewMatch()
+    '            End If
+
+    '            PlaySelectSound()
+    '            Invalidate()
+
+    '            Return
+
+    '    ' ============================================================
+    '    ' 4. Escape (Exit Game)
+    '    ' ============================================================
+    '        Case Keys.Escape
+    '            If escapeKeyDown Then Return
+    '            escapeKeyDown = True
+
+    '            QuitGame()
+
+    '            Return
+
+    '    End Select
+
+    'End Sub
+
+
     Private Sub HandleStartScreenInput(e As KeyEventArgs)
 
         ' ============================================================
@@ -2328,88 +2491,77 @@ Public Class Form1
         ' ============================================================
         Select Case e.KeyCode
 
-            ' ------------------------------
-            '  Up / W   --   ↑ Menu Up ↑
-            ' ------------------------------
-            Case Keys.Up ' ↑ Menu Up ↑
+        ' ------------------------------
+        '  Up / W   --   ↑ Menu Up ↑
+        ' ------------------------------
+            Case Keys.Up
                 If upKeyDown Then Return
                 upKeyDown = True
 
-                ' Is one player mode NOT selected? If so, select it and play sound
                 If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
                     numberOfPlayersSelection = NumberOfPlayers.OnePlayer
                     PlayMenuUpSound()
                     Invalidate()
                 End If
-
                 Return
 
-            Case Keys.W ' W Menu Up ↑
+            Case Keys.W
                 If wKeyDown Then Return
                 wKeyDown = True
 
-                ' Is one player mode NOT selected? If so, select it and play sound
                 If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
                     numberOfPlayersSelection = NumberOfPlayers.OnePlayer
                     PlayMenuUpSound()
                     Invalidate()
                 End If
-
                 Return
 
-                ' ------------------------------
-                '  Down / S   --   ↓ Menu Down ↓
-                ' ------------------------------
-            Case Keys.Down ' ↓ Menu Down ↓
+
+        ' ------------------------------
+        '  Down / S   --   ↓ Menu Down ↓
+        ' ------------------------------
+            Case Keys.Down
                 If downKeyDown Then Return
                 downKeyDown = True
 
-                ' Is two player mode NOT selected? If so, select it and play sound
                 If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
                     numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
                     PlayMenuDownSound()
                     Invalidate()
                 End If
-
                 Return
 
-            Case Keys.S ' S Menu Down ↓
+            Case Keys.S
                 If sKeyDown Then Return
                 sKeyDown = True
 
-                ' Is two player mode NOT selected? If so, select it and play sound
                 If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
                     numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
                     PlayMenuDownSound()
                     Invalidate()
                 End If
-
                 Return
+
 
         ' ============================================================
         ' 2. Direct Selection via Number Keys (1 or 2)
         ' ============================================================
-            Case Keys.D1, Keys.NumPad1 ' 1 Player Mode
+            Case Keys.D1, Keys.NumPad1
+                playerMode = 1
+                currentState = GameState.AIDifficulty
 
-                ' Is one player mode NOT selected? If so, select it and play sound
-                If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
-                    numberOfPlayersSelection = NumberOfPlayers.OnePlayer
-                    PlayMenuUpSound()
-                    Invalidate()
-                End If
-
+                PlaySelectSound()
+                Invalidate()
                 Return
 
-            Case Keys.D2, Keys.NumPad2 ' 2 Player Mode
+            Case Keys.D2, Keys.NumPad2
+                playerMode = 2
+                StartNewMatch()
 
-                ' Is two player mode NOT selected? If so, select it and play sound
-                If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
-                    numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
-                    PlayMenuDownSound()
-                    Invalidate()
-                End If
-
+                PlaySelectSound()
+                Invalidate()
                 Return
+
 
         ' ============================================================
         ' 3. Confirm Selection (Space / Enter)
@@ -2418,37 +2570,34 @@ Public Class Form1
                 If spaceKeyDown Then Return
                 spaceKeyDown = True
 
-                ' Is one player mode selected? If so, go to AI Difficulty Menu.
                 If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
                     playerMode = 1
                     currentState = GameState.AIDifficulty
-                Else  ' Otherwise, start a new match for 2 players.
+                Else
                     playerMode = 2
                     StartNewMatch()
                 End If
 
                 PlaySelectSound()
                 Invalidate()
-
                 Return
 
             Case Keys.Enter
                 If enterKeyDown Then Return
                 enterKeyDown = True
 
-                ' Is one player mode selected? If so, go to AI Difficulty Menu.
                 If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
                     playerMode = 1
                     currentState = GameState.AIDifficulty
-                Else ' Otherwise, start a new match for 2 players.
+                Else
                     playerMode = 2
                     StartNewMatch()
                 End If
 
                 PlaySelectSound()
                 Invalidate()
-
                 Return
+
 
         ' ============================================================
         ' 4. Escape (Exit Game)
@@ -2458,12 +2607,48 @@ Public Class Form1
                 escapeKeyDown = True
 
                 QuitGame()
-
                 Return
 
         End Select
 
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     Private Sub HandleGameplayInput(e As KeyEventArgs)
