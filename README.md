@@ -3,14 +3,12 @@
 A modern, full‑screen remake of the classic Pong arcade game. Rebuilt from scratch with smooth physics, glowing motion trails, dynamic paddle spin, an AI opponent, animated menus, and a fully‑featured audio system.
 
 
-
+<img width="1920" height="1080" alt="041" src="https://github.com/user-attachments/assets/ae74c5ef-c9fa-4f6d-9e30-1c5cbb8115f1" />
 
 This project isn’t just Pong.
 It’s a compact 2D game engine demonstrating real‑time rendering, delta‑time physics, state‑driven UI, and responsive design.
 
-
-<img width="1920" height="1080" alt="041" src="https://github.com/user-attachments/assets/ae74c5ef-c9fa-4f6d-9e30-1c5cbb8115f1" />
-
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls)  | [Clones](#clones) 
 
 ### Key Features
 - **Classic Gameplay**: Experience the timeless fun of ping-pong with modern enhancements, including smooth animations and responsive controls.
