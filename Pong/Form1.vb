@@ -1015,6 +1015,67 @@ Public Class Form1
     'End Sub
 
 
+    'Private Sub DrawKeyboardHintsStartScreen(g As Graphics)
+
+    '    ' -------------------------------
+    '    '  Keyboard Hints (Top‑Left)
+    '    ' -------------------------------
+    '    Dim hintText As String =
+    '    "1 - One Player   2 - Two Players   Enter - Start Match"
+
+    '    Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+    '    g.DrawString(hintText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             10,
+    '             10)
+
+
+    '    ' -------------------------------
+    '    '  Fullscreen Indicator (Top‑Right)
+    '    ' -------------------------------
+    '    Dim fsText As String =
+    '    If(Me.FormBorderStyle = FormBorderStyle.None,
+    '       "F - Exit Fullscreen",
+    '       "F - Fullscreen")
+
+    '    Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
+
+    '    g.DrawString(fsText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             ClientSize.Width - fsSize.Width - 10,
+    '             10)
+
+
+    '    ' -------------------------------
+    '    '  Quit Game (Bottom‑Left)
+    '    ' -------------------------------
+    '    Dim quitText As String = "CTRL+Q - Quit Game"
+    '    Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
+
+    '    g.DrawString(quitText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             10,
+    '             ClientSize.Height - quitSize.Height - 10)
+
+
+    '    ' -------------------------------
+    '    '  Hide Keyboard Hints (Bottom‑Right)
+    '    ' -------------------------------
+    '    Dim hideText As String = "CTRL+H Hide Keyboard Hints"
+    '    Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
+
+    '    g.DrawString(hideText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             ClientSize.Width - hideSize.Width - 10,
+    '             ClientSize.Height - hideSize.Height - 10)
+
+    'End Sub
+
     Private Sub DrawKeyboardHintsStartScreen(g As Graphics)
 
         ' -------------------------------
@@ -1050,20 +1111,7 @@ Public Class Form1
 
 
         ' -------------------------------
-        '  Quit Game (Bottom‑Left)
-        ' -------------------------------
-        Dim quitText As String = "CTRL+Q - Quit Game"
-        Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
-
-        g.DrawString(quitText,
-                 fullscreenIndicatorFont,
-                 grayBrush,
-                 10,
-                 ClientSize.Height - quitSize.Height - 10)
-
-
-        ' -------------------------------
-        '  Hide Keyboard Hints (Bottom‑Right)
+        '  Hide Keyboard Hints (Bottom‑Left)
         ' -------------------------------
         Dim hideText As String = "CTRL+H Hide Keyboard Hints"
         Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
@@ -1071,11 +1119,10 @@ Public Class Form1
         g.DrawString(hideText,
                  fullscreenIndicatorFont,
                  grayBrush,
-                 ClientSize.Width - hideSize.Width - 10,
+                 10,
                  ClientSize.Height - hideSize.Height - 10)
 
     End Sub
-
 
 
 
@@ -1361,10 +1408,75 @@ Public Class Form1
     End Sub
 
 
+    'Private Sub DrawKeyboardHintsAIDifficultyScreen(g As Graphics)
+
+
+
+
+    '    ' -------------------------------
+    '    '  Keyboard Hints (Top‑Left)
+    '    ' -------------------------------
+    '    Dim hintText As String = "E - Easy   N - Normal   H - Hard   Enter - Start Match"
+    '    Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+    '    g.DrawString(hintText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             10,
+    '             10)
+
+
+
+
+
+    '    ' -------------------------------
+    '    '  Fullscreen Indicator (Top-Right)
+    '    ' -------------------------------
+    '    Dim fsText As String =
+    '    If(Me.FormBorderStyle = FormBorderStyle.None,
+    '       "F - Exit Fullscreen",
+    '       "F - Fullscreen")
+
+    '    Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
+
+    '    g.DrawString(fsText,
+    '         fullscreenIndicatorFont,
+    '         grayBrush,
+    '         ClientSize.Width - fsSize.Width - 10,
+    '         10)
+
+
+
+    '    ' -------------------------------
+    '    '  Quit Game (Bottom‑Left)
+    '    ' -------------------------------
+    '    Dim quitText As String = "CTRL+Q - Quit Game"
+    '    Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
+
+    '    g.DrawString(quitText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             10,
+    '             ClientSize.Height - quitSize.Height - 10)
+
+
+    '    ' -------------------------------
+    '    '  Hide Keyboard Hints (Bottom‑Right)
+    '    ' -------------------------------
+    '    Dim hideText As String = "CTRL+H Hide Keyboard Hints"
+    '    Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
+
+    '    g.DrawString(hideText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             ClientSize.Width - hideSize.Width - 10,
+    '             ClientSize.Height - hideSize.Height - 10)
+
+
+
+    'End Sub
+
     Private Sub DrawKeyboardHintsAIDifficultyScreen(g As Graphics)
-
-
-
 
         ' -------------------------------
         '  Keyboard Hints (Top‑Left)
@@ -1379,11 +1491,8 @@ Public Class Form1
                  10)
 
 
-
-
-
         ' -------------------------------
-        '  Fullscreen Indicator (Top-Right)
+        '  Fullscreen Indicator (Top‑Right)
         ' -------------------------------
         Dim fsText As String =
         If(Me.FormBorderStyle = FormBorderStyle.None,
@@ -1393,28 +1502,14 @@ Public Class Form1
         Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
 
         g.DrawString(fsText,
-             fullscreenIndicatorFont,
-             grayBrush,
-             ClientSize.Width - fsSize.Width - 10,
-             10)
-
-
-
-        ' -------------------------------
-        '  Quit Game (Bottom‑Left)
-        ' -------------------------------
-        Dim quitText As String = "CTRL+Q - Quit Game"
-        Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
-
-        g.DrawString(quitText,
                  fullscreenIndicatorFont,
                  grayBrush,
-                 10,
-                 ClientSize.Height - quitSize.Height - 10)
+                 ClientSize.Width - fsSize.Width - 10,
+                 10)
 
 
         ' -------------------------------
-        '  Hide Keyboard Hints (Bottom‑Right)
+        '  Hide Keyboard Hints (Bottom‑Left)
         ' -------------------------------
         Dim hideText As String = "CTRL+H Hide Keyboard Hints"
         Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
@@ -1422,13 +1517,10 @@ Public Class Form1
         g.DrawString(hideText,
                  fullscreenIndicatorFont,
                  grayBrush,
-                 ClientSize.Width - hideSize.Width - 10,
+                 10,
                  ClientSize.Height - hideSize.Height - 10)
 
-
-
     End Sub
-
 
 
 
@@ -1521,17 +1613,17 @@ Public Class Form1
                  ClientSize.Height - quitSize.Height - 10)
 
 
-        ' -------------------------------
-        '  Hide Keyboard Hints (Bottom‑Right)
-        ' -------------------------------
-        Dim hideText As String = "CTRL+H Hide Keyboard Hints"
-        Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
+        '' -------------------------------
+        ''  Hide Keyboard Hints (Bottom‑Right)
+        '' -------------------------------
+        'Dim hideText As String = "CTRL+H Hide Keyboard Hints"
+        'Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
 
-        g.DrawString(hideText,
-                 fullscreenIndicatorFont,
-                 grayBrush,
-                 ClientSize.Width - hideSize.Width - 10,
-                 ClientSize.Height - hideSize.Height - 10)
+        'g.DrawString(hideText,
+        '         fullscreenIndicatorFont,
+        '         grayBrush,
+        '         ClientSize.Width - hideSize.Width - 10,
+        '         ClientSize.Height - hideSize.Height - 10)
 
 
 
