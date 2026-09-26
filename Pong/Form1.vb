@@ -2241,9 +2241,26 @@ Public Class Form1
         End If
 
         ' H → Hard
-        If e.KeyCode = Keys.H AndAlso aiDifficultySelection <> AIDifficultyLevel.Hard Then
+        'If e.KeyCode = Keys.H AndAlso aiDifficultySelection <> AIDifficultyLevel.Hard Then
+        If e.KeyCode = Keys.H Then
+
             aiDifficultySelection = AIDifficultyLevel.Hard
-            PlayMenuDownSound()
+            'PlayMenuDownSound()
+
+
+
+
+            Select Case aiDifficultySelection
+                Case AIDifficultyLevel.Easy : aiModeFactor = 0.6
+                Case AIDifficultyLevel.Normal : aiModeFactor = 0.7
+                Case AIDifficultyLevel.Hard : aiModeFactor = 0.8
+            End Select
+
+            currentState = GameState.Playing
+            StartNewMatch()
+            PlaySelectSound()
+
+
             Invalidate()
             Return
         End If
@@ -2263,7 +2280,7 @@ Public Class Form1
             Select Case aiDifficultySelection
                 Case AIDifficultyLevel.Easy : aiModeFactor = 0.6
                 Case AIDifficultyLevel.Normal : aiModeFactor = 0.7
-                Case AIDifficultyLevel.Hard : aiModeFactor = 0.8
+                Case AIDifficultyLevel.Hard : aiModeFactor = 0.9
             End Select
 
             currentState = GameState.Playing
