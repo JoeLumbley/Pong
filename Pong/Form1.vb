@@ -2547,6 +2547,8 @@ Public Class Form1
         ' 2. Direct Selection via Number Keys (1 or 2)
         ' ============================================================
             Case Keys.D1, Keys.NumPad1
+                numberOfPlayersSelection = NumberOfPlayers.OnePlayer
+
                 playerMode = 1
                 currentState = GameState.AIDifficulty
 
@@ -2555,6 +2557,8 @@ Public Class Form1
                 Return
 
             Case Keys.D2, Keys.NumPad2
+                numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
+
                 playerMode = 2
                 StartNewMatch()
 
