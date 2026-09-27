@@ -588,6 +588,11 @@ Public Class Form1
 
     End Sub
 
+
+    ' ===============================
+    '  AUDIO RESTART
+    ' ===============================
+
     Private Sub AudioRestartTimer_Tick(sender As Object, e As EventArgs) Handles AudioRestartTimer.Tick
         RestartAudioEngine()
     End Sub
