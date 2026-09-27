@@ -2175,95 +2175,194 @@ Public Class Form1
 
         End If
 
+        '' ============================
+        ''   NUMBER SHORTCUTS: 1 / 2 / 3
+        '' ============================
+
+        '' Is the 1 key pressed AND
+        '' Is the selected difficulty NOT already Easy? If so, select it and play sound
+        'If (e.KeyCode = Keys.D1 OrElse e.KeyCode = Keys.NumPad1) AndAlso
+        '    aiDifficultySelection <> AIDifficultyLevel.Easy Then
+
+        '    aiDifficultySelection = AIDifficultyLevel.Easy
+        '    PlayMenuUpSound()
+        '    Invalidate()
+
+        '    Return
+
+        'End If
+
+        '' Is the 2 key pressed AND
+        '' Is the selected difficulty NOT already Normal? If so, select it and play sound
+        'If (e.KeyCode = Keys.D2 OrElse e.KeyCode = Keys.NumPad2) AndAlso
+        '    aiDifficultySelection <> AIDifficultyLevel.Normal Then
+
+        '    aiDifficultySelection = AIDifficultyLevel.Normal
+        '    PlayMenuDownSound()
+        '    Invalidate()
+
+        '    Return
+
+        'End If
+
+        '' Is the 3 key pressed AND
+        '' Is the selected difficulty NOT already Hard? If so, select it and play sound
+        'If (e.KeyCode = Keys.D3 OrElse e.KeyCode = Keys.NumPad3) AndAlso
+        '    aiDifficultySelection <> AIDifficultyLevel.Hard Then
+
+        '    aiDifficultySelection = AIDifficultyLevel.Hard
+        '    PlayMenuDownSound()
+        '    Invalidate()
+
+        '    Return
+
+        'End If
+
+
+
+        '' ============================
+        ''   LETTER SHORTCUTS: E / N / H
+        '' ============================
+
+        '' E → Easy
+        ''If e.KeyCode = Keys.E AndAlso aiDifficultySelection <> AIDifficultyLevel.Easy Then
+        'If e.KeyCode = Keys.E Then
+
+        '    aiDifficultySelection = AIDifficultyLevel.Easy
+        '    'PlayMenuUpSound()
+
+
+        '    'Select Case aiDifficultySelection
+        '    '    Case AIDifficultyLevel.Easy : aiModeFactor = 0.6
+        '    '    Case AIDifficultyLevel.Normal : aiModeFactor = 0.7
+        '    '    Case AIDifficultyLevel.Hard : aiModeFactor = 0.9
+        '    'End Select
+
+        '    SetAIModeFactor()
+
+
+        '    currentState = GameState.Playing
+        '    StartNewMatch()
+        '    PlaySelectSound()
+
+        '    Invalidate()
+        '    Return
+        'End If
+
+        '' N → Normal
+        ''If e.KeyCode = Keys.N AndAlso aiDifficultySelection <> AIDifficultyLevel.Normal Then
+        'If e.KeyCode = Keys.N Then
+
+        '    aiDifficultySelection = AIDifficultyLevel.Normal
+        '    'PlayMenuDownSound()
+
+        '    'Select Case aiDifficultySelection
+        '    '    Case AIDifficultyLevel.Easy : aiModeFactor = 0.6
+        '    '    Case AIDifficultyLevel.Normal : aiModeFactor = 0.66
+        '    '    Case AIDifficultyLevel.Hard : aiModeFactor = 0.9
+        '    'End Select
+
+
+        '    SetAIModeFactor()
+
+
+        '    currentState = GameState.Playing
+        '    StartNewMatch()
+        '    PlaySelectSound()
+
+
+
+        '    Invalidate()
+        '    Return
+        'End If
+
+
+        '' H → Hard
+        ''If e.KeyCode = Keys.H AndAlso aiDifficultySelection <> AIDifficultyLevel.Hard Then
+        'If e.KeyCode = Keys.H Then
+
+        '    aiDifficultySelection = AIDifficultyLevel.Hard
+        '    'PlayMenuDownSound()
+
+
+
+
+        '    'Select Case aiDifficultySelection
+        '    '    Case AIDifficultyLevel.Easy : aiModeFactor = 0.6
+        '    '    Case AIDifficultyLevel.Normal : aiModeFactor = 0.65
+        '    '    Case AIDifficultyLevel.Hard : aiModeFactor = 0.7
+        '    'End Select
+        '    SetAIModeFactor()
+
+
+
+
+
+        '    currentState = GameState.Playing
+        '    StartNewMatch()
+        '    PlaySelectSound()
+
+
+        '    Invalidate()
+        '    Return
+        'End If
+
+
+
+
+
+
+
+
+
         ' ============================
-        '   NUMBER SHORTCUTS: 1 / 2 / 3
+        '   DIRECT SELECT: E / N / H / 1 / 2 / 3
         ' ============================
 
-        ' Is the 1 key pressed AND
-        ' Is the selected difficulty NOT already Easy? If so, select it and play sound
-        If (e.KeyCode = Keys.D1 OrElse e.KeyCode = Keys.NumPad1) AndAlso
-            aiDifficultySelection <> AIDifficultyLevel.Easy Then
+        Dim directSelectDifficulty As Nullable(Of AIDifficultyLevel) = Nothing
 
-            aiDifficultySelection = AIDifficultyLevel.Easy
-            PlayMenuUpSound()
-            Invalidate()
+        Select Case e.KeyCode
+            Case Keys.E, Keys.D1, Keys.NumPad1
+                directSelectDifficulty = AIDifficultyLevel.Easy
 
-            Return
+            Case Keys.N, Keys.D2, Keys.NumPad2
+                directSelectDifficulty = AIDifficultyLevel.Normal
 
-        End If
+            Case Keys.H, Keys.D3, Keys.NumPad3
+                directSelectDifficulty = AIDifficultyLevel.Hard
+        End Select
 
-        ' Is the 2 key pressed AND
-        ' Is the selected difficulty NOT already Normal? If so, select it and play sound
-        If (e.KeyCode = Keys.D2 OrElse e.KeyCode = Keys.NumPad2) AndAlso
-            aiDifficultySelection <> AIDifficultyLevel.Normal Then
+        If directSelectDifficulty.HasValue Then
 
-            aiDifficultySelection = AIDifficultyLevel.Normal
-            PlayMenuDownSound()
-            Invalidate()
+            aiDifficultySelection = directSelectDifficulty.Value
 
-            Return
+            ' Update AI mode factor
+            SetAIModeFactor()
 
-        End If
-
-        ' Is the 3 key pressed AND
-        ' Is the selected difficulty NOT already Hard? If so, select it and play sound
-        If (e.KeyCode = Keys.D3 OrElse e.KeyCode = Keys.NumPad3) AndAlso
-            aiDifficultySelection <> AIDifficultyLevel.Hard Then
-
-            aiDifficultySelection = AIDifficultyLevel.Hard
-            PlayMenuDownSound()
-            Invalidate()
-
-            Return
-
-        End If
-
-
-
-        ' ============================
-        '   LETTER SHORTCUTS: E / N / H
-        ' ============================
-
-        ' E → Easy
-        If e.KeyCode = Keys.E AndAlso aiDifficultySelection <> AIDifficultyLevel.Easy Then
-            aiDifficultySelection = AIDifficultyLevel.Easy
-            PlayMenuUpSound()
-            Invalidate()
-            Return
-        End If
-
-        ' N → Normal
-        If e.KeyCode = Keys.N AndAlso aiDifficultySelection <> AIDifficultyLevel.Normal Then
-            aiDifficultySelection = AIDifficultyLevel.Normal
-            PlayMenuDownSound()
-            Invalidate()
-            Return
-        End If
-
-        ' H → Hard
-        'If e.KeyCode = Keys.H AndAlso aiDifficultySelection <> AIDifficultyLevel.Hard Then
-        If e.KeyCode = Keys.H Then
-
-            aiDifficultySelection = AIDifficultyLevel.Hard
-            'PlayMenuDownSound()
-
-
-
-
-            Select Case aiDifficultySelection
-                Case AIDifficultyLevel.Easy : aiModeFactor = 0.6
-                Case AIDifficultyLevel.Normal : aiModeFactor = 0.7
-                Case AIDifficultyLevel.Hard : aiModeFactor = 0.8
-            End Select
-
+            ' Start match immediately
             currentState = GameState.Playing
             StartNewMatch()
+
             PlaySelectSound()
-
-
             Invalidate()
+
             Return
         End If
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         ' ============================
@@ -2277,11 +2376,7 @@ Public Class Form1
                 enterKeyDown = True
             End If
 
-            Select Case aiDifficultySelection
-                Case AIDifficultyLevel.Easy : aiModeFactor = 0.6
-                Case AIDifficultyLevel.Normal : aiModeFactor = 0.7
-                Case AIDifficultyLevel.Hard : aiModeFactor = 0.9
-            End Select
+            SetAIModeFactor()
 
             currentState = GameState.Playing
             StartNewMatch()
@@ -2308,6 +2403,25 @@ Public Class Form1
         End If
 
     End Sub
+
+    Private Sub SetAIModeFactor()
+        Select Case aiDifficultySelection
+            Case AIDifficultyLevel.Easy : aiModeFactor = 0.6
+            Case AIDifficultyLevel.Normal : aiModeFactor = 0.63
+            Case AIDifficultyLevel.Hard : aiModeFactor = 0.66
+        End Select
+    End Sub
+
+
+
+
+
+
+
+
+
+
+
 
     'Private Sub HandleEndScreenInput(e As KeyEventArgs)
 
