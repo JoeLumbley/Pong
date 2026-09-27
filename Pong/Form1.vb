@@ -240,20 +240,11 @@ Public Class Form1
 
     Private Audio As AudioPlayer
 
-    'Private WithEvents AudioRestartTimer As New Timer With {
-    '    .Interval = 360000,
-    '    .Enabled = True
-    '}
-    'Private WithEvents AudioRestartTimer As New Timer With {
-    '    .Interval = 15000,
-    '    .Enabled = True
-    '}
 
 
-    Private WithEvents AudioRestartTimer As New Timer With {
-        .Interval = 180000,
-        .Enabled = True
-    }
+    Private WithEvents AudioRestartTimer As Timer
+
+
 
 
     Private gameplayLoopVolume As Integer = 200
@@ -710,6 +701,8 @@ Public Class Form1
 
         physicsStopwatch.Start()
         fpsStopwatch.Start()
+
+
     End Sub
 
     Private Sub InitGraphics()
@@ -785,6 +778,24 @@ Public Class Form1
         LoadAndRegisterSounds()
 
         PlayStartLoop(600)
+
+        InitAudioRestartTimer()
+
+    End Sub
+
+    Private Sub InitAudioRestartTimer()
+
+        'Restart Audio every 3 minutes
+        AudioRestartTimer = New Timer With {
+            .Interval = 180000,
+            .Enabled = True
+        }
+
+        ''Restart Audio every 15 seconds for testing
+        'AudioRestartTimer = New Timer With {
+        '    .Interval = 15000,
+        '    .Enabled = True
+        '}
 
     End Sub
 
