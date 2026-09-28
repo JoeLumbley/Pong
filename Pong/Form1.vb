@@ -328,10 +328,13 @@ Public Class Form1
                 CheckScore()
 
             Case GameState.AIDifficulty
-                ' No updates needed for AI Difficulty screen
+                UpdateStartScreenFX()
+
+
             Case GameState.Pause
                 ' No updates needed for Pause screen
             Case GameState.EndScreen
+                UpdateStartScreenFX()
 
         End Select
 
@@ -1516,12 +1519,28 @@ Public Class Form1
     Private Sub DrawAIDifficultyScreen(g As Graphics)
 
 
+        'Dim title As String = "Difficulty"
+        'Dim titleSize = g.MeasureString(title, aiDifficultyTitleFont)
+
+        'g.DrawString(title, aiDifficultyTitleFont, whiteBrush,
+        '         CSng((ClientSize.Width - titleSize.Width) / 2.0F),
+        '         CSng(ClientSize.Height * 0.2F))
+
+
         Dim title As String = "Difficulty"
         Dim titleSize = g.MeasureString(title, aiDifficultyTitleFont)
+        Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
 
-        g.DrawString(title, aiDifficultyTitleFont, whiteBrush,
-                 CSng((ClientSize.Width - titleSize.Width) / 2.0F),
-                 CSng(ClientSize.Height * 0.2F))
+        Using titleBrush As New SolidBrush(titleColor)
+            g.DrawString(title, aiDifficultyTitleFont, titleBrush,
+                     CSng((ClientSize.Width - titleSize.Width) / 2.0F),
+                     CSng(ClientSize.Height * 0.2F))
+        End Using
+
+
+
+
+
 
         For i As Integer = 0 To aiOptions.Length - 1
             Dim text = aiOptions(i)
@@ -1536,12 +1555,22 @@ Public Class Form1
 
         Next
 
-        Dim info As String = "Press SPACE to Start"
-        Dim infoSize = g.MeasureString(info, startInfoFont)
+        If blinkVisible Then
 
-        g.DrawString(info, startInfoFont, whiteBrush,
+            Dim info As String = "Press SPACE to Start"
+            Dim infoSize = g.MeasureString(info, startInfoFont)
+
+            g.DrawString(info, startInfoFont, whiteBrush,
                  CSng((ClientSize.Width - infoSize.Width) / 2.0F),
                  CSng(ClientSize.Height * 0.75F))
+
+
+
+
+        End If
+
+
+
 
 
     End Sub
@@ -1601,17 +1630,64 @@ Public Class Form1
     Private Sub DrawGameOver(g As Graphics)
 
 
-        Dim size = g.MeasureString(winnerText, gameOverFont)
-        Dim info As String = "Press SPACE to Start"
-        Dim infoSize = g.MeasureString(info, gameOverInfoFont)
+        'Dim size = g.MeasureString(winnerText, gameOverFont)
+        'Dim info As String = "Press SPACE to Start"
+        'Dim infoSize = g.MeasureString(info, gameOverInfoFont)
 
-        g.DrawString(winnerText, gameOverFont, whiteBrush,
-                     CSng((ClientSize.Width - size.Width) / 2.0F),
+        'g.DrawString(winnerText, gameOverFont, whiteBrush,
+        '             CSng((ClientSize.Width - Size.Width) / 2.0F),
+        '             CSng(ClientSize.Height * 0.3F))
+
+
+        ' -------------------------------
+        '  Title
+        ' -------------------------------
+        Dim title As String = winnerText
+        Dim titleSize = g.MeasureString(title, gameOverFont)
+        Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
+
+        Using titleBrush As New SolidBrush(titleColor)
+            g.DrawString(title, gameOverFont, titleBrush,
+                     CSng((ClientSize.Width - titleSize.Width) / 2.0F),
                      CSng(ClientSize.Height * 0.3F))
+        End Using
 
-        g.DrawString(info, gameOverInfoFont, whiteBrush,
+
+
+
+
+
+
+
+
+
+
+
+        'g.DrawString(info, gameOverInfoFont, whiteBrush,
+        '             CSng((ClientSize.Width - infoSize.Width) / 2.0F),
+        '             CSng(ClientSize.Height * 0.55F))
+
+
+        ' -------------------------------
+        '  Blink "Press SPACE"
+        ' -------------------------------
+        If blinkVisible Then
+            Dim info As String = "Press SPACE to Start"
+            Dim infoSize = g.MeasureString(info, startInfoFont)
+
+            g.DrawString(info, startInfoFont, whiteBrush,
                      CSng((ClientSize.Width - infoSize.Width) / 2.0F),
                      CSng(ClientSize.Height * 0.55F))
+        End If
+
+
+
+
+
+
+
+
+
     End Sub
 
 
