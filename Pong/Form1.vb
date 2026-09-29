@@ -1885,7 +1885,7 @@ Public Class Form1
         ' -------------------------------
         '  Hide Keyboard Hints (Bottom‑Right)
         ' -------------------------------
-        Dim hideText As String = "CTRL+H Hide Keyboard Hints"
+        Dim hideText As String = "CTRL H - Hide Keyboard Hints"
         Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
 
         g.DrawString(hideText,
