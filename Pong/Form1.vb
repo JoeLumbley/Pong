@@ -296,6 +296,10 @@ Public Class Form1
 
 
 
+    Private darkBrush As New SolidBrush(Color.FromArgb(64, 255, 255, 255))
+
+    Private outlinePen As New Pen(Color.FromArgb(225, 255, 255, 255))
+    Private darkOutlinePen As New Pen(Color.FromArgb(128, 255, 255, 255))
 
 
 
@@ -1182,6 +1186,148 @@ Public Class Form1
     'End Sub
 
 
+    'Private Sub DrawPauseScreen(g As Graphics)
+
+    '    ' Dim the game
+    '    g.FillRectangle(dimBrush, ClientRectangle)
+
+    '    ' Title
+    '    g.DrawString(pauseTitle, pauseTitleFont, whiteBrush,
+    '             pauseTitleX, pauseTitleY)
+
+
+
+
+
+    '    ' Compute clickable rectangles (no allocations except the 3 rectangles)
+    '    For i As Integer = 0 To pauseMenuItems.Length - 1
+
+    '        Dim text = pauseMenuItems(i)
+    '        Dim x = pauseMenuItemX(i)
+    '        Dim y = pauseMenuItemY(i)
+
+    '        ' Measure once per item (cheap)
+    '        Dim size = g.MeasureString(text, pauseMenuFont)
+
+    '        Select Case i
+    '            Case 0
+    '                pauseResumeRect = New Rectangle(CInt(x), CInt(y),
+    '                                            CInt(size.Width), CInt(size.Height))
+
+    '            Case 1
+    '                pauseNewMatchRect = New Rectangle(CInt(x), CInt(y),
+    '                                              CInt(size.Width), CInt(size.Height))
+
+    '            Case 2
+    '                pauseQuitRect = New Rectangle(CInt(x), CInt(y),
+    '                                          CInt(size.Width), CInt(size.Height))
+
+    '        End Select
+
+    '        'Dim brush As SolidBrush = If(i = pauseMenuSelection, whiteBrush, grayBrush)
+
+
+
+
+    '        'g.DrawString(text, pauseMenuFont, brush, x, y)
+
+
+    '    Next
+
+
+
+    '    Dim darkBrush As New SolidBrush(Color.FromArgb(32, 255, 255, 255))
+    '    Dim outinePen As New Pen(Color.FromArgb(64, 255, 255, 255))
+    '    Dim darkOutinePen As New Pen(Color.FromArgb(255, 64, 64, 64))
+
+    '    'g.DrawRectangle(darkOutinePen, pauseResumeRect)
+    '    'g.DrawRectangle(darkOutinePen, pauseNewMatchRect)
+    '    'g.DrawRectangle(darkOutinePen, pauseQuitRect)
+
+
+    '    If pauseMenuSelection = 0 Then
+    '        g.FillRectangle(darkBrush, pauseResumeRect)
+    '        g.DrawRectangle(outinePen, pauseResumeRect)
+
+    '        g.DrawRectangle(darkOutinePen, pauseNewMatchRect)
+    '        g.DrawRectangle(darkOutinePen, pauseQuitRect)
+
+
+    '    ElseIf pauseMenuSelection = 1 Then
+    '        g.FillRectangle(darkBrush, pauseNewMatchRect)
+    '        g.DrawRectangle(outinePen, pauseNewMatchRect)
+
+    '        g.DrawRectangle(darkOutinePen, pauseResumeRect)
+    '        g.DrawRectangle(darkOutinePen, pauseQuitRect)
+
+
+    '    ElseIf pauseMenuSelection = 2 Then
+    '        g.FillRectangle(darkBrush, pauseQuitRect)
+    '        g.DrawRectangle(outinePen, pauseQuitRect)
+
+    '        g.DrawRectangle(darkOutinePen, pauseResumeRect)
+    '        g.DrawRectangle(darkOutinePen, pauseNewMatchRect)
+
+
+    '    End If
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    '    ' Compute clickable rectangles (no allocations except the 3 rectangles)
+    '    For i As Integer = 0 To pauseMenuItems.Length - 1
+
+    '        Dim text = pauseMenuItems(i)
+    '        Dim x = pauseMenuItemX(i)
+    '        Dim y = pauseMenuItemY(i)
+
+    '        '' Measure once per item (cheap)
+    '        'Dim size = g.MeasureString(text, pauseMenuFont)
+
+    '        'Select Case i
+    '        '    Case 0
+    '        '        pauseResumeRect = New Rectangle(CInt(x), CInt(y),
+    '        '                                    CInt(size.Width), CInt(size.Height))
+
+    '        '    Case 1
+    '        '        pauseNewMatchRect = New Rectangle(CInt(x), CInt(y),
+    '        '                                      CInt(size.Width), CInt(size.Height))
+
+    '        '    Case 2
+    '        '        pauseQuitRect = New Rectangle(CInt(x), CInt(y),
+    '        '                                  CInt(size.Width), CInt(size.Height))
+
+    '        'End Select
+
+    '        Dim brush As SolidBrush = If(i = pauseMenuSelection, whiteBrush, grayBrush)
+
+
+
+
+    '        g.DrawString(text, pauseMenuFont, brush, x, y)
+
+
+    '    Next
+
+    'End Sub
+
+
+
+
+
+
+
+
     Private Sub DrawPauseScreen(g As Graphics)
 
         ' Dim the game
@@ -1191,42 +1337,45 @@ Public Class Form1
         g.DrawString(pauseTitle, pauseTitleFont, whiteBrush,
                  pauseTitleX, pauseTitleY)
 
-        ' Compute clickable rectangles (no allocations except the 3 rectangles)
+        ' Pre-created brushes/pens (created once in Form_Load)
+        ' darkBrush
+        ' outlinePen
+        ' darkOutlinePen
+
         For i As Integer = 0 To pauseMenuItems.Length - 1
 
             Dim text = pauseMenuItems(i)
             Dim x = pauseMenuItemX(i)
             Dim y = pauseMenuItemY(i)
 
-            ' Measure once per item (cheap)
+            ' Measure once per item
             Dim size = g.MeasureString(text, pauseMenuFont)
 
-            Select Case i
-                Case 0
-                    pauseResumeRect = New Rectangle(CInt(x), CInt(y),
-                                                CInt(size.Width), CInt(size.Height))
-                Case 1
-                    pauseNewMatchRect = New Rectangle(CInt(x), CInt(y),
-                                                  CInt(size.Width), CInt(size.Height))
-                Case 2
-                    pauseQuitRect = New Rectangle(CInt(x), CInt(y),
+            ' Compute clickable rectangles
+            Dim rect As Rectangle = New Rectangle(CInt(x), CInt(y),
                                               CInt(size.Width), CInt(size.Height))
+
+            Select Case i
+                Case 0 : pauseResumeRect = rect
+                Case 1 : pauseNewMatchRect = rect
+                Case 2 : pauseQuitRect = rect
             End Select
 
-            Dim brush As SolidBrush = If(i = pauseMenuSelection, whiteBrush, grayBrush)
+            ' Highlight selection
+            If i = pauseMenuSelection Then
+                g.FillRectangle(darkBrush, rect)
+                g.DrawRectangle(outlinePen, rect)
+            Else
+                g.DrawRectangle(darkOutlinePen, rect)
+            End If
 
+            ' Draw text
+            Dim brush As SolidBrush = If(i = pauseMenuSelection, whiteBrush, grayBrush)
             g.DrawString(text, pauseMenuFont, brush, x, y)
+
         Next
 
     End Sub
-
-
-
-
-
-
-
-
 
 
 
@@ -1378,6 +1527,86 @@ Public Class Form1
 
     End Sub
 
+    'Private Sub DrawStartScreen(g As Graphics)
+
+    '    ' -------------------------------
+    '    '  Title
+    '    ' -------------------------------
+    '    Dim title As String = "PONG"
+    '    Dim titleSize = g.MeasureString(title, startTitleFont)
+    '    Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
+
+    '    Using titleBrush As New SolidBrush(titleColor)
+    '        g.DrawString(title, startTitleFont, titleBrush,
+    '                 CSng((ClientSize.Width - titleSize.Width) / 2.0F),
+    '                 CSng(ClientSize.Height * 0.15F))
+    '    End Using
+
+
+    '    '' -------------------------------
+    '    ''  Menu Options
+    '    '' -------------------------------
+    '    'Dim option1 As String = "1 Player"
+    '    'Dim option2 As String = "2 Players"
+
+    '    'Dim opt1Size = g.MeasureString(option1, startMenuFont)
+    '    'Dim opt2Size = g.MeasureString(option2, startMenuFont)
+
+    '    'Dim opt1Brush As SolidBrush = If(numberOfPlayersSelection = 0, whiteBrush, grayBrush)
+    '    'Dim opt2Brush As SolidBrush = If(numberOfPlayersSelection = 1, whiteBrush, grayBrush)
+
+    '    'g.DrawString(option1, startMenuFont, opt1Brush,
+    '    '         CSng((ClientSize.Width - opt1Size.Width) / 2.0F),
+    '    '         CSng(ClientSize.Height * 0.45F))
+
+    '    'g.DrawString(option2, startMenuFont, opt2Brush,
+    '    '         CSng((ClientSize.Width - opt2Size.Width) / 2.0F),
+    '    '         CSng(ClientSize.Height * 0.55F))
+
+
+    '    ' -------------------------------
+    '    '  Menu Options
+    '    ' -------------------------------
+    '    Dim option1 As String = "1 Player"
+    '    Dim option2 As String = "2 Players"
+
+    '    Dim opt1Size = g.MeasureString(option1, startMenuFont)
+    '    Dim opt2Size = g.MeasureString(option2, startMenuFont)
+
+    '    Dim opt1X As Single = CSng((ClientSize.Width - opt1Size.Width) / 2.0F)
+    '    Dim opt1Y As Single = CSng(ClientSize.Height * 0.45F)
+
+    '    Dim opt2X As Single = CSng((ClientSize.Width - opt2Size.Width) / 2.0F)
+    '    Dim opt2Y As Single = CSng(ClientSize.Height * 0.55F)
+
+    '    ' Store clickable rectangles
+    '    onePlayerOptionRect = New RectangleF(opt1X, opt1Y, opt1Size.Width, opt1Size.Height)
+    '    twoPlayersOptionRect = New RectangleF(opt2X, opt2Y, opt2Size.Width, opt2Size.Height)
+
+    '    Dim opt1Brush As SolidBrush = If(numberOfPlayersSelection = 0, whiteBrush, grayBrush)
+    '    Dim opt2Brush As SolidBrush = If(numberOfPlayersSelection = 1, whiteBrush, grayBrush)
+
+    '    g.DrawString(option1, startMenuFont, opt1Brush, opt1X, opt1Y)
+    '    g.DrawString(option2, startMenuFont, opt2Brush, opt2X, opt2Y)
+
+
+    '    ' -------------------------------
+    '    '  Blink "Press SPACE"
+    '    ' -------------------------------
+    '    If blinkVisible Then
+    '        Dim info As String = "Press SPACE to Start"
+    '        Dim infoSize = g.MeasureString(info, startInfoFont)
+
+    '        g.DrawString(info, startInfoFont, whiteBrush,
+    '                 CSng((ClientSize.Width - infoSize.Width) / 2.0F),
+    '                 CSng(ClientSize.Height * 0.75F))
+    '    End If
+
+
+
+
+    'End Sub
+
     Private Sub DrawStartScreen(g As Graphics)
 
         ' -------------------------------
@@ -1392,27 +1621,6 @@ Public Class Form1
                      CSng((ClientSize.Width - titleSize.Width) / 2.0F),
                      CSng(ClientSize.Height * 0.15F))
         End Using
-
-
-        '' -------------------------------
-        ''  Menu Options
-        '' -------------------------------
-        'Dim option1 As String = "1 Player"
-        'Dim option2 As String = "2 Players"
-
-        'Dim opt1Size = g.MeasureString(option1, startMenuFont)
-        'Dim opt2Size = g.MeasureString(option2, startMenuFont)
-
-        'Dim opt1Brush As SolidBrush = If(numberOfPlayersSelection = 0, whiteBrush, grayBrush)
-        'Dim opt2Brush As SolidBrush = If(numberOfPlayersSelection = 1, whiteBrush, grayBrush)
-
-        'g.DrawString(option1, startMenuFont, opt1Brush,
-        '         CSng((ClientSize.Width - opt1Size.Width) / 2.0F),
-        '         CSng(ClientSize.Height * 0.45F))
-
-        'g.DrawString(option2, startMenuFont, opt2Brush,
-        '         CSng((ClientSize.Width - opt2Size.Width) / 2.0F),
-        '         CSng(ClientSize.Height * 0.55F))
 
 
         ' -------------------------------
@@ -1431,9 +1639,41 @@ Public Class Form1
         Dim opt2Y As Single = CSng(ClientSize.Height * 0.55F)
 
         ' Store clickable rectangles
-        onePlayerOptionRect = New RectangleF(opt1X, opt1Y, opt1Size.Width, opt1Size.Height)
-        twoPlayersOptionRect = New RectangleF(opt2X, opt2Y, opt2Size.Width, opt2Size.Height)
+        onePlayerOptionRect = New Rectangle(CInt(opt1X), CInt(opt1Y),
+                                        CInt(opt1Size.Width), CInt(opt1Size.Height))
 
+        twoPlayersOptionRect = New Rectangle(CInt(opt2X), CInt(opt2Y),
+                                         CInt(opt2Size.Width), CInt(opt2Size.Height))
+
+
+        ' -------------------------------
+        '  Highlight + Outline (Pause Menu Style)
+        ' -------------------------------
+
+        ' Option 1
+        If numberOfPlayersSelection = 0 Then
+            g.FillRectangle(darkBrush, onePlayerOptionRect)
+            g.DrawRectangle(outlinePen, onePlayerOptionRect)
+
+            'g.DrawRectangle(darkOutlinePen, twoPlayersOptionRect)
+        Else
+            g.DrawRectangle(darkOutlinePen, onePlayerOptionRect)
+        End If
+
+        ' Option 2
+        If numberOfPlayersSelection = 1 Then
+            g.FillRectangle(darkBrush, twoPlayersOptionRect)
+            g.DrawRectangle(outlinePen, twoPlayersOptionRect)
+
+            'g.DrawRectangle(darkOutlinePen, onePlayerOptionRect)
+        Else
+            g.DrawRectangle(darkOutlinePen, twoPlayersOptionRect)
+        End If
+
+
+        ' -------------------------------
+        '  Draw Text
+        ' -------------------------------
         Dim opt1Brush As SolidBrush = If(numberOfPlayersSelection = 0, whiteBrush, grayBrush)
         Dim opt2Brush As SolidBrush = If(numberOfPlayersSelection = 1, whiteBrush, grayBrush)
 
@@ -1453,10 +1693,43 @@ Public Class Form1
                      CSng(ClientSize.Height * 0.75F))
         End If
 
-
-
-
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     Private Sub DrawKeyboardHintsPauseScreen(g As Graphics)
@@ -1704,8 +1977,65 @@ Public Class Form1
 
     'End Sub
 
+    'Private Sub DrawAIDifficultyScreen(g As Graphics)
+
+    '    Dim title As String = "Difficulty"
+    '    Dim titleSize = g.MeasureString(title, aiDifficultyTitleFont)
+    '    Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
+
+    '    Using titleBrush As New SolidBrush(titleColor)
+    '        g.DrawString(title, aiDifficultyTitleFont, titleBrush,
+    '                 CSng((ClientSize.Width - titleSize.Width) / 2.0F),
+    '                 CSng(ClientSize.Height * 0.2F))
+    '    End Using
+
+    '    ' Compute clickable rects
+    '    Dim baseY As Single = CSng(ClientSize.Height * 0.36F)
+
+    '    For i As Integer = 0 To aiOptions.Length - 1
+
+    '        Dim text = aiOptions(i)
+    '        Dim size = g.MeasureString(text, startMenuFont)
+
+    '        Dim x = CSng((ClientSize.Width - size.Width) / 2.0F)
+    '        Dim y = baseY + i * (size.Height + 10)
+
+    '        ' Store clickable rectangles
+    '        Select Case i
+    '            Case AIDifficultyLevel.Easy
+    '                aiEasyRect = New Rectangle(CInt(x), CInt(y), CInt(size.Width), CInt(size.Height))
+    '            Case AIDifficultyLevel.Normal
+    '                aiNormalRect = New Rectangle(CInt(x), CInt(y), CInt(size.Width), CInt(size.Height))
+    '            Case AIDifficultyLevel.Hard
+    '                aiHardRect = New Rectangle(CInt(x), CInt(y), CInt(size.Width), CInt(size.Height))
+    '        End Select
+
+    '        Dim brush As SolidBrush = If(i = aiDifficultySelection, whiteBrush, grayBrush)
+
+    '        g.DrawString(text, startMenuFont, brush, x, y)
+
+    '    Next
+
+    '    If blinkVisible Then
+    '        Dim info As String = "Press SPACE to Start"
+    '        Dim infoSize = g.MeasureString(info, startInfoFont)
+
+    '        g.DrawString(info, startInfoFont, whiteBrush,
+    '                 CSng((ClientSize.Width - infoSize.Width) / 2.0F),
+    '                 CSng(ClientSize.Height * 0.75F))
+    '    End If
+
+    'End Sub
+
+
+
+
+
     Private Sub DrawAIDifficultyScreen(g As Graphics)
 
+        ' -------------------------------
+        '  Title
+        ' -------------------------------
         Dim title As String = "Difficulty"
         Dim titleSize = g.MeasureString(title, aiDifficultyTitleFont)
         Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
@@ -1716,7 +2046,10 @@ Public Class Form1
                      CSng(ClientSize.Height * 0.2F))
         End Using
 
-        ' Compute clickable rects
+
+        ' -------------------------------
+        '  Menu Options + Rectangles
+        ' -------------------------------
         Dim baseY As Single = CSng(ClientSize.Height * 0.36F)
 
         For i As Integer = 0 To aiOptions.Length - 1
@@ -1727,22 +2060,43 @@ Public Class Form1
             Dim x = CSng((ClientSize.Width - size.Width) / 2.0F)
             Dim y = baseY + i * (size.Height + 10)
 
+            Dim rect As New Rectangle(CInt(x), CInt(y),
+                                  CInt(size.Width), CInt(size.Height))
+
             ' Store clickable rectangles
             Select Case i
                 Case AIDifficultyLevel.Easy
-                    aiEasyRect = New Rectangle(CInt(x), CInt(y), CInt(size.Width), CInt(size.Height))
+                    aiEasyRect = rect
                 Case AIDifficultyLevel.Normal
-                    aiNormalRect = New Rectangle(CInt(x), CInt(y), CInt(size.Width), CInt(size.Height))
+                    aiNormalRect = rect
                 Case AIDifficultyLevel.Hard
-                    aiHardRect = New Rectangle(CInt(x), CInt(y), CInt(size.Width), CInt(size.Height))
+                    aiHardRect = rect
             End Select
 
-            Dim brush As SolidBrush = If(i = aiDifficultySelection, whiteBrush, grayBrush)
 
+            ' -------------------------------
+            '  Highlight (Pause Menu Style)
+            ' -------------------------------
+            If i = aiDifficultySelection Then
+                g.FillRectangle(darkBrush, rect)
+                g.DrawRectangle(outlinePen, rect)
+            Else
+                g.DrawRectangle(darkOutlinePen, rect)
+            End If
+
+
+            ' -------------------------------
+            '  Draw Text
+            ' -------------------------------
+            Dim brush As SolidBrush = If(i = aiDifficultySelection, whiteBrush, grayBrush)
             g.DrawString(text, startMenuFont, brush, x, y)
 
         Next
 
+
+        ' -------------------------------
+        '  Blink "Press SPACE"
+        ' -------------------------------
         If blinkVisible Then
             Dim info As String = "Press SPACE to Start"
             Dim infoSize = g.MeasureString(info, startInfoFont)
@@ -1753,11 +2107,6 @@ Public Class Form1
         End If
 
     End Sub
-
-
-
-
-
 
 
 
@@ -3026,12 +3375,12 @@ Public Class Form1
     '    'PauseMenu_MouseDown(e)
     'End Sub
 
-    Private Sub Form1_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
-        StartScreen_MouseUp(e)
-        AIDifficulty_MouseUp(e)
-        PauseMenu_MouseUp(e)
+    'Private Sub Form1_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
+    '    StartScreen_MouseUp(e)
+    '    AIDifficulty_MouseUp(e)
+    '    PauseMenu_MouseUp(e)
 
-    End Sub
+    'End Sub
 
 
 
@@ -3093,9 +3442,9 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
-        EndScreen_MouseDown(e)
-    End Sub
+    'Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
+    '    EndScreen_MouseDown(e)
+    'End Sub
 
     Private Sub EndScreen_MouseDown(e As MouseEventArgs)
         If currentState <> GameState.EndScreen Then Return
@@ -3106,6 +3455,14 @@ Public Class Form1
         Invalidate()
     End Sub
 
+    Private Sub Form1_MouseClick(sender As Object, e As MouseEventArgs) Handles Me.MouseClick
+        StartScreen_MouseUp(e)
+        AIDifficulty_MouseUp(e)
+        PauseMenu_MouseUp(e)
+
+        EndScreen_MouseDown(e)
 
 
+
+    End Sub
 End Class
