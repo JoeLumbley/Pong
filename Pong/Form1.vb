@@ -290,6 +290,29 @@ Public Class Form1
     Private aiHardRect As Rectangle
 
 
+    Private pauseResumeRect As Rectangle
+    Private pauseNewMatchRect As Rectangle
+    Private pauseQuitRect As Rectangle
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     ' ===============================
@@ -1139,24 +1162,78 @@ Public Class Form1
         End If
     End Sub
 
+    'Private Sub DrawPauseScreen(g As Graphics)
+
+    '    ' Dim the gamme
+    '    g.FillRectangle(dimBrush, ClientRectangle)
+
+    '    ' Title
+    '    g.DrawString(pauseTitle, pauseTitleFont, whiteBrush,
+    '             pauseTitleX, pauseTitleY)
+
+    '    ' Menu items (zero allocations, zero per-frame logic)
+    '    For i As Integer = 0 To pauseMenuItems.Length - 1
+    '        Dim brush As SolidBrush = If(i = pauseMenuSelection, whiteBrush, grayBrush)
+    '        g.DrawString(pauseMenuItems(i), pauseMenuFont, brush,
+    '                 pauseMenuItemX(i), pauseMenuItemY(i))
+    '    Next
+
+
+    'End Sub
+
+
     Private Sub DrawPauseScreen(g As Graphics)
 
-        ' Dim the gamme
+        ' Dim the game
         g.FillRectangle(dimBrush, ClientRectangle)
 
         ' Title
         g.DrawString(pauseTitle, pauseTitleFont, whiteBrush,
                  pauseTitleX, pauseTitleY)
 
-        ' Menu items (zero allocations, zero per-frame logic)
+        ' Compute clickable rectangles (no allocations except the 3 rectangles)
         For i As Integer = 0 To pauseMenuItems.Length - 1
+
+            Dim text = pauseMenuItems(i)
+            Dim x = pauseMenuItemX(i)
+            Dim y = pauseMenuItemY(i)
+
+            ' Measure once per item (cheap)
+            Dim size = g.MeasureString(text, pauseMenuFont)
+
+            Select Case i
+                Case 0
+                    pauseResumeRect = New Rectangle(CInt(x), CInt(y),
+                                                CInt(size.Width), CInt(size.Height))
+                Case 1
+                    pauseNewMatchRect = New Rectangle(CInt(x), CInt(y),
+                                                  CInt(size.Width), CInt(size.Height))
+                Case 2
+                    pauseQuitRect = New Rectangle(CInt(x), CInt(y),
+                                              CInt(size.Width), CInt(size.Height))
+            End Select
+
             Dim brush As SolidBrush = If(i = pauseMenuSelection, whiteBrush, grayBrush)
-            g.DrawString(pauseMenuItems(i), pauseMenuFont, brush,
-                     pauseMenuItemX(i), pauseMenuItemY(i))
+
+            g.DrawString(text, pauseMenuFont, brush, x, y)
         Next
 
-
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Sub DrawTrail(g As Graphics)
         If trail Is Nothing OrElse
@@ -2824,7 +2901,7 @@ Public Class Form1
 
     'End Sub
 
-    Private Sub StartScreen_MouseDown(e As MouseEventArgs)
+    Private Sub StartScreen_MouseUp(e As MouseEventArgs)
         If currentState <> GameState.StartScreen Then Return
 
         ' Check one player option
@@ -2894,7 +2971,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub AIDifficulty_MouseDown(e As MouseEventArgs)
+    Private Sub AIDifficulty_MouseUp(e As MouseEventArgs)
         If currentState <> GameState.AIDifficulty Then Return
 
         Dim clickedDifficulty As Nullable(Of AIDifficultyLevel) = Nothing
@@ -2926,14 +3003,34 @@ Public Class Form1
 
 
 
-    Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
-        StartScreen_MouseDown(e)
-        AIDifficulty_MouseDown(e)
-    End Sub
+    'Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
+    '    StartScreen_MouseDown(e)
+    '    AIDifficulty_MouseDown(e)
+    'End Sub
+
+    'Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
+    '    StartScreen_MouseMove(e)
+    '    AIDifficulty_MouseMove(e)
+    'End Sub
+
 
     Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
         StartScreen_MouseMove(e)
         AIDifficulty_MouseMove(e)
+        PauseMenu_MouseMove(e)
+    End Sub
+
+    'Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
+    '    'StartScreen_MouseDown(e)
+    '    'AIDifficulty_MouseDown(e)
+    '    'PauseMenu_MouseDown(e)
+    'End Sub
+
+    Private Sub Form1_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
+        StartScreen_MouseUp(e)
+        AIDifficulty_MouseUp(e)
+        PauseMenu_MouseUp(e)
+
     End Sub
 
 
@@ -2945,6 +3042,69 @@ Public Class Form1
 
 
 
+
+
+
+
+
+    Private Sub PauseMenu_MouseMove(e As MouseEventArgs)
+        If currentState <> GameState.Pause Then Return
+
+        Dim oldSelection = pauseMenuSelection
+
+        If pauseResumeRect.Contains(e.Location) Then
+            pauseMenuSelection = 0
+        ElseIf pauseNewMatchRect.Contains(e.Location) Then
+            pauseMenuSelection = 1
+        ElseIf pauseQuitRect.Contains(e.Location) Then
+            pauseMenuSelection = 2
+        End If
+
+        If oldSelection <> pauseMenuSelection Then
+            PlayMenuUpSound()
+            Invalidate()
+        End If
+    End Sub
+
+
+
+    Private Sub PauseMenu_MouseUp(e As MouseEventArgs)
+        If currentState <> GameState.Pause Then Return
+
+        If pauseResumeRect.Contains(e.Location) Then
+            ResumeGame()
+            PlaySelectSound()
+            Invalidate()
+            Return
+        End If
+
+        If pauseNewMatchRect.Contains(e.Location) Then
+            StartNewMatch()
+            PlaySelectSound()
+            Invalidate()
+            Return
+        End If
+
+        If pauseQuitRect.Contains(e.Location) Then
+            Quit2StartScreen()
+            PlaySelectSound()
+            Invalidate()
+            Return
+        End If
+    End Sub
+
+    Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
+        EndScreen_MouseDown(e)
+    End Sub
+
+    Private Sub EndScreen_MouseDown(e As MouseEventArgs)
+        If currentState <> GameState.EndScreen Then Return
+
+        PlaySelectSound()
+        currentState = GameState.StartScreen
+        winnerText = ""
+        Invalidate()
+    End Sub
 
 
 
