@@ -393,6 +393,9 @@ Public Class Form1
             Case GameState.EndScreen
                 DrawTrail(g)
                 DrawBall(g)
+
+                DrawHUD(g)
+
                 DrawGameOver(g)
                 If showKeyboardHints Then DrawKeyboardHintsGameOverScreen(g)
 
@@ -2395,6 +2398,9 @@ Public Class Form1
         Else
             ' No, we are NOT in fullscreen
 
+            ' Switch to fullscreen mode
+            Me.FormBorderStyle = FormBorderStyle.None
+
             Me.WindowState = FormWindowState.Normal
             Me.Size = hdSize
 
@@ -2404,8 +2410,6 @@ Public Class Form1
             Dim centerY As Integer = (screenBounds.Height - Me.Height) \ 2
             Me.Location = New Point(centerX, centerY)
 
-            ' Switch to fullscreen mode
-            Me.FormBorderStyle = FormBorderStyle.None
             Me.WindowState = FormWindowState.Maximized
 
         End If
