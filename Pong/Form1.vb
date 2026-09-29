@@ -343,6 +343,11 @@ Public Class Form1
 
     End Sub
 
+
+
+
+
+
     ' ===============================
     '  PHYSICS LOOP
     ' ===============================
@@ -752,6 +757,79 @@ Public Class Form1
 
         Invalidate()
     End Sub
+
+
+    ' ===============================
+    '  CLEANUP / FILES
+    ' ===============================
+
+    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+
+        'Audio.CloseAll()
+
+        AudioRestartTimer?.Stop()
+        physicsTimer?.Stop()
+
+
+        ballBrush?.Dispose()
+        fpsBrush?.Dispose()
+        fpsFont?.Dispose()
+        paddleBrush?.Dispose()
+        playerLabelBrush?.Dispose()
+        scoreBrush?.Dispose()
+        whiteBrush?.Dispose()
+        grayBrush?.Dispose()
+        dimBrush?.Dispose()
+
+        If trailBrushes IsNot Nothing Then
+            For Each b In trailBrushes
+                b?.Dispose()
+            Next
+        End If
+
+        hudScoreFont?.Dispose()
+        hudLabelFont?.Dispose()
+        pauseTitleFont?.Dispose()
+        pauseMenuFont?.Dispose()
+        startTitleFont?.Dispose()
+        aiDifficultyTitleFont?.Dispose()
+        startMenuFont?.Dispose()
+        startInfoFont?.Dispose()
+        gameOverFont?.Dispose()
+        gameOverInfoFont?.Dispose()
+        fullscreenIndicatorFont?.Dispose()
+
+        physicsTimer?.Dispose()
+        AudioRestartTimer?.Dispose()
+
+
+        Audio?.Dispose()
+        Audio = Nothing
+
+
+    End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Sub InitWindow()
         Me.Text = "PONG - Code with Joe"
@@ -3043,55 +3121,6 @@ Public Class Form1
 
     End Sub
 
-    ' ===============================
-    '  CLEANUP / FILES
-    ' ===============================
-
-    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-
-        'Audio.CloseAll()
-
-        AudioRestartTimer?.Stop()
-        physicsTimer?.Stop()
-
-
-        ballBrush?.Dispose()
-        fpsBrush?.Dispose()
-        fpsFont?.Dispose()
-        paddleBrush?.Dispose()
-        playerLabelBrush?.Dispose()
-        scoreBrush?.Dispose()
-        whiteBrush?.Dispose()
-        grayBrush?.Dispose()
-        dimBrush?.Dispose()
-
-        If trailBrushes IsNot Nothing Then
-            For Each b In trailBrushes
-                b?.Dispose()
-            Next
-        End If
-
-        hudScoreFont?.Dispose()
-        hudLabelFont?.Dispose()
-        pauseTitleFont?.Dispose()
-        pauseMenuFont?.Dispose()
-        startTitleFont?.Dispose()
-        aiDifficultyTitleFont?.Dispose()
-        startMenuFont?.Dispose()
-        startInfoFont?.Dispose()
-        gameOverFont?.Dispose()
-        gameOverInfoFont?.Dispose()
-        fullscreenIndicatorFont?.Dispose()
-
-        physicsTimer?.Dispose()
-        AudioRestartTimer?.Dispose()
-
-
-        Audio?.Dispose()
-        Audio = Nothing
-
-
-    End Sub
 
     Private Sub CreateSoundFiles()
         CreateFileFromResource(Path.Combine(Application.StartupPath, "gameplayloop.mp3"), My.Resources.Resource1.TechNoir)
