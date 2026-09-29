@@ -643,6 +643,33 @@ Public Class Form1
     End Sub
 
 
+
+    Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
+        StartScreen_MouseMove(e)
+        AIDifficulty_MouseMove(e)
+        PauseMenu_MouseMove(e)
+    End Sub
+
+    Private Sub Form1_MouseClick(sender As Object, e As MouseEventArgs) Handles Me.MouseClick
+
+        StartScreen_MouseClick(e)
+        AIDifficulty_MouseClick(e)
+        PauseMenu_MouseClick(e)
+        EndScreen_MouseClick(e)
+
+
+    End Sub
+
+
+
+
+
+
+
+
+
+
+
     ' ===============================
     '  AUDIO RESTART
     ' ===============================
@@ -3338,11 +3365,6 @@ Public Class Form1
 
 
 
-    Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
-        StartScreen_MouseMove(e)
-        AIDifficulty_MouseMove(e)
-        PauseMenu_MouseMove(e)
-    End Sub
 
 
 
@@ -3402,13 +3424,9 @@ Public Class Form1
         Invalidate()
     End Sub
 
-    Private Sub Form1_MouseClick(sender As Object, e As MouseEventArgs) Handles Me.MouseClick
-
-        StartScreen_MouseClick(e)
-        AIDifficulty_MouseClick(e)
-        PauseMenu_MouseClick(e)
-        EndScreen_MouseClick(e)
 
 
-    End Sub
+
+
+
 End Class
