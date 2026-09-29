@@ -279,6 +279,11 @@ Public Class Form1
 
 
 
+    Private onePlayerOptionRect As RectangleF
+    Private twoPlayersOptionRect As RectangleF
+
+
+
 
 
     ' ===============================
@@ -1306,6 +1311,27 @@ Public Class Form1
         End Using
 
 
+        '' -------------------------------
+        ''  Menu Options
+        '' -------------------------------
+        'Dim option1 As String = "1 Player"
+        'Dim option2 As String = "2 Players"
+
+        'Dim opt1Size = g.MeasureString(option1, startMenuFont)
+        'Dim opt2Size = g.MeasureString(option2, startMenuFont)
+
+        'Dim opt1Brush As SolidBrush = If(numberOfPlayersSelection = 0, whiteBrush, grayBrush)
+        'Dim opt2Brush As SolidBrush = If(numberOfPlayersSelection = 1, whiteBrush, grayBrush)
+
+        'g.DrawString(option1, startMenuFont, opt1Brush,
+        '         CSng((ClientSize.Width - opt1Size.Width) / 2.0F),
+        '         CSng(ClientSize.Height * 0.45F))
+
+        'g.DrawString(option2, startMenuFont, opt2Brush,
+        '         CSng((ClientSize.Width - opt2Size.Width) / 2.0F),
+        '         CSng(ClientSize.Height * 0.55F))
+
+
         ' -------------------------------
         '  Menu Options
         ' -------------------------------
@@ -1315,16 +1341,21 @@ Public Class Form1
         Dim opt1Size = g.MeasureString(option1, startMenuFont)
         Dim opt2Size = g.MeasureString(option2, startMenuFont)
 
+        Dim opt1X As Single = CSng((ClientSize.Width - opt1Size.Width) / 2.0F)
+        Dim opt1Y As Single = CSng(ClientSize.Height * 0.45F)
+
+        Dim opt2X As Single = CSng((ClientSize.Width - opt2Size.Width) / 2.0F)
+        Dim opt2Y As Single = CSng(ClientSize.Height * 0.55F)
+
+        ' Store clickable rectangles
+        onePlayerOptionRect = New RectangleF(opt1X, opt1Y, opt1Size.Width, opt1Size.Height)
+        twoPlayersOptionRect = New RectangleF(opt2X, opt2Y, opt2Size.Width, opt2Size.Height)
+
         Dim opt1Brush As SolidBrush = If(numberOfPlayersSelection = 0, whiteBrush, grayBrush)
         Dim opt2Brush As SolidBrush = If(numberOfPlayersSelection = 1, whiteBrush, grayBrush)
 
-        g.DrawString(option1, startMenuFont, opt1Brush,
-                 CSng((ClientSize.Width - opt1Size.Width) / 2.0F),
-                 CSng(ClientSize.Height * 0.45F))
-
-        g.DrawString(option2, startMenuFont, opt2Brush,
-                 CSng((ClientSize.Width - opt2Size.Width) / 2.0F),
-                 CSng(ClientSize.Height * 0.55F))
+        g.DrawString(option1, startMenuFont, opt1Brush, opt1X, opt1Y)
+        g.DrawString(option2, startMenuFont, opt2Brush, opt2X, opt2Y)
 
 
         ' -------------------------------
@@ -1338,6 +1369,8 @@ Public Class Form1
                      CSng((ClientSize.Width - infoSize.Width) / 2.0F),
                      CSng(ClientSize.Height * 0.75F))
         End If
+
+
 
 
     End Sub
@@ -2696,6 +2729,63 @@ Public Class Form1
                               DWMWA_USE_IMMERSIVE_DARK_MODE,
                               value,
                               Marshal.SizeOf(value))
+
+    End Sub
+
+    Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
+
+
+        StartScreen_MouseDown(e)
+
+
+    End Sub
+
+    Private Sub StartScreen_MouseDown(e As MouseEventArgs)
+        If currentState <> GameState.StartScreen Then Return
+
+        ' Check one player option
+        If onePlayerOptionRect.Contains(e.Location) Then
+            numberOfPlayersSelection = NumberOfPlayers.OnePlayer
+            playerMode = 1
+            currentState = GameState.AIDifficulty
+            PlaySelectSound()
+            Invalidate()
+            Return
+        End If
+
+        ' Check two player option
+        If twoPlayersOptionRect.Contains(e.Location) Then
+            numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
+            playerMode = 2
+            StartNewMatch()
+            PlaySelectSound()
+            Invalidate()
+            Return
+        End If
+    End Sub
+
+    Private Sub StartScreen_MouseMove(e As MouseEventArgs)
+        If currentState <> GameState.StartScreen Then Return
+
+        Dim oldSelection = numberOfPlayersSelection
+
+        If onePlayerOptionRect.Contains(e.Location) Then
+            numberOfPlayersSelection = NumberOfPlayers.OnePlayer
+        ElseIf twoPlayersOptionRect.Contains(e.Location) Then
+            numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
+        End If
+
+        If oldSelection <> numberOfPlayersSelection Then
+            'PlayMenuMoveSound()
+            PlayMenuUpSound()
+
+            Invalidate()
+        End If
+    End Sub
+
+    Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
+
+        StartScreen_MouseMove(e)
 
     End Sub
 
