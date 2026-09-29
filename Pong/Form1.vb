@@ -285,6 +285,12 @@ Public Class Form1
 
 
 
+    Private aiEasyRect As Rectangle
+    Private aiNormalRect As Rectangle
+    Private aiHardRect As Rectangle
+
+
+
 
     ' ===============================
     '  FORM LIFECYCLE
@@ -1562,16 +1568,66 @@ Public Class Form1
     End Sub
 
 
+    'Private Sub DrawAIDifficultyScreen(g As Graphics)
+
+
+    '    'Dim title As String = "Difficulty"
+    '    'Dim titleSize = g.MeasureString(title, aiDifficultyTitleFont)
+
+    '    'g.DrawString(title, aiDifficultyTitleFont, whiteBrush,
+    '    '         CSng((ClientSize.Width - titleSize.Width) / 2.0F),
+    '    '         CSng(ClientSize.Height * 0.2F))
+
+
+    '    Dim title As String = "Difficulty"
+    '    Dim titleSize = g.MeasureString(title, aiDifficultyTitleFont)
+    '    Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
+
+    '    Using titleBrush As New SolidBrush(titleColor)
+    '        g.DrawString(title, aiDifficultyTitleFont, titleBrush,
+    '                 CSng((ClientSize.Width - titleSize.Width) / 2.0F),
+    '                 CSng(ClientSize.Height * 0.2F))
+    '    End Using
+
+
+
+
+
+
+    '    For i As Integer = 0 To aiOptions.Length - 1
+    '        Dim text = aiOptions(i)
+    '        Dim size = g.MeasureString(text, startMenuFont)
+
+    '        Dim brush As SolidBrush = If(i = aiDifficultySelection, whiteBrush, grayBrush)
+
+
+    '        g.DrawString(text, startMenuFont, brush,
+    '                 CSng((ClientSize.Width - size.Width) / 2.0F),
+    '                 CSng(ClientSize.Height * 0.36F + i * (size.Height + 10)))
+
+    '    Next
+
+    '    If blinkVisible Then
+
+    '        Dim info As String = "Press SPACE to Start"
+    '        Dim infoSize = g.MeasureString(info, startInfoFont)
+
+    '        g.DrawString(info, startInfoFont, whiteBrush,
+    '             CSng((ClientSize.Width - infoSize.Width) / 2.0F),
+    '             CSng(ClientSize.Height * 0.75F))
+
+
+
+
+    '    End If
+
+
+
+
+
+    'End Sub
+
     Private Sub DrawAIDifficultyScreen(g As Graphics)
-
-
-        'Dim title As String = "Difficulty"
-        'Dim titleSize = g.MeasureString(title, aiDifficultyTitleFont)
-
-        'g.DrawString(title, aiDifficultyTitleFont, whiteBrush,
-        '         CSng((ClientSize.Width - titleSize.Width) / 2.0F),
-        '         CSng(ClientSize.Height * 0.2F))
-
 
         Dim title As String = "Difficulty"
         Dim titleSize = g.MeasureString(title, aiDifficultyTitleFont)
@@ -1583,43 +1639,71 @@ Public Class Form1
                      CSng(ClientSize.Height * 0.2F))
         End Using
 
-
-
-
-
+        ' Compute clickable rects
+        Dim baseY As Single = CSng(ClientSize.Height * 0.36F)
 
         For i As Integer = 0 To aiOptions.Length - 1
+
             Dim text = aiOptions(i)
             Dim size = g.MeasureString(text, startMenuFont)
 
+            Dim x = CSng((ClientSize.Width - size.Width) / 2.0F)
+            Dim y = baseY + i * (size.Height + 10)
+
+            ' Store clickable rectangles
+            Select Case i
+                Case AIDifficultyLevel.Easy
+                    aiEasyRect = New Rectangle(CInt(x), CInt(y), CInt(size.Width), CInt(size.Height))
+                Case AIDifficultyLevel.Normal
+                    aiNormalRect = New Rectangle(CInt(x), CInt(y), CInt(size.Width), CInt(size.Height))
+                Case AIDifficultyLevel.Hard
+                    aiHardRect = New Rectangle(CInt(x), CInt(y), CInt(size.Width), CInt(size.Height))
+            End Select
+
             Dim brush As SolidBrush = If(i = aiDifficultySelection, whiteBrush, grayBrush)
 
-
-            g.DrawString(text, startMenuFont, brush,
-                     CSng((ClientSize.Width - size.Width) / 2.0F),
-                     CSng(ClientSize.Height * 0.36F + i * (size.Height + 10)))
+            g.DrawString(text, startMenuFont, brush, x, y)
 
         Next
 
         If blinkVisible Then
-
             Dim info As String = "Press SPACE to Start"
             Dim infoSize = g.MeasureString(info, startInfoFont)
 
             g.DrawString(info, startInfoFont, whiteBrush,
-                 CSng((ClientSize.Width - infoSize.Width) / 2.0F),
-                 CSng(ClientSize.Height * 0.75F))
-
-
-
-
+                     CSng((ClientSize.Width - infoSize.Width) / 2.0F),
+                     CSng(ClientSize.Height * 0.75F))
         End If
 
-
-
-
-
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Sub DrawKeyboardHintsGameOverScreen(g As Graphics)
 
@@ -2732,13 +2816,13 @@ Public Class Form1
 
     End Sub
 
-    Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
+    'Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
 
 
-        StartScreen_MouseDown(e)
+    '    StartScreen_MouseDown(e)
 
 
-    End Sub
+    'End Sub
 
     Private Sub StartScreen_MouseDown(e As MouseEventArgs)
         If currentState <> GameState.StartScreen Then Return
@@ -2783,11 +2867,84 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
+    'Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
 
-        StartScreen_MouseMove(e)
+    '    StartScreen_MouseMove(e)
 
+    'End Sub
+
+
+
+    Private Sub AIDifficulty_MouseMove(e As MouseEventArgs)
+        If currentState <> GameState.AIDifficulty Then Return
+
+        Dim oldSelection = aiDifficultySelection
+
+        If aiEasyRect.Contains(e.Location) Then
+            aiDifficultySelection = AIDifficultyLevel.Easy
+        ElseIf aiNormalRect.Contains(e.Location) Then
+            aiDifficultySelection = AIDifficultyLevel.Normal
+        ElseIf aiHardRect.Contains(e.Location) Then
+            aiDifficultySelection = AIDifficultyLevel.Hard
+        End If
+
+        If oldSelection <> aiDifficultySelection Then
+            PlayMenuUpSound()
+            Invalidate()
+        End If
     End Sub
+
+    Private Sub AIDifficulty_MouseDown(e As MouseEventArgs)
+        If currentState <> GameState.AIDifficulty Then Return
+
+        Dim clickedDifficulty As Nullable(Of AIDifficultyLevel) = Nothing
+
+        If aiEasyRect.Contains(e.Location) Then
+            clickedDifficulty = AIDifficultyLevel.Easy
+        ElseIf aiNormalRect.Contains(e.Location) Then
+            clickedDifficulty = AIDifficultyLevel.Normal
+        ElseIf aiHardRect.Contains(e.Location) Then
+            clickedDifficulty = AIDifficultyLevel.Hard
+        End If
+
+        If clickedDifficulty.HasValue Then
+
+            aiDifficultySelection = clickedDifficulty.Value
+            SetAIModeFactor()
+
+            currentState = GameState.Playing
+            StartNewMatch()
+
+            PlaySelectSound()
+            Invalidate()
+
+            Return
+        End If
+    End Sub
+
+
+
+
+
+    Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
+        StartScreen_MouseDown(e)
+        AIDifficulty_MouseDown(e)
+    End Sub
+
+    Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
+        StartScreen_MouseMove(e)
+        AIDifficulty_MouseMove(e)
+    End Sub
+
+
+
+
+
+
+
+
+
+
 
 
 
