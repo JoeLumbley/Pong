@@ -5,6 +5,7 @@
 ' GDI+, the game delivers a polished retro experience with responsive controls
 ' and crisp visuals.  
 ' 
+' GitHub Repo: https://github.com/JoeLumbley/Pong
 
 
 ' MIT License
@@ -845,7 +846,7 @@ Public Class Form1
         ' Overlapping SFX
         ' ---------------------------------------------------------
         Audio.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
-        Audio.SetVolumeOverlapping("bounce", 250)
+        Audio.SetVolumeOverlapping("bounce", 200)
 
         Audio.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
         Audio.SetVolumeOverlapping("arrow_up", 250)
@@ -863,7 +864,7 @@ Public Class Form1
         Audio.SetVolume("select", 300)
 
         Audio.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
-        Audio.SetVolume("point", 300)
+        Audio.SetVolume("point", 500)
 
         Audio.AddSound("exit", Path.Combine(Application.StartupPath, "exit.mp3"))
         Audio.SetVolume("exit", 300)
