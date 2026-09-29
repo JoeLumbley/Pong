@@ -247,7 +247,7 @@ Public Class Form1
 
 
 
-    Private gameplayLoopVolume As Integer = 200
+    Private gameplayLoopVolume As Integer = 50
     Private startLoopVolume As Integer = 75
     Private pauseLoopVolume As Integer = 40
 
@@ -848,22 +848,22 @@ Public Class Form1
         Audio.SetVolumeOverlapping("bounce", 250)
 
         Audio.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
-        Audio.SetVolumeOverlapping("arrow_up", 400)
+        Audio.SetVolumeOverlapping("arrow_up", 250)
 
         Audio.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
-        Audio.SetVolumeOverlapping("arrow_down", 300)
+        Audio.SetVolumeOverlapping("arrow_down", 200)
 
         ' ---------------------------------------------------------
         ' Single‑instance SFX
         ' ---------------------------------------------------------
         Audio.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
-        Audio.SetVolume("fullscreen", 300)
+        Audio.SetVolume("fullscreen", 150)
 
         Audio.AddSound("select", Path.Combine(Application.StartupPath, "select.mp3"))
         Audio.SetVolume("select", 300)
 
         Audio.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
-        Audio.SetVolume("point", 600)
+        Audio.SetVolume("point", 300)
 
         Audio.AddSound("exit", Path.Combine(Application.StartupPath, "exit.mp3"))
         Audio.SetVolume("exit", 300)
@@ -1266,7 +1266,7 @@ Public Class Form1
         ' -------------------------------
         '  Hide Keyboard Hints (Bottom‑Left)
         ' -------------------------------
-        Dim hideText As String = "CTRL+H Hide Keyboard Hints"
+        Dim hideText As String = "CTRL H - Hide Keyboard Hints"
         Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
 
         g.DrawString(hideText,
@@ -1504,7 +1504,7 @@ Public Class Form1
         ' -------------------------------
         '  Hide Keyboard Hints (Bottom‑Left)
         ' -------------------------------
-        Dim hideText As String = "CTRL+H Hide Keyboard Hints"
+        Dim hideText As String = "CTRL H - Hide Keyboard Hints"
         Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
 
         g.DrawString(hideText,
@@ -1614,7 +1614,7 @@ Public Class Form1
         ' -------------------------------
         '  Quit Game (Bottom‑Left)
         ' -------------------------------
-        Dim quitText As String = "CTRL+Q - Quit Game"
+        Dim quitText As String = "CTRL Q - Quit Game"
         Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
 
         g.DrawString(quitText,
