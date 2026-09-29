@@ -3242,15 +3242,8 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
 
-
-    '    StartScreen_MouseDown(e)
-
-
-    'End Sub
-
-    Private Sub StartScreen_MouseUp(e As MouseEventArgs)
+    Private Sub StartScreen_MouseClick(e As MouseEventArgs)
         If currentState <> GameState.StartScreen Then Return
 
         ' Check one player option
@@ -3293,11 +3286,6 @@ Public Class Form1
         End If
     End Sub
 
-    'Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
-
-    '    StartScreen_MouseMove(e)
-
-    'End Sub
 
 
 
@@ -3320,7 +3308,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub AIDifficulty_MouseUp(e As MouseEventArgs)
+    Private Sub AIDifficulty_MouseClick(e As MouseEventArgs)
         If currentState <> GameState.AIDifficulty Then Return
 
         Dim clickedDifficulty As Nullable(Of AIDifficultyLevel) = Nothing
@@ -3350,49 +3338,11 @@ Public Class Form1
 
 
 
-
-
-    'Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
-    '    StartScreen_MouseDown(e)
-    '    AIDifficulty_MouseDown(e)
-    'End Sub
-
-    'Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
-    '    StartScreen_MouseMove(e)
-    '    AIDifficulty_MouseMove(e)
-    'End Sub
-
-
     Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
         StartScreen_MouseMove(e)
         AIDifficulty_MouseMove(e)
         PauseMenu_MouseMove(e)
     End Sub
-
-    'Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
-    '    'StartScreen_MouseDown(e)
-    '    'AIDifficulty_MouseDown(e)
-    '    'PauseMenu_MouseDown(e)
-    'End Sub
-
-    'Private Sub Form1_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
-    '    StartScreen_MouseUp(e)
-    '    AIDifficulty_MouseUp(e)
-    '    PauseMenu_MouseUp(e)
-
-    'End Sub
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -3417,7 +3367,7 @@ Public Class Form1
 
 
 
-    Private Sub PauseMenu_MouseUp(e As MouseEventArgs)
+    Private Sub PauseMenu_MouseClick(e As MouseEventArgs)
         If currentState <> GameState.Pause Then Return
 
         If pauseResumeRect.Contains(e.Location) Then
@@ -3442,11 +3392,8 @@ Public Class Form1
         End If
     End Sub
 
-    'Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
-    '    EndScreen_MouseDown(e)
-    'End Sub
 
-    Private Sub EndScreen_MouseDown(e As MouseEventArgs)
+    Private Sub EndScreen_MouseClick(e As MouseEventArgs)
         If currentState <> GameState.EndScreen Then Return
 
         PlaySelectSound()
@@ -3456,12 +3403,11 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_MouseClick(sender As Object, e As MouseEventArgs) Handles Me.MouseClick
-        StartScreen_MouseUp(e)
-        AIDifficulty_MouseUp(e)
-        PauseMenu_MouseUp(e)
 
-        EndScreen_MouseDown(e)
-
+        StartScreen_MouseClick(e)
+        AIDifficulty_MouseClick(e)
+        PauseMenu_MouseClick(e)
+        EndScreen_MouseClick(e)
 
 
     End Sub
