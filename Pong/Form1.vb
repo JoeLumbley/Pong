@@ -273,6 +273,12 @@ Public Class Form1
 
 
 
+    Private hdSize As New Size(1280, 720)
+    Private fhdSize As New Size(1920, 1080)
+
+
+
+
 
 
     ' ===============================
@@ -281,6 +287,9 @@ Public Class Form1
 
     Protected Overrides Sub OnLoad(e As EventArgs)
         MyBase.OnLoad(e)
+
+
+
 
         InitWindow()
         InitTimers()
@@ -2366,19 +2375,39 @@ Public Class Form1
 
     Private Sub ToggleFullScreen()
 
+        ' Are we in fullscreen mode?
         If Me.FormBorderStyle = FormBorderStyle.None Then
+            ' Yes, we are in fullscreen mode
+
+            ' Switch to windowed mode
             Me.FormBorderStyle = FormBorderStyle.Sizable
+
             Me.WindowState = FormWindowState.Normal
+            Me.Size = hdSize
 
-            Me.Size = New Size(1280, 720)
-
+            ' Center window
             Dim screenBounds As Rectangle = Screen.PrimaryScreen.WorkingArea
             Dim centerX As Integer = (screenBounds.Width - Me.Width) \ 2
             Dim centerY As Integer = (screenBounds.Height - Me.Height) \ 2
             Me.Location = New Point(centerX, centerY)
+
+
         Else
+            ' No, we are NOT in fullscreen
+
+            Me.WindowState = FormWindowState.Normal
+            Me.Size = hdSize
+
+            ' Center window
+            Dim screenBounds As Rectangle = Screen.PrimaryScreen.WorkingArea
+            Dim centerX As Integer = (screenBounds.Width - Me.Width) \ 2
+            Dim centerY As Integer = (screenBounds.Height - Me.Height) \ 2
+            Me.Location = New Point(centerX, centerY)
+
+            ' Switch to fullscreen mode
             Me.FormBorderStyle = FormBorderStyle.None
             Me.WindowState = FormWindowState.Maximized
+
         End If
 
     End Sub
