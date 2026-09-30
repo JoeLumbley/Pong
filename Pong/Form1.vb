@@ -340,7 +340,7 @@ Public Class Form1
 
         blinkStopwatch.Start()
 
-        MovePointerOffScreen()
+        MovePointerCenterScreen()
 
     End Sub
 
@@ -2838,6 +2838,7 @@ Public Class Form1
 
             PlaySelectSound()
             PauseGame()
+            MovePointerCenterScreen()
             Invalidate()
             Return
         End If
@@ -2891,6 +2892,8 @@ Public Class Form1
 
             ResumeGame()
             PlaySelectSound()
+            MovePointerOffScreen()
+
             Invalidate()
             Return
         End If
@@ -3016,7 +3019,7 @@ Public Class Form1
 
         FadeOutAndStopPausedLoop(600)
 
-        MovePointerOffScreen()
+        MovePointerCenterScreen()
 
         speed = 200 * (ClientSize.Height / 1080.0)
         winnerText = ""
@@ -3120,6 +3123,9 @@ Public Class Form1
     Private Sub ResumeGame()
 
         FadeOutAndStopPausedLoop(600)
+
+        MovePointerOffScreen()
+
 
         currentState = GameState.Playing
         physicsTimer.Start()
@@ -3386,6 +3392,9 @@ Public Class Form1
 
 
     'End Sub
+
+
+
     Private Sub StartScreen_MouseClick(e As MouseEventArgs)
         If currentState <> GameState.StartScreen Then Return
         If mouseIsClicking Then Return
@@ -3496,37 +3505,100 @@ Public Class Form1
         End If
     End Sub
 
+    'Private Sub AIDifficulty_MouseClick(e As MouseEventArgs)
+    '    If currentState <> GameState.AIDifficulty Then Return
+
+    '    If mouseIsClicking Then Return
+    '    mouseIsClicking = True
+
+
+    '    Dim clickedDifficulty As Nullable(Of AIDifficultyLevel) = Nothing
+
+    '    If aiEasyRect.Contains(e.Location) Then
+    '        clickedDifficulty = AIDifficultyLevel.Easy
+    '    ElseIf aiNormalRect.Contains(e.Location) Then
+    '        clickedDifficulty = AIDifficultyLevel.Normal
+    '    ElseIf aiHardRect.Contains(e.Location) Then
+    '        clickedDifficulty = AIDifficultyLevel.Hard
+    '    End If
+
+    '    If clickedDifficulty.HasValue Then
+
+    '        aiDifficultySelection = clickedDifficulty.Value
+    '        SetAIModeFactor()
+
+    '        currentState = GameState.Playing
+    '        StartNewMatch()
+
+    '        PlaySelectSound()
+    '        Invalidate()
+
+    '        Return
+    '    End If
+    'End Sub
+
+
     Private Sub AIDifficulty_MouseClick(e As MouseEventArgs)
         If currentState <> GameState.AIDifficulty Then Return
-
         If mouseIsClicking Then Return
         mouseIsClicking = True
 
-
-        Dim clickedDifficulty As Nullable(Of AIDifficultyLevel) = Nothing
-
-        If aiEasyRect.Contains(e.Location) Then
-            clickedDifficulty = AIDifficultyLevel.Easy
-        ElseIf aiNormalRect.Contains(e.Location) Then
-            clickedDifficulty = AIDifficultyLevel.Normal
-        ElseIf aiHardRect.Contains(e.Location) Then
-            clickedDifficulty = AIDifficultyLevel.Hard
-        End If
-
-        If clickedDifficulty.HasValue Then
-
-            aiDifficultySelection = clickedDifficulty.Value
-            SetAIModeFactor()
-
-            currentState = GameState.Playing
-            StartNewMatch()
-
+        ' ------------------------------
+        ' Middle-click = activate current selection
+        ' ------------------------------
+        If e.Button = MouseButtons.Middle Then
+            ActivateAIDifficulty(aiDifficultySelection)
             PlaySelectSound()
             Invalidate()
-
             Return
         End If
+
+        ' ------------------------------
+        ' Left-click: check menu items
+        ' ------------------------------
+
+        ' Easy
+        If aiEasyRect.Contains(e.Location) Then
+            aiDifficultySelection = AIDifficultyLevel.Easy
+            ActivateAIDifficulty(aiDifficultySelection)
+            PlaySelectSound()
+            Invalidate()
+            Return
+        End If
+
+        ' Normal
+        If aiNormalRect.Contains(e.Location) Then
+            aiDifficultySelection = AIDifficultyLevel.Normal
+            ActivateAIDifficulty(aiDifficultySelection)
+            PlaySelectSound()
+            Invalidate()
+            Return
+        End If
+
+        ' Hard
+        If aiHardRect.Contains(e.Location) Then
+            aiDifficultySelection = AIDifficultyLevel.Hard
+            ActivateAIDifficulty(aiDifficultySelection)
+            PlaySelectSound()
+            Invalidate()
+            Return
+        End If
+
     End Sub
+
+    Private Sub ActivateAIDifficulty(level As AIDifficultyLevel)
+        aiDifficultySelection = level
+        SetAIModeFactor()
+        currentState = GameState.Playing
+        StartNewMatch()
+    End Sub
+
+
+
+
+
+
+
 
 
 
@@ -3751,6 +3823,23 @@ Public Class Form1
     '        HandlePauseMouseWheel(e.Delta)
     '    End If
     'End Sub
+
+
+
+    'Private Sub Form1_MouseWheel(sender As Object, e As MouseEventArgs) Handles Me.MouseWheel
+
+    '    If currentState = GameState.Pause Then
+    '        HandlePauseMouseWheel(e.Delta)
+    '        Return
+    '    End If
+
+    '    If currentState = GameState.StartScreen Then
+    '        HandleStartScreenMouseWheel(e.Delta)
+    '        Return
+    '    End If
+
+    'End Sub
+
     Private Sub Form1_MouseWheel(sender As Object, e As MouseEventArgs) Handles Me.MouseWheel
 
         If currentState = GameState.Pause Then
@@ -3763,8 +3852,12 @@ Public Class Form1
             Return
         End If
 
-    End Sub
+        If currentState = GameState.AIDifficulty Then
+            HandleAIDifficultyMouseWheel(e.Delta)
+            Return
+        End If
 
+    End Sub
 
 
 
@@ -3805,6 +3898,29 @@ Public Class Form1
 
 
 
+    Private Sub HandleAIDifficultyMouseWheel(delta As Integer)
+
+        ' Wheel up → move selection up (Easy ← Normal ← Hard)
+        If delta > 0 Then
+            If aiDifficultySelection > AIDifficultyLevel.Easy Then
+                aiDifficultySelection -= 1
+                PlayMenuUpSound()
+                Invalidate()
+            End If
+            Return
+        End If
+
+        ' Wheel down → move selection down (Easy → Normal → Hard)
+        If delta < 0 Then
+            If aiDifficultySelection < AIDifficultyLevel.Hard Then
+                aiDifficultySelection += 1
+                PlayMenuDownSound()
+                Invalidate()
+            End If
+            Return
+        End If
+
+    End Sub
 
 
 
