@@ -299,8 +299,8 @@ Public Class Form1
 
     Private darkBrush As New SolidBrush(Color.FromArgb(32, 0, 0, 0))
 
-    Private outlinePen As New Pen(Color.FromArgb(40, 255, 255, 255))
-    Private darkOutlinePen As New Pen(Color.FromArgb(50, 255, 255, 255))
+    Private outlinePen As New Pen(Color.FromArgb(40, 255, 255, 255), 2)
+    Private darkOutlinePen As New Pen(Color.FromArgb(32, 255, 255, 255), 2)
 
 
 
@@ -1469,11 +1469,17 @@ Public Class Form1
 
             ' Highlight selection
             If i = pauseMenuSelection Then
-                g.FillRectangle(lightBrush, rect)
-                g.DrawRectangle(outlinePen, rect)
+                'g.FillRectangle(lightBrush, rect)
+                FillRoundedRectangle(g, lightBrush, rect, 16)
+                'g.DrawRectangle(outlinePen, rect)
+                DrawRoundedRectangle(g, outlinePen, rect, 16)
             Else
-                g.FillRectangle(darkBrush, rect)
-                g.DrawRectangle(darkOutlinePen, rect)
+                'g.FillRectangle(darkBrush, rect)
+                FillRoundedRectangle(g, darkBrush, rect, 16)
+
+                'g.DrawRectangle(darkOutlinePen, rect)
+                DrawRoundedRectangle(g, darkOutlinePen, rect, 16)
+
             End If
 
             ' Draw text
@@ -3458,6 +3464,75 @@ Public Class Form1
         winnerText = ""
         Invalidate()
     End Sub
+
+
+
+
+
+
+    '===========================================================
+    '  CreateRoundedRectanglePath
+    '===========================================================
+    Private Function CreateRoundedRectanglePath(rect As Rectangle, radius As Integer) As GraphicsPath
+        Dim path As New GraphicsPath()
+
+        Dim d As Integer = radius * 2
+
+        ' Top-left arc
+        path.AddArc(rect.X, rect.Y, d, d, 180, 90)
+
+        ' Top-right arc
+        path.AddArc(rect.Right - d, rect.Y, d, d, 270, 90)
+
+        ' Bottom-right arc
+        path.AddArc(rect.Right - d, rect.Bottom - d, d, d, 0, 90)
+
+        ' Bottom-left arc
+        path.AddArc(rect.X, rect.Bottom - d, d, d, 90, 90)
+
+        path.CloseFigure()
+        Return path
+    End Function
+
+    '===========================================================
+    '  FillRoundedRectangle
+    '===========================================================
+    Private Sub FillRoundedRectangle(g As Graphics, brush As Brush, rect As Rectangle, radius As Integer)
+        Using path As GraphicsPath = CreateRoundedRectanglePath(rect, radius)
+            g.FillPath(brush, path)
+        End Using
+    End Sub
+
+    '===========================================================
+    '  DrawRoundedRectangle
+    '===========================================================
+    Private Sub DrawRoundedRectangle(g As Graphics, pen As Pen, rect As Rectangle, radius As Integer)
+        Using path As GraphicsPath = CreateRoundedRectanglePath(rect, radius)
+            g.DrawPath(pen, path)
+        End Using
+    End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
