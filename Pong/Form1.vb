@@ -3334,32 +3334,126 @@ Public Class Form1
     End Sub
 
 
+    'Private Sub StartScreen_MouseClick(e As MouseEventArgs)
+    '    If currentState <> GameState.StartScreen Then Return
+
+    '    If mouseIsClicking Then Return
+    '    mouseIsClicking = True
+
+
+
+    '    If e.Button <> MouseButtons.Middle Then
+
+    '        ' Check one player option
+    '        If onePlayerOptionRect.Contains(e.Location) Then
+    '            numberOfPlayersSelection = NumberOfPlayers.OnePlayer
+    '            playerMode = 1
+    '            currentState = GameState.AIDifficulty
+    '            PlaySelectSound()
+    '            Invalidate()
+    '            Return
+    '        End If
+
+    '        ' Check two player option
+    '        If twoPlayersOptionRect.Contains(e.Location) Then
+    '            numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
+    '            playerMode = 2
+    '            StartNewMatch()
+    '            PlaySelectSound()
+    '            Invalidate()
+    '            Return
+    '        End If
+
+    '    Else
+
+    '        If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
+    '            playerMode = 1
+    '            currentState = GameState.AIDifficulty
+    '        Else
+    '            playerMode = 2
+    '            StartNewMatch()
+    '        End If
+
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+
+    '    End If
+
+
+
+
+
+
+    'End Sub
     Private Sub StartScreen_MouseClick(e As MouseEventArgs)
         If currentState <> GameState.StartScreen Then Return
-
         If mouseIsClicking Then Return
         mouseIsClicking = True
 
-        ' Check one player option
-        If onePlayerOptionRect.Contains(e.Location) Then
-            numberOfPlayersSelection = NumberOfPlayers.OnePlayer
-            playerMode = 1
-            currentState = GameState.AIDifficulty
+        ' Ignore middle-click logic unless needed
+        If e.Button = MouseButtons.Middle Then
+            If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
+                playerMode = 1
+                currentState = GameState.AIDifficulty
+            Else
+                playerMode = 2
+                StartNewMatch()
+            End If
+
             PlaySelectSound()
             Invalidate()
             Return
         End If
 
-        ' Check two player option
+        ' ------------------------------
+        ' Left-click: check menu items
+        ' ------------------------------
+
+        ' One Player
+        If onePlayerOptionRect.Contains(e.Location) Then
+            numberOfPlayersSelection = NumberOfPlayers.OnePlayer   ' ← update selection
+            playerMode = 1
+            currentState = GameState.AIDifficulty
+
+            PlaySelectSound()
+            Invalidate()
+            Return
+        End If
+
+        ' Two Players
         If twoPlayersOptionRect.Contains(e.Location) Then
-            numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
+            numberOfPlayersSelection = NumberOfPlayers.TwoPlayers   ' ← update selection
             playerMode = 2
             StartNewMatch()
+
             PlaySelectSound()
             Invalidate()
             Return
         End If
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Sub StartScreen_MouseMove(e As MouseEventArgs)
         If currentState <> GameState.StartScreen Then Return
@@ -3570,15 +3664,82 @@ Public Class Form1
     End Sub
 
 
-    Private Sub GameForm_MouseWheel(sender As Object, e As MouseEventArgs) Handles Me.MouseWheel
+    'Private Sub Form1_MouseWheel(sender As Object, e As MouseEventArgs) Handles Me.MouseWheel
+    '    If currentState = GameState.Pause Then
+    '        HandlePauseMouseWheel(e.Delta)
+    '    End If
+    'End Sub
+    Private Sub Form1_MouseWheel(sender As Object, e As MouseEventArgs) Handles Me.MouseWheel
+
         If currentState = GameState.Pause Then
             HandlePauseMouseWheel(e.Delta)
+            Return
         End If
+
+        If currentState = GameState.StartScreen Then
+            HandleStartScreenMouseWheel(e.Delta)
+            Return
+        End If
+
     End Sub
+
+
+
+
+
+
+
 
     Private Sub Form1_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
 
         mouseIsClicking = False
 
     End Sub
+
+    Private Sub HandleStartScreenMouseWheel(delta As Integer)
+
+        ' Wheel up → select One Player
+        If delta > 0 Then
+            If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
+                numberOfPlayersSelection = NumberOfPlayers.OnePlayer
+                PlayMenuUpSound()
+                Invalidate()
+            End If
+            Return
+        End If
+
+        ' Wheel down → select Two Players
+        If delta < 0 Then
+            If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
+                numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
+                PlayMenuDownSound()
+                Invalidate()
+            End If
+            Return
+        End If
+
+    End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 End Class
