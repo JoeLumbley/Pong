@@ -279,8 +279,8 @@ Public Class Form1
 
 
 
-    Private onePlayerOptionRect As RectangleF
-    Private twoPlayersOptionRect As RectangleF
+    Private onePlayerOptionRect As Rectangle
+    Private twoPlayersOptionRect As Rectangle
 
 
 
@@ -297,13 +297,13 @@ Public Class Form1
 
     Private lightBrush As New SolidBrush(Color.FromArgb(32, 255, 255, 255))
 
-    Private darkBrush As New SolidBrush(Color.FromArgb(32, 0, 0, 0))
+    Private darkBrush As New SolidBrush(Color.FromArgb(64, 0, 0, 0))
 
     Private outlinePen As New Pen(Color.FromArgb(40, 255, 255, 255), 2)
     Private darkOutlinePen As New Pen(Color.FromArgb(32, 255, 255, 255), 2)
 
 
-
+    Private mouseIsClicking As Boolean = False
 
 
 
@@ -1470,15 +1470,15 @@ Public Class Form1
             ' Highlight selection
             If i = pauseMenuSelection Then
                 'g.FillRectangle(lightBrush, rect)
-                FillRoundedRectangle(g, lightBrush, rect, 16)
+                FillRoundedRectangle(g, lightBrush, rect, ClientSize.Height / 64)
                 'g.DrawRectangle(outlinePen, rect)
-                DrawRoundedRectangle(g, outlinePen, rect, 16)
+                DrawRoundedRectangle(g, outlinePen, rect, ClientSize.Height / 64)
             Else
                 'g.FillRectangle(darkBrush, rect)
-                FillRoundedRectangle(g, darkBrush, rect, 16)
+                FillRoundedRectangle(g, darkBrush, rect, ClientSize.Height / 64)
 
                 'g.DrawRectangle(darkOutlinePen, rect)
-                DrawRoundedRectangle(g, darkOutlinePen, rect, 16)
+                DrawRoundedRectangle(g, darkOutlinePen, rect, ClientSize.Height / 64)
 
             End If
 
@@ -1765,24 +1765,40 @@ Public Class Form1
 
         ' Option 1
         If numberOfPlayersSelection = 0 Then
-            g.FillRectangle(lightBrush, onePlayerOptionRect)
-            g.DrawRectangle(outlinePen, onePlayerOptionRect)
+            'g.FillRectangle(lightBrush, onePlayerOptionRect)
+            FillRoundedRectangle(g, lightBrush, onePlayerOptionRect, ClientSize.Height / 64)
+
+            'g.DrawRectangle(outlinePen, onePlayerOptionRect)
+            DrawRoundedRectangle(g, outlinePen, onePlayerOptionRect, ClientSize.Height / 64)
 
             'g.DrawRectangle(darkOutlinePen, twoPlayersOptionRect)
         Else
-            g.FillRectangle(darkBrush, onePlayerOptionRect)
-            g.DrawRectangle(darkOutlinePen, onePlayerOptionRect)
+            'g.FillRectangle(darkBrush, onePlayerOptionRect)
+            FillRoundedRectangle(g, darkBrush, onePlayerOptionRect, ClientSize.Height / 64)
+
+            'g.DrawRectangle(darkOutlinePen, onePlayerOptionRect)
+            DrawRoundedRectangle(g, darkOutlinePen, onePlayerOptionRect, ClientSize.Height / 64)
+
+
         End If
 
         ' Option 2
         If numberOfPlayersSelection = 1 Then
-            g.FillRectangle(lightBrush, twoPlayersOptionRect)
-            g.DrawRectangle(outlinePen, twoPlayersOptionRect)
+            'g.FillRectangle(lightBrush, twoPlayersOptionRect)
+            FillRoundedRectangle(g, lightBrush, twoPlayersOptionRect, ClientSize.Height / 64)
+
+
+            'g.DrawRectangle(outlinePen, twoPlayersOptionRect)
+            DrawRoundedRectangle(g, outlinePen, twoPlayersOptionRect, ClientSize.Height / 64)
 
             'g.DrawRectangle(darkOutlinePen, onePlayerOptionRect)
         Else
-            g.FillRectangle(darkBrush, twoPlayersOptionRect)
-            g.DrawRectangle(darkOutlinePen, twoPlayersOptionRect)
+            'g.FillRectangle(darkBrush, twoPlayersOptionRect)
+            FillRoundedRectangle(g, darkBrush, twoPlayersOptionRect, ClientSize.Height / 64)
+
+            'g.DrawRectangle(darkOutlinePen, twoPlayersOptionRect)
+            DrawRoundedRectangle(g, darkOutlinePen, twoPlayersOptionRect, ClientSize.Height / 64)
+
         End If
 
 
@@ -2193,12 +2209,19 @@ Public Class Form1
             '  Highlight (Pause Menu Style)
             ' -------------------------------
             If i = aiDifficultySelection Then
-                g.FillRectangle(lightBrush, rect)
-                g.DrawRectangle(outlinePen, rect)
-            Else
-                g.FillRectangle(darkBrush, rect)
+                'g.FillRectangle(lightBrush, rect)
+                FillRoundedRectangle(g, lightBrush, rect, ClientSize.Height / 64)
 
-                g.DrawRectangle(darkOutlinePen, rect)
+                'g.DrawRectangle(outlinePen, rect)
+                DrawRoundedRectangle(g, outlinePen, rect, ClientSize.Height / 64)
+
+            Else
+                'g.FillRectangle(darkBrush, rect)
+                FillRoundedRectangle(g, darkBrush, rect, ClientSize.Height / 64)
+
+                'g.DrawRectangle(darkOutlinePen, rect)
+                DrawRoundedRectangle(g, darkOutlinePen, rect, ClientSize.Height / 64)
+
             End If
 
 
@@ -3314,6 +3337,9 @@ Public Class Form1
     Private Sub StartScreen_MouseClick(e As MouseEventArgs)
         If currentState <> GameState.StartScreen Then Return
 
+        If mouseIsClicking Then Return
+        mouseIsClicking = True
+
         ' Check one player option
         If onePlayerOptionRect.Contains(e.Location) Then
             numberOfPlayersSelection = NumberOfPlayers.OnePlayer
@@ -3378,6 +3404,10 @@ Public Class Form1
 
     Private Sub AIDifficulty_MouseClick(e As MouseEventArgs)
         If currentState <> GameState.AIDifficulty Then Return
+
+        If mouseIsClicking Then Return
+        mouseIsClicking = True
+
 
         Dim clickedDifficulty As Nullable(Of AIDifficultyLevel) = Nothing
 
@@ -3515,28 +3545,40 @@ Public Class Form1
 
 
 
+    Private Sub HandlePauseMouseWheel(delta As Integer)
+
+        ' Wheel up → move selection up
+        If delta > 0 Then
+            If pauseMenuSelection > 0 Then
+                pauseMenuSelection -= 1
+                PlayMenuUpSound()
+                Invalidate()
+            End If
+            Return
+        End If
+
+        ' Wheel down → move selection down
+        If delta < 0 Then
+            If pauseMenuSelection < 2 Then
+                pauseMenuSelection += 1
+                PlayMenuDownSound()
+                Invalidate()
+            End If
+            Return
+        End If
+
+    End Sub
 
 
+    Private Sub GameForm_MouseWheel(sender As Object, e As MouseEventArgs) Handles Me.MouseWheel
+        If currentState = GameState.Pause Then
+            HandlePauseMouseWheel(e.Delta)
+        End If
+    End Sub
 
+    Private Sub Form1_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
 
+        mouseIsClicking = False
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    End Sub
 End Class
