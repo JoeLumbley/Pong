@@ -3554,30 +3554,112 @@ Public Class Form1
 
 
 
+    'Private Sub PauseMenu_MouseClick(e As MouseEventArgs)
+    '    If currentState <> GameState.Pause Then Return
+    '    If mouseIsClicking Then Return
+    '    mouseIsClicking = True
+
+    '    ' Ignore middle-click logic unless needed
+    '    If e.Button = MouseButtons.Middle Then
+    '        Select Case pauseMenuSelection
+    '            Case 0 : ResumeGame()
+    '            Case 1 : StartNewMatch()
+    '            Case 2 : Quit2StartScreen()
+    '        End Select
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+
+
+
+
+
+
+    '    If pauseResumeRect.Contains(e.Location) Then
+    '        ResumeGame()
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    If pauseNewMatchRect.Contains(e.Location) Then
+    '        StartNewMatch()
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    If pauseQuitRect.Contains(e.Location) Then
+    '        Quit2StartScreen()
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+    'End Sub
+
     Private Sub PauseMenu_MouseClick(e As MouseEventArgs)
         If currentState <> GameState.Pause Then Return
+        If mouseIsClicking Then Return
+        mouseIsClicking = True
 
+        ' ------------------------------
+        ' Middle-click = activate current selection
+        ' ------------------------------
+        If e.Button = MouseButtons.Middle Then
+            Select Case pauseMenuSelection
+                Case 0 : ResumeGame()
+                Case 1 : StartNewMatch()
+                Case 2 : Quit2StartScreen()
+            End Select
+
+            PlaySelectSound()
+            Invalidate()
+            Return
+        End If
+
+        ' ------------------------------
+        ' Left-click: check menu items
+        ' ------------------------------
+
+        ' Resume
         If pauseResumeRect.Contains(e.Location) Then
+            pauseMenuSelection = 0   ' ← keep selection visually correct
             ResumeGame()
             PlaySelectSound()
             Invalidate()
             Return
         End If
 
+        ' New Match
         If pauseNewMatchRect.Contains(e.Location) Then
+            pauseMenuSelection = 1   ' ← keep selection visually correct
             StartNewMatch()
             PlaySelectSound()
             Invalidate()
             Return
         End If
 
+        ' Quit
         If pauseQuitRect.Contains(e.Location) Then
+            pauseMenuSelection = 2   ' ← keep selection visually correct
             Quit2StartScreen()
             PlaySelectSound()
             Invalidate()
             Return
         End If
     End Sub
+
+
+
+
+
+
+
+
+
+
 
 
     Private Sub EndScreen_MouseClick(e As MouseEventArgs)
