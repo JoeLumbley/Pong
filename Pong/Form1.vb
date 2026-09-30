@@ -232,7 +232,6 @@ Public Class Form1
     Private pauseMenuItemBrush() As SolidBrush
 
 
-    'Private fpsFont As Font
 
     ' -------------------------------
     '  Random
@@ -313,6 +312,12 @@ Public Class Form1
         MovePointerCenterScreen()
 
     End Sub
+
+    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        ScaleBallDiameter()
+        Me.WindowState = FormWindowState.Maximized
+    End Sub
+
 
     ' ===============================
     '  PHYSICS LOOP
@@ -630,6 +635,35 @@ Public Class Form1
 
 
     End Sub
+
+
+
+    Private Sub Form1_MouseWheel(sender As Object, e As MouseEventArgs) Handles Me.MouseWheel
+
+        If currentState = GameState.Pause Then
+            HandlePauseMouseWheel(e.Delta)
+            Return
+        End If
+
+        If currentState = GameState.StartScreen Then
+            HandleStartScreenMouseWheel(e.Delta)
+            Return
+        End If
+
+        If currentState = GameState.AIDifficulty Then
+            HandleAIDifficultyMouseWheel(e.Delta)
+            Return
+        End If
+
+    End Sub
+
+
+    Private Sub Form1_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
+
+        mouseIsClicking = False
+
+    End Sub
+
 
     ' ===============================
     '  AUDIO RESTART
@@ -1973,10 +2007,20 @@ Public Class Form1
         ballDiameter = CInt(ClientSize.Height / 18.0F)
     End Sub
 
-    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        ScaleBallDiameter()
-        Me.WindowState = FormWindowState.Maximized
-    End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Sub HandleAIDifficultyInput(e As KeyEventArgs)
 
@@ -3128,31 +3172,12 @@ Public Class Form1
     End Sub
 
 
-    Private Sub Form1_MouseWheel(sender As Object, e As MouseEventArgs) Handles Me.MouseWheel
-
-        If currentState = GameState.Pause Then
-            HandlePauseMouseWheel(e.Delta)
-            Return
-        End If
-
-        If currentState = GameState.StartScreen Then
-            HandleStartScreenMouseWheel(e.Delta)
-            Return
-        End If
-
-        If currentState = GameState.AIDifficulty Then
-            HandleAIDifficultyMouseWheel(e.Delta)
-            Return
-        End If
-
-    End Sub
 
 
-    Private Sub Form1_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
 
-        mouseIsClicking = False
 
-    End Sub
+
+
 
     Private Sub HandleStartScreenMouseWheel(delta As Integer)
 
