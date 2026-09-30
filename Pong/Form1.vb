@@ -3283,6 +3283,11 @@ Public Class Form1
         Audio.PlayOverlapping("arrow_up")
     End Sub
 
+
+    Private Sub PlayMenuMoveSound()
+        Audio.PlayOverlapping("arrow_up")
+    End Sub
+
     Private Sub PlayMenuDownSound()
         Audio.PlayOverlapping("arrow_down")
     End Sub
@@ -3340,61 +3345,6 @@ Public Class Form1
     End Sub
 
 
-    'Private Sub StartScreen_MouseClick(e As MouseEventArgs)
-    '    If currentState <> GameState.StartScreen Then Return
-
-    '    If mouseIsClicking Then Return
-    '    mouseIsClicking = True
-
-
-
-    '    If e.Button <> MouseButtons.Middle Then
-
-    '        ' Check one player option
-    '        If onePlayerOptionRect.Contains(e.Location) Then
-    '            numberOfPlayersSelection = NumberOfPlayers.OnePlayer
-    '            playerMode = 1
-    '            currentState = GameState.AIDifficulty
-    '            PlaySelectSound()
-    '            Invalidate()
-    '            Return
-    '        End If
-
-    '        ' Check two player option
-    '        If twoPlayersOptionRect.Contains(e.Location) Then
-    '            numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
-    '            playerMode = 2
-    '            StartNewMatch()
-    '            PlaySelectSound()
-    '            Invalidate()
-    '            Return
-    '        End If
-
-    '    Else
-
-    '        If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
-    '            playerMode = 1
-    '            currentState = GameState.AIDifficulty
-    '        Else
-    '            playerMode = 2
-    '            StartNewMatch()
-    '        End If
-
-    '        PlaySelectSound()
-    '        Invalidate()
-    '        Return
-
-    '    End If
-
-
-
-
-
-
-    'End Sub
-
-
-
     Private Sub StartScreen_MouseClick(e As MouseEventArgs)
         If currentState <> GameState.StartScreen Then Return
         If mouseIsClicking Then Return
@@ -3442,28 +3392,6 @@ Public Class Form1
         End If
     End Sub
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     Private Sub StartScreen_MouseMove(e As MouseEventArgs)
         If currentState <> GameState.StartScreen Then Return
 
@@ -3476,15 +3404,12 @@ Public Class Form1
         End If
 
         If oldSelection <> numberOfPlayersSelection Then
-            'PlayMenuMoveSound()
-            PlayMenuUpSound()
+            PlayMenuMoveSound()
+            'PlayMenuUpSound()
 
             Invalidate()
         End If
     End Sub
-
-
-
 
     Private Sub AIDifficulty_MouseMove(e As MouseEventArgs)
         If currentState <> GameState.AIDifficulty Then Return
@@ -3500,42 +3425,12 @@ Public Class Form1
         End If
 
         If oldSelection <> aiDifficultySelection Then
-            PlayMenuUpSound()
+            'PlayMenuUpSound()
+            PlayMenuMoveSound()
+
             Invalidate()
         End If
     End Sub
-
-    'Private Sub AIDifficulty_MouseClick(e As MouseEventArgs)
-    '    If currentState <> GameState.AIDifficulty Then Return
-
-    '    If mouseIsClicking Then Return
-    '    mouseIsClicking = True
-
-
-    '    Dim clickedDifficulty As Nullable(Of AIDifficultyLevel) = Nothing
-
-    '    If aiEasyRect.Contains(e.Location) Then
-    '        clickedDifficulty = AIDifficultyLevel.Easy
-    '    ElseIf aiNormalRect.Contains(e.Location) Then
-    '        clickedDifficulty = AIDifficultyLevel.Normal
-    '    ElseIf aiHardRect.Contains(e.Location) Then
-    '        clickedDifficulty = AIDifficultyLevel.Hard
-    '    End If
-
-    '    If clickedDifficulty.HasValue Then
-
-    '        aiDifficultySelection = clickedDifficulty.Value
-    '        SetAIModeFactor()
-
-    '        currentState = GameState.Playing
-    '        StartNewMatch()
-
-    '        PlaySelectSound()
-    '        Invalidate()
-
-    '        Return
-    '    End If
-    'End Sub
 
 
     Private Sub AIDifficulty_MouseClick(e As MouseEventArgs)
@@ -3619,7 +3514,9 @@ Public Class Form1
         End If
 
         If oldSelection <> pauseMenuSelection Then
-            PlayMenuUpSound()
+            'PlayMenuUpSound()
+            PlayMenuMoveSound()
+
             Invalidate()
         End If
     End Sub
