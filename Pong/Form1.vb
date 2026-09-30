@@ -295,11 +295,12 @@ Public Class Form1
     Private pauseQuitRect As Rectangle
 
 
+    Private lightBrush As New SolidBrush(Color.FromArgb(32, 255, 255, 255))
 
-    Private darkBrush As New SolidBrush(Color.FromArgb(64, 255, 255, 255))
+    Private darkBrush As New SolidBrush(Color.FromArgb(32, 0, 0, 0))
 
-    Private outlinePen As New Pen(Color.FromArgb(225, 255, 255, 255))
-    Private darkOutlinePen As New Pen(Color.FromArgb(128, 255, 255, 255))
+    Private outlinePen As New Pen(Color.FromArgb(40, 255, 255, 255))
+    Private darkOutlinePen As New Pen(Color.FromArgb(50, 255, 255, 255))
 
 
 
@@ -1468,9 +1469,10 @@ Public Class Form1
 
             ' Highlight selection
             If i = pauseMenuSelection Then
-                g.FillRectangle(darkBrush, rect)
+                g.FillRectangle(lightBrush, rect)
                 g.DrawRectangle(outlinePen, rect)
             Else
+                g.FillRectangle(darkBrush, rect)
                 g.DrawRectangle(darkOutlinePen, rect)
             End If
 
@@ -1757,21 +1759,23 @@ Public Class Form1
 
         ' Option 1
         If numberOfPlayersSelection = 0 Then
-            g.FillRectangle(darkBrush, onePlayerOptionRect)
+            g.FillRectangle(lightBrush, onePlayerOptionRect)
             g.DrawRectangle(outlinePen, onePlayerOptionRect)
 
             'g.DrawRectangle(darkOutlinePen, twoPlayersOptionRect)
         Else
+            g.FillRectangle(darkBrush, onePlayerOptionRect)
             g.DrawRectangle(darkOutlinePen, onePlayerOptionRect)
         End If
 
         ' Option 2
         If numberOfPlayersSelection = 1 Then
-            g.FillRectangle(darkBrush, twoPlayersOptionRect)
+            g.FillRectangle(lightBrush, twoPlayersOptionRect)
             g.DrawRectangle(outlinePen, twoPlayersOptionRect)
 
             'g.DrawRectangle(darkOutlinePen, onePlayerOptionRect)
         Else
+            g.FillRectangle(darkBrush, twoPlayersOptionRect)
             g.DrawRectangle(darkOutlinePen, twoPlayersOptionRect)
         End If
 
@@ -2155,7 +2159,7 @@ Public Class Form1
         ' -------------------------------
         '  Menu Options + Rectangles
         ' -------------------------------
-        Dim baseY As Single = CSng(ClientSize.Height * 0.36F)
+        Dim baseY As Single = CSng(ClientSize.Height * 0.4F)
 
         For i As Integer = 0 To aiOptions.Length - 1
 
@@ -2183,9 +2187,11 @@ Public Class Form1
             '  Highlight (Pause Menu Style)
             ' -------------------------------
             If i = aiDifficultySelection Then
-                g.FillRectangle(darkBrush, rect)
+                g.FillRectangle(lightBrush, rect)
                 g.DrawRectangle(outlinePen, rect)
             Else
+                g.FillRectangle(darkBrush, rect)
+
                 g.DrawRectangle(darkOutlinePen, rect)
             End If
 
