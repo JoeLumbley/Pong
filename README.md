@@ -3,7 +3,7 @@
 A modern, full‑screen remake of the classic Pong arcade game. Rebuilt from scratch with smooth physics, glowing motion trails, dynamic paddle spin, an AI opponent, animated menus, and a fully‑featured audio system.
 
 
-<img width="1920" height="1080" alt="041" src="https://github.com/user-attachments/assets/ae74c5ef-c9fa-4f6d-9e30-1c5cbb8115f1" />
+<img width="1920" height="1080" alt="044" src="https://github.com/user-attachments/assets/73677a3b-c2d4-4de7-aa41-60b77db9e796" />
 
 This project isn’t just Pong.
 It’s a compact 2D game engine demonstrating real‑time rendering, delta‑time physics, state‑driven UI, and responsive design.
@@ -17,7 +17,7 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 - **Single and Multiplayer Modes**: Challenge yourself against a computer player or compete with friends, making the game versatile for different play styles.
 
 
-<img width="1920" height="1080" alt="040" src="https://github.com/user-attachments/assets/4d2887e5-7769-4864-bded-5a322b1d1d04" />
+<img width="1920" height="1080" alt="043" src="https://github.com/user-attachments/assets/b403e9fa-208e-4ffe-a1cd-5eb18e80273b" />
 
 ### Learning Objectives
 - Understand the basics of game mechanics and physics, including how to simulate movement and collisions.
@@ -60,6 +60,8 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 | **F11** | Toggle fullscreen mode |
 | **F** | Toggle fullscreen mode (secondary shortcut) |
 | **Escape** | Context‑sensitive: fullscreen exit, pause, or return to start screen |
+| **CTRL+Q** | Quit game. |
+| **CTRL+H** | Hide keyboard hints. |
 
 ---
 
@@ -89,11 +91,13 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 
 ---
 
+<img width="1920" height="1080" alt="045" src="https://github.com/user-attachments/assets/df4bf778-9f27-4e6b-9f68-4f6842fce0eb" />
+
 ## Pause Menu
 | Key | Action |
 |-----|--------|
-| **Up Arrow** | Move menu selection up |
-| **Down Arrow** | Move menu selection down |
+| **Up Arrow / W** | Move menu selection up |
+| **Down Arrow / S** | Move menu selection down |
 | **Enter / Space** | Activate selected menu option |
 | **P** | Resume game |
 | **Pause / Break** | Resume game |
@@ -112,7 +116,7 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 
 
 
-[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls) 
+[Top](#pong---code-with-joe)  | [Keyboard Controls](#keyboard-controls)  | [Clones](#clones) 
 
 
 ---
@@ -120,6 +124,12 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 ---
 
 # Clones
+
+<img width="1920" height="1080" alt="046" src="https://github.com/user-attachments/assets/e215bf7b-94c7-4600-b97d-2e0aca334036" />
+
+
+
+
 
 <img width="1920" height="1080" alt="042" src="https://github.com/user-attachments/assets/f91c6b47-1da4-448d-9e2e-5bd9aec3c6e0" />
 
