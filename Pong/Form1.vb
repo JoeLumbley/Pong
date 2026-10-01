@@ -1184,6 +1184,8 @@ Public Class Form1
 
         FadeOutAndStopGamePlayLoop(600)
 
+        MovePointerCenterScreen()
+
         speed = 200 * (ClientSize.Height / 1080.0)
 
         CenterBall()
@@ -1467,10 +1469,10 @@ Public Class Form1
         Dim opt2Size = g.MeasureString(option2, startMenuFont)
 
         Dim opt1X As Single = CSng((ClientSize.Width - opt1Size.Width) / 2.0F)
-        Dim opt1Y As Single = CSng(ClientSize.Height * 0.45F)
+        Dim opt1Y As Single = CSng(ClientSize.Height * 0.41F)
 
         Dim opt2X As Single = CSng((ClientSize.Width - opt2Size.Width) / 2.0F)
-        Dim opt2Y As Single = CSng(ClientSize.Height * 0.55F)
+        Dim opt2Y As Single = CSng(ClientSize.Height * 0.52F)
 
         ' Store clickable rectangles
         onePlayerOptionRect = New Rectangle(CInt(opt1X), CInt(opt1Y),
@@ -1756,7 +1758,7 @@ Public Class Form1
         ' -------------------------------
         '  Menu Options + Rectangles
         ' -------------------------------
-        Dim baseY As Single = CSng(ClientSize.Height * 0.4F)
+        Dim baseY As Single = CSng(ClientSize.Height * 0.41F)
 
         For i As Integer = 0 To aiOptions.Length - 1
 
@@ -1764,7 +1766,7 @@ Public Class Form1
             Dim size = g.MeasureString(text, startMenuFont)
 
             Dim x = CSng((ClientSize.Width - size.Width) / 2.0F)
-            Dim y = baseY + i * (size.Height + 10)
+            Dim y = baseY + i * (size.Height + ClientSize.Height * 0.03F)
 
             Dim rect As New Rectangle(CInt(x), CInt(y),
                                   CInt(size.Width), CInt(size.Height))
@@ -1965,7 +1967,7 @@ Public Class Form1
             pauseTitleY = ClientSize.Height * 0.22F
 
             ' Menu spacing
-            pauseMenuSpacing = ClientSize.Height * 0.1F
+            pauseMenuSpacing = ClientSize.Height * 0.11F
             pauseMenuStartY = pauseTitleY + pauseTitleSize.Height + (ClientSize.Height * 0.05F)
 
             ' Menu items
@@ -2143,7 +2145,7 @@ Public Class Form1
         Select Case aiDifficultySelection
             Case AIDifficultyLevel.Easy : aiModeFactor = 0.6
             Case AIDifficultyLevel.Normal : aiModeFactor = 0.63
-            Case AIDifficultyLevel.Hard : aiModeFactor = 0.66
+            Case AIDifficultyLevel.Hard : aiModeFactor = 0.7
         End Select
     End Sub
 
@@ -2549,7 +2551,7 @@ Public Class Form1
 
         FadeOutAndStopPausedLoop(600)
 
-        MovePointerCenterScreen()
+        'MovePointerCenterScreen()
 
         speed = 200 * (ClientSize.Height / 1080.0)
         winnerText = ""
