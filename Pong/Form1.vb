@@ -2354,7 +2354,7 @@ Public Class Form1
 
             PlaySelectSound()
             PauseGame()
-            MovePointerCenterScreen()
+            'MovePointerCenterScreen()
             Invalidate()
             Return
         End If
@@ -2408,7 +2408,7 @@ Public Class Form1
 
             ResumeGame()
             PlaySelectSound()
-            MovePointerOffScreen()
+            'MovePointerOffScreen()
 
             Invalidate()
             Return
@@ -2420,6 +2420,8 @@ Public Class Form1
 
             ResumeGame()
             PlaySelectSound()
+            'MovePointerOffScreen()
+
             Invalidate()
             Return
         End If
@@ -2430,6 +2432,8 @@ Public Class Form1
 
             ResumeGame()
             PlaySelectSound()
+            'MovePointerOffScreen()
+
             Invalidate()
             Return
         End If
@@ -2465,6 +2469,8 @@ Public Class Form1
         If e.KeyCode = Keys.R Then
             ResumeGame()
             PlaySelectSound()
+            'MovePointerOffScreen()
+
             Invalidate()
             Return
         End If
@@ -2472,6 +2478,8 @@ Public Class Form1
         If e.KeyCode = Keys.N Then
             StartNewMatch()
             PlaySelectSound()
+            MovePointerOffScreen()
+
             Invalidate()
             Return
         End If
@@ -2621,6 +2629,9 @@ Public Class Form1
     Private Sub PauseGame()
 
         FadeOutAndStopGamePlayLoop(600)
+
+        MovePointerCenterScreen()
+
 
         pauseMenuSelection = 0 ' Resume game
 
