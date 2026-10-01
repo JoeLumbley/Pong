@@ -1488,18 +1488,13 @@ Public Class Form1
 
         ' Option 1
         If numberOfPlayersSelection = 0 Then
-            'g.FillRectangle(lightBrush, onePlayerOptionRect)
             FillRoundedRectangle(g, lightBrush, onePlayerOptionRect, ClientSize.Height / 64)
 
-            'g.DrawRectangle(outlinePen, onePlayerOptionRect)
             DrawRoundedRectangle(g, outlinePen, onePlayerOptionRect, ClientSize.Height / 64)
 
-            'g.DrawRectangle(darkOutlinePen, twoPlayersOptionRect)
         Else
-            'g.FillRectangle(darkBrush, onePlayerOptionRect)
             FillRoundedRectangle(g, darkBrush, onePlayerOptionRect, ClientSize.Height / 64)
 
-            'g.DrawRectangle(darkOutlinePen, onePlayerOptionRect)
             DrawRoundedRectangle(g, darkOutlinePen, onePlayerOptionRect, ClientSize.Height / 64)
 
 
@@ -1507,19 +1502,14 @@ Public Class Form1
 
         ' Option 2
         If numberOfPlayersSelection = 1 Then
-            'g.FillRectangle(lightBrush, twoPlayersOptionRect)
             FillRoundedRectangle(g, lightBrush, twoPlayersOptionRect, ClientSize.Height / 64)
 
 
-            'g.DrawRectangle(outlinePen, twoPlayersOptionRect)
             DrawRoundedRectangle(g, outlinePen, twoPlayersOptionRect, ClientSize.Height / 64)
 
-            'g.DrawRectangle(darkOutlinePen, onePlayerOptionRect)
         Else
-            'g.FillRectangle(darkBrush, twoPlayersOptionRect)
             FillRoundedRectangle(g, darkBrush, twoPlayersOptionRect, ClientSize.Height / 64)
 
-            'g.DrawRectangle(darkOutlinePen, twoPlayersOptionRect)
             DrawRoundedRectangle(g, darkOutlinePen, twoPlayersOptionRect, ClientSize.Height / 64)
 
         End If
