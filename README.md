@@ -60,6 +60,8 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 | **F11** | Toggle fullscreen mode |
 | **F** | Toggle fullscreen mode (secondary shortcut) |
 | **Escape** | Context‑sensitive: fullscreen exit, pause, or return to start screen |
+| **CTRL+Q** | Quit game. |
+| **CTRL+H** | Hide keyboard hints. |
 
 ---
 
@@ -94,8 +96,8 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 ## Pause Menu
 | Key | Action |
 |-----|--------|
-| **Up Arrow** | Move menu selection up |
-| **Down Arrow** | Move menu selection down |
+| **Up Arrow / W** | Move menu selection up |
+| **Down Arrow / S** | Move menu selection down |
 | **Enter / Space** | Activate selected menu option |
 | **P** | Resume game |
 | **Pause / Break** | Resume game |
