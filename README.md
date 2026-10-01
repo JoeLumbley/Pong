@@ -125,6 +125,12 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 
 # Clones
 
+<img width="1920" height="1080" alt="046" src="https://github.com/user-attachments/assets/e215bf7b-94c7-4600-b97d-2e0aca334036" />
+
+
+
+
+
 <img width="1920" height="1080" alt="042" src="https://github.com/user-attachments/assets/f91c6b47-1da4-448d-9e2e-5bd9aec3c6e0" />
 
 
