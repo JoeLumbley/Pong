@@ -1489,27 +1489,21 @@ Public Class Form1
         ' Option 1
         If numberOfPlayersSelection = 0 Then
             FillRoundedRectangle(g, lightBrush, onePlayerOptionRect, ClientSize.Height / 64)
-
             DrawRoundedRectangle(g, outlinePen, onePlayerOptionRect, ClientSize.Height / 64)
 
         Else
             FillRoundedRectangle(g, darkBrush, onePlayerOptionRect, ClientSize.Height / 64)
-
             DrawRoundedRectangle(g, darkOutlinePen, onePlayerOptionRect, ClientSize.Height / 64)
-
 
         End If
 
         ' Option 2
         If numberOfPlayersSelection = 1 Then
             FillRoundedRectangle(g, lightBrush, twoPlayersOptionRect, ClientSize.Height / 64)
-
-
             DrawRoundedRectangle(g, outlinePen, twoPlayersOptionRect, ClientSize.Height / 64)
 
         Else
             FillRoundedRectangle(g, darkBrush, twoPlayersOptionRect, ClientSize.Height / 64)
-
             DrawRoundedRectangle(g, darkOutlinePen, twoPlayersOptionRect, ClientSize.Height / 64)
 
         End If
