@@ -2478,7 +2478,7 @@ Public Class Form1
         If e.KeyCode = Keys.N Then
             StartNewMatch()
             PlaySelectSound()
-            MovePointerOffScreen()
+            'MovePointerOffScreen()
 
             Invalidate()
             Return
