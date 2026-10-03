@@ -292,6 +292,70 @@ Public Class Form1
 
     Private mouseIsClicking As Boolean = False
 
+    ' HUD cached layout
+    Private leftScoreX As Single
+    Private rightScoreX As Single
+    Private leftLabelX As Single
+    Private rightLabelX As Single
+    Private scoreY As Single
+    Private labelY As Single
+
+    Private leftScoreSize As SizeF
+    Private rightScoreSize As SizeF
+    Private leftLabelSize As SizeF
+    Private rightLabelSize As SizeF
+
+
+
+
+    ' Cached text
+    Private hintLeftText As String
+    Private hintRightText As String
+    Private pauseText As String
+    Private fpsText As String
+
+    ' Cached sizes
+    Private hintLeftSize As SizeF
+    Private hintRightSize As SizeF
+    Private pauseSize As SizeF
+    Private fpsSize As SizeF
+
+    ' Cached positions
+    Private hintLeftX As Single = 10
+    Private hintLeftY As Single = 10
+
+    Private hintRightX As Single
+    Private hintRightY As Single = 10
+
+    Private pauseX As Single = 10
+    Private pauseY As Single
+
+    Private fpsX As Single
+    Private fpsY As Single
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ' ===============================
     '  FORM LIFECYCLE
     ' ===============================
@@ -1299,28 +1363,72 @@ Public Class Form1
     End Sub
 
 
+    'Private Sub DrawTrail(g As Graphics)
+    '    If trail Is Nothing OrElse
+    '       trailSizes Is Nothing OrElse
+    '       trailOffsets Is Nothing OrElse
+    '       trailBrushes Is Nothing Then
+    '        Exit Sub
+    '    End If
+
+    '    Dim count As Integer = Math.Min(trail.Count, trailLength)
+
+    '    For i As Integer = 0 To count - 1
+    '        Dim p As PointF = trail(i)
+    '        Dim size As Integer = trailSizes(i)
+    '        Dim offset As Single = trailOffsets(i)
+
+    '        g.FillEllipse(trailBrushes(i),
+    '                      p.X + offset,
+    '                      p.Y + offset,
+    '                      size,
+    '                      size)
+    '    Next
+    'End Sub
+
+
     Private Sub DrawTrail(g As Graphics)
+
         If trail Is Nothing OrElse
-           trailSizes Is Nothing OrElse
-           trailOffsets Is Nothing OrElse
-           trailBrushes Is Nothing Then
+       trailSizes Is Nothing OrElse
+       trailOffsets Is Nothing OrElse
+       trailBrushes Is Nothing Then
             Exit Sub
         End If
 
-        Dim count As Integer = Math.Min(trail.Count, trailLength)
+        Dim count As Integer = trail.Count
+        If count > trailLength Then count = trailLength
 
         For i As Integer = 0 To count - 1
+
             Dim p As PointF = trail(i)
-            Dim size As Integer = trailSizes(i)
             Dim offset As Single = trailOffsets(i)
 
             g.FillEllipse(trailBrushes(i),
-                          p.X + offset,
-                          p.Y + offset,
-                          size,
-                          size)
+                      p.X + offset,
+                      p.Y + offset,
+                      trailSizes(i),
+                      trailSizes(i))
         Next
+
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Sub DrawBall(g As Graphics)
         g.FillEllipse(ballBrush,
@@ -1335,35 +1443,82 @@ Public Class Form1
         g.FillRectangle(paddleBrush, paddleRight)
     End Sub
 
+    'Private Sub DrawHUD(g As Graphics)
+
+    '    Dim halfWidth As Single = ClientSize.Width / 2.0F
+
+    '    Dim leftScoreText As String = scoreLeft.ToString()
+    '    Dim rightScoreText As String = scoreRight.ToString()
+
+    '    Dim leftScoreSize = g.MeasureString(leftScoreText, hudScoreFont)
+    '    Dim rightScoreSize = g.MeasureString(rightScoreText, hudScoreFont)
+
+    '    Dim leftLabelSize = g.MeasureString(leftPlayerName, hudLabelFont)
+    '    Dim rightLabelSize = g.MeasureString(rightPlayerName, hudLabelFont)
+
+    '    Dim scoreY As Single = 10 + CSng(ClientSize.Height / 25)
+    '    Dim labelY As Single = scoreY - CSng(ClientSize.Height / 200.0)
+
+    '    Dim leftScoreX As Single = (halfWidth - leftScoreSize.Width) / 2.0F
+    '    Dim rightScoreX As Single = halfWidth + (halfWidth - rightScoreSize.Width) / 2.0F
+
+    '    Dim leftLabelX As Single = (halfWidth - leftLabelSize.Width) / 2.0F
+    '    Dim rightLabelX As Single = halfWidth + (halfWidth - rightLabelSize.Width) / 2.0F
+
+    '    g.DrawString(leftPlayerName, hudLabelFont, playerLabelBrush, leftLabelX, labelY)
+    '    g.DrawString(rightPlayerName, hudLabelFont, playerLabelBrush, rightLabelX, labelY)
+
+    '    g.DrawString(leftScoreText, hudScoreFont, scoreBrush, leftScoreX, scoreY)
+    '    g.DrawString(rightScoreText, hudScoreFont, scoreBrush, rightScoreX, scoreY)
+
+    'End Sub
+
+
     Private Sub DrawHUD(g As Graphics)
 
-        Dim halfWidth As Single = ClientSize.Width / 2.0F
-
-        Dim leftScoreText As String = scoreLeft.ToString()
-        Dim rightScoreText As String = scoreRight.ToString()
-
-        Dim leftScoreSize = g.MeasureString(leftScoreText, hudScoreFont)
-        Dim rightScoreSize = g.MeasureString(rightScoreText, hudScoreFont)
-
-        Dim leftLabelSize = g.MeasureString(leftPlayerName, hudLabelFont)
-        Dim rightLabelSize = g.MeasureString(rightPlayerName, hudLabelFont)
-
-        Dim scoreY As Single = 10 + CSng(ClientSize.Height / 25)
-        Dim labelY As Single = scoreY - CSng(ClientSize.Height / 200.0)
-
-        Dim leftScoreX As Single = (halfWidth - leftScoreSize.Width) / 2.0F
-        Dim rightScoreX As Single = halfWidth + (halfWidth - rightScoreSize.Width) / 2.0F
-
-        Dim leftLabelX As Single = (halfWidth - leftLabelSize.Width) / 2.0F
-        Dim rightLabelX As Single = halfWidth + (halfWidth - rightLabelSize.Width) / 2.0F
-
+        ' Draw labels (no allocations)
         g.DrawString(leftPlayerName, hudLabelFont, playerLabelBrush, leftLabelX, labelY)
         g.DrawString(rightPlayerName, hudLabelFont, playerLabelBrush, rightLabelX, labelY)
 
-        g.DrawString(leftScoreText, hudScoreFont, scoreBrush, leftScoreX, scoreY)
-        g.DrawString(rightScoreText, hudScoreFont, scoreBrush, rightScoreX, scoreY)
+        ' Draw scores (no allocations)
+        g.DrawString(scoreLeft.ToString(), hudScoreFont, scoreBrush, leftScoreX, scoreY)
+        g.DrawString(scoreRight.ToString(), hudScoreFont, scoreBrush, rightScoreX, scoreY)
 
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Sub DrawFPS(g As Graphics)
         UpdateFPS()
@@ -1597,82 +1752,150 @@ Public Class Form1
     End Sub
 
 
+    'Private Sub DrawKeyboardHintsGamePlayScreen(g As Graphics)
+
+
+    '    ' -------------------------------
+    '    '  Left Paddle Keyboard Hints (Top‑Left)
+    '    ' -------------------------------
+    '    Dim hintText As String
+
+    '    If numberOfPlayersSelection = 0 Then
+    '        ' One Player selected → user will choose AI difficulty next
+    '        hintText = $"W S - Move Paddle"
+    '    Else
+    '        ' Two Players selected → match starts immediately
+    '        hintText = $"W S - Move Paddle"
+    '    End If
+
+    '    Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
+
+    '    g.DrawString(hintText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             10,
+    '             10)
+
+    '    ' -------------------------------
+    '    ' Right Paddle Keyboard Hint (Top-Right)
+    '    ' -------------------------------
+    '    Dim rpText As String = "P - Pause Match"
+
+
+    '    If playerMode = 2 Then
+    '        rpText = "Arrows - Move Paddle"
+    '    End If
+
+    '    Dim rpSize = g.MeasureString(rpText, fullscreenIndicatorFont)
+
+    '    g.DrawString(rpText,
+    '         fullscreenIndicatorFont,
+    '         grayBrush,
+    '         ClientSize.Width - rpSize.Width - 10,
+    '         10)
+
+    '    ' -------------------------------
+    '    '  Pause Match (Bottom‑Left)
+    '    ' -------------------------------
+    '    Dim pText As String = String.Empty
+
+    '    If playerMode = 2 Then
+    '        pText = "P - Pause Match"
+    '    End If
+
+
+    '    Dim pSize = g.MeasureString(pText, fullscreenIndicatorFont)
+
+    '    g.DrawString(pText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             10,
+    '             ClientSize.Height - pSize.Height - 10)
+
+
+    '    ' -------------------------------
+    '    '  FPS Frame Per Second Display (Bottom‑Right)
+    '    ' -------------------------------
+    '    Dim fpsText As String = $"FPS: {fps} "
+    '    Dim fpsSize = g.MeasureString(fpsText, fullscreenIndicatorFont)
+
+    '    g.DrawString(fpsText,
+    '             fullscreenIndicatorFont,
+    '             grayBrush,
+    '             ClientSize.Width - fpsSize.Width - 10,
+    '             ClientSize.Height - fpsSize.Height - 10)
+
+
+
+    'End Sub
+
     Private Sub DrawKeyboardHintsGamePlayScreen(g As Graphics)
 
-
-        ' -------------------------------
-        '  Left Paddle Keyboard Hints (Top‑Left)
-        ' -------------------------------
-        Dim hintText As String
-
-        If numberOfPlayersSelection = 0 Then
-            ' One Player selected → user will choose AI difficulty next
-            hintText = $"W S - Move Paddle"
-        Else
-            ' Two Players selected → match starts immediately
-            hintText = $"W S - Move Paddle"
-        End If
-
-        Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
-
-        g.DrawString(hintText,
+        ' Left paddle hint
+        g.DrawString(hintLeftText,
                  fullscreenIndicatorFont,
                  grayBrush,
-                 10,
-                 10)
+                 hintLeftX,
+                 hintLeftY)
 
-        ' -------------------------------
-        ' Right Paddle Keyboard Hint (Top-Right)
-        ' -------------------------------
-        Dim rpText As String = "P - Pause Match"
-
-
-        If playerMode = 2 Then
-            rpText = "Arrows - Move Paddle"
-        End If
-
-        Dim rpSize = g.MeasureString(rpText, fullscreenIndicatorFont)
-
-        g.DrawString(rpText,
-             fullscreenIndicatorFont,
-             grayBrush,
-             ClientSize.Width - rpSize.Width - 10,
-             10)
-
-        ' -------------------------------
-        '  Pause Match (Bottom‑Left)
-        ' -------------------------------
-        Dim pText As String = String.Empty
-
-        If playerMode = 2 Then
-            pText = "P - Pause Match"
-        End If
-
-
-        Dim pSize = g.MeasureString(pText, fullscreenIndicatorFont)
-
-        g.DrawString(pText,
+        ' Right paddle hint
+        g.DrawString(hintRightText,
                  fullscreenIndicatorFont,
                  grayBrush,
-                 10,
-                 ClientSize.Height - pSize.Height - 10)
+                 hintRightX,
+                 hintRightY)
 
+        ' Pause hint (bottom-left)
+        g.DrawString(pauseText,
+                 fullscreenIndicatorFont,
+                 grayBrush,
+                 pauseX,
+                 pauseY)
 
-        ' -------------------------------
-        '  FPS Frame Per Second Display (Bottom‑Right)
-        ' -------------------------------
-        Dim fpsText As String = $"FPS: {fps} "
-        Dim fpsSize = g.MeasureString(fpsText, fullscreenIndicatorFont)
-
+        ' FPS (bottom-right)
         g.DrawString(fpsText,
                  fullscreenIndicatorFont,
                  grayBrush,
-                 ClientSize.Width - fpsSize.Width - 10,
-                 ClientSize.Height - fpsSize.Height - 10)
-
-
+                 fpsX,
+                 fpsY)
 
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     Private Sub DrawKeyboardHintsAIDifficultyScreen(g As Graphics)
@@ -1967,7 +2190,113 @@ Public Class Form1
 
         End Using
 
+
+
+
+
+
+        Using g As Graphics = Me.CreateGraphics()
+
+            Dim halfWidth As Single = ClientSize.Width / 2.0F
+
+            ' Measure once
+            leftScoreSize = g.MeasureString(scoreLeft.ToString(), hudScoreFont)
+            rightScoreSize = g.MeasureString(scoreRight.ToString(), hudScoreFont)
+
+            leftLabelSize = g.MeasureString(leftPlayerName, hudLabelFont)
+            rightLabelSize = g.MeasureString(rightPlayerName, hudLabelFont)
+
+            ' Vertical layout
+            scoreY = 10 + CSng(ClientSize.Height / 25.0F)
+            labelY = scoreY - CSng(ClientSize.Height / 200.0F)
+
+            ' Horizontal layout
+            leftScoreX = (halfWidth - leftScoreSize.Width) / 2.0F
+            rightScoreX = halfWidth + (halfWidth - rightScoreSize.Width) / 2.0F
+
+            leftLabelX = (halfWidth - leftLabelSize.Width) / 2.0F
+            rightLabelX = halfWidth + (halfWidth - rightLabelSize.Width) / 2.0F
+
+        End Using
+
+
+
+        RecomputeKeyboardHintLayout()
+
+
+
     End Sub
+
+    Private Sub RecomputeKeyboardHintLayout()
+
+        Using g As Graphics = Me.CreateGraphics()
+
+            ' -------------------------------
+            ' Left Paddle Hint
+            ' -------------------------------
+            hintLeftText = "W S - Move Paddle"
+            hintLeftSize = g.MeasureString(hintLeftText, fullscreenIndicatorFont)
+
+            ' -------------------------------
+            ' Right Paddle Hint
+            ' -------------------------------
+            If playerMode = 2 Then
+                hintRightText = "Arrows - Move Paddle"
+            Else
+                hintRightText = "P - Pause Match"
+            End If
+
+            hintRightSize = g.MeasureString(hintRightText, fullscreenIndicatorFont)
+            hintRightX = ClientSize.Width - hintRightSize.Width - 10
+
+            ' -------------------------------
+            ' Pause Hint (Bottom‑Left)
+            ' -------------------------------
+            If playerMode = 2 Then
+                pauseText = "P - Pause Match"
+            Else
+                pauseText = ""
+            End If
+
+            pauseSize = g.MeasureString(pauseText, fullscreenIndicatorFont)
+            pauseY = ClientSize.Height - pauseSize.Height - 10
+
+            ' -------------------------------
+            ' FPS (Bottom‑Right)
+            ' -------------------------------
+            fpsText = $"FPS: {fps}"
+            fpsSize = g.MeasureString(fpsText, fullscreenIndicatorFont)
+            fpsX = ClientSize.Width - fpsSize.Width - 10
+            fpsY = ClientSize.Height - fpsSize.Height - 10
+
+        End Using
+
+    End Sub
+
+
+    Private Sub UpdateFPSLayout()
+        fpsText = "FPS: " & fps.ToString()
+        Using g As Graphics = Me.CreateGraphics()
+            fpsSize = g.MeasureString(fpsText, fullscreenIndicatorFont)
+        End Using
+        fpsX = ClientSize.Width - fpsSize.Width - 10
+        fpsY = ClientSize.Height - fpsSize.Height - 10
+    End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Sub ScaleBallSpeed4State()
 
