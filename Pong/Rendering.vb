@@ -195,7 +195,7 @@ Public Class Rendering
     Private lightBrush As New SolidBrush(Color.FromArgb(32, 255, 255, 255))
     Private darkBrush As New SolidBrush(Color.FromArgb(64, 0, 0, 0))
     Private outlinePen As New Pen(Color.FromArgb(32, 255, 255, 255), 2)
-    Private darkOutlinePen As New Pen(Color.FromArgb(32, 255, 255, 255), 2)
+    Private darkOutlinePen As New Pen(Color.FromArgb(32, 0, 0, 0), 2)
 
 
     ' ============================================================
