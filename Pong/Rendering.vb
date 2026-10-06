@@ -194,7 +194,7 @@ Public Class Rendering
     ' ============================================================
     Private lightBrush As New SolidBrush(Color.FromArgb(32, 255, 255, 255))
     Private darkBrush As New SolidBrush(Color.FromArgb(64, 0, 0, 0))
-    Private outlinePen As New Pen(Color.FromArgb(40, 255, 255, 255), 2)
+    Private outlinePen As New Pen(Color.FromArgb(32, 255, 255, 255), 2)
     Private darkOutlinePen As New Pen(Color.FromArgb(32, 255, 255, 255), 2)
 
 
@@ -1151,24 +1151,28 @@ Public Class Rendering
 
         Dim radius As Integer = clientSize.Height \ 64   ' kept for consistency, but paths already use it
 
+        Dim gPath As GraphicsPath = pauseResumePath
+
+
         For i As Integer = 0 To pauseMenuItems.Length - 1
             Dim text = pauseMenuItems(i)
             Dim x = pauseMenuItemX(i)
             Dim y = pauseMenuItemY(i)
 
-            Dim path As GraphicsPath
+            'Dim gPath As GraphicsPath = pauseResumePath
+
             Select Case i
-                Case 0 : path = pauseResumePath
-                Case 1 : path = pauseNewPath
-                Case 2 : path = pauseQuitPath
+                Case 0 : gPath = pauseResumePath
+                Case 1 : gPath = pauseNewPath
+                Case 2 : gPath = pauseQuitPath
             End Select
 
             If i = pauseMenuSelection Then
-                g.FillPath(lightBrush, path)
-                g.DrawPath(outlinePen, path)
+                g.FillPath(lightBrush, gPath)
+                g.DrawPath(outlinePen, gPath)
             Else
-                g.FillPath(darkBrush, path)
-                g.DrawPath(darkOutlinePen, path)
+                g.FillPath(darkBrush, gPath)
+                g.DrawPath(darkOutlinePen, gPath)
             End If
 
             Dim brush As SolidBrush = If(i = pauseMenuSelection, whiteBrush, grayBrush)
@@ -1266,20 +1270,24 @@ Public Class Rendering
             g.DrawString("Difficulty", aiTitleFont, titleBrush, aiTitleX, aiTitleY)
         End Using
 
+        Dim gPath As GraphicsPath = aiEasyPath
+
         For i As Integer = 0 To aiOptions.Length - 1
-            Dim path As GraphicsPath
+
+            'Dim gPath As GraphicsPath = aiEasyPath
+
             Select Case i
-                Case 0 : path = aiEasyPath
-                Case 1 : path = aiNormalPath
-                Case 2 : path = aiHardPath
+                Case 0 : gPath = aiEasyPath
+                Case 1 : gPath = aiNormalPath
+                Case 2 : gPath = aiHardPath
             End Select
 
             If i = aiDifficultySelection Then
-                g.FillPath(lightBrush, path)
-                g.DrawPath(outlinePen, path)
+                g.FillPath(lightBrush, gPath)
+                g.DrawPath(outlinePen, gPath)
             Else
-                g.FillPath(darkBrush, path)
-                g.DrawPath(darkOutlinePen, path)
+                g.FillPath(darkBrush, gPath)
+                g.DrawPath(darkOutlinePen, gPath)
             End If
 
             Dim brush As SolidBrush =
