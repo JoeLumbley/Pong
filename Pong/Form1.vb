@@ -534,16 +534,16 @@ Public Class Form1
     Protected Overrides Sub OnPaint(e As PaintEventArgs)
         MyBase.OnPaint(e)
 
-        Dim g As Graphics = e.Graphics
-        g.CompositingMode = CompositingMode.SourceOver
-        g.SmoothingMode = SmoothingMode.AntiAlias
-        g.PixelOffsetMode = PixelOffsetMode.HighQuality
-        g.InterpolationMode = InterpolationMode.HighQualityBicubic
-        g.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
+        'Dim g As Graphics = e.Graphics
+        'g.CompositingMode = CompositingMode.SourceOver
+        'g.SmoothingMode = SmoothingMode.AntiAlias
+        'g.PixelOffsetMode = PixelOffsetMode.HighQuality
+        'g.InterpolationMode = InterpolationMode.HighQualityBicubic
+        'g.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
 
         renderer.UpdateFormState(Me.FormBorderStyle, Me.ClientSize)
         renderer.UpdateFPS()
-        renderer.Render(g, currentState, showKeyboardHints)
+        renderer.Render(e.Graphics, currentState, showKeyboardHints)
     End Sub
 
 

@@ -4882,6 +4882,14 @@ Imports System.Drawing
     '   RENDERING PIPELINE
     ' ============================================================
     Public Sub Render(g As Graphics, state As GameState, showHints As Boolean)
+
+
+        g.CompositingMode = CompositingMode.SourceOver
+        g.SmoothingMode = SmoothingMode.AntiAlias
+        g.PixelOffsetMode = PixelOffsetMode.HighQuality
+        g.InterpolationMode = InterpolationMode.HighQualityBicubic
+        g.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
+
         Select Case state
             Case GameState.StartScreen
                 DrawTrail(g)
