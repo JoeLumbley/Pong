@@ -422,7 +422,7 @@ Public Class Form1
         renderer.UpdateBallPosition(ballPos)
 
         HandleWallCollisions()
-        UpdateTrail()
+        'UpdateTrail()
         renderer.UpdateTrail()
         Select Case currentState
             Case GameState.StartScreen
@@ -1303,9 +1303,15 @@ Public Class Form1
 
         Dim paddleCenter As Single = paddleRight.Y + paddleHeight / 2
 
-        If targetY < paddleCenter Then
+        ' AI logic to move the right paddle towards the ball's Y position 
+        ' If the ball is above the paddle
+        If targetY < paddleCenter - 20 Then
+            ' Move paddle up
             paddleRight.Y -= CSng(paddleSpeed * dt * difficultyFactor)
-        ElseIf targetY > paddleCenter Then
+
+            ' If below, move down. The speed is scaled by the difficulty factor.
+        ElseIf targetY > paddleCenter + 20 Then
+            ' Move paddle down
             paddleRight.Y += CSng(paddleSpeed * dt * difficultyFactor)
         End If
 
@@ -1509,13 +1515,13 @@ Public Class Form1
     '  TRAIL
     ' ===============================
 
-    Private Sub UpdateTrail()
-        trail.Add(New PointF(ballPos.X, ballPos.Y))
+    'Private Sub UpdateTrail()
+    '    trail.Add(New PointF(ballPos.X, ballPos.Y))
 
-        If trail.Count > trailLength Then
-            trail.RemoveAt(0)
-        End If
-    End Sub
+    '    If trail.Count > trailLength Then
+    '        trail.RemoveAt(0)
+    '    End If
+    'End Sub
 
 
     'Private Sub DrawPauseScreen(g As Graphics)
@@ -2331,61 +2337,61 @@ Public Class Form1
 
 
 
-    Private Sub RecomputeKeyboardHintLayout()
+    'Private Sub RecomputeKeyboardHintLayout()
 
-        Using g As Graphics = Me.CreateGraphics()
+    '    Using g As Graphics = Me.CreateGraphics()
 
-            ' -------------------------------
-            ' Left Paddle Hint
-            ' -------------------------------
-            hintLeftText = "W S - Move Paddle"
-            hintLeftSize = g.MeasureString(hintLeftText, fullscreenIndicatorFont)
+    '        ' -------------------------------
+    '        ' Left Paddle Hint
+    '        ' -------------------------------
+    '        hintLeftText = "W S - Move Paddle"
+    '        hintLeftSize = g.MeasureString(hintLeftText, fullscreenIndicatorFont)
 
-            ' -------------------------------
-            ' Right Paddle Hint
-            ' -------------------------------
-            If playerMode = 2 Then
-                hintRightText = "Arrows - Move Paddle"
-            Else
-                hintRightText = "P - Pause Match"
-            End If
+    '        ' -------------------------------
+    '        ' Right Paddle Hint
+    '        ' -------------------------------
+    '        If playerMode = 2 Then
+    '            hintRightText = "Arrows - Move Paddle"
+    '        Else
+    '            hintRightText = "P - Pause Match"
+    '        End If
 
-            hintRightSize = g.MeasureString(hintRightText, fullscreenIndicatorFont)
-            hintRightX = ClientSize.Width - hintRightSize.Width - 10
+    '        hintRightSize = g.MeasureString(hintRightText, fullscreenIndicatorFont)
+    '        hintRightX = ClientSize.Width - hintRightSize.Width - 10
 
-            ' -------------------------------
-            ' Pause Hint (Bottom‑Left)
-            ' -------------------------------
-            If playerMode = 2 Then
-                pauseText = "P - Pause Match"
-            Else
-                pauseText = ""
-            End If
+    '        ' -------------------------------
+    '        ' Pause Hint (Bottom‑Left)
+    '        ' -------------------------------
+    '        If playerMode = 2 Then
+    '            pauseText = "P - Pause Match"
+    '        Else
+    '            pauseText = ""
+    '        End If
 
-            pauseSize = g.MeasureString(pauseText, fullscreenIndicatorFont)
-            pauseY = ClientSize.Height - pauseSize.Height - 10
+    '        pauseSize = g.MeasureString(pauseText, fullscreenIndicatorFont)
+    '        pauseY = ClientSize.Height - pauseSize.Height - 10
 
-            ' -------------------------------
-            ' FPS (Bottom‑Right)
-            ' -------------------------------
-            fpsText = $"FPS: {fps}"
-            fpsSize = g.MeasureString(fpsText, fullscreenIndicatorFont)
-            fpsX = ClientSize.Width - fpsSize.Width - 10
-            fpsY = ClientSize.Height - fpsSize.Height - 10
+    '        ' -------------------------------
+    '        ' FPS (Bottom‑Right)
+    '        ' -------------------------------
+    '        fpsText = $"FPS: {fps}"
+    '        fpsSize = g.MeasureString(fpsText, fullscreenIndicatorFont)
+    '        fpsX = ClientSize.Width - fpsSize.Width - 10
+    '        fpsY = ClientSize.Height - fpsSize.Height - 10
 
-        End Using
+    '    End Using
 
-    End Sub
+    'End Sub
 
 
-    Private Sub UpdateFPSLayout()
-        fpsText = "FPS: " & fps.ToString()
-        Using g As Graphics = Me.CreateGraphics()
-            fpsSize = g.MeasureString(fpsText, fullscreenIndicatorFont)
-        End Using
-        fpsX = ClientSize.Width - fpsSize.Width - 10
-        fpsY = ClientSize.Height - fpsSize.Height - 10
-    End Sub
+    'Private Sub UpdateFPSLayout()
+    '    fpsText = "FPS: " & fps.ToString()
+    '    Using g As Graphics = Me.CreateGraphics()
+    '        fpsSize = g.MeasureString(fpsText, fullscreenIndicatorFont)
+    '    End Using
+    '    fpsX = ClientSize.Width - fpsSize.Width - 10
+    '    fpsY = ClientSize.Height - fpsSize.Height - 10
+    'End Sub
 
 
 
