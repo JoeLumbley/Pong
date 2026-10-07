@@ -99,33 +99,33 @@ Public Class Form1
     ' -------------------------------
     '  FPS Tracking
     ' -------------------------------
-    Private frameCount As Integer = 0
-    Private fps As Integer = 0
-    Private fpsStopwatch As New Stopwatch()
+    'Private frameCount As Integer = 0
+    'Private fps As Integer = 0
+    'Private fpsStopwatch As New Stopwatch()
 
     ' -------------------------------
     '  GDI Resources
     ' -------------------------------
-    Private ballBrush As SolidBrush
-    Private fpsBrush As SolidBrush
-    Private fpsFont As Font
-    Private trailBrushes As SolidBrush()
-    Private paddleBrush As SolidBrush
-    Private playerLabelBrush As SolidBrush
-    Private scoreBrush As SolidBrush
+    'Private ballBrush As SolidBrush
+    'Private fpsBrush As SolidBrush
+    'Private fpsFont As Font
+    'Private trailBrushes As SolidBrush()
+    'Private paddleBrush As SolidBrush
+    'Private playerLabelBrush As SolidBrush
+    'Private scoreBrush As SolidBrush
 
-    Private whiteBrush As SolidBrush
-    Private grayBrush As SolidBrush
-    Private dimBrush As SolidBrush
+    'Private whiteBrush As SolidBrush
+    'Private grayBrush As SolidBrush
+    'Private dimBrush As SolidBrush
 
     ' -------------------------------
     '  Trail System
     ' -------------------------------
-    Private trail As New List(Of PointF)
-    Private trailLength As Integer = 25
-    Private trailSizes As Integer()
-    Private trailOffsets As Single()
-    Private trailAlpha As Integer()
+    'Private trail As New List(Of PointF)
+    'Private trailLength As Integer = 25
+    'Private trailSizes As Integer()
+    'Private trailOffsets As Single()
+    'Private trailAlpha As Integer()
 
     ' -------------------------------
     '  Audio Cooldown
@@ -218,36 +218,36 @@ Public Class Form1
     ' -------------------------------
     '  Cached Fonts
     ' -------------------------------
-    Private hudScoreFont As Font
-    Private hudLabelFont As Font
-    Private pauseTitleFont As Font
-    Private pauseMenuFont As Font
-    Private startTitleFont As Font
-    Private aiDifficultyTitleFont As Font
-    Private startMenuFont As Font
-    Private startInfoFont As Font
-    Private gameOverFont As Font
-    Private gameOverInfoFont As Font
+    'Private hudScoreFont As Font
+    'Private hudLabelFont As Font
+    'Private pauseTitleFont As Font
+    'Private pauseMenuFont As Font
+    'Private startTitleFont As Font
+    'Private aiDifficultyTitleFont As Font
+    'Private startMenuFont As Font
+    'Private startInfoFont As Font
+    'Private gameOverFont As Font
+    'Private gameOverInfoFont As Font
 
-    Private fullscreenIndicatorFont As Font
-    Private fullscreenIndicatorBrush As SolidBrush
+    'Private fullscreenIndicatorFont As Font
+    'Private fullscreenIndicatorBrush As SolidBrush
 
 
     ' Cached pause layout
-    Private pauseTitle As String = "PAUSED"
-    Private pauseTitleSize As SizeF
-    Private pauseTitleX As Single
-    Private pauseTitleY As Single
+    'Private pauseTitle As String = "PAUSED"
+    'Private pauseTitleSize As SizeF
+    'Private pauseTitleX As Single
+    'Private pauseTitleY As Single
 
-    Private pauseMenuItems() As String = {"Resume", "New", "Quit"}
-    Private pauseMenuItemSizes() As SizeF
-    Private pauseMenuItemX() As Single
-    Private pauseMenuItemY() As Single
+    'Private pauseMenuItems() As String = {"Resume", "New", "Quit"}
+    'Private pauseMenuItemSizes() As SizeF
+    'Private pauseMenuItemX() As Single
+    'Private pauseMenuItemY() As Single
 
-    Private pauseMenuStartY As Single
-    Private pauseMenuSpacing As Single
+    'Private pauseMenuStartY As Single
+    'Private pauseMenuSpacing As Single
 
-    Private pauseMenuItemBrush() As SolidBrush
+    'Private pauseMenuItemBrush() As SolidBrush
 
 
 
@@ -300,56 +300,56 @@ Public Class Form1
     Private pauseQuitRect As Rectangle
 
 
-    Private lightBrush As New SolidBrush(Color.FromArgb(32, 255, 255, 255))
+    'Private lightBrush As New SolidBrush(Color.FromArgb(32, 255, 255, 255))
 
-    Private darkBrush As New SolidBrush(Color.FromArgb(64, 0, 0, 0))
+    'Private darkBrush As New SolidBrush(Color.FromArgb(64, 0, 0, 0))
 
-    Private outlinePen As New Pen(Color.FromArgb(40, 255, 255, 255), 2)
-    Private darkOutlinePen As New Pen(Color.FromArgb(32, 255, 255, 255), 2)
+    'Private outlinePen As New Pen(Color.FromArgb(40, 255, 255, 255), 2)
+    'Private darkOutlinePen As New Pen(Color.FromArgb(32, 255, 255, 255), 2)
 
 
     Private mouseIsClicking As Boolean = False
 
     ' HUD cached layout
-    Private leftScoreX As Single
-    Private rightScoreX As Single
-    Private leftLabelX As Single
-    Private rightLabelX As Single
-    Private scoreY As Single
-    Private labelY As Single
+    'Private leftScoreX As Single
+    'Private rightScoreX As Single
+    'Private leftLabelX As Single
+    'Private rightLabelX As Single
+    'Private scoreY As Single
+    'Private labelY As Single
 
-    Private leftScoreSize As SizeF
-    Private rightScoreSize As SizeF
-    Private leftLabelSize As SizeF
-    Private rightLabelSize As SizeF
-
-
+    'Private leftScoreSize As SizeF
+    'Private rightScoreSize As SizeF
+    'Private leftLabelSize As SizeF
+    'Private rightLabelSize As SizeF
 
 
-    ' Cached text
-    Private hintLeftText As String
-    Private hintRightText As String
-    Private pauseText As String
-    Private fpsText As String
 
-    ' Cached sizes
-    Private hintLeftSize As SizeF
-    Private hintRightSize As SizeF
-    Private pauseSize As SizeF
-    Private fpsSize As SizeF
 
-    ' Cached positions
-    Private hintLeftX As Single = 10
-    Private hintLeftY As Single = 10
+    '' Cached text
+    'Private hintLeftText As String
+    'Private hintRightText As String
+    'Private pauseText As String
+    'Private fpsText As String
 
-    Private hintRightX As Single
-    Private hintRightY As Single = 10
+    '' Cached sizes
+    'Private hintLeftSize As SizeF
+    'Private hintRightSize As SizeF
+    'Private pauseSize As SizeF
+    'Private fpsSize As SizeF
 
-    Private pauseX As Single = 10
-    Private pauseY As Single
+    '' Cached positions
+    'Private hintLeftX As Single = 10
+    'Private hintLeftY As Single = 10
 
-    Private fpsX As Single
-    Private fpsY As Single
+    'Private hintRightX As Single
+    'Private hintRightY As Single = 10
+
+    'Private pauseX As Single = 10
+    'Private pauseY As Single
+
+    'Private fpsX As Single
+    'Private fpsY As Single
 
 
 
@@ -388,7 +388,7 @@ Public Class Form1
         InitWindow()
         InitTimers()
         'InitGraphics()
-        InitTrails()
+        'InitTrails()
         InitGameplay()
         InitAudio()
         InitBall()
@@ -471,113 +471,15 @@ Public Class Form1
     '  RENDERING
     ' ===============================
 
-    'Protected Overrides Sub OnPaint(e As PaintEventArgs)
-    '    MyBase.OnPaint(e)
-
-    '    Dim g As Graphics = e.Graphics
-    '    g.CompositingMode = CompositingMode.SourceOver
-    '    g.SmoothingMode = SmoothingMode.AntiAlias
-    '    g.PixelOffsetMode = PixelOffsetMode.HighQuality
-    '    g.InterpolationMode = InterpolationMode.HighQualityBicubic
-    '    g.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
-
-    '    'UpdateFPS()
-    '    renderer.UpdateFPS()
-
-    '    Select Case currentState
-    '        Case GameState.StartScreen
-    '            DrawTrail(g)
-    '            DrawBall(g)
-    '            DrawStartScreen(g)
-    '            If showKeyboardHints Then DrawKeyboardHintsStartScreen(g)
-
-    '        Case GameState.Playing
-    '            renderer.DrawGamePlayScreen(g)
-    '            'DrawTrail(g)
-    '            'renderer.DrawTrail(g)
-    '            'renderer.DrawBall(g)
-    '            'DrawBall(g)
-    '            'DrawPaddles(g)
-    '            'renderer.DrawPaddles(g)
-    '            'DrawHUD(g)
-    '            'renderer.DrawHUD(g)
-    '            'If showKeyboardHints Then DrawKeyboardHintsGamePlayScreen(g)
-    '            'If showKeyboardHints Then renderer.DrawKeyboardHintsGamePlayScreen(g)
-
-    '        Case GameState.EndScreen
-    '            DrawTrail(g)
-    '            DrawBall(g)
-
-    '            DrawHUD(g)
-
-    '            DrawGameOver(g)
-    '            If showKeyboardHints Then DrawKeyboardHintsGameOverScreen(g)
-
-    '        Case GameState.Pause
-    '            DrawTrail(g)
-    '            DrawBall(g)
-    '            DrawPaddles(g)
-    '            DrawHUD(g)
-    '            DrawPauseScreen(g)
-    '            If showKeyboardHints Then DrawKeyboardHintsPauseScreen(g)
-
-
-    '        Case GameState.AIDifficulty
-    '            DrawTrail(g)
-    '            DrawBall(g)
-    '            DrawAIDifficultyScreen(g)
-    '            If showKeyboardHints Then DrawKeyboardHintsAIDifficultyScreen(g)
-
-    '    End Select
-    'End Sub
 
     Protected Overrides Sub OnPaint(e As PaintEventArgs)
         MyBase.OnPaint(e)
 
-        'Dim g As Graphics = e.Graphics
-        'g.CompositingMode = CompositingMode.SourceOver
-        'g.SmoothingMode = SmoothingMode.AntiAlias
-        'g.PixelOffsetMode = PixelOffsetMode.HighQuality
-        'g.InterpolationMode = InterpolationMode.HighQualityBicubic
-        'g.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
 
         renderer.UpdateFormState(Me.FormBorderStyle, Me.ClientSize)
         renderer.UpdateFPS()
         renderer.Render(e.Graphics, currentState, showKeyboardHints)
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     Protected Overrides Sub OnPaintBackground(pevent As PaintEventArgs)
@@ -829,83 +731,6 @@ Public Class Form1
     '  RESIZE / SCALING
     ' ===============================
 
-    'Protected Overrides Sub OnResize(e As EventArgs)
-    '    MyBase.OnResize(e)
-
-    '    If Me.WindowState = FormWindowState.Minimized Then Return
-    '    'If trailSizes Is Nothing OrElse trailOffsets Is Nothing Then Return
-
-    '    ScaleBallDiameter()
-    '    renderer.UpdateBallDiameter(ballDiameter)
-    '    ScaleBallSpeed4State()
-    '    ScalePaddleSpeed()
-
-    '    paddleHeight = ClientSize.Height / 8
-    '    paddleWidth = ClientSize.Height / 25
-
-    '    paddleLeft.Height = paddleHeight
-    '    paddleLeft.Width = paddleWidth
-    '    paddleRight.Height = paddleHeight
-    '    paddleRight.Width = paddleWidth
-
-    '    paddleLeft.X = ClientSize.Height / 25
-    '    paddleRight.X = ClientSize.Width - ClientSize.Height / 25 - paddleWidth
-
-    '    ResetPaddles()
-    '    CenterBall()
-
-    '    If currentState = GameState.Playing OrElse currentState = GameState.Pause Then
-    '        ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
-    '    Else
-    '        MoveBallRandom()
-    '    End If
-
-
-    '    'Dim newLength As Integer = CInt(ClientSize.Height / 30)
-    '    'If newLength < 5 Then newLength = 5
-
-    '    'If newLength <> trailLength Then
-    '    '    trailLength = newLength
-
-    '    '    ReDim Preserve trailSizes(trailLength - 1)
-    '    '    ReDim Preserve trailOffsets(trailLength - 1)
-    '    '    ReDim Preserve trailAlpha(trailLength - 1)
-    '    '    ReDim Preserve trailBrushes(trailLength - 1)
-
-    '    '    For i As Integer = 0 To trailLength - 1
-    '    '        Dim size As Integer = ballDiameter - (trailLength - i) * 2
-    '    '        If size < 10 Then size = 10
-
-    '    '        trailSizes(i) = size
-    '    '        trailOffsets(i) = CSng((ballDiameter - size) / 2.0F)
-
-    '    '        Dim t As Double = i / CDbl(trailLength)
-    '    '        Dim alpha As Integer = CInt(32 * t * t)
-    '    '        trailAlpha(i) = alpha
-
-    '    '        If trailBrushes(i) Is Nothing Then
-    '    '            trailBrushes(i) = New SolidBrush(Color.FromArgb(alpha, 0, 191, 255))
-    '    '        Else
-    '    '            trailBrushes(i).Color = Color.FromArgb(alpha, 0, 191, 255)
-    '    '        End If
-    '    '    Next
-    '    'End If
-
-
-    '    renderer.UpdateTrail()
-
-
-    '    'trail.Clear()
-    '    'RescaleFonts()
-
-    '    renderer.RescaleFonts(Me.CreateGraphics(), ClientSize)
-
-    '    aiDifficulty = ClientSize.Height / 1080.0
-
-
-    '    Invalidate()
-    'End Sub
-
 
     Protected Overrides Sub OnResize(e As EventArgs)
         MyBase.OnResize(e)
@@ -975,30 +800,6 @@ Public Class Form1
         Invalidate()
     End Sub
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ' ===============================
     '  CLEANUP / FILES
     ' ===============================
@@ -1011,33 +812,33 @@ Public Class Form1
         physicsTimer?.Stop()
 
 
-        ballBrush?.Dispose()
-        fpsBrush?.Dispose()
-        fpsFont?.Dispose()
-        paddleBrush?.Dispose()
-        playerLabelBrush?.Dispose()
-        scoreBrush?.Dispose()
-        whiteBrush?.Dispose()
-        grayBrush?.Dispose()
-        dimBrush?.Dispose()
+        'ballBrush?.Dispose()
+        'fpsBrush?.Dispose()
+        'fpsFont?.Dispose()
+        'paddleBrush?.Dispose()
+        'playerLabelBrush?.Dispose()
+        'scoreBrush?.Dispose()
+        'whiteBrush?.Dispose()
+        'grayBrush?.Dispose()
+        'dimBrush?.Dispose()
 
-        If trailBrushes IsNot Nothing Then
-            For Each b In trailBrushes
-                b?.Dispose()
-            Next
-        End If
+        'If trailBrushes IsNot Nothing Then
+        '    For Each b In trailBrushes
+        '        b?.Dispose()
+        '    Next
+        'End If
 
-        hudScoreFont?.Dispose()
-        hudLabelFont?.Dispose()
-        pauseTitleFont?.Dispose()
-        pauseMenuFont?.Dispose()
-        startTitleFont?.Dispose()
-        aiDifficultyTitleFont?.Dispose()
-        startMenuFont?.Dispose()
-        startInfoFont?.Dispose()
-        gameOverFont?.Dispose()
-        gameOverInfoFont?.Dispose()
-        fullscreenIndicatorFont?.Dispose()
+        'hudScoreFont?.Dispose()
+        'hudLabelFont?.Dispose()
+        'pauseTitleFont?.Dispose()
+        'pauseMenuFont?.Dispose()
+        'startTitleFont?.Dispose()
+        'aiDifficultyTitleFont?.Dispose()
+        'startMenuFont?.Dispose()
+        'startInfoFont?.Dispose()
+        'gameOverFont?.Dispose()
+        'gameOverInfoFont?.Dispose()
+        'fullscreenIndicatorFont?.Dispose()
 
         physicsTimer?.Dispose()
         AudioRestartTimer?.Dispose()
@@ -1082,47 +883,10 @@ Public Class Form1
         AddHandler physicsTimer.Tick, AddressOf PhysicsTick
 
         physicsStopwatch.Start()
-        fpsStopwatch.Start()
 
 
     End Sub
 
-    'Private Sub InitGraphics()
-    '    ballBrush = New SolidBrush(Color.DeepSkyBlue)
-    '    fpsBrush = New SolidBrush(Color.Gray)
-    '    fpsFont = New Font("Segoe UI", 14, FontStyle.Bold)
-    '    paddleBrush = New SolidBrush(Color.White)
-    '    playerLabelBrush = New SolidBrush(Color.Gray)
-    '    scoreBrush = New SolidBrush(Color.White)
-
-    '    whiteBrush = New SolidBrush(Color.White)
-    '    grayBrush = New SolidBrush(Color.FromArgb(140, 140, 140))
-    '    dimBrush = New SolidBrush(Color.FromArgb(120, 0, 0, 0))
-    '    fullscreenIndicatorBrush = New SolidBrush(Color.FromArgb(120, 255, 255, 255))
-
-    '    RescaleFonts()
-    'End Sub
-
-    Private Sub InitTrails()
-        trailSizes = New Integer(trailLength - 1) {}
-        trailOffsets = New Single(trailLength - 1) {}
-        trailAlpha = New Integer(trailLength - 1) {}
-        trailBrushes = New SolidBrush(trailLength - 1) {}
-
-        For i As Integer = 0 To trailLength - 1
-            Dim size As Integer = ballDiameter - (trailLength - i) * 2
-            If size < 10 Then size = 10
-
-            trailSizes(i) = size
-            trailOffsets(i) = CSng((ballDiameter - size) / 2)
-
-            Dim t As Double = i / CDbl(trailLength)
-            Dim alpha As Integer = CInt(32 * t * t)
-            trailAlpha(i) = alpha
-
-            trailBrushes(i) = New SolidBrush(Color.FromArgb(alpha, 0, 191, 255))
-        Next
-    End Sub
 
     Private Sub InitGameplay()
         InitPaddles()
@@ -1257,26 +1021,6 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub UpdateStartScreenFX()
-    '    If titleFadeIn Then
-    '        titleAlpha += 3
-    '        If titleAlpha >= 255 Then
-    '            titleAlpha = 255
-    '            titleFadeIn = False
-    '        End If
-    '    Else
-    '        titleAlpha -= 3
-    '        If titleAlpha <= 80 Then
-    '            titleAlpha = 80
-    '            titleFadeIn = True
-    '        End If
-    '    End If
-
-    '    If blinkStopwatch.ElapsedMilliseconds >= 800 Then
-    '        blinkVisible = Not blinkVisible
-    '        blinkStopwatch.Restart()
-    '    End If
-    'End Sub
 
     Private Sub UpdatePaddles(dt As Double)
         If moveLeftPaddleUp Then paddleLeft.Y -= CSng(paddleSpeed * dt)
@@ -1369,6 +1113,7 @@ Public Class Form1
         If ballPos.Y <= 0 Then
             ballPos.Y = 0
             renderer.UpdateBallPosition(ballPos)
+
             velY = Math.Abs(velY)
             PlayWithCooldown("bounce", 100)
 
@@ -1394,6 +1139,8 @@ Public Class Form1
 
             ElseIf ballPos.X >= ClientSize.Width - ballDiameter Then
                 ballPos.X = ClientSize.Width - ballDiameter
+                renderer.UpdateBallPosition(ballPos)
+
                 velX = -Math.Abs(velX)
                 PlayWithCooldown("bounce", 100)
             End If
@@ -1449,7 +1196,7 @@ Public Class Form1
             PlayPoint()
             ResetBall(-1)
             ResetPaddles()
-            'renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y)
+            renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, ClientSize)
 
         End If
     End Sub
@@ -1489,7 +1236,7 @@ Public Class Form1
     Private Sub ResetBall(direction As Integer)
         CenterBall()
         ServeBall(direction)
-        trail.Clear()
+        'trail.Clear()
         renderer.ClearTrail()
 
     End Sub
@@ -1510,902 +1257,6 @@ Public Class Form1
         lastPlay(name) = now
         Audio.PlayOverlapping(name)
     End Sub
-
-    ' ===============================
-    '  TRAIL
-    ' ===============================
-
-    'Private Sub UpdateTrail()
-    '    trail.Add(New PointF(ballPos.X, ballPos.Y))
-
-    '    If trail.Count > trailLength Then
-    '        trail.RemoveAt(0)
-    '    End If
-    'End Sub
-
-
-    'Private Sub DrawPauseScreen(g As Graphics)
-
-    '    ' Dim the game
-    '    g.FillRectangle(dimBrush, ClientRectangle)
-
-    '    ' Title
-    '    g.DrawString(pauseTitle, pauseTitleFont, whiteBrush,
-    '             pauseTitleX, pauseTitleY)
-
-    '    ' Pre-created brushes/pens (created once in Form_Load)
-    '    ' darkBrush
-    '    ' outlinePen
-    '    ' darkOutlinePen
-
-    '    For i As Integer = 0 To pauseMenuItems.Length - 1
-
-    '        Dim text = pauseMenuItems(i)
-    '        Dim x = pauseMenuItemX(i)
-    '        Dim y = pauseMenuItemY(i)
-
-    '        ' Measure once per item
-    '        Dim size = g.MeasureString(text, pauseMenuFont)
-
-    '        ' Compute clickable rectangles
-    '        Dim rect As Rectangle = New Rectangle(CInt(x), CInt(y),
-    '                                          CInt(size.Width), CInt(size.Height))
-
-    '        Select Case i
-    '            Case 0 : pauseResumeRect = rect
-    '            Case 1 : pauseNewMatchRect = rect
-    '            Case 2 : pauseQuitRect = rect
-    '        End Select
-
-    '        ' Highlight selection
-    '        If i = pauseMenuSelection Then
-    '            'g.FillRectangle(lightBrush, rect)
-    '            FillRoundedRectangle(g, lightBrush, rect, ClientSize.Height / 64)
-    '            'g.DrawRectangle(outlinePen, rect)
-    '            DrawRoundedRectangle(g, outlinePen, rect, ClientSize.Height / 64)
-    '        Else
-    '            'g.FillRectangle(darkBrush, rect)
-    '            FillRoundedRectangle(g, darkBrush, rect, ClientSize.Height / 64)
-
-    '            'g.DrawRectangle(darkOutlinePen, rect)
-    '            DrawRoundedRectangle(g, darkOutlinePen, rect, ClientSize.Height / 64)
-
-    '        End If
-
-    '        ' Draw text
-    '        Dim brush As SolidBrush = If(i = pauseMenuSelection, whiteBrush, grayBrush)
-    '        g.DrawString(text, pauseMenuFont, brush, x, y)
-
-    '    Next
-
-    'End Sub
-
-
-    'Private Sub DrawTrail(g As Graphics)
-    '    If trail Is Nothing OrElse
-    '       trailSizes Is Nothing OrElse
-    '       trailOffsets Is Nothing OrElse
-    '       trailBrushes Is Nothing Then
-    '        Exit Sub
-    '    End If
-
-    '    Dim count As Integer = Math.Min(trail.Count, trailLength)
-
-    '    For i As Integer = 0 To count - 1
-    '        Dim p As PointF = trail(i)
-    '        Dim size As Integer = trailSizes(i)
-    '        Dim offset As Single = trailOffsets(i)
-
-    '        g.FillEllipse(trailBrushes(i),
-    '                      p.X + offset,
-    '                      p.Y + offset,
-    '                      size,
-    '                      size)
-    '    Next
-    'End Sub
-
-
-    'Private Sub DrawTrail(g As Graphics)
-
-    '    If trail Is Nothing OrElse
-    '   trailSizes Is Nothing OrElse
-    '   trailOffsets Is Nothing OrElse
-    '   trailBrushes Is Nothing Then
-    '        Exit Sub
-    '    End If
-
-    '    Dim count As Integer = trail.Count
-    '    If count > trailLength Then count = trailLength
-
-    '    For i As Integer = 0 To count - 1
-
-    '        Dim p As PointF = trail(i)
-    '        Dim offset As Single = trailOffsets(i)
-
-    '        g.FillEllipse(trailBrushes(i),
-    '                  p.X + offset,
-    '                  p.Y + offset,
-    '                  trailSizes(i),
-    '                  trailSizes(i))
-    '    Next
-
-    'End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    'Private Sub DrawBall(g As Graphics)
-    '    g.FillEllipse(ballBrush,
-    '                  ballPos.X,
-    '                  ballPos.Y,
-    '                  ballDiameter,
-    '                  ballDiameter)
-    'End Sub
-
-    'Private Sub DrawPaddles(g As Graphics)
-    '    g.FillRectangle(paddleBrush, paddleLeft)
-    '    g.FillRectangle(paddleBrush, paddleRight)
-    'End Sub
-
-    'Private Sub DrawHUD(g As Graphics)
-
-    '    Dim halfWidth As Single = ClientSize.Width / 2.0F
-
-    '    Dim leftScoreText As String = scoreLeft.ToString()
-    '    Dim rightScoreText As String = scoreRight.ToString()
-
-    '    Dim leftScoreSize = g.MeasureString(leftScoreText, hudScoreFont)
-    '    Dim rightScoreSize = g.MeasureString(rightScoreText, hudScoreFont)
-
-    '    Dim leftLabelSize = g.MeasureString(leftPlayerName, hudLabelFont)
-    '    Dim rightLabelSize = g.MeasureString(rightPlayerName, hudLabelFont)
-
-    '    Dim scoreY As Single = 10 + CSng(ClientSize.Height / 25)
-    '    Dim labelY As Single = scoreY - CSng(ClientSize.Height / 200.0)
-
-    '    Dim leftScoreX As Single = (halfWidth - leftScoreSize.Width) / 2.0F
-    '    Dim rightScoreX As Single = halfWidth + (halfWidth - rightScoreSize.Width) / 2.0F
-
-    '    Dim leftLabelX As Single = (halfWidth - leftLabelSize.Width) / 2.0F
-    '    Dim rightLabelX As Single = halfWidth + (halfWidth - rightLabelSize.Width) / 2.0F
-
-    '    g.DrawString(leftPlayerName, hudLabelFont, playerLabelBrush, leftLabelX, labelY)
-    '    g.DrawString(rightPlayerName, hudLabelFont, playerLabelBrush, rightLabelX, labelY)
-
-    '    g.DrawString(leftScoreText, hudScoreFont, scoreBrush, leftScoreX, scoreY)
-    '    g.DrawString(rightScoreText, hudScoreFont, scoreBrush, rightScoreX, scoreY)
-
-    'End Sub
-
-
-    'Private Sub DrawHUD(g As Graphics)
-
-    '    ' Draw labels (no allocations)
-    '    g.DrawString(leftPlayerName, hudLabelFont, playerLabelBrush, leftLabelX, labelY)
-    '    g.DrawString(rightPlayerName, hudLabelFont, playerLabelBrush, rightLabelX, labelY)
-
-    '    ' Draw scores (no allocations)
-    '    g.DrawString(scoreLeft.ToString(), hudScoreFont, scoreBrush, leftScoreX, scoreY)
-    '    g.DrawString(scoreRight.ToString(), hudScoreFont, scoreBrush, rightScoreX, scoreY)
-
-    'End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    'Private Sub DrawFPS(g As Graphics)
-    '    'UpdateFPS()
-
-
-    '    ' -------------------------------
-    '    '  Keyboard Hints (Top‑Left)
-    '    ' -------------------------------
-    '    Dim hintText As String
-
-    '    If numberOfPlayersSelection = 0 Then
-    '        ' One Player selected → user will choose AI difficulty next
-    '        hintText = $"FPS: {fps}   W S - Move Paddle"
-    '    Else
-    '        ' Two Players selected → match starts immediately
-    '        hintText = $"FPS: {fps}   W S - Left Paddle   Up Down Arrows - Right Paddle"
-    '    End If
-
-    '    Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
-
-    '    g.DrawString(hintText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             10,
-    '             10)
-
-
-    'End Sub
-
-
-    'Private Sub DrawKeyboardHintsStartScreen(g As Graphics)
-
-    '    ' -------------------------------
-    '    '  Keyboard Hints (Top‑Left)
-    '    ' -------------------------------
-    '    Dim hintText As String =
-    '    "1 - One Player   2 - Two Players   Enter - Start Match"
-
-    '    Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
-
-    '    g.DrawString(hintText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             10,
-    '             10)
-
-
-    '    ' -------------------------------
-    '    '  Fullscreen Indicator (Top‑Right)
-    '    ' -------------------------------
-    '    Dim fsText As String =
-    '    If(Me.FormBorderStyle = FormBorderStyle.None,
-    '       "F - Exit Fullscreen",
-    '       "F - Fullscreen")
-
-    '    Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
-
-    '    g.DrawString(fsText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             ClientSize.Width - fsSize.Width - 10,
-    '             10)
-
-
-    '    ' -------------------------------
-    '    '  Hide Keyboard Hints (Bottom‑Left)
-    '    ' -------------------------------
-    '    Dim hideText As String = "CTRL H - Hide Keyboard Hints"
-    '    Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
-
-    '    g.DrawString(hideText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             10,
-    '             ClientSize.Height - hideSize.Height - 10)
-
-    'End Sub
-
-
-    'Private Sub DrawStartScreen(g As Graphics)
-
-    '    ' -------------------------------
-    '    '  Title
-    '    ' -------------------------------
-    '    Dim title As String = "PONG"
-    '    Dim titleSize = g.MeasureString(title, startTitleFont)
-    '    Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
-
-    '    Using titleBrush As New SolidBrush(titleColor)
-    '        g.DrawString(title, startTitleFont, titleBrush,
-    '                 CSng((ClientSize.Width - titleSize.Width) / 2.0F),
-    '                 CSng(ClientSize.Height * 0.15F))
-    '    End Using
-
-
-    '    ' -------------------------------
-    '    '  Menu Options
-    '    ' -------------------------------
-    '    Dim option1 As String = "1 Player"
-    '    Dim option2 As String = "2 Players"
-
-    '    Dim opt1Size = g.MeasureString(option1, startMenuFont)
-    '    Dim opt2Size = g.MeasureString(option2, startMenuFont)
-
-    '    Dim opt1X As Single = CSng((ClientSize.Width - opt1Size.Width) / 2.0F)
-    '    Dim opt1Y As Single = CSng(ClientSize.Height * 0.41F)
-
-    '    Dim opt2X As Single = CSng((ClientSize.Width - opt2Size.Width) / 2.0F)
-    '    Dim opt2Y As Single = CSng(ClientSize.Height * 0.52F)
-
-    '    ' Store clickable rectangles
-    '    onePlayerOptionRect = New Rectangle(CInt(opt1X), CInt(opt1Y),
-    '                                    CInt(opt1Size.Width), CInt(opt1Size.Height))
-
-    '    twoPlayersOptionRect = New Rectangle(CInt(opt2X), CInt(opt2Y),
-    '                                     CInt(opt2Size.Width), CInt(opt2Size.Height))
-
-
-    '    ' -------------------------------
-    '    '  Highlight + Outline (Pause Menu Style)
-    '    ' -------------------------------
-
-    '    ' Option 1
-    '    If numberOfPlayersSelection = 0 Then
-    '        FillRoundedRectangle(g, lightBrush, onePlayerOptionRect, ClientSize.Height / 64)
-    '        DrawRoundedRectangle(g, outlinePen, onePlayerOptionRect, ClientSize.Height / 64)
-
-    '    Else
-    '        FillRoundedRectangle(g, darkBrush, onePlayerOptionRect, ClientSize.Height / 64)
-    '        DrawRoundedRectangle(g, darkOutlinePen, onePlayerOptionRect, ClientSize.Height / 64)
-
-    '    End If
-
-    '    ' Option 2
-    '    If numberOfPlayersSelection = 1 Then
-    '        FillRoundedRectangle(g, lightBrush, twoPlayersOptionRect, ClientSize.Height / 64)
-    '        DrawRoundedRectangle(g, outlinePen, twoPlayersOptionRect, ClientSize.Height / 64)
-
-    '    Else
-    '        FillRoundedRectangle(g, darkBrush, twoPlayersOptionRect, ClientSize.Height / 64)
-    '        DrawRoundedRectangle(g, darkOutlinePen, twoPlayersOptionRect, ClientSize.Height / 64)
-
-    '    End If
-
-
-    '    ' -------------------------------
-    '    '  Draw Text
-    '    ' -------------------------------
-    '    Dim opt1Brush As SolidBrush = If(numberOfPlayersSelection = 0, whiteBrush, grayBrush)
-    '    Dim opt2Brush As SolidBrush = If(numberOfPlayersSelection = 1, whiteBrush, grayBrush)
-
-    '    g.DrawString(option1, startMenuFont, opt1Brush, opt1X, opt1Y)
-    '    g.DrawString(option2, startMenuFont, opt2Brush, opt2X, opt2Y)
-
-
-    '    ' -------------------------------
-    '    '  Blink "Press SPACE"
-    '    ' -------------------------------
-    '    If blinkVisible Then
-    '        Dim info As String = "Press SPACE to Start"
-    '        Dim infoSize = g.MeasureString(info, startInfoFont)
-
-    '        g.DrawString(info, startInfoFont, whiteBrush,
-    '                 CSng((ClientSize.Width - infoSize.Width) / 2.0F),
-    '                 CSng(ClientSize.Height * 0.75F))
-    '    End If
-
-    'End Sub
-
-
-
-
-    'Private Sub DrawKeyboardHintsPauseScreen(g As Graphics)
-
-    '    ' -------------------------------
-    '    '  Keyboard Hints (Top‑Left)
-    '    ' -------------------------------
-    '    Dim hintText As String
-    '    hintText = $"R - Resume Match   N - New Match"
-    '    Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
-
-    '    g.DrawString(hintText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             10,
-    '             10)
-
-
-    '    ' -------------------------------
-    '    '  Fullscreen Indicator (Top-Right)
-    '    ' -------------------------------
-    '    Dim fsText As String =
-    '    If(Me.FormBorderStyle = FormBorderStyle.None,
-    '       "F - Exit Fullscreen",
-    '       "F - Fullscreen")
-
-    '    Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
-
-    '    g.DrawString(fsText,
-    '         fullscreenIndicatorFont,
-    '         grayBrush,
-    '         ClientSize.Width - fsSize.Width - 10,
-    '         10)
-
-    '    ' -------------------------------
-    '    '  Quit Match (Bottom‑Left)
-    '    ' -------------------------------
-    '    Dim quitText As String = "Q - Quit Match"
-
-    '    Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
-
-    '    g.DrawString(quitText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             10,
-    '             ClientSize.Height - quitSize.Height - 10)
-
-    '    ' -------------------------------
-    '    '  Hide Keyboard Hints (Bottom‑Right)
-    '    ' -------------------------------
-    '    Dim hideText As String = "CTRL H - Hide Keyboard Hints"
-    '    Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
-
-    '    g.DrawString(hideText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             ClientSize.Width - hideSize.Width - 10,
-    '             ClientSize.Height - hideSize.Height - 10)
-
-
-    'End Sub
-
-
-    'Private Sub DrawKeyboardHintsGamePlayScreen(g As Graphics)
-
-    '    ' Left paddle hint
-    '    g.DrawString(hintLeftText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             hintLeftX,
-    '             hintLeftY)
-
-    '    ' Right paddle hint
-    '    g.DrawString(hintRightText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             hintRightX,
-    '             hintRightY)
-
-    '    ' Pause hint (bottom-left)
-    '    g.DrawString(pauseText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             pauseX,
-    '             pauseY)
-
-    '    ' FPS (bottom-right)
-    '    g.DrawString(fpsText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             fpsX,
-    '             fpsY)
-
-    'End Sub
-
-
-    'Private Sub DrawKeyboardHintsAIDifficultyScreen(g As Graphics)
-
-    '    ' -------------------------------
-    '    '  Keyboard Hints (Top‑Left)
-    '    ' -------------------------------
-    '    Dim hintText As String = "E - Easy   N - Normal   H - Hard   Enter - Start Match"
-    '    Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
-
-    '    g.DrawString(hintText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             10,
-    '             10)
-
-
-    '    ' -------------------------------
-    '    '  Fullscreen Indicator (Top‑Right)
-    '    ' -------------------------------
-    '    Dim fsText As String =
-    '    If(Me.FormBorderStyle = FormBorderStyle.None,
-    '       "F - Exit Fullscreen",
-    '       "F - Fullscreen")
-
-    '    Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
-
-    '    g.DrawString(fsText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             ClientSize.Width - fsSize.Width - 10,
-    '             10)
-
-
-    '    ' -------------------------------
-    '    '  Hide Keyboard Hints (Bottom‑Left)
-    '    ' -------------------------------
-    '    Dim hideText As String = "CTRL H - Hide Keyboard Hints"
-    '    Dim hideSize = g.MeasureString(hideText, fullscreenIndicatorFont)
-
-    '    g.DrawString(hideText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             10,
-    '             ClientSize.Height - hideSize.Height - 10)
-
-    'End Sub
-
-
-
-    'Private Sub DrawAIDifficultyScreen(g As Graphics)
-
-    '    ' -------------------------------
-    '    '  Title
-    '    ' -------------------------------
-    '    Dim title As String = "Difficulty"
-    '    Dim titleSize = g.MeasureString(title, aiDifficultyTitleFont)
-    '    Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
-
-    '    Using titleBrush As New SolidBrush(titleColor)
-    '        g.DrawString(title, aiDifficultyTitleFont, titleBrush,
-    '                 CSng((ClientSize.Width - titleSize.Width) / 2.0F),
-    '                 CSng(ClientSize.Height * 0.2F))
-    '    End Using
-
-
-    '    ' -------------------------------
-    '    '  Menu Options + Rectangles
-    '    ' -------------------------------
-    '    Dim baseY As Single = CSng(ClientSize.Height * 0.41F)
-
-    '    For i As Integer = 0 To aiOptions.Length - 1
-
-    '        Dim text = aiOptions(i)
-    '        Dim size = g.MeasureString(text, startMenuFont)
-
-    '        Dim x = CSng((ClientSize.Width - size.Width) / 2.0F)
-    '        Dim y = baseY + i * (size.Height + ClientSize.Height * 0.03F)
-
-    '        Dim rect As New Rectangle(CInt(x), CInt(y),
-    '                              CInt(size.Width), CInt(size.Height))
-
-    '        ' Store clickable rectangles
-    '        Select Case i
-    '            Case AIDifficultyLevel.Easy
-    '                aiEasyRect = rect
-    '            Case AIDifficultyLevel.Normal
-    '                aiNormalRect = rect
-    '            Case AIDifficultyLevel.Hard
-    '                aiHardRect = rect
-    '        End Select
-
-
-    '        ' -------------------------------
-    '        '  Highlight (Pause Menu Style)
-    '        ' -------------------------------
-    '        If i = aiDifficultySelection Then
-    '            'g.FillRectangle(lightBrush, rect)
-    '            FillRoundedRectangle(g, lightBrush, rect, ClientSize.Height / 64)
-
-    '            'g.DrawRectangle(outlinePen, rect)
-    '            DrawRoundedRectangle(g, outlinePen, rect, ClientSize.Height / 64)
-
-    '        Else
-    '            'g.FillRectangle(darkBrush, rect)
-    '            FillRoundedRectangle(g, darkBrush, rect, ClientSize.Height / 64)
-
-    '            'g.DrawRectangle(darkOutlinePen, rect)
-    '            DrawRoundedRectangle(g, darkOutlinePen, rect, ClientSize.Height / 64)
-
-    '        End If
-
-
-    '        ' -------------------------------
-    '        '  Draw Text
-    '        ' -------------------------------
-    '        Dim brush As SolidBrush = If(i = aiDifficultySelection, whiteBrush, grayBrush)
-    '        g.DrawString(text, startMenuFont, brush, x, y)
-
-    '    Next
-
-
-    '    ' -------------------------------
-    '    '  Blink "Press SPACE"
-    '    ' -------------------------------
-    '    If blinkVisible Then
-    '        Dim info As String = "Press SPACE to Start"
-    '        Dim infoSize = g.MeasureString(info, startInfoFont)
-
-    '        g.DrawString(info, startInfoFont, whiteBrush,
-    '                 CSng((ClientSize.Width - infoSize.Width) / 2.0F),
-    '                 CSng(ClientSize.Height * 0.75F))
-    '    End If
-
-    'End Sub
-
-
-
-    'Private Sub DrawKeyboardHintsGameOverScreen(g As Graphics)
-
-
-    '    ' -------------------------------
-    '    '  Keyboard Hints (Top‑Left)
-    '    ' -------------------------------
-    '    Dim hintText As String = "Enter - Start New Match"
-    '    Dim hintSize = g.MeasureString(hintText, fullscreenIndicatorFont)
-
-    '    g.DrawString(hintText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             10,
-    '             10)
-
-
-    '    ' -------------------------------
-    '    '  Fullscreen Indicator (Top-Right)
-    '    ' -------------------------------
-    '    Dim fsText As String =
-    '    If(Me.FormBorderStyle = FormBorderStyle.None,
-    '       "F - Exit Fullscreen",
-    '       "F - Fullscreen")
-
-    '    Dim fsSize = g.MeasureString(fsText, fullscreenIndicatorFont)
-
-    '    g.DrawString(fsText,
-    '         fullscreenIndicatorFont,
-    '         grayBrush,
-    '         ClientSize.Width - fsSize.Width - 10,
-    '         10)
-
-
-
-    '    ' -------------------------------
-    '    '  Quit Game (Bottom‑Left)
-    '    ' -------------------------------
-    '    Dim quitText As String = "CTRL Q - Quit Game"
-    '    Dim quitSize = g.MeasureString(quitText, fullscreenIndicatorFont)
-
-    '    g.DrawString(quitText,
-    '             fullscreenIndicatorFont,
-    '             grayBrush,
-    '             10,
-    '             ClientSize.Height - quitSize.Height - 10)
-
-
-
-    'End Sub
-
-    'Private Sub DrawGameOver(g As Graphics)
-
-
-    '    ' -------------------------------
-    '    '  Title
-    '    ' -------------------------------
-    '    Dim title As String = winnerText
-    '    Dim titleSize = g.MeasureString(title, gameOverFont)
-    '    Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
-
-    '    Using titleBrush As New SolidBrush(titleColor)
-    '        g.DrawString(title, gameOverFont, titleBrush,
-    '                 CSng((ClientSize.Width - titleSize.Width) / 2.0F),
-    '                 CSng(ClientSize.Height * 0.3F))
-    '    End Using
-
-
-    '    ' -------------------------------
-    '    '  Blink "Press SPACE"
-    '    ' -------------------------------
-    '    If blinkVisible Then
-    '        Dim info As String = "Press SPACE to Start"
-    '        Dim infoSize = g.MeasureString(info, startInfoFont)
-
-    '        g.DrawString(info, startInfoFont, whiteBrush,
-    '                 CSng((ClientSize.Width - infoSize.Width) / 2.0F),
-    '                 CSng(ClientSize.Height * 0.55F))
-    '    End If
-
-    'End Sub
-
-
-    ' ===============================
-    '  FPS COUNTER
-    ' ===============================
-
-    'Private Sub UpdateFPS()
-    '    frameCount += 1
-
-    '    If fpsStopwatch.ElapsedMilliseconds >= 1000 Then
-    '        fps = frameCount
-    '        renderer.UpdateFPS(fps)
-
-    '        frameCount = 0
-    '        fpsStopwatch.Restart()
-    '    End If
-
-    'End Sub
-
-
-    'Private Sub RescaleFonts()
-    '    hudScoreFont?.Dispose()
-    '    hudLabelFont?.Dispose()
-    '    pauseTitleFont?.Dispose()
-    '    aiDifficultyTitleFont?.Dispose()
-    '    pauseMenuFont?.Dispose()
-    '    startTitleFont?.Dispose()
-    '    startMenuFont?.Dispose()
-    '    startInfoFont?.Dispose()
-    '    gameOverFont?.Dispose()
-    '    gameOverInfoFont?.Dispose()
-    '    fullscreenIndicatorFont?.Dispose()
-    '    fpsFont?.Dispose()
-
-    '    hudScoreFont = New Font("Segoe UI", CSng(ClientSize.Height / 12.0F), FontStyle.Bold)
-    '    hudLabelFont = New Font("Segoe UI", CSng(ClientSize.Height / 50.0F), FontStyle.Regular)
-
-    '    pauseTitleFont = New Font("Segoe UI", CSng(ClientSize.Height / 18.0F), FontStyle.Bold)
-    '    pauseMenuFont = New Font("Segoe UI", CSng(ClientSize.Height / 28.0F), FontStyle.Regular)
-
-    '    startTitleFont = New Font("Segoe UI", CSng(ClientSize.Height / 10.0F), FontStyle.Bold)
-    '    aiDifficultyTitleFont = New Font("Segoe UI", CSng(ClientSize.Height / 18.0F), FontStyle.Bold)
-
-    '    startMenuFont = New Font("Segoe UI", CSng(ClientSize.Height / 30.0F), FontStyle.Regular)
-    '    startInfoFont = New Font("Segoe UI", CSng(ClientSize.Height / 35.0F), FontStyle.Regular)
-
-    '    gameOverFont = New Font("Segoe UI", CSng(ClientSize.Height / 20.0F), FontStyle.Bold)
-    '    gameOverInfoFont = New Font("Segoe UI", CSng(ClientSize.Height / 35.0F), FontStyle.Regular)
-
-    '    fullscreenIndicatorFont = New Font("Segoe UI", CSng(ClientSize.Height / 75.0F), FontStyle.Regular)
-    '    fpsFont = New Font("Segoe UI", CSng(ClientSize.Height / 75.0F), FontStyle.Bold)
-
-    '    ' -------------------------------
-    '    ' Pause Screen Layout Cache
-    '    ' -------------------------------
-    '    Using g As Graphics = Me.CreateGraphics()
-
-    '        ' Title
-    '        pauseTitleSize = g.MeasureString(pauseTitle, pauseTitleFont)
-    '        pauseTitleX = (ClientSize.Width - pauseTitleSize.Width) / 2.0F
-    '        pauseTitleY = ClientSize.Height * 0.22F
-
-    '        ' Menu spacing
-    '        pauseMenuSpacing = ClientSize.Height * 0.11F
-    '        pauseMenuStartY = pauseTitleY + pauseTitleSize.Height + (ClientSize.Height * 0.05F)
-
-    '        ' Menu items
-    '        ReDim pauseMenuItemSizes(pauseMenuItems.Length - 1)
-    '        ReDim pauseMenuItemX(pauseMenuItems.Length - 1)
-    '        ReDim pauseMenuItemY(pauseMenuItems.Length - 1)
-
-    '        For i As Integer = 0 To pauseMenuItems.Length - 1
-    '            pauseMenuItemSizes(i) = g.MeasureString(pauseMenuItems(i), pauseMenuFont)
-    '            pauseMenuItemX(i) = (ClientSize.Width - pauseMenuItemSizes(i).Width) / 2.0F
-    '            pauseMenuItemY(i) = pauseMenuStartY + i * pauseMenuSpacing
-    '        Next
-
-    '    End Using
-
-
-
-
-
-
-    '    Using g As Graphics = Me.CreateGraphics()
-
-    '        Dim halfWidth As Single = ClientSize.Width / 2.0F
-
-    '        ' Measure once
-    '        leftScoreSize = g.MeasureString(scoreLeft.ToString(), hudScoreFont)
-    '        rightScoreSize = g.MeasureString(scoreRight.ToString(), hudScoreFont)
-
-    '        leftLabelSize = g.MeasureString(leftPlayerName, hudLabelFont)
-    '        rightLabelSize = g.MeasureString(rightPlayerName, hudLabelFont)
-
-    '        ' Vertical layout
-    '        scoreY = 10 + CSng(ClientSize.Height / 25.0F)
-    '        labelY = scoreY - CSng(ClientSize.Height / 200.0F)
-
-    '        ' Horizontal layout
-    '        leftScoreX = (halfWidth - leftScoreSize.Width) / 2.0F
-    '        rightScoreX = halfWidth + (halfWidth - rightScoreSize.Width) / 2.0F
-
-    '        leftLabelX = (halfWidth - leftLabelSize.Width) / 2.0F
-    '        rightLabelX = halfWidth + (halfWidth - rightLabelSize.Width) / 2.0F
-
-    '    End Using
-
-
-
-    '    RecomputeKeyboardHintLayout()
-
-
-
-    'End Sub
-
-
-
-    'Private Sub RecomputeKeyboardHintLayout()
-
-    '    Using g As Graphics = Me.CreateGraphics()
-
-    '        ' -------------------------------
-    '        ' Left Paddle Hint
-    '        ' -------------------------------
-    '        hintLeftText = "W S - Move Paddle"
-    '        hintLeftSize = g.MeasureString(hintLeftText, fullscreenIndicatorFont)
-
-    '        ' -------------------------------
-    '        ' Right Paddle Hint
-    '        ' -------------------------------
-    '        If playerMode = 2 Then
-    '            hintRightText = "Arrows - Move Paddle"
-    '        Else
-    '            hintRightText = "P - Pause Match"
-    '        End If
-
-    '        hintRightSize = g.MeasureString(hintRightText, fullscreenIndicatorFont)
-    '        hintRightX = ClientSize.Width - hintRightSize.Width - 10
-
-    '        ' -------------------------------
-    '        ' Pause Hint (Bottom‑Left)
-    '        ' -------------------------------
-    '        If playerMode = 2 Then
-    '            pauseText = "P - Pause Match"
-    '        Else
-    '            pauseText = ""
-    '        End If
-
-    '        pauseSize = g.MeasureString(pauseText, fullscreenIndicatorFont)
-    '        pauseY = ClientSize.Height - pauseSize.Height - 10
-
-    '        ' -------------------------------
-    '        ' FPS (Bottom‑Right)
-    '        ' -------------------------------
-    '        fpsText = $"FPS: {fps}"
-    '        fpsSize = g.MeasureString(fpsText, fullscreenIndicatorFont)
-    '        fpsX = ClientSize.Width - fpsSize.Width - 10
-    '        fpsY = ClientSize.Height - fpsSize.Height - 10
-
-    '    End Using
-
-    'End Sub
-
-
-    'Private Sub UpdateFPSLayout()
-    '    fpsText = "FPS: " & fps.ToString()
-    '    Using g As Graphics = Me.CreateGraphics()
-    '        fpsSize = g.MeasureString(fpsText, fullscreenIndicatorFont)
-    '    End Using
-    '    fpsX = ClientSize.Width - fpsSize.Width - 10
-    '    fpsY = ClientSize.Height - fpsSize.Height - 10
-    'End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     Private Sub ScaleBallSpeed4State()
@@ -2431,21 +1282,6 @@ Public Class Form1
     Private Sub ScaleBallDiameter()
         ballDiameter = CInt(ClientSize.Height / 18.0F)
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     Private Sub HandleAIDifficultyInput(e As KeyEventArgs)
 
@@ -2814,7 +1650,6 @@ Public Class Form1
 
             PlaySelectSound()
             PauseGame()
-            'MovePointerCenterScreen()
             Invalidate()
             Return
         End If
@@ -2868,7 +1703,6 @@ Public Class Form1
 
             ResumeGame()
             PlaySelectSound()
-            'MovePointerOffScreen()
 
             Invalidate()
             Return
@@ -2880,7 +1714,6 @@ Public Class Form1
 
             ResumeGame()
             PlaySelectSound()
-            'MovePointerOffScreen()
 
             Invalidate()
             Return
@@ -2892,7 +1725,6 @@ Public Class Form1
 
             ResumeGame()
             PlaySelectSound()
-            'MovePointerOffScreen()
 
             Invalidate()
             Return
@@ -2931,7 +1763,6 @@ Public Class Form1
         If e.KeyCode = Keys.R Then
             ResumeGame()
             PlaySelectSound()
-            'MovePointerOffScreen()
 
             Invalidate()
             Return
@@ -2940,7 +1771,6 @@ Public Class Form1
         If e.KeyCode = Keys.N Then
             StartNewMatch()
             PlaySelectSound()
-            'MovePointerOffScreen()
 
             Invalidate()
             Return
@@ -3365,19 +2195,6 @@ Public Class Form1
         ' ------------------------------
 
         ' One Player
-        'If onePlayerOptionRect.Contains(e.Location) Then
-        '    numberOfPlayersSelection = NumberOfPlayers.OnePlayer   ' ← update selection
-        '    renderer.SetStartMenuSelection(numberOfPlayersSelection)
-
-        '    playerMode = 1
-        '    currentState = GameState.AIDifficulty
-
-        '    PlaySelectSound()
-        '    Invalidate()
-        '    Return
-        'End If
-
-
         If renderer.OnePlayerOptionRect.Contains(e.Location) Then
             numberOfPlayersSelection = NumberOfPlayers.OnePlayer   ' ← update selection
             renderer.SetStartMenuSelection(numberOfPlayersSelection)
@@ -3390,20 +2207,7 @@ Public Class Form1
             Return
         End If
 
-
         ' Two Players
-        'If twoPlayersOptionRect.Contains(e.Location) Then
-        '    numberOfPlayersSelection = NumberOfPlayers.TwoPlayers   ' ← update selection
-        '    renderer.SetStartMenuSelection(numberOfPlayersSelection)
-
-        '    playerMode = 2
-        '    StartNewMatch()
-
-        '    PlaySelectSound()
-        '    Invalidate()
-        '    Return
-        'End If
-
         If renderer.TwoPlayersOptionRect.Contains(e.Location) Then
             numberOfPlayersSelection = NumberOfPlayers.TwoPlayers   ' ← update selection
             renderer.SetStartMenuSelection(numberOfPlayersSelection)
@@ -3417,16 +2221,6 @@ Public Class Form1
         End If
 
 
-
-
-
-
-
-
-
-
-
-
     End Sub
 
     Private Sub StartScreen_MouseMove(e As MouseEventArgs)
@@ -3437,31 +2231,6 @@ Public Class Form1
 
 
 
-
-
-
-
-        'If onePlayerOptionRect.Contains(e.Location) Then
-        '    numberOfPlayersSelection = NumberOfPlayers.OnePlayer
-        '    renderer.SetStartMenuSelection(numberOfPlayersSelection)
-
-        'ElseIf twoPlayersOptionRect.Contains(e.Location) Then
-        '    numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
-        '    renderer.SetStartMenuSelection(numberOfPlayersSelection)
-
-        'End If
-
-
-        'If renderer.OnePlayerRect.Contains(e.Location) Then
-        '    numberOfPlayersSelection = NumberOfPlayers.OnePlayer
-        '    renderer.SetStartMenuSelection(numberOfPlayersSelection)
-
-        'ElseIf twoPlayersOptionRect.Contains(e.Location) Then
-        '    numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
-        '    renderer.SetStartMenuSelection(numberOfPlayersSelection)
-
-        'End If
-
         If renderer.OnePlayerOptionRect.Contains(e.Location) Then
             numberOfPlayersSelection = NumberOfPlayers.OnePlayer
             renderer.SetStartMenuSelection(numberOfPlayersSelection)
@@ -3471,22 +2240,6 @@ Public Class Form1
             renderer.SetStartMenuSelection(numberOfPlayersSelection)
 
         End If
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         If oldSelection <> numberOfPlayersSelection Then
@@ -3501,15 +2254,6 @@ Public Class Form1
         If currentState <> GameState.AIDifficulty Then Return
 
         Dim oldSelection = aiDifficultySelection
-
-        'If aiEasyRect.Contains(e.Location) Then
-        '    aiDifficultySelection = AIDifficultyLevel.Easy
-        'ElseIf aiNormalRect.Contains(e.Location) Then
-        '    aiDifficultySelection = AIDifficultyLevel.Normal
-        'ElseIf aiHardRect.Contains(e.Location) Then
-        '    aiDifficultySelection = AIDifficultyLevel.Hard
-        'End If
-
 
 
         If renderer.EasyRect.Contains(e.Location) Then
@@ -3603,20 +2347,6 @@ Public Class Form1
         If currentState <> GameState.Pause Then Return
 
         Dim oldSelection = pauseMenuSelection
-
-        'If pauseResumeRect.Contains(e.Location) Then
-        '    pauseMenuSelection = 0
-        '    renderer.SetPauseMenuSelection(pauseMenuSelection)
-
-        'ElseIf pauseNewMatchRect.Contains(e.Location) Then
-        '    pauseMenuSelection = 1
-        '    renderer.SetPauseMenuSelection(pauseMenuSelection)
-
-        'ElseIf pauseQuitRect.Contains(e.Location) Then
-        '    pauseMenuSelection = 2
-        '    renderer.SetPauseMenuSelection(pauseMenuSelection)
-        'End If
-
 
 
         If renderer.ResumeRect.Contains(e.Location) Then
@@ -3713,78 +2443,6 @@ Public Class Form1
         Invalidate()
     End Sub
 
-
-    ''===========================================================
-    ''  CreateRoundedRectanglePath
-    ''===========================================================
-    'Private Function CreateRoundedRectanglePath(rect As Rectangle, radius As Integer) As GraphicsPath
-    '    Dim path As New GraphicsPath()
-
-    '    Dim d As Integer = radius * 2
-
-    '    ' Top-left arc
-    '    path.AddArc(rect.X, rect.Y, d, d, 180, 90)
-
-    '    ' Top-right arc
-    '    path.AddArc(rect.Right - d, rect.Y, d, d, 270, 90)
-
-    '    ' Bottom-right arc
-    '    path.AddArc(rect.Right - d, rect.Bottom - d, d, d, 0, 90)
-
-    '    ' Bottom-left arc
-    '    path.AddArc(rect.X, rect.Bottom - d, d, d, 90, 90)
-
-    '    path.CloseFigure()
-    '    Return path
-    'End Function
-
-    ''===========================================================
-    ''  FillRoundedRectangle
-    ''===========================================================
-    'Private Sub FillRoundedRectangle(g As Graphics, brush As Brush, rect As Rectangle, radius As Integer)
-    '    Using path As GraphicsPath = CreateRoundedRectanglePath(rect, radius)
-    '        g.FillPath(brush, path)
-    '    End Using
-    'End Sub
-
-    ''===========================================================
-    ''  DrawRoundedRectangle
-    ''===========================================================
-    'Private Sub DrawRoundedRectangle(g As Graphics, pen As Pen, rect As Rectangle, radius As Integer)
-    '    Using path As GraphicsPath = CreateRoundedRectanglePath(rect, radius)
-    '        g.DrawPath(pen, path)
-    '    End Using
-    'End Sub
-
-
-    'Private Sub HandlePauseMouseWheel(delta As Integer)
-
-    '    ' Wheel up → move selection up
-    '    If delta > 0 Then
-    '        If pauseMenuSelection > 0 Then
-    '            pauseMenuSelection -= 1
-    '            renderer.SetPauseMenuSelection(pauseMenuSelection)
-
-    '            PlayMenuUpSound()
-    '            Invalidate()
-    '        End If
-    '        Return
-    '    End If
-
-    '    ' Wheel down → move selection down
-    '    If delta < 0 Then
-    '        If pauseMenuSelection < 2 Then
-    '            pauseMenuSelection += 1
-    '            renderer.SetPauseMenuSelection(pauseMenuSelection)
-
-    '            PlayMenuDownSound()
-    '            Invalidate()
-    '        End If
-    '        Return
-    '    End If
-
-    'End Sub
-
     Private Sub HandlePauseMouseWheel(delta As Integer)
 
         ' Accumulate wheel movement
@@ -3827,59 +2485,6 @@ Public Class Form1
     End Sub
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    'Private Sub HandleStartScreenMouseWheel(delta As Integer)
-
-    '    ' Wheel up → select One Player
-    '    If delta > 10 Then
-    '        If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
-    '            numberOfPlayersSelection = NumberOfPlayers.OnePlayer
-    '            renderer.SetStartMenuSelection(numberOfPlayersSelection)
-
-    '            PlayMenuUpSound()
-    '            Invalidate()
-    '        End If
-    '        Return
-    '    End If
-
-    '    ' Wheel down → select Two Players
-    '    If delta < 0 Then
-    '        If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
-    '            numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
-    '            renderer.SetStartMenuSelection(numberOfPlayersSelection)
-
-    '            PlayMenuDownSound()
-    '            Invalidate()
-    '        End If
-    '        Return
-    '    End If
-
-    'End Sub
-
     Private Sub HandleStartScreenMouseWheel(delta As Integer)
 
         ' Accumulate wheel movement
@@ -3914,66 +2519,6 @@ Public Class Form1
         End If
 
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    'Private Sub HandleAIDifficultyMouseWheel(delta As Integer)
-
-    '    ' Wheel up → move selection up (Easy ← Normal ← Hard)
-    '    If delta > 0 Then
-    '        If aiDifficultySelection > AIDifficultyLevel.Easy Then
-    '            aiDifficultySelection -= 1
-    '            renderer.SetAIDifficultySelection(aiDifficultySelection)
-
-    '            PlayMenuUpSound()
-    '            Invalidate()
-    '        End If
-    '        Return
-    '    End If
-
-    '    ' Wheel down → move selection down (Easy → Normal → Hard)
-    '    If delta < 0 Then
-    '        If aiDifficultySelection < AIDifficultyLevel.Hard Then
-    '            aiDifficultySelection += 1
-    '            renderer.SetAIDifficultySelection(aiDifficultySelection)
-
-    '            PlayMenuDownSound()
-    '            Invalidate()
-    '        End If
-    '        Return
-    '    End If
-
-    'End Sub
 
 
     Private Sub HandleAIDifficultyMouseWheel(delta As Integer)
@@ -4016,49 +2561,5 @@ Public Class Form1
         End If
 
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 End Class
