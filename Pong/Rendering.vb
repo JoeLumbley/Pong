@@ -234,13 +234,6 @@ Public Class Rendering
     Private startRadius As Integer
 
 
-
-
-
-
-
-
-
     ' ============================================================
     '   PUBLIC RECT ACCESSORS
     ' ============================================================
@@ -279,23 +272,6 @@ Public Class Rendering
     ' ============================================================
     '   CONSTRUCTOR
     ' ============================================================
-    'Public Sub New(g As Graphics, size As Size)
-    '    clientSize = size
-    '    g.SmoothingMode = SmoothingMode.AntiAlias
-    '    g.PixelOffsetMode = PixelOffsetMode.HighQuality
-
-    '    ScaleBall(size)
-    '    InitGraphics(g, size)
-    '    InitTrails()
-    '    InitPaddles(size)
-    '    CacheHUD(g, size)
-    '    CachePause(g, size)
-    '    CacheKeyboardHints(g, size)
-    '    CacheAIDifficulty(g, size)
-
-    '    fpsStopwatch.Start()
-    '    blinkStopwatch.Start()
-    'End Sub
 
 
     Public Sub New(g As Graphics, size As Size)
@@ -492,25 +468,6 @@ Public Class Rendering
     ' ============================================================
     '   PAUSE LAYOUT
     ' ============================================================
-    'Private Sub CachePause(g As Graphics, size As Size)
-    '    pauseTitleSize = g.MeasureString(pauseTitle, pauseTitleFont)
-    '    pauseTitleX = (size.Width - pauseTitleSize.Width) / 2.0F
-    '    pauseTitleY = size.Height * 0.2F
-
-    '    pauseMenuSpacing = size.Height * 0.13F
-    '    pauseMenuStartY = pauseTitleY + pauseTitleSize.Height + (size.Height * 0.01F)
-
-    '    ReDim pauseMenuItemSizes(pauseMenuItems.Length - 1)
-    '    ReDim pauseMenuItemX(pauseMenuItems.Length - 1)
-    '    ReDim pauseMenuItemY(pauseMenuItems.Length - 1)
-
-    '    For i As Integer = 0 To pauseMenuItems.Length - 1
-    '        pauseMenuItemSizes(i) = g.MeasureString(pauseMenuItems(i), pauseMenuFont)
-    '        pauseMenuItemX(i) = (size.Width - pauseMenuItemSizes(i).Width) / 2.0F
-    '        pauseMenuItemY(i) = pauseMenuStartY + i * pauseMenuSpacing
-    '    Next
-    'End Sub
-
 
     Private Sub CachePause(g As Graphics, size As Size)
         pauseTitleSize = g.MeasureString(pauseTitle, pauseTitleFont)
@@ -557,24 +514,6 @@ Public Class Rendering
     End Sub
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ' ============================================================
     '   KEYBOARD HINT LAYOUT
     ' ============================================================
@@ -604,47 +543,7 @@ Public Class Rendering
 
     ' ============================================================
     '   AI DIFFICULTY LAYOUT
-    '' ============================================================
-    'Private Sub CacheAIDifficulty(g As Graphics, size As Size)
-    '    aiTitleSize = g.MeasureString("Difficulty", aiTitleFont)
-    '    aiTitleX = (size.Width - aiTitleSize.Width) / 2.0F
-    '    aiTitleY = size.Height * 0.2F
-
-    '    Dim baseY As Single = size.Height * 0.4F
-    '    Dim spacing As Single = size.Height * 0.03F
-
-    '    ReDim aiOptionSizes(aiOptions.Length - 1)
-    '    ReDim aiOptionX(aiOptions.Length - 1)
-    '    ReDim aiOptionY(aiOptions.Length - 1)
-
-    '    For i As Integer = 0 To aiOptions.Length - 1
-    '        aiOptionSizes(i) = g.MeasureString(aiOptions(i), startMenuFont)
-    '        aiOptionX(i) = (size.Width - aiOptionSizes(i).Width) / 2.0F
-    '        aiOptionY(i) = baseY + i * (aiOptionSizes(i).Height + spacing)
-
-    '        Dim rect As New Rectangle(
-    '            CInt(aiOptionX(i)),
-    '            CInt(aiOptionY(i)),
-    '            CInt(aiOptionSizes(i).Width),
-    '            CInt(aiOptionSizes(i).Height)
-    '        )
-
-    '        Select Case i
-    '            Case 0 : aiEasyRect = rect
-    '            Case 1 : aiNormalRect = rect
-    '            Case 2 : aiHardRect = rect
-    '        End Select
-    '    Next
-
-
-    '    ' ============================
-    '    ' Blink Info ("Press SPACE to Start")
-    '    ' ============================
-    '    Dim info As String = "Press SPACE to Start"
-    '    aiInfoSize = g.MeasureString(info, startInfoFont)
-    '    aiInfoX = (size.Width - aiInfoSize.Width) / 2.0F
-    '    aiInfoY = size.Height * 0.8F
-    'End Sub
+    ' ============================================================
 
 
     Private Sub CacheAIDifficulty(g As Graphics, size As Size)
@@ -694,52 +593,6 @@ Public Class Rendering
         aiInfoX = (size.Width - aiInfoSize.Width) / 2.0F
         aiInfoY = size.Height * 0.75F
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     ' ============================================================
@@ -957,66 +810,6 @@ Public Class Rendering
         DrawHUD(g)
     End Sub
 
-    'Private Sub DrawStartScreen(g As Graphics)
-    '    Dim title As String = "PONG"
-    '    Dim titleSize = g.MeasureString(title, startTitleFont)
-    '    Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
-
-    '    Using titleBrush As New SolidBrush(titleColor)
-    '        g.DrawString(title, startTitleFont, titleBrush,
-    '                     CSng((clientSize.Width - titleSize.Width) / 2.0F),
-    '                     CSng(clientSize.Height * 0.15F))
-    '    End Using
-
-    '    Dim option1 As String = "1 Player"
-    '    Dim option2 As String = "2 Players"
-
-    '    Dim opt1Size = g.MeasureString(option1, startMenuFont)
-    '    Dim opt2Size = g.MeasureString(option2, startMenuFont)
-
-    '    Dim opt1X As Single = CSng((clientSize.Width - opt1Size.Width) / 2.0F)
-    '    Dim opt1Y As Single = CSng(clientSize.Height * 0.4F)
-    '    Dim opt2X As Single = CSng((clientSize.Width - opt2Size.Width) / 2.0F)
-    '    Dim opt2Y As Single = CSng(clientSize.Height * 0.55F)
-
-    '    onePlayerRect = New Rectangle(CInt(opt1X), CInt(opt1Y),
-    '                                  CInt(opt1Size.Width), CInt(opt1Size.Height))
-    '    twoPlayersRect = New Rectangle(CInt(opt2X), CInt(opt2Y),
-    '                                   CInt(opt2Size.Width), CInt(opt2Size.Height))
-
-    '    Dim radius As Integer = clientSize.Height \ 64
-
-    '    If numberOfPlayersSelection = 0 Then
-    '        FillRoundedRectangle(g, lightBrush, onePlayerRect, radius)
-    '        DrawRoundedRectangle(g, outlinePen, onePlayerRect, radius)
-    '    Else
-    '        FillRoundedRectangle(g, darkBrush, onePlayerRect, radius)
-    '        DrawRoundedRectangle(g, darkOutlinePen, onePlayerRect, radius)
-    '    End If
-
-    '    If numberOfPlayersSelection = 1 Then
-    '        FillRoundedRectangle(g, lightBrush, twoPlayersRect, radius)
-    '        DrawRoundedRectangle(g, outlinePen, twoPlayersRect, radius)
-    '    Else
-    '        FillRoundedRectangle(g, darkBrush, twoPlayersRect, radius)
-    '        DrawRoundedRectangle(g, darkOutlinePen, twoPlayersRect, radius)
-    '    End If
-
-    '    Dim opt1Brush As SolidBrush = If(numberOfPlayersSelection = 0, whiteBrush, grayBrush)
-    '    Dim opt2Brush As SolidBrush = If(numberOfPlayersSelection = 1, whiteBrush, grayBrush)
-
-    '    g.DrawString(option1, startMenuFont, opt1Brush, opt1X, opt1Y)
-    '    g.DrawString(option2, startMenuFont, opt2Brush, opt2X, opt2Y)
-
-    '    If blinkVisible Then
-    '        Dim info As String = "Press SPACE to Start"
-    '        Dim infoSize = g.MeasureString(info, startInfoFont)
-
-    '        g.DrawString(info, startInfoFont, whiteBrush,
-    '                     CSng((clientSize.Width - infoSize.Width) / 2.0F),
-    '                     CSng(clientSize.Height * 0.75F))
-    '    End If
-    'End Sub
 
     Private Sub DrawStartScreen(g As Graphics)
         Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
@@ -1052,43 +845,6 @@ Public Class Rendering
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     Public Sub UpdateStartScreenFX()
         If titleFadeIn Then
             titleAlpha += 2
@@ -1110,40 +866,6 @@ Public Class Rendering
         End If
     End Sub
 
-    'Private Sub DrawPauseScreen(g As Graphics)
-    '    g.FillRectangle(dimBrush, ClientRectangle)
-
-    '    g.DrawString(pauseTitle, pauseTitleFont, whiteBrush, pauseTitleX, pauseTitleY)
-
-
-    '    Dim radius As Integer = clientSize.Height \ 64
-
-    '    For i As Integer = 0 To pauseMenuItems.Length - 1
-    '        Dim text = pauseMenuItems(i)
-    '        Dim x = pauseMenuItemX(i)
-    '        Dim y = pauseMenuItemY(i)
-    '        Dim size = pauseMenuItemSizes(i)
-
-    '        Dim rect As New Rectangle(CInt(x), CInt(y), CInt(size.Width), CInt(size.Height))
-
-    '        Select Case i
-    '            Case 0 : pauseResumeRect = rect
-    '            Case 1 : pauseNewRect = rect
-    '            Case 2 : pauseQuitRect = rect
-    '        End Select
-
-    '        If i = pauseMenuSelection Then
-    '            FillRoundedRectangle(g, lightBrush, rect, radius)
-    '            DrawRoundedRectangle(g, outlinePen, rect, radius)
-    '        Else
-    '            FillRoundedRectangle(g, darkBrush, rect, radius)
-    '            DrawRoundedRectangle(g, darkOutlinePen, rect, radius)
-    '        End If
-
-    '        Dim brush As SolidBrush = If(i = pauseMenuSelection, whiteBrush, grayBrush)
-    '        g.DrawString(text, pauseMenuFont, brush, x, y)
-    '    Next
-    'End Sub
 
     Private Sub DrawPauseScreen(g As Graphics)
         g.FillRectangle(dimBrush, ClientRectangle)
@@ -1179,88 +901,6 @@ Public Class Rendering
             g.DrawString(text, pauseMenuFont, brush, x, y)
         Next
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    'Private Sub DrawAIDifficultyScreen(g As Graphics)
-    '    Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
-
-    '    Using titleBrush As New SolidBrush(titleColor)
-    '        g.DrawString("Difficulty", aiTitleFont, titleBrush,
-    '                     aiTitleX, aiTitleY)
-    '    End Using
-
-    '    Dim radius As Integer = clientSize.Height \ 64
-
-    '    For i As Integer = 0 To aiOptions.Length - 1
-    '        Dim rect As Rectangle =
-    '            If(i = 0, aiEasyRect,
-    '            If(i = 1, aiNormalRect, aiHardRect))
-
-    '        If i = aiDifficultySelection Then
-    '            FillRoundedRectangle(g, lightBrush, rect, radius)
-    '            DrawRoundedRectangle(g, outlinePen, rect, radius)
-    '        Else
-    '            FillRoundedRectangle(g, darkBrush, rect, radius)
-    '            DrawRoundedRectangle(g, darkOutlinePen, rect, radius)
-    '        End If
-
-    '        Dim brush As SolidBrush =
-    '            If(i = aiDifficultySelection, whiteBrush, grayBrush)
-
-    '        g.DrawString(aiOptions(i), startMenuFont, brush,
-    '                     aiOptionX(i), aiOptionY(i))
-    '    Next
-
-    '    If blinkVisible Then
-    '        g.DrawString("Press SPACE to Start", startInfoFont, whiteBrush,
-    '                     aiInfoX, aiInfoY)
-    '    End If
-    'End Sub
-
 
 
     Private Sub DrawAIDifficultyScreen(g As Graphics)
@@ -1302,54 +942,6 @@ Public Class Rendering
                      aiInfoX, aiInfoY)
         End If
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     Private Sub DrawGameOver(g As Graphics)
         Dim titleSize = g.MeasureString(winnerText, gameOverFont)
