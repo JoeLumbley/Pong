@@ -42,14 +42,6 @@ Public Class Form1
     ' -------------------------------
     '  Game State
     ' -------------------------------
-    'Private Enum GameState
-    '    StartScreen
-    '    Playing
-    '    EndScreen
-    '    Pause
-    '    AIDifficulty
-
-    'End Enum
 
     Private Enum GameState
         StartScreen
@@ -58,15 +50,6 @@ Public Class Form1
         EndScreen
         AIDifficulty
     End Enum
-
-
-
-
-
-
-
-
-
 
 
     Private currentState As GameState = GameState.StartScreen
@@ -97,37 +80,6 @@ Public Class Form1
     Private physicsStopwatch As New Stopwatch()
 
     ' -------------------------------
-    '  FPS Tracking
-    ' -------------------------------
-    'Private frameCount As Integer = 0
-    'Private fps As Integer = 0
-    'Private fpsStopwatch As New Stopwatch()
-
-    ' -------------------------------
-    '  GDI Resources
-    ' -------------------------------
-    'Private ballBrush As SolidBrush
-    'Private fpsBrush As SolidBrush
-    'Private fpsFont As Font
-    'Private trailBrushes As SolidBrush()
-    'Private paddleBrush As SolidBrush
-    'Private playerLabelBrush As SolidBrush
-    'Private scoreBrush As SolidBrush
-
-    'Private whiteBrush As SolidBrush
-    'Private grayBrush As SolidBrush
-    'Private dimBrush As SolidBrush
-
-    ' -------------------------------
-    '  Trail System
-    ' -------------------------------
-    'Private trail As New List(Of PointF)
-    'Private trailLength As Integer = 25
-    'Private trailSizes As Integer()
-    'Private trailOffsets As Single()
-    'Private trailAlpha As Integer()
-
-    ' -------------------------------
     '  Audio Cooldown
     ' -------------------------------
     Private lastPlay As New Dictionary(Of String, Integer)
@@ -149,14 +101,6 @@ Public Class Form1
 
     Private scoreLeft As Integer = 0
     Private scoreRight As Integer = 0
-
-    ' -------------------------------
-    '  Start Screen FX
-    ' -------------------------------
-    'Private titleAlpha As Integer = 0
-    'Private titleFadeIn As Boolean = True
-    'Private blinkVisible As Boolean = True
-    'Private blinkStopwatch As New Stopwatch()
 
     ' -------------------------------
     '  Paddle Velocity (Spin)
@@ -215,41 +159,6 @@ Public Class Form1
     Private aiDifficulty As Double = 1.0   ' 1.0 = normal
     Private aiModeFactor As Double = 1.0         ' 1.0 = normal
 
-    ' -------------------------------
-    '  Cached Fonts
-    ' -------------------------------
-    'Private hudScoreFont As Font
-    'Private hudLabelFont As Font
-    'Private pauseTitleFont As Font
-    'Private pauseMenuFont As Font
-    'Private startTitleFont As Font
-    'Private aiDifficultyTitleFont As Font
-    'Private startMenuFont As Font
-    'Private startInfoFont As Font
-    'Private gameOverFont As Font
-    'Private gameOverInfoFont As Font
-
-    'Private fullscreenIndicatorFont As Font
-    'Private fullscreenIndicatorBrush As SolidBrush
-
-
-    ' Cached pause layout
-    'Private pauseTitle As String = "PAUSED"
-    'Private pauseTitleSize As SizeF
-    'Private pauseTitleX As Single
-    'Private pauseTitleY As Single
-
-    'Private pauseMenuItems() As String = {"Resume", "New", "Quit"}
-    'Private pauseMenuItemSizes() As SizeF
-    'Private pauseMenuItemX() As Single
-    'Private pauseMenuItemY() As Single
-
-    'Private pauseMenuStartY As Single
-    'Private pauseMenuSpacing As Single
-
-    'Private pauseMenuItemBrush() As SolidBrush
-
-
 
     ' -------------------------------
     '  Random
@@ -286,72 +195,7 @@ Public Class Form1
     Private fhdSize As New Size(1920, 1080)
 
 
-    Private onePlayerOptionRect As Rectangle
-    Private twoPlayersOptionRect As Rectangle
-
-
-    Private aiEasyRect As Rectangle
-    Private aiNormalRect As Rectangle
-    Private aiHardRect As Rectangle
-
-
-    Private pauseResumeRect As Rectangle
-    Private pauseNewMatchRect As Rectangle
-    Private pauseQuitRect As Rectangle
-
-
-    'Private lightBrush As New SolidBrush(Color.FromArgb(32, 255, 255, 255))
-
-    'Private darkBrush As New SolidBrush(Color.FromArgb(64, 0, 0, 0))
-
-    'Private outlinePen As New Pen(Color.FromArgb(40, 255, 255, 255), 2)
-    'Private darkOutlinePen As New Pen(Color.FromArgb(32, 255, 255, 255), 2)
-
-
     Private mouseIsClicking As Boolean = False
-
-    ' HUD cached layout
-    'Private leftScoreX As Single
-    'Private rightScoreX As Single
-    'Private leftLabelX As Single
-    'Private rightLabelX As Single
-    'Private scoreY As Single
-    'Private labelY As Single
-
-    'Private leftScoreSize As SizeF
-    'Private rightScoreSize As SizeF
-    'Private leftLabelSize As SizeF
-    'Private rightLabelSize As SizeF
-
-
-
-
-    '' Cached text
-    'Private hintLeftText As String
-    'Private hintRightText As String
-    'Private pauseText As String
-    'Private fpsText As String
-
-    '' Cached sizes
-    'Private hintLeftSize As SizeF
-    'Private hintRightSize As SizeF
-    'Private pauseSize As SizeF
-    'Private fpsSize As SizeF
-
-    '' Cached positions
-    'Private hintLeftX As Single = 10
-    'Private hintLeftY As Single = 10
-
-    'Private hintRightX As Single
-    'Private hintRightY As Single = 10
-
-    'Private pauseX As Single = 10
-    'Private pauseY As Single
-
-    'Private fpsX As Single
-    'Private fpsY As Single
-
-
 
 
     Private renderer As New Rendering(Me.CreateGraphics(), Me.ClientSize)
@@ -366,18 +210,6 @@ Public Class Form1
 
     Private pauseScrollAccum As Integer = 0
 
-
-
-
-
-
-
-
-
-
-
-
-
     ' ===============================
     '  FORM LIFECYCLE
     ' ===============================
@@ -387,13 +219,9 @@ Public Class Form1
 
         InitWindow()
         InitTimers()
-        'InitGraphics()
-        'InitTrails()
         InitGameplay()
         InitAudio()
         InitBall()
-
-        'blinkStopwatch.Start()
 
         MovePointerCenterScreen()
 
