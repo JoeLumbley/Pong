@@ -1,7 +1,8 @@
 ﻿
 Imports System.Drawing
     Imports System.Drawing.Drawing2D
-    Imports System.Diagnostics
+Imports System.Diagnostics
+Imports Pong.Enums
 
 Public Class Rendering
     Implements IDisposable
@@ -9,20 +10,20 @@ Public Class Rendering
     ' ============================================================
     '   PUBLIC ENUMS
     ' ============================================================
-    Public Enum GameState
-        StartScreen
-        Playing
-        Pause
-        EndScreen
-        AIDifficulty
-    End Enum
+    'Public Enum GameState
+    '    StartScreen
+    '    Playing
+    '    Pause
+    '    EndScreen
+    '    AIDifficulty
+    'End Enum
 
     ' ============================================================
     '   CORE STATE
     ' ============================================================
     Private currentState As GameState = GameState.StartScreen
-    Private formBorderStyle As FormBorderStyle
-    Private clientSize As Size
+    'Private formBorderStyle As FormBorderStyle
+    'Private clientSize As Size
 
     ' ============================================================
     '   BALL / PHYSICS
@@ -275,7 +276,7 @@ Public Class Rendering
 
 
     Public Sub New(g As Graphics, size As Size)
-        clientSize = size
+        'clientSize = size
         g.SmoothingMode = SmoothingMode.AntiAlias
         g.PixelOffsetMode = PixelOffsetMode.HighQuality
 
@@ -346,10 +347,10 @@ Public Class Rendering
     ' ============================================================
     '   FORM STATE UPDATE
     ' ============================================================
-    Public Sub UpdateFormState(style As FormBorderStyle, size As Size)
-        formBorderStyle = style
-        clientSize = size
-    End Sub
+    'Public Sub UpdateFormState(style As FormBorderStyle, size As Size)
+    '    formBorderStyle = style
+    '    clientSize = size
+    'End Sub
 
     ' ============================================================
     '   INITIALIZATION
@@ -719,7 +720,11 @@ Public Class Rendering
     ' ============================================================
     '   RENDERING PIPELINE
     ' ============================================================
-    Public Sub Render(g As Graphics, state As GameState, showHints As Boolean)
+    Public Sub Render(g As Graphics,
+                      state As GameState,
+                      settings As SettingsManager,
+                      match As MatchManager,
+                      form As Form)
 
 
         g.CompositingMode = CompositingMode.SourceOver
@@ -732,33 +737,33 @@ Public Class Rendering
             Case GameState.StartScreen
                 DrawTrail(g)
                 DrawBall(g)
-                DrawStartScreen(g)
-                If showHints Then DrawKeyboardHintsStartScreen(g)
+                DrawStartScreen(g, settings)
+                If settings.GetShowKeyboardHints() Then DrawStartHints(g, form)
 
             Case GameState.Playing
                 DrawGamePlayScreen(g)
-                If showHints Then DrawKeyboardHintsGamePlayScreen(g)
+                If settings.GetShowKeyboardHints() Then DrawGamePlayHints(g)
 
             Case GameState.Pause
                 DrawTrail(g)
                 DrawBall(g)
                 DrawPaddles(g)
                 DrawHUD(g)
-                DrawPauseScreen(g)
-                If showHints Then DrawKeyboardHintsPauseScreen(g)
+                DrawPauseScreen(g, settings, form)
+                If settings.GetShowKeyboardHints() Then DrawPauseHints(g, form)
 
             Case GameState.EndScreen
                 DrawTrail(g)
                 DrawBall(g)
                 DrawHUD(g)
-                DrawGameOver(g)
-                If showHints Then DrawKeyboardHintsGameOverScreen(g)
+                DrawGameOver(g, match, form)
+                If settings.GetShowKeyboardHints() Then DrawGameOverHints(g, form)
 
             Case GameState.AIDifficulty
                 DrawTrail(g)
                 DrawBall(g)
-                DrawAIDifficultyScreen(g)
-                If showHints Then DrawKeyboardHintsAIDifficultyScreen(g)
+                DrawAIDifficultyScreen(g, settings)
+                If settings.GetShowKeyboardHints() Then DrawAIDifficultyHints(g, form)
         End Select
     End Sub
 
@@ -811,20 +816,23 @@ Public Class Rendering
     End Sub
 
 
-    Private Sub DrawStartScreen(g As Graphics)
+    Private Sub DrawStartScreen(g As Graphics, settings As SettingsManager)
         Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
 
         Using titleBrush As New SolidBrush(titleColor)
             g.DrawString("PONG", startTitleFont, titleBrush, startTitleX, startTitleY)
         End Using
 
-        Dim opt1Brush As SolidBrush = If(numberOfPlayersSelection = 0, whiteBrush, grayBrush)
-        Dim opt2Brush As SolidBrush = If(numberOfPlayersSelection = 1, whiteBrush, grayBrush)
+        Dim opt1Brush As SolidBrush = If(settings.GetNumberOfPlayersSelection = 0, whiteBrush, grayBrush)
+        Dim opt2Brush As SolidBrush = If(settings.GetNumberOfPlayersSelection = 1, whiteBrush, grayBrush)
 
         ' Fill/outline using precomputed paths
-        If numberOfPlayersSelection = 0 Then
+        If settings.GetNumberOfPlayersSelection = 0 Then
+
+            ' Use light brush for one player to show that it is selected
             g.FillPath(lightBrush, onePlayerPath)
             g.DrawPath(outlinePen, onePlayerPath)
+            ' Use dark brush for two players to show that it is NOT selected
             g.FillPath(darkBrush, twoPlayersPath)
             g.DrawPath(darkOutlinePen, twoPlayersPath)
         Else
@@ -834,12 +842,24 @@ Public Class Rendering
             g.DrawPath(outlinePen, twoPlayersPath)
         End If
 
-        g.DrawString("1 Player", startMenuFont, opt1Brush, startOption1X, startOption1Y)
-        g.DrawString("2 Players", startMenuFont, opt2Brush, startOption2X, startOption2Y)
+        g.DrawString("1 Player",
+                     startMenuFont,
+                     opt1Brush,
+                     startOption1X,
+                     startOption1Y)
+
+        g.DrawString("2 Players",
+                     startMenuFont,
+                     opt2Brush,
+                     startOption2X,
+                     startOption2Y)
 
         If blinkVisible Then
-            g.DrawString("Press SPACE to Start", startInfoFont, whiteBrush,
-                     startInfoX, startInfoY)
+            g.DrawString("Press SPACE to Start",
+                         startInfoFont,
+                         whiteBrush,
+                         startInfoX,
+                         startInfoY)
         End If
     End Sub
 
@@ -867,11 +887,16 @@ Public Class Rendering
     End Sub
 
 
-    Private Sub DrawPauseScreen(g As Graphics)
-        g.FillRectangle(dimBrush, ClientRectangle)
+    Private Sub DrawPauseScreen(g As Graphics,
+                                settings As SettingsManager,
+                                form As Form)
+
+        ' Dim the game
+        g.FillRectangle(dimBrush, form.ClientRectangle)
+
         g.DrawString(pauseTitle, pauseTitleFont, whiteBrush, pauseTitleX, pauseTitleY)
 
-        Dim radius As Integer = clientSize.Height \ 64   ' kept for consistency, but paths already use it
+        Dim radius As Integer = form.ClientSize.Height \ 64   ' kept for consistency, but paths already use it
 
         Dim gPath As GraphicsPath = pauseResumePath
 
@@ -889,7 +914,7 @@ Public Class Rendering
                 Case 2 : gPath = pauseQuitPath
             End Select
 
-            If i = pauseMenuSelection Then
+            If i = settings.GetPauseMenuSelection Then
                 g.FillPath(lightBrush, gPath)
                 g.DrawPath(outlinePen, gPath)
             Else
@@ -897,13 +922,13 @@ Public Class Rendering
                 g.DrawPath(darkOutlinePen, gPath)
             End If
 
-            Dim brush As SolidBrush = If(i = pauseMenuSelection, whiteBrush, grayBrush)
+            Dim brush As SolidBrush = If(i = settings.GetPauseMenuSelection, whiteBrush, grayBrush)
             g.DrawString(text, pauseMenuFont, brush, x, y)
         Next
     End Sub
 
 
-    Private Sub DrawAIDifficultyScreen(g As Graphics)
+    Private Sub DrawAIDifficultyScreen(g As Graphics, settings As SettingsManager)
         Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
 
         Using titleBrush As New SolidBrush(titleColor)
@@ -922,7 +947,7 @@ Public Class Rendering
                 Case 2 : gPath = aiHardPath
             End Select
 
-            If i = aiDifficultySelection Then
+            If i = settings.GetAIDifficultySelection Then
                 g.FillPath(lightBrush, gPath)
                 g.DrawPath(outlinePen, gPath)
             Else
@@ -931,7 +956,7 @@ Public Class Rendering
             End If
 
             Dim brush As SolidBrush =
-            If(i = aiDifficultySelection, whiteBrush, grayBrush)
+            If(i = settings.GetAIDifficultySelection, whiteBrush, grayBrush)
 
             g.DrawString(aiOptions(i), startMenuFont, brush,
                      aiOptionX(i), aiOptionY(i))
@@ -943,14 +968,14 @@ Public Class Rendering
         End If
     End Sub
 
-    Private Sub DrawGameOver(g As Graphics)
-        Dim titleSize = g.MeasureString(winnerText, gameOverFont)
+    Private Sub DrawGameOver(g As Graphics, match As MatchManager, form As Form)
+        Dim titleSize = g.MeasureString(match.GetWinnerText(), gameOverFont)
         Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
 
         Using titleBrush As New SolidBrush(titleColor)
-            g.DrawString(winnerText, gameOverFont, titleBrush,
-                         CSng((clientSize.Width - titleSize.Width) / 2.0F),
-                         CSng(clientSize.Height * 0.35F))
+            g.DrawString(match.GetWinnerText(), gameOverFont, titleBrush,
+                         CSng((form.ClientSize.Width - titleSize.Width) / 2.0F),
+                         CSng(form.ClientSize.Height * 0.35F))
         End Using
 
         If blinkVisible Then
@@ -958,64 +983,112 @@ Public Class Rendering
             Dim infoSize = g.MeasureString(info, gameOverInfoFont)
 
             g.DrawString(info, gameOverInfoFont, whiteBrush,
-                         CSng((clientSize.Width - infoSize.Width) / 2.0F),
-                         CSng(clientSize.Height * 0.6F))
+                         CSng((form.ClientSize.Width - infoSize.Width) / 2.0F),
+                         CSng(form.ClientSize.Height * 0.6F))
         End If
     End Sub
 
     ' ============================================================
     '   KEYBOARD HINT RENDERERS
     ' ============================================================
-    Private Sub DrawKeyboardHintsStartScreen(g As Graphics)
-        Dim hintText As String = "1 - One Player   2 - Two Players   Enter - Start Match"
-        g.DrawString(hintText, keyboardFont, grayBrush, 10, 10)
+    Private Sub DrawStartHints(g As Graphics, form As Form)
 
+        ' ====================================
+        ' Start Screen Hints - Top/Left Corner 
+        ' ====================================
+        Dim hintText As String = "1 - One Player   2 - Two Players   Enter - Start Match"
+        g.DrawString(hintText,
+                     keyboardFont,
+                     grayBrush,
+                     10,
+                     10)
+
+        ' ===================================
+        ' Fullscreen Hint - Top/Right Corner 
+        ' ===================================
         Dim fsText As String =
-            If(formBorderStyle = FormBorderStyle.None,
+            If(form.FormBorderStyle = FormBorderStyle.None,
                "F - Exit Fullscreen",
                "F - Fullscreen")
 
         Dim fsSize = g.MeasureString(fsText, keyboardFont)
 
-        g.DrawString(fsText, keyboardFont, grayBrush,
-                     clientSize.Width - fsSize.Width - 10, 10)
+        g.DrawString(fsText,
+                     keyboardFont,
+                     grayBrush,
+                     form.ClientSize.Width - fsSize.Width - 10,
+                     10)
 
+
+
+        ' ====================================
+        ' Hide Hints hint - Bottom/Left Corner 
+        ' ====================================
         Dim hideText As String = "CTRL H - Hide Keyboard Hints"
         Dim hideSize = g.MeasureString(hideText, keyboardFont)
 
-        g.DrawString(hideText, keyboardFont, grayBrush,
-                     10, clientSize.Height - hideSize.Height - 10)
+        g.DrawString(hideText,
+                     keyboardFont,
+                     grayBrush,
+                     10,
+                     form.ClientSize.Height - hideSize.Height - 10)
+
     End Sub
 
-    Private Sub DrawKeyboardHintsPauseScreen(g As Graphics)
-        Dim hintText As String = "R - Resume Match   N - New Match"
-        g.DrawString(hintText, keyboardFont, grayBrush, 10, 10)
+    Private Sub DrawPauseHints(g As Graphics, form As Form)
 
+        ' ====================================
+        ' Pause Screen Hints - Top/Left Corner
+        ' ====================================
+        Dim hintText As String = "R - Resume Match   N - New Match"
+        g.DrawString(hintText,
+                     keyboardFont,
+                     grayBrush,
+                     10,
+                     10)
+
+        ' ====================================
+        ' Fullscreen Hint - Top/Right Corner
+        ' ====================================
         Dim fsText As String =
-            If(formBorderStyle = FormBorderStyle.None,
+            If(form.FormBorderStyle = FormBorderStyle.None,
                "F - Exit Fullscreen",
                "F - Fullscreen")
-
         Dim fsSize = g.MeasureString(fsText, keyboardFont)
 
-        g.DrawString(fsText, keyboardFont, grayBrush,
-                     clientSize.Width - fsSize.Width - 10, 10)
+        g.DrawString(fsText,
+                     keyboardFont,
+                     grayBrush,
+                     form.ClientSize.Width - fsSize.Width - 10,
+                     10)
 
+
+        ' ====================================
+        ' Quit Match Hint - Bottom/Left Corner
+        ' ====================================
         Dim quitText As String = "Q - Quit Match"
         Dim quitSize = g.MeasureString(quitText, keyboardFont)
 
-        g.DrawString(quitText, keyboardFont, grayBrush,
-                     10, clientSize.Height - quitSize.Height - 10)
+        g.DrawString(quitText,
+                     keyboardFont,
+                     grayBrush,
+                     10,
+                     form.ClientSize.Height - quitSize.Height - 10)
 
+        ' ====================================
+        ' Hide Hints hint - Bottom/Right Corner
+        ' ====================================
         Dim hideText As String = "CTRL H - Hide Keyboard Hints"
         Dim hideSize = g.MeasureString(hideText, keyboardFont)
 
-        g.DrawString(hideText, keyboardFont, grayBrush,
-                     clientSize.Width - hideSize.Width - 10,
-                     clientSize.Height - hideSize.Height - 10)
+        g.DrawString(hideText,
+                     keyboardFont,
+                     grayBrush,
+                     form.ClientSize.Width - hideSize.Width - 10,
+                     form.ClientSize.Height - hideSize.Height - 10)
     End Sub
 
-    Private Sub DrawKeyboardHintsGamePlayScreen(g As Graphics)
+    Private Sub DrawGamePlayHints(g As Graphics)
         g.DrawString(hintLeftText, keyboardFont, fsIndicatorBrush, hintLeftX, hintLeftY)
         g.DrawString(hintRightText, keyboardFont, fsIndicatorBrush, hintRightX, hintRightY)
 
@@ -1026,47 +1099,47 @@ Public Class Rendering
         g.DrawString(fpsText, keyboardFont, fsIndicatorBrush, fpsX, fpsY)
     End Sub
 
-    Private Sub DrawKeyboardHintsAIDifficultyScreen(g As Graphics)
+    Private Sub DrawAIDifficultyHints(g As Graphics, form As Form)
         Dim hintText As String = "E - Easy   N - Normal   H - Hard   Enter - Start Match"
         g.DrawString(hintText, keyboardFont, grayBrush, 10, 10)
 
         Dim fsText As String =
-            If(formBorderStyle = FormBorderStyle.None,
+            If(form.FormBorderStyle = FormBorderStyle.None,
                "F - Exit Fullscreen",
                "F - Fullscreen")
 
         Dim fsSize = g.MeasureString(fsText, keyboardFont)
 
         g.DrawString(fsText, keyboardFont, grayBrush,
-                     clientSize.Width - fsSize.Width - 10, 10)
+                     form.ClientSize.Width - fsSize.Width - 10, 10)
 
         Dim hideText As String = "CTRL H - Hide Keyboard Hints"
         Dim hideSize = g.MeasureString(hideText, keyboardFont)
 
         g.DrawString(hideText, keyboardFont, grayBrush,
-                     10, clientSize.Height - hideSize.Height - 10)
+                     10, form.ClientSize.Height - hideSize.Height - 10)
     End Sub
 
 
-    Private Sub DrawKeyboardHintsGameOverScreen(g As Graphics)
+    Private Sub DrawGameOverHints(g As Graphics, form As Form)
         Dim hintText As String = "Enter - Start New Match"
         g.DrawString(hintText, keyboardFont, grayBrush, 10, 10)
 
         Dim fsText As String =
-            If(formBorderStyle = FormBorderStyle.None,
+            If(form.FormBorderStyle = FormBorderStyle.None,
                "F - Exit Fullscreen",
                "F - Fullscreen")
 
         Dim fsSize = g.MeasureString(fsText, keyboardFont)
 
         g.DrawString(fsText, keyboardFont, grayBrush,
-                     clientSize.Width - fsSize.Width - 10, 10)
+                     form.ClientSize.Width - fsSize.Width - 10, 10)
 
         Dim quitText As String = "CTRL Q - Quit Game"
         Dim quitSize = g.MeasureString(quitText, keyboardFont)
 
         g.DrawString(quitText, keyboardFont, grayBrush,
-                     10, clientSize.Height - quitSize.Height - 10)
+                     10, form.ClientSize.Height - quitSize.Height - 10)
     End Sub
 
     ' ============================================================
@@ -1100,11 +1173,11 @@ Public Class Rendering
     ' ============================================================
     '   CLIENT RECTANGLE
     ' ============================================================
-    Private ReadOnly Property ClientRectangle As Rectangle
-        Get
-            Return New Rectangle(0, 0, clientSize.Width, clientSize.Height)
-        End Get
-    End Property
+    'Private ReadOnly Property ClientRectangle As Rectangle
+    '    Get
+    '        Return New Rectangle(0, 0, clientSize.Width, clientSize.Height)
+    '    End Get
+    'End Property
 
 
     ' ============================================================

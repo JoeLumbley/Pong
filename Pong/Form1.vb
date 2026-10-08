@@ -36,6 +36,7 @@ Imports System.Drawing.Drawing2D
 Imports System.IO
 Imports System.Runtime.InteropServices
 Imports Microsoft.Win32
+Imports Pong.Enums
 
 Public Class Form1
 
@@ -43,28 +44,28 @@ Public Class Form1
     '  Game State
     ' -------------------------------
 
-    Private Enum GameState
-        StartScreen
-        Playing
-        Pause
-        EndScreen
-        AIDifficulty
-    End Enum
+    'Private Enum GameState
+    '    StartScreen
+    '    Playing
+    '    Pause
+    '    EndScreen
+    '    AIDifficulty
+    'End Enum
 
 
-    Private currentState As GameState = GameState.StartScreen
-    Private winnerText As String = String.Empty
+    'Private currentState As GameState = GameState.StartScreen
+    'Private winnerText As String = String.Empty
 
     ' -------------------------------
     '  Player Mode
     ' -------------------------------
-    Private playerMode As Integer = 1       ' 1 = Single Player (AI), 2 = Two Players
-    Private numberOfPlayersSelection As Integer = 0   ' 0 = "1 Player", 1 = "2 Players"
+    'Private playerMode As Integer = 1       ' 1 = Single Player (AI), 2 = Two Players
+    'Private numberOfPlayersSelection As Integer = 0   ' 0 = "1 Player", 1 = "2 Players"
 
-    Private Enum NumberOfPlayers
-        OnePlayer
-        TwoPlayers
-    End Enum
+    'Private Enum NumberOfPlayers
+    '    OnePlayer
+    '    TwoPlayers
+    'End Enum
 
     ' -------------------------------
     '  Ball / Physics
@@ -94,10 +95,10 @@ Public Class Form1
     Private paddleHeight As Integer = 128
     Private paddleSpeed As Integer = 700
 
-    Private moveLeftPaddleUp As Boolean
-    Private moveLeftPaddleDown As Boolean
-    Private moveRightPaddleUp As Boolean
-    Private moveRightPaddleDown As Boolean
+    Public moveLeftPaddleUp As Boolean
+    Public moveLeftPaddleDown As Boolean
+    Public moveRightPaddleUp As Boolean
+    Public moveRightPaddleDown As Boolean
 
     Private scoreLeft As Integer = 0
     Private scoreRight As Integer = 0
@@ -113,18 +114,18 @@ Public Class Form1
     ' -------------------------------
     '  Pause Menu
     ' -------------------------------
-    Private pauseMenuSelection As Integer = 0
+    'Private pauseMenuSelection As Integer = 0
 
 
 
-    Private aiDifficultySelection As Integer = 0 ' 0 = Easy, 1 = Normal, 2 = Hard
-    Private aiOptions() As String = {"Easy", "Normal", "Hard"}
+    'Public aiDifficultySelection As Integer = 0 ' 0 = Easy, 1 = Normal, 2 = Hard
+    'Public aiOptions() As String = {"Easy", "Normal", "Hard"}
 
-    Private Enum AIDifficultyLevel
-        Easy
-        Normal
-        Hard
-    End Enum
+    'Private Enum AIDifficultyLevel
+    '    Easy
+    '    Normal
+    '    Hard
+    'End Enum
 
     ' -------------------------------
     '  Player Names
@@ -188,7 +189,7 @@ Public Class Form1
     ) As Integer
     End Function
 
-    Private showKeyboardHints As Boolean = True
+    'Private showKeyboardHints As Boolean = True
 
 
     Private hdSize As New Size(1280, 720)
@@ -198,17 +199,27 @@ Public Class Form1
     Private mouseIsClicking As Boolean = False
 
 
-    Private renderer As New Rendering(Me.CreateGraphics(), Me.ClientSize)
+    Public renderer As New Rendering(Me.CreateGraphics(), Me.ClientSize)
+
+    Private input As New InputManager
+
+    Private settings As New SettingsManager
+
+
+    Private state As New GameStateManager()
+
+
+    Private match As New MatchManager()
 
 
 
-    Private startScreenScrollAccum As Integer = 0
-    Private Const ScrollThreshold As Integer = 400
+    'Private startScreenScrollAccum As Integer = 0
+    'Private Const ScrollThreshold As Integer = 400
 
-    Private aiDifficultyScrollAccum As Integer = 0
+    'Private aiDifficultyScrollAccum As Integer = 0
 
 
-    Private pauseScrollAccum As Integer = 0
+    'Private pauseScrollAccum As Integer = 0
 
     ' ===============================
     '  FORM LIFECYCLE
@@ -252,7 +263,7 @@ Public Class Form1
         HandleWallCollisions()
         'UpdateTrail()
         renderer.UpdateTrail()
-        Select Case currentState
+        Select Case state.GetCurrentState()
             Case GameState.StartScreen
                 'UpdateStartScreenFX()
                 renderer.UpdateStartScreenFX()
@@ -260,8 +271,8 @@ Public Class Form1
 
             Case GameState.Playing
                 UpdatePaddles(dt)
-
-                If playerMode = 1 Then
+                ', setting As SettingsManager
+                If settings.GetPlayerMode() = 1 Then
                     UpdateAI(dt)
                 End If
 
@@ -304,9 +315,9 @@ Public Class Form1
         MyBase.OnPaint(e)
 
 
-        renderer.UpdateFormState(Me.FormBorderStyle, Me.ClientSize)
+        'renderer.UpdateFormState(Me.FormBorderStyle, Me.ClientSize)
         renderer.UpdateFPS()
-        renderer.Render(e.Graphics, currentState, showKeyboardHints)
+        renderer.Render(e.Graphics, state.GetCurrentState(), settings, match, Me)
     End Sub
 
 
@@ -317,101 +328,104 @@ Public Class Form1
     Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
         MyBase.OnKeyDown(e)
 
-        ' ============================================================
-        ' 1. Fullscreen Toggle (F11 / F)
-        ' ============================================================
-        If e.KeyCode = Keys.F11 OrElse e.KeyCode = Keys.F Then
-
-            ' Repeat‑guard
-            If (e.KeyCode = Keys.F11 AndAlso f11KeyDown) OrElse
-           (e.KeyCode = Keys.F AndAlso fKeyDown) Then Return
-
-            ' Mark correct key as down
-            If e.KeyCode = Keys.F11 Then
-                f11KeyDown = True
-            Else
-                fKeyDown = True
-            End If
-
-            PlayFullScreenSound()
-            ToggleFullScreen()
-            Invalidate()
-            Return
-        End If
+        input.OnKeyDown(e, Me, settings, state, match)
 
 
-        ' ============================================================
-        ' 2. Escape pressed while fullscreen (exit fullscreen)
-        ' ============================================================
-        If Me.FormBorderStyle = FormBorderStyle.None AndAlso
-       e.KeyCode = Keys.Escape Then
+        ' ' ============================================================
+        ' ' 1. Fullscreen Toggle (F11 / F)
+        ' ' ============================================================
+        ' If e.KeyCode = Keys.F11 OrElse e.KeyCode = Keys.F Then
 
-            If escapeKeyDown Then Return
-            escapeKeyDown = True
+        '     ' Repeat‑guard
+        '     If (e.KeyCode = Keys.F11 AndAlso f11KeyDown) OrElse
+        '    (e.KeyCode = Keys.F AndAlso fKeyDown) Then Return
 
-            PlayFullScreenSound()
-            ToggleFullScreen()
-            Invalidate()
-            Return
-        End If
+        '     ' Mark correct key as down
+        '     If e.KeyCode = Keys.F11 Then
+        '         f11KeyDown = True
+        '     Else
+        '         fKeyDown = True
+        '     End If
 
-
-        ' ============================================================
-        ' 3. Quit Game (Ctrl + Q)
-        ' ============================================================
-        If e.Control AndAlso e.KeyCode = Keys.Q Then
-
-            If ctrlQDown Then Return
-            ctrlQDown = True
-
-            QuitGame()
-            Return
-        End If
+        '     PlayFullScreenSound()
+        '     ToggleFullScreen()
+        '     Invalidate()
+        '     Return
+        ' End If
 
 
-        ' ============================================================
-        ' 4. Keyboard Hints Toggle (Ctrl + H)
-        ' ============================================================
-        If e.Control AndAlso e.KeyCode = Keys.H Then
+        ' ' ============================================================
+        ' ' 2. Escape pressed while fullscreen (exit fullscreen)
+        ' ' ============================================================
+        ' If Me.FormBorderStyle = FormBorderStyle.None AndAlso
+        'e.KeyCode = Keys.Escape Then
 
-            If ctrlHDown Then Return
-            ctrlHDown = True
+        '     If escapeKeyDown Then Return
+        '     escapeKeyDown = True
 
-            showKeyboardHints = Not showKeyboardHints
-            renderer.ToggleKeyboardHints()
-
-            Invalidate()
-
-            Return
-        End If
+        '     PlayFullScreenSound()
+        '     ToggleFullScreen()
+        '     Invalidate()
+        '     Return
+        ' End If
 
 
-        ' ============================================================
-        ' 5. State‑based Input Dispatch
-        ' ============================================================
-        Select Case currentState
+        ' ' ============================================================
+        ' ' 3. Quit Game (Ctrl + Q)
+        ' ' ============================================================
+        ' If e.Control AndAlso e.KeyCode = Keys.Q Then
 
-            Case GameState.StartScreen
-                HandleStartScreenInput(e)
-                Return
+        '     If ctrlQDown Then Return
+        '     ctrlQDown = True
 
-            Case GameState.EndScreen
-                HandleEndScreenInput(e)
-                Return
+        '     QuitGame()
+        '     Return
+        ' End If
 
-            Case GameState.Playing
-                HandleGameplayInput(e)
-                Return
 
-            Case GameState.Pause
-                HandlePauseInput(e)
-                Return
+        ' ' ============================================================
+        ' ' 4. Keyboard Hints Toggle (Ctrl + H)
+        ' ' ============================================================
+        ' If e.Control AndAlso e.KeyCode = Keys.H Then
 
-            Case GameState.AIDifficulty
-                HandleAIDifficultyInput(e)
-                Return
+        '     If ctrlHDown Then Return
+        '     ctrlHDown = True
 
-        End Select
+        '     showKeyboardHints = Not showKeyboardHints
+        '     renderer.ToggleKeyboardHints()
+
+        '     Invalidate()
+
+        '     Return
+        ' End If
+
+
+        ' ' ============================================================
+        ' ' 5. State‑based Input Dispatch
+        ' ' ============================================================
+        ' Select Case currentState
+
+        '     Case GameState.StartScreen
+        '         HandleStartScreenInput(e)
+        '         Return
+
+        '     Case GameState.EndScreen
+        '         HandleEndScreenInput(e)
+        '         Return
+
+        '     Case GameState.Playing
+        '         HandleGameplayInput(e)
+        '         Return
+
+        '     Case GameState.Pause
+        '         HandlePauseInput(e)
+        '         Return
+
+        '     Case GameState.AIDifficulty
+        '         HandleAIDifficultyInput(e)
+        '         Return
+
+        ' End Select
 
     End Sub
 
@@ -420,99 +434,109 @@ Public Class Form1
     Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
         MyBase.OnKeyUp(e)
 
-        ' ============================================================
-        ' 1. Release Paddle Movement Keys
-        ' ============================================================
-        If e.KeyCode = Keys.W Then
-            moveLeftPaddleUp = False
-            wKeyDown = False
-        End If
+        input.OnKeyUp(e, settings)
 
-        If e.KeyCode = Keys.S Then
-            moveLeftPaddleDown = False
-            sKeyDown = False
-        End If
+        '' ============================================================
+        '' 1. Release Paddle Movement Keys
+        '' ============================================================
+        'If e.KeyCode = Keys.W Then
+        '    moveLeftPaddleUp = False
+        '    wKeyDown = False
+        'End If
 
-        If playerMode = 2 Then
-            If e.KeyCode = Keys.Up Then
-                moveRightPaddleUp = False
-                upKeyDown = False
-            End If
+        'If e.KeyCode = Keys.S Then
+        '    moveLeftPaddleDown = False
+        '    sKeyDown = False
+        'End If
 
-            If e.KeyCode = Keys.Down Then
-                moveRightPaddleDown = False
-                downKeyDown = False
-            End If
-        End If
+        'If playerMode = 2 Then
+        '    If e.KeyCode = Keys.Up Then
+        '        moveRightPaddleUp = False
+        '        upKeyDown = False
+        '    End If
 
-
-        ' ============================================================
-        ' 2. Release Pause / Resume Keys
-        ' ============================================================
-        If e.KeyCode = Keys.P Then pKeyDown = False
-        If e.KeyCode = Keys.Pause Then pauseKeyDown = False
-        If e.KeyCode = Keys.MediaPlayPause Then mediaPlayPauseKeyDown = False
+        '    If e.KeyCode = Keys.Down Then
+        '        moveRightPaddleDown = False
+        '        downKeyDown = False
+        '    End If
+        'End If
 
 
-        ' ============================================================
-        ' 3. Release Fullscreen Toggle Keys
-        ' ============================================================
-        If e.KeyCode = Keys.F11 Then f11KeyDown = False
-        If e.KeyCode = Keys.F Then fKeyDown = False
+        '' ============================================================
+        '' 2. Release Pause / Resume Keys
+        '' ============================================================
+        'If e.KeyCode = Keys.P Then pKeyDown = False
+        'If e.KeyCode = Keys.Pause Then pauseKeyDown = False
+        'If e.KeyCode = Keys.MediaPlayPause Then mediaPlayPauseKeyDown = False
 
 
-        ' ============================================================
-        ' 4. Release Escape Key
-        ' ============================================================
-        If e.KeyCode = Keys.Escape Then escapeKeyDown = False
+        '' ============================================================
+        '' 3. Release Fullscreen Toggle Keys
+        '' ============================================================
+        'If e.KeyCode = Keys.F11 Then f11KeyDown = False
+        'If e.KeyCode = Keys.F Then fKeyDown = False
 
 
-        ' ============================================================
-        ' 5. Release Confirm Keys (Enter / Space)
-        ' ============================================================
-        If e.KeyCode = Keys.Enter Then enterKeyDown = False
-        If e.KeyCode = Keys.Space Then spaceKeyDown = False
+        '' ============================================================
+        '' 4. Release Escape Key
+        '' ============================================================
+        'If e.KeyCode = Keys.Escape Then escapeKeyDown = False
 
 
-        ' ============================================================
-        ' 6. Release Menu Navigation Keys (Up / Down / W / S)
-        ' ============================================================
-        If e.KeyCode = Keys.Up Then upKeyDown = False
-        If e.KeyCode = Keys.Down Then downKeyDown = False
-
-        If e.KeyCode = Keys.W Then wKeyDown = False
-        If e.KeyCode = Keys.S Then sKeyDown = False
+        '' ============================================================
+        '' 5. Release Confirm Keys (Enter / Space)
+        '' ============================================================
+        'If e.KeyCode = Keys.Enter Then enterKeyDown = False
+        'If e.KeyCode = Keys.Space Then spaceKeyDown = False
 
 
-        ' ============================================================
-        ' 7. Release Quit Game Key (Ctrl + Q)
-        ' ============================================================
-        If e.KeyCode = Keys.Q Then ctrlQDown = False
-        If e.KeyCode = Keys.ControlKey Then ctrlQDown = False
+        '' ============================================================
+        '' 6. Release Menu Navigation Keys (Up / Down / W / S)
+        '' ============================================================
+        'If e.KeyCode = Keys.Up Then upKeyDown = False
+        'If e.KeyCode = Keys.Down Then downKeyDown = False
+
+        'If e.KeyCode = Keys.W Then wKeyDown = False
+        'If e.KeyCode = Keys.S Then sKeyDown = False
 
 
-        ' ============================================================
-        ' 8. Release Keyboard Hints Key (Ctrl + H)
-        ' ============================================================
-        If e.KeyCode = Keys.H Then ctrlHDown = False
-        If e.KeyCode = Keys.ControlKey Then ctrlHDown = False
+        '' ============================================================
+        '' 7. Release Quit Game Key (Ctrl + Q)
+        '' ============================================================
+        'If e.KeyCode = Keys.Q Then ctrlQDown = False
+        'If e.KeyCode = Keys.ControlKey Then ctrlQDown = False
+
+
+        '' ============================================================
+        '' 8. Release Keyboard Hints Key (Ctrl + H)
+        '' ============================================================
+        'If e.KeyCode = Keys.H Then ctrlHDown = False
+        'If e.KeyCode = Keys.ControlKey Then ctrlHDown = False
 
     End Sub
 
 
 
     Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
-        StartScreen_MouseMove(e)
-        AIDifficulty_MouseMove(e)
-        PauseMenu_MouseMove(e)
+        input.OnMouseMove(e, renderer, settings, state, Me)
+        'StartScreen_MouseMove(e)
+        'AIDifficulty_MouseMove(e)
+        'PauseMenu_MouseMove(e)
     End Sub
 
     Private Sub Form1_MouseClick(sender As Object, e As MouseEventArgs) Handles Me.MouseClick
 
-        StartScreen_MouseClick(e)
-        AIDifficulty_MouseClick(e)
-        PauseMenu_MouseClick(e)
-        EndScreen_MouseClick(e)
+        input.OnMouseClick(e, settings, state, Me, match)
+
+        'input.HandleStartScreen_MouseClick(e)
+        'input.HandleAIDifficulty_MouseClick(e)
+        'input.HandlePauseMenu_MouseClick(e)
+        'input.HandleEndScreen_MouseClick(e)
+
+        'StartScreen_MouseClick(e)
+        'AIDifficulty_MouseClick(e)
+        'PauseMenu_MouseClick(e)
+        'EndScreen_MouseClick(e)
 
 
     End Sub
@@ -521,27 +545,31 @@ Public Class Form1
 
     Private Sub Form1_MouseWheel(sender As Object, e As MouseEventArgs) Handles Me.MouseWheel
 
-        If currentState = GameState.Pause Then
-            HandlePauseMouseWheel(e.Delta)
-            Return
-        End If
 
-        If currentState = GameState.StartScreen Then
-            HandleStartScreenMouseWheel(e.Delta)
-            Return
-        End If
+        input.OnMouseWheel(e, settings, state, Me)
 
-        If currentState = GameState.AIDifficulty Then
-            HandleAIDifficultyMouseWheel(e.Delta)
-            Return
-        End If
+        'If GameStateManager.GetCurrentState = GameState.Pause Then
+        '    HandlePauseMouseWheel(e.Delta)
+        '    Return
+        'End If
+
+        'If GameStateManager.GetCurrentState = GameState.StartScreen Then
+        '    HandleStartScreenMouseWheel(e.Delta)
+        '    Return
+        'End If
+
+        'If GameStateManager.GetCurrentState = GameState.AIDifficulty Then
+        '    HandleAIDifficultyMouseWheel(e.Delta)
+        '    Return
+        'End If
 
     End Sub
 
 
     Private Sub Form1_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
 
-        mouseIsClicking = False
+        'mouseIsClicking = False
+        input.OnMouseUp()
 
     End Sub
 
@@ -565,7 +593,7 @@ Public Class Form1
 
         If Me.WindowState = FormWindowState.Minimized Then Return
 
-        renderer.UpdateFormState(Me.FormBorderStyle, ClientSize)
+        'renderer.UpdateFormState(Me.FormBorderStyle, ClientSize)
 
 
         ' -------------------------------
@@ -590,7 +618,7 @@ Public Class Form1
         paddleLeft.X = ClientSize.Height / 25
         paddleRight.X = ClientSize.Width - ClientSize.Height / 25 - paddleWidth
 
-        renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, ClientSize)
+        'renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, ClientSize)
 
         ResetPaddles()
         CenterBall()
@@ -598,7 +626,7 @@ Public Class Form1
         ' -------------------------------
         ' Preserve ball direction
         ' -------------------------------
-        If currentState = GameState.Playing OrElse currentState = GameState.Pause Then
+        If state.GetCurrentState() = GameState.Playing OrElse state.GetCurrentState() = GameState.Pause Then
             ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
         Else
             MoveBallRandom()
@@ -854,7 +882,7 @@ Public Class Form1
         If moveLeftPaddleUp Then paddleLeft.Y -= CSng(paddleSpeed * dt)
         If moveLeftPaddleDown Then paddleLeft.Y += CSng(paddleSpeed * dt)
 
-        If playerMode = 2 Then
+        If settings.GetPlayerMode = 2 Then
             If moveRightPaddleUp Then paddleRight.Y -= CSng(paddleSpeed * dt)
             If moveRightPaddleDown Then paddleRight.Y += CSng(paddleSpeed * dt)
         End If
@@ -921,7 +949,7 @@ Public Class Form1
             ElseIf paddleRightVelocity > 1 Then
                 angle = 135 * (Math.PI / 180.0)
             Else
-                If playerMode = 1 Then
+                If settings.GetPlayerMode = 1 Then
                     angle = 175 * (Math.PI / 180.0)
                 Else
                     angle = 180 * (Math.PI / 180.0)
@@ -954,9 +982,9 @@ Public Class Form1
         End If
 
         ' Horizontal bounce only on Start / End / AI Difficulty screens
-        If currentState = GameState.StartScreen OrElse
-           currentState = GameState.EndScreen OrElse
-           currentState = GameState.AIDifficulty Then
+        If state.GetCurrentState() = GameState.StartScreen OrElse
+           state.GetCurrentState() = GameState.EndScreen OrElse
+           state.GetCurrentState() = GameState.AIDifficulty Then
 
             If ballPos.X <= 0 Then
                 ballPos.X = 0
@@ -977,23 +1005,23 @@ Public Class Form1
 
 
     Private Sub CheckScore()
-        If currentState = GameState.Pause Then Return
+        If state.GetCurrentState() = GameState.Pause Then Return
 
         If scoreLeft >= 10 Then
             CenterBall()
             MoveBallRandom()
 
             If leftPlayerName = "You" Then
-                winnerText = "You Win!"
-                renderer.SetWinnerText(winnerText)
+                match.SetWinnerText("You Win!")
+                'renderer.SetWinnerText(MatchManager.GetWinnerText())
 
             Else
-                winnerText = $"{leftPlayerName} Wins!"
-                renderer.SetWinnerText(winnerText)
+                match.SetWinnerText($"{leftPlayerName} Wins!")
+                'renderer.SetWinnerText(MatchManager.GetWinnerText())
 
             End If
 
-            currentState = GameState.EndScreen
+            state.SetCurrentState(GameState.EndScreen)
             EndMatch()
             Return
         End If
@@ -1002,10 +1030,10 @@ Public Class Form1
             CenterBall()
             MoveBallRandom()
 
-            winnerText = $"{rightPlayerName} Wins!"
-            renderer.SetWinnerText(winnerText)
+            match.SetWinnerText($"{rightPlayerName} Wins!")
+            'renderer.SetWinnerText(MatchManager.GetWinnerText())
 
-            currentState = GameState.EndScreen
+            state.SetCurrentState(GameState.EndScreen)
             EndMatch()
             Return
         End If
@@ -1016,7 +1044,7 @@ Public Class Form1
             PlayPoint()
             ResetBall(1)
             ResetPaddles()
-            renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, ClientSize)
+            'renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, ClientSize)
 
         ElseIf ballPos.X >= ClientSize.Width - ballDiameter Then
             scoreLeft += 1
@@ -1024,18 +1052,18 @@ Public Class Form1
             PlayPoint()
             ResetBall(-1)
             ResetPaddles()
-            renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, ClientSize)
+            'renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, ClientSize)
 
         End If
     End Sub
 
-    Private Sub ResetPaddles()
+    Public Sub ResetPaddles()
         paddleLeft.Y = (ClientSize.Height - paddleHeight) / 2
         paddleRight.Y = (ClientSize.Height - paddleHeight) / 2
         renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, ClientSize)
     End Sub
 
-    Private Sub EndMatch()
+    Public Sub EndMatch()
 
         FadeOutAndStopGamePlayLoop(600)
 
@@ -1050,18 +1078,18 @@ Public Class Form1
 
     End Sub
 
-    Private Sub CenterBall()
+    Public Sub CenterBall()
         ballPos = New PointF((ClientSize.Width - ballDiameter) / 2.0F,
                             (ClientSize.Height - ballDiameter) / 2.0F)
     End Sub
 
-    Private Sub MoveBallRandom()
+    Public Sub MoveBallRandom()
         Dim angle As Double = rng.NextDouble() * Math.PI * 2.0
         velX = Math.Cos(angle) * speed
         velY = Math.Sin(angle) * speed
     End Sub
 
-    Private Sub ResetBall(direction As Integer)
+    Public Sub ResetBall(direction As Integer)
         CenterBall()
         ServeBall(direction)
         'trail.Clear()
@@ -1069,7 +1097,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub ServeBall(direction As Integer)
+    Public Sub ServeBall(direction As Integer)
         Dim angle As Double = rng.NextDouble() * (Math.PI / 3.0) - (Math.PI / 6.0)
         velX = Math.Cos(angle) * speed * direction
         velY = Math.Sin(angle) * speed
@@ -1089,9 +1117,9 @@ Public Class Form1
 
     Private Sub ScaleBallSpeed4State()
 
-        If currentState = GameState.StartScreen OrElse
-           currentState = GameState.EndScreen OrElse
-           currentState = GameState.AIDifficulty Then
+        If state.GetCurrentState() = GameState.StartScreen OrElse
+           state.GetCurrentState() = GameState.EndScreen OrElse
+           state.GetCurrentState() = GameState.AIDifficulty Then
 
             speed = 200 * (ClientSize.Height / 1080.0)
 
@@ -1111,130 +1139,130 @@ Public Class Form1
         ballDiameter = CInt(ClientSize.Height / 18.0F)
     End Sub
 
-    Private Sub HandleAIDifficultyInput(e As KeyEventArgs)
+    'Private Sub HandleAIDifficultyInput(e As KeyEventArgs)
 
-        ' -------------------------------
-        '  AI Difficulty Menu Navigation
-        ' -------------------------------
+    '    ' -------------------------------
+    '    '  AI Difficulty Menu Navigation
+    '    ' -------------------------------
 
-        ' Menu Up (Arrow Up or W)
-        If (e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W) Then
+    '    ' Menu Up (Arrow Up or W)
+    '    If (e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W) Then
 
-            If (e.KeyCode = Keys.Up AndAlso upKeyDown) OrElse
-               (e.KeyCode = Keys.W AndAlso wKeyDown) Then Return
+    '        If (e.KeyCode = Keys.Up AndAlso upKeyDown) OrElse
+    '           (e.KeyCode = Keys.W AndAlso wKeyDown) Then Return
 
-            If e.KeyCode = Keys.Up Then upKeyDown = True Else wKeyDown = True
+    '        If e.KeyCode = Keys.Up Then upKeyDown = True Else wKeyDown = True
 
-            If aiDifficultySelection > 0 Then
-                aiDifficultySelection -= 1
-                renderer.SetAIDifficultySelection(aiDifficultySelection)
+    '        If aiDifficultySelection > 0 Then
+    '            aiDifficultySelection -= 1
+    '            renderer.SetAIDifficultySelection(aiDifficultySelection)
 
-                PlayMenuUpSound()
-                Invalidate()
-            End If
+    '            PlayMenuUpSound()
+    '            Invalidate()
+    '        End If
 
-            Return
+    '        Return
 
-        End If
+    '    End If
 
-        ' Menu Down (Arrow Down or S)
-        If (e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S) Then
+    '    ' Menu Down (Arrow Down or S)
+    '    If (e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S) Then
 
-            If (e.KeyCode = Keys.Down AndAlso downKeyDown) OrElse
-               (e.KeyCode = Keys.S AndAlso sKeyDown) Then Return
+    '        If (e.KeyCode = Keys.Down AndAlso downKeyDown) OrElse
+    '           (e.KeyCode = Keys.S AndAlso sKeyDown) Then Return
 
-            If e.KeyCode = Keys.Down Then downKeyDown = True Else sKeyDown = True
+    '        If e.KeyCode = Keys.Down Then downKeyDown = True Else sKeyDown = True
 
-            If aiDifficultySelection < aiOptions.Length - 1 Then
-                aiDifficultySelection += 1
-                renderer.SetAIDifficultySelection(aiDifficultySelection)
+    '        If aiDifficultySelection < aiOptions.Length - 1 Then
+    '            aiDifficultySelection += 1
+    '            renderer.SetAIDifficultySelection(aiDifficultySelection)
 
-                PlayMenuDownSound()
-                Invalidate()
-            End If
+    '            PlayMenuDownSound()
+    '            Invalidate()
+    '        End If
 
-            Return
+    '        Return
 
-        End If
-
-
-        ' ============================
-        '   DIRECT SELECT: E / N / H / 1 / 2 / 3
-        ' ============================
-
-        Dim directSelectDifficulty As Nullable(Of AIDifficultyLevel) = Nothing
-
-        Select Case e.KeyCode
-            Case Keys.E, Keys.D1, Keys.NumPad1
-                directSelectDifficulty = AIDifficultyLevel.Easy
-
-            Case Keys.N, Keys.D2, Keys.NumPad2
-                directSelectDifficulty = AIDifficultyLevel.Normal
-
-            Case Keys.H, Keys.D3, Keys.NumPad3
-                directSelectDifficulty = AIDifficultyLevel.Hard
-        End Select
-
-        If directSelectDifficulty.HasValue Then
-
-            aiDifficultySelection = directSelectDifficulty.Value
-            renderer.SetAIDifficultySelection(aiDifficultySelection)
-
-            ' Update AI mode factor
-            SetAIModeFactor()
-
-            ' Start match immediately
-            currentState = GameState.Playing
-            StartNewMatch()
-
-            PlaySelectSound()
-            Invalidate()
-
-            Return
-        End If
+    '    End If
 
 
-        ' ============================
-        '   SELECT: SPACE / ENTER
-        ' ============================
-        If (e.KeyCode = Keys.Space AndAlso Not spaceKeyDown) OrElse
-           (e.KeyCode = Keys.Enter AndAlso Not enterKeyDown) Then
-            If e.KeyCode = Keys.Space Then
-                spaceKeyDown = True
-            Else
-                enterKeyDown = True
-            End If
+    '    ' ============================
+    '    '   DIRECT SELECT: E / N / H / 1 / 2 / 3
+    '    ' ============================
 
-            SetAIModeFactor()
+    '    Dim directSelectDifficulty As Nullable(Of AIDifficultyLevel) = Nothing
 
-            currentState = GameState.Playing
-            StartNewMatch()
-            PlaySelectSound()
-            Invalidate()
+    '    Select Case e.KeyCode
+    '        Case Keys.E, Keys.D1, Keys.NumPad1
+    '            directSelectDifficulty = AIDifficultyLevel.Easy
 
-            Return
+    '        Case Keys.N, Keys.D2, Keys.NumPad2
+    '            directSelectDifficulty = AIDifficultyLevel.Normal
 
-        End If
+    '        Case Keys.H, Keys.D3, Keys.NumPad3
+    '            directSelectDifficulty = AIDifficultyLevel.Hard
+    '    End Select
 
-        ' ============================
-        '   ESCAPE → RETURN TO START
-        ' ============================
+    '    If directSelectDifficulty.HasValue Then
 
-        If e.KeyCode = Keys.Escape AndAlso Not escapeKeyDown Then
-            escapeKeyDown = True
+    '        aiDifficultySelection = directSelectDifficulty.Value
+    '        renderer.SetAIDifficultySelection(aiDifficultySelection)
 
-            currentState = GameState.StartScreen
-            PlaySelectSound()
-            Invalidate()
+    '        ' Update AI mode factor
+    '        SetAIModeFactor()
 
-            Return
+    '        ' Start match immediately
+    '        currentState = GameState.Playing
+    '        StartNewMatch()
 
-        End If
+    '        PlaySelectSound()
+    '        Invalidate()
 
-    End Sub
+    '        Return
+    '    End If
 
-    Private Sub SetAIModeFactor()
-        Select Case aiDifficultySelection
+
+    '    ' ============================
+    '    '   SELECT: SPACE / ENTER
+    '    ' ============================
+    '    If (e.KeyCode = Keys.Space AndAlso Not spaceKeyDown) OrElse
+    '       (e.KeyCode = Keys.Enter AndAlso Not enterKeyDown) Then
+    '        If e.KeyCode = Keys.Space Then
+    '            spaceKeyDown = True
+    '        Else
+    '            enterKeyDown = True
+    '        End If
+
+    '        SetAIModeFactor()
+
+    '        currentState = GameState.Playing
+    '        StartNewMatch()
+    '        PlaySelectSound()
+    '        Invalidate()
+
+    '        Return
+
+    '    End If
+
+    '    ' ============================
+    '    '   ESCAPE → RETURN TO START
+    '    ' ============================
+
+    '    If e.KeyCode = Keys.Escape AndAlso Not escapeKeyDown Then
+    '        escapeKeyDown = True
+
+    '        currentState = GameState.StartScreen
+    '        PlaySelectSound()
+    '        Invalidate()
+
+    '        Return
+
+    '    End If
+
+    'End Sub
+
+    Public Sub SetAIModeFactor()
+        Select Case settings.GetAIDifficultySelection()
             Case AIDifficultyLevel.Easy : aiModeFactor = 0.6
             Case AIDifficultyLevel.Normal : aiModeFactor = 0.63
             Case AIDifficultyLevel.Hard : aiModeFactor = 0.7
@@ -1242,432 +1270,432 @@ Public Class Form1
     End Sub
 
 
-    Private Sub HandleEndScreenInput(e As KeyEventArgs)
-
-        ' ============================================================
-        ' 1. Return to Start Screen (Space)
-        ' ============================================================
-        If e.KeyCode = Keys.Space Then
-            If spaceKeyDown Then Return
-            spaceKeyDown = True
-
-            PlaySelectSound()
-            currentState = GameState.StartScreen
-            winnerText = ""
-            renderer.SetWinnerText(winnerText)
-
-            Invalidate()
-            Return
-        End If
-
-
-        ' ============================================================
-        ' 2. Return to Start Screen (Enter)
-        ' ============================================================
-        If e.KeyCode = Keys.Enter Then
-            If enterKeyDown Then Return
-            enterKeyDown = True
-
-            PlaySelectSound()
-            currentState = GameState.StartScreen
-            winnerText = ""
-            renderer.SetWinnerText(winnerText)
-
-            Invalidate()
-            Return
-        End If
-
-
-        ' ============================================================
-        ' 3. Return to Start Screen (Escape)
-        ' ============================================================
-        If e.KeyCode = Keys.Escape Then
-            If escapeKeyDown Then Return
-            escapeKeyDown = True
-
-            PlaySelectSound()
-            currentState = GameState.StartScreen
-            winnerText = ""
-            renderer.SetWinnerText(winnerText)
-
-            Invalidate()
-            Return
-        End If
-
-    End Sub
-
-
-    Private Sub HandleStartScreenInput(e As KeyEventArgs)
-
-        ' ============================================================
-        ' 1. Menu Navigation (Up/W and Down/S)
-        ' ============================================================
-        Select Case e.KeyCode
-
-        ' ------------------------------
-        '  Up / W   --   ↑ Menu Up ↑
-        ' ------------------------------
-            Case Keys.Up
-                If upKeyDown Then Return
-                upKeyDown = True
-
-                If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
-                    numberOfPlayersSelection = NumberOfPlayers.OnePlayer
-                    renderer.SetStartMenuSelection(numberOfPlayersSelection)
-
-                    PlayMenuUpSound()
-                    Invalidate()
-                End If
-                Return
-
-            Case Keys.W
-                If wKeyDown Then Return
-                wKeyDown = True
-
-                If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
-                    numberOfPlayersSelection = NumberOfPlayers.OnePlayer
-                    renderer.SetStartMenuSelection(numberOfPlayersSelection)
-
-                    PlayMenuUpSound()
-                    Invalidate()
-                End If
-                Return
-
-
-        ' ------------------------------
-        '  Down / S   --   ↓ Menu Down ↓
-        ' ------------------------------
-            Case Keys.Down
-                If downKeyDown Then Return
-                downKeyDown = True
-
-                If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
-                    numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
-                    renderer.SetStartMenuSelection(numberOfPlayersSelection)
+    'Private Sub HandleEndScreenInput(e As KeyEventArgs)
+
+    '    ' ============================================================
+    '    ' 1. Return to Start Screen (Space)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Space Then
+    '        If spaceKeyDown Then Return
+    '        spaceKeyDown = True
+
+    '        PlaySelectSound()
+    '        currentState = GameState.StartScreen
+    '        MatchManager.SetWinnerText("")
+    '        'renderer.SetWinnerText(MatchManager.GetWinnerText())
+
+    '        Invalidate()
+    '        Return
+    '    End If
+
+
+    '    ' ============================================================
+    '    ' 2. Return to Start Screen (Enter)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Enter Then
+    '        If enterKeyDown Then Return
+    '        enterKeyDown = True
+
+    '        PlaySelectSound()
+    '        currentState = GameState.StartScreen
+    '        MatchManager.SetWinnerText("")
+    '        'renderer.SetWinnerText(MatchManager.GetWinnerText())
+
+    '        Invalidate()
+    '        Return
+    '    End If
+
+
+    '    ' ============================================================
+    '    ' 3. Return to Start Screen (Escape)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Escape Then
+    '        If escapeKeyDown Then Return
+    '        escapeKeyDown = True
+
+    '        PlaySelectSound()
+    '        currentState = GameState.StartScreen
+    '        MatchManager.SetWinnerText("")
+    '        'renderer.SetWinnerText(MatchManager.GetWinnerText())
+
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    'End Sub
+
+
+    'Private Sub HandleStartScreenInput(e As KeyEventArgs)
+
+    '    ' ============================================================
+    '    ' 1. Menu Navigation (Up/W and Down/S)
+    '    ' ============================================================
+    '    Select Case e.KeyCode
+
+    '    ' ------------------------------
+    '    '  Up / W   --   ↑ Menu Up ↑
+    '    ' ------------------------------
+    '        Case Keys.Up
+    '            If upKeyDown Then Return
+    '            upKeyDown = True
+
+    '            If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
+    '                numberOfPlayersSelection = NumberOfPlayers.OnePlayer
+    '                renderer.SetStartMenuSelection(numberOfPlayersSelection)
+
+    '                PlayMenuUpSound()
+    '                Invalidate()
+    '            End If
+    '            Return
+
+    '        Case Keys.W
+    '            If wKeyDown Then Return
+    '            wKeyDown = True
+
+    '            If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
+    '                numberOfPlayersSelection = NumberOfPlayers.OnePlayer
+    '                renderer.SetStartMenuSelection(numberOfPlayersSelection)
+
+    '                PlayMenuUpSound()
+    '                Invalidate()
+    '            End If
+    '            Return
+
+
+    '    ' ------------------------------
+    '    '  Down / S   --   ↓ Menu Down ↓
+    '    ' ------------------------------
+    '        Case Keys.Down
+    '            If downKeyDown Then Return
+    '            downKeyDown = True
+
+    '            If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
+    '                numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
+    '                renderer.SetStartMenuSelection(numberOfPlayersSelection)
 
-                    PlayMenuDownSound()
-                    Invalidate()
-                End If
-                Return
-
-            Case Keys.S
-                If sKeyDown Then Return
-                sKeyDown = True
-
-                If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
-                    numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
-                    renderer.SetStartMenuSelection(numberOfPlayersSelection)
+    '                PlayMenuDownSound()
+    '                Invalidate()
+    '            End If
+    '            Return
+
+    '        Case Keys.S
+    '            If sKeyDown Then Return
+    '            sKeyDown = True
+
+    '            If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
+    '                numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
+    '                renderer.SetStartMenuSelection(numberOfPlayersSelection)
 
-                    PlayMenuDownSound()
-                    Invalidate()
-                End If
-                Return
-
-
-        ' ============================================================
-        ' 2. Direct Selection via Number Keys (1 or 2)
-        ' ============================================================
-            Case Keys.D1, Keys.NumPad1
-                numberOfPlayersSelection = NumberOfPlayers.OnePlayer
-                renderer.SetStartMenuSelection(numberOfPlayersSelection)
+    '                PlayMenuDownSound()
+    '                Invalidate()
+    '            End If
+    '            Return
+
+
+    '    ' ============================================================
+    '    ' 2. Direct Selection via Number Keys (1 or 2)
+    '    ' ============================================================
+    '        Case Keys.D1, Keys.NumPad1
+    '            numberOfPlayersSelection = NumberOfPlayers.OnePlayer
+    '            renderer.SetStartMenuSelection(numberOfPlayersSelection)
 
-                playerMode = 1
-                currentState = GameState.AIDifficulty
-
-                PlaySelectSound()
-                Invalidate()
-                Return
-
-            Case Keys.D2, Keys.NumPad2
-                numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
-                renderer.SetStartMenuSelection(numberOfPlayersSelection)
-
-                playerMode = 2
-                StartNewMatch()
-
-                PlaySelectSound()
-                Invalidate()
-                Return
-
-
-        ' ============================================================
-        ' 3. Confirm Selection (Space / Enter)
-        ' ============================================================
-            Case Keys.Space
-                If spaceKeyDown Then Return
-                spaceKeyDown = True
-
-                If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
-                    playerMode = 1
-                    currentState = GameState.AIDifficulty
-                Else
-                    playerMode = 2
-                    StartNewMatch()
-                End If
-
-                PlaySelectSound()
-                Invalidate()
-                Return
-
-            Case Keys.Enter
-                If enterKeyDown Then Return
-                enterKeyDown = True
-
-                If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
-                    playerMode = 1
-                    currentState = GameState.AIDifficulty
-                Else
-                    playerMode = 2
-                    StartNewMatch()
-                End If
-
-                PlaySelectSound()
-                Invalidate()
-                Return
-
-
-        ' ============================================================
-        ' 4. Escape (Exit Game)
-        ' ============================================================
-            Case Keys.Escape
-                If escapeKeyDown Then Return
-                escapeKeyDown = True
-
-                QuitGame()
-                Return
-
-        End Select
-
-    End Sub
-
-
-    Private Sub HandleGameplayInput(e As KeyEventArgs)
-
-        ' ============================================================
-        ' 1. Paddle Movement (Left Player: W/S)
-        ' ============================================================
-        If e.KeyCode = Keys.W Then
-            moveLeftPaddleUp = True
-        End If
-
-        If e.KeyCode = Keys.S Then
-            moveLeftPaddleDown = True
-        End If
-
-
-        ' ============================================================
-        ' 2. Paddle Movement (Right Player: Up/Down in 2‑Player mode)
-        ' ============================================================
-        If playerMode = 2 Then
-            If e.KeyCode = Keys.Up Then
-                moveRightPaddleUp = True
-            End If
-
-            If e.KeyCode = Keys.Down Then
-                moveRightPaddleDown = True
-            End If
-        End If
-
-
-        ' ============================================================
-        ' 3. Pause Game (P, Pause/Break, MediaPlayPause)
-        ' ============================================================
-        If e.KeyCode = Keys.P Then
-            If pKeyDown Then Return
-            pKeyDown = True
-
-            PlaySelectSound()
-            PauseGame()
-            Invalidate()
-            Return
-        End If
-
-        If e.KeyCode = Keys.Pause Then
-            If pauseKeyDown Then Return
-            pauseKeyDown = True
-
-            PlaySelectSound()
-            PauseGame()
-            Invalidate()
-            Return
-        End If
-
-        If e.KeyCode = Keys.MediaPlayPause Then
-            If mediaPlayPauseKeyDown Then Return
-            mediaPlayPauseKeyDown = True
-
-            PlaySelectSound()
-            PauseGame()
-            Invalidate()
-            Return
-        End If
-
-
-        ' ============================================================
-        ' 4. Escape (Pause only when windowed)
-        ' ============================================================
-        If Me.FormBorderStyle <> FormBorderStyle.None AndAlso
-           e.KeyCode = Keys.Escape Then
-            If escapeKeyDown Then Return
-            escapeKeyDown = True
-
-            PlaySelectSound()
-            PauseGame()
-            Invalidate()
-            Return
-        End If
-
-
-    End Sub
-
-    Private Sub HandlePauseInput(e As KeyEventArgs)
-
-        ' ============================================================
-        ' 1. Resume Game (P, Pause/Break, MediaPlayPause)
-        ' ============================================================
-        If e.KeyCode = Keys.P Then
-            If pKeyDown Then Return
-            pKeyDown = True
-
-            ResumeGame()
-            PlaySelectSound()
-
-            Invalidate()
-            Return
-        End If
-
-        If e.KeyCode = Keys.Pause Then
-            If pauseKeyDown Then Return
-            pauseKeyDown = True
-
-            ResumeGame()
-            PlaySelectSound()
-
-            Invalidate()
-            Return
-        End If
-
-        If e.KeyCode = Keys.MediaPlayPause Then
-            If mediaPlayPauseKeyDown Then Return
-            mediaPlayPauseKeyDown = True
-
-            ResumeGame()
-            PlaySelectSound()
-
-            Invalidate()
-            Return
-        End If
-
-
-        ' ============================================================
-        ' 2. Pause Menu Navigation (Up/W and Down/S)
-        ' ============================================================
-        If e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W Then
-            If pauseMenuSelection > 0 Then
-                pauseMenuSelection = Math.Max(0, pauseMenuSelection - 1)
-                renderer.SetPauseMenuSelection(pauseMenuSelection)
-
-                PlayMenuUpSound()
-                Invalidate()
-            End If
-            Return
-        End If
-
-        If e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S Then
-            If pauseMenuSelection < 2 Then
-                pauseMenuSelection = Math.Min(2, pauseMenuSelection + 1)
-                renderer.SetPauseMenuSelection(pauseMenuSelection)
-
-                PlayMenuDownSound()
-                Invalidate()
-            End If
-            Return
-        End If
-
-
-        ' ============================================================
-        ' 3. Direct Hotkeys (R = Resume, N = New Match, Q = Quit)
-        ' ============================================================
-        If e.KeyCode = Keys.R Then
-            ResumeGame()
-            PlaySelectSound()
-
-            Invalidate()
-            Return
-        End If
-
-        If e.KeyCode = Keys.N Then
-            StartNewMatch()
-            PlaySelectSound()
-
-            Invalidate()
-            Return
-        End If
-
-        If e.KeyCode = Keys.Q Then
-            Quit2StartScreen()
-            PlaySelectSound()
-            Invalidate()
-            Return
-        End If
-
-
-        ' ============================================================
-        ' 4. Escape Key (Quit to Start Screen)
-        ' ============================================================
-        If e.KeyCode = Keys.Escape Then
-            If escapeKeyDown Then Return
-            escapeKeyDown = True
-
-            Quit2StartScreen()
-            PlaySelectSound()
-            Invalidate()
-            Return
-        End If
-
-
-        ' ============================================================
-        ' 5. Confirm Selection (Enter / Space)
-        ' ============================================================
-        If e.KeyCode = Keys.Enter Then
-            If enterKeyDown Then Return
-            enterKeyDown = True
-
-            Select Case pauseMenuSelection
-                Case 0 : ResumeGame()
-                Case 1 : StartNewMatch()
-                Case 2 : Quit2StartScreen()
-            End Select
-            PlaySelectSound()
-            Invalidate()
-            Return
-        End If
-
-        If e.KeyCode = Keys.Space Then
-            If spaceKeyDown Then Return
-            spaceKeyDown = True
-
-            Select Case pauseMenuSelection
-                Case 0 : ResumeGame()
-                Case 1 : StartNewMatch()
-                Case 2 : Quit2StartScreen()
-            End Select
-            PlaySelectSound()
-            Invalidate()
-            Return
-        End If
-
-    End Sub
-
-    Private Sub Quit2StartScreen()
+    '            playerMode = 1
+    '            currentState = GameState.AIDifficulty
+
+    '            PlaySelectSound()
+    '            Invalidate()
+    '            Return
+
+    '        Case Keys.D2, Keys.NumPad2
+    '            numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
+    '            renderer.SetStartMenuSelection(numberOfPlayersSelection)
+
+    '            playerMode = 2
+    '            StartNewMatch()
+
+    '            PlaySelectSound()
+    '            Invalidate()
+    '            Return
+
+
+    '    ' ============================================================
+    '    ' 3. Confirm Selection (Space / Enter)
+    '    ' ============================================================
+    '        Case Keys.Space
+    '            If spaceKeyDown Then Return
+    '            spaceKeyDown = True
+
+    '            If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
+    '                playerMode = 1
+    '                currentState = GameState.AIDifficulty
+    '            Else
+    '                playerMode = 2
+    '                StartNewMatch()
+    '            End If
+
+    '            PlaySelectSound()
+    '            Invalidate()
+    '            Return
+
+    '        Case Keys.Enter
+    '            If enterKeyDown Then Return
+    '            enterKeyDown = True
+
+    '            If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
+    '                playerMode = 1
+    '                currentState = GameState.AIDifficulty
+    '            Else
+    '                playerMode = 2
+    '                StartNewMatch()
+    '            End If
+
+    '            PlaySelectSound()
+    '            Invalidate()
+    '            Return
+
+
+    '    ' ============================================================
+    '    ' 4. Escape (Exit Game)
+    '    ' ============================================================
+    '        Case Keys.Escape
+    '            If escapeKeyDown Then Return
+    '            escapeKeyDown = True
+
+    '            QuitGame()
+    '            Return
+
+    '    End Select
+
+    'End Sub
+
+
+    'Private Sub HandleGameplayInput(e As KeyEventArgs)
+
+    '    ' ============================================================
+    '    ' 1. Paddle Movement (Left Player: W/S)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.W Then
+    '        moveLeftPaddleUp = True
+    '    End If
+
+    '    If e.KeyCode = Keys.S Then
+    '        moveLeftPaddleDown = True
+    '    End If
+
+
+    '    ' ============================================================
+    '    ' 2. Paddle Movement (Right Player: Up/Down in 2‑Player mode)
+    '    ' ============================================================
+    '    If playerMode = 2 Then
+    '        If e.KeyCode = Keys.Up Then
+    '            moveRightPaddleUp = True
+    '        End If
+
+    '        If e.KeyCode = Keys.Down Then
+    '            moveRightPaddleDown = True
+    '        End If
+    '    End If
+
+
+    '    ' ============================================================
+    '    ' 3. Pause Game (P, Pause/Break, MediaPlayPause)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.P Then
+    '        If pKeyDown Then Return
+    '        pKeyDown = True
+
+    '        PlaySelectSound()
+    '        PauseGame()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.Pause Then
+    '        If pauseKeyDown Then Return
+    '        pauseKeyDown = True
+
+    '        PlaySelectSound()
+    '        PauseGame()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.MediaPlayPause Then
+    '        If mediaPlayPauseKeyDown Then Return
+    '        mediaPlayPauseKeyDown = True
+
+    '        PlaySelectSound()
+    '        PauseGame()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+
+    '    ' ============================================================
+    '    ' 4. Escape (Pause only when windowed)
+    '    ' ============================================================
+    '    If Me.FormBorderStyle <> FormBorderStyle.None AndAlso
+    '       e.KeyCode = Keys.Escape Then
+    '        If escapeKeyDown Then Return
+    '        escapeKeyDown = True
+
+    '        PlaySelectSound()
+    '        PauseGame()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+
+    'End Sub
+
+    'Private Sub HandlePauseInput(e As KeyEventArgs)
+
+    '    ' ============================================================
+    '    ' 1. Resume Game (P, Pause/Break, MediaPlayPause)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.P Then
+    '        If pKeyDown Then Return
+    '        pKeyDown = True
+
+    '        ResumeGame()
+    '        PlaySelectSound()
+
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.Pause Then
+    '        If pauseKeyDown Then Return
+    '        pauseKeyDown = True
+
+    '        ResumeGame()
+    '        PlaySelectSound()
+
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.MediaPlayPause Then
+    '        If mediaPlayPauseKeyDown Then Return
+    '        mediaPlayPauseKeyDown = True
+
+    '        ResumeGame()
+    '        PlaySelectSound()
+
+    '        Invalidate()
+    '        Return
+    '    End If
+
+
+    '    ' ============================================================
+    '    ' 2. Pause Menu Navigation (Up/W and Down/S)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W Then
+    '        If pauseMenuSelection > 0 Then
+    '            pauseMenuSelection = Math.Max(0, pauseMenuSelection - 1)
+    '            renderer.SetPauseMenuSelection(pauseMenuSelection)
+
+    '            PlayMenuUpSound()
+    '            Invalidate()
+    '        End If
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S Then
+    '        If pauseMenuSelection < 2 Then
+    '            pauseMenuSelection = Math.Min(2, pauseMenuSelection + 1)
+    '            renderer.SetPauseMenuSelection(pauseMenuSelection)
+
+    '            PlayMenuDownSound()
+    '            Invalidate()
+    '        End If
+    '        Return
+    '    End If
+
+
+    '    ' ============================================================
+    '    ' 3. Direct Hotkeys (R = Resume, N = New Match, Q = Quit)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.R Then
+    '        ResumeGame()
+    '        PlaySelectSound()
+
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.N Then
+    '        StartNewMatch()
+    '        PlaySelectSound()
+
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.Q Then
+    '        Quit2StartScreen()
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+
+    '    ' ============================================================
+    '    ' 4. Escape Key (Quit to Start Screen)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Escape Then
+    '        If escapeKeyDown Then Return
+    '        escapeKeyDown = True
+
+    '        Quit2StartScreen()
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+
+    '    ' ============================================================
+    '    ' 5. Confirm Selection (Enter / Space)
+    '    ' ============================================================
+    '    If e.KeyCode = Keys.Enter Then
+    '        If enterKeyDown Then Return
+    '        enterKeyDown = True
+
+    '        Select Case pauseMenuSelection
+    '            Case 0 : ResumeGame()
+    '            Case 1 : StartNewMatch()
+    '            Case 2 : Quit2StartScreen()
+    '        End Select
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    If e.KeyCode = Keys.Space Then
+    '        If spaceKeyDown Then Return
+    '        spaceKeyDown = True
+
+    '        Select Case pauseMenuSelection
+    '            Case 0 : ResumeGame()
+    '            Case 1 : StartNewMatch()
+    '            Case 2 : Quit2StartScreen()
+    '        End Select
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    'End Sub
+
+    Public Sub Quit2StartScreen()
 
         FadeOutAndStopPausedLoop(600)
 
         'MovePointerCenterScreen()
 
         speed = 200 * (ClientSize.Height / 1080.0)
-        winnerText = ""
-        renderer.SetWinnerText(winnerText)
+        match.SetWinnerText("")
+        'renderer.SetWinnerText(MatchManager.GetWinnerText())
 
         scoreLeft = 0
         scoreRight = 0
@@ -1675,7 +1703,9 @@ Public Class Form1
         CenterBall()
         MoveBallRandom()
 
-        currentState = GameState.StartScreen
+        'currentState = GameState.StartScreen
+        state.SetCurrentState(GameState.StartScreen)
+
         physicsTimer.Start()
 
         PlayStartLoop(600)
@@ -1683,7 +1713,7 @@ Public Class Form1
     End Sub
 
 
-    Private Sub QuitGame()
+    Public Sub QuitGame()
 
         AudioRestartTimer?.Stop()
 
@@ -1708,7 +1738,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub ToggleFullScreen()
+    Public Sub ToggleFullScreen()
 
         ' Are we in fullscreen mode?
         If Me.FormBorderStyle = FormBorderStyle.None Then
@@ -1748,18 +1778,21 @@ Public Class Form1
 
     End Sub
 
-    Private Sub PauseGame()
+    Public Sub PauseGame()
+
+        physicsTimer.Stop()
 
         FadeOutAndStopGamePlayLoop(600)
 
         MovePointerCenterScreen()
 
 
-        pauseMenuSelection = 0 ' Resume game
-        renderer.SetPauseMenuSelection(pauseMenuSelection)
+        'pauseMenuSelection = 0 ' Resume game
+        settings.SetPauseMenuSelection(0) ' Resume game
 
-        currentState = GameState.Pause
-        physicsTimer.Stop()
+        'GameStateManager.SetCurrentState(GameState.Pause)
+        state.SetCurrentState(GameState.Pause)
+
 
         moveLeftPaddleUp = False
         moveLeftPaddleDown = False
@@ -1770,20 +1803,20 @@ Public Class Form1
 
     End Sub
 
-    Private Sub ResumeGame()
+    Public Sub ResumeGame()
 
         FadeOutAndStopPausedLoop(600)
 
         MovePointerOffScreen()
 
 
-        currentState = GameState.Playing
+        state.SetCurrentState(GameState.Playing)
         physicsTimer.Start()
 
         PlayGamePlayLoop(600)
     End Sub
 
-    Private Sub StartNewMatch()
+    Public Sub StartNewMatch()
         FadeOutAndStopStartLoop(600)
         FadeOutAndStopPausedLoop(600)
 
@@ -1795,7 +1828,7 @@ Public Class Form1
         scoreRight = 0
         renderer.UpdateScore(scoreLeft, scoreRight, Me.CreateGraphics(), ClientSize)
 
-        If playerMode = 1 Then
+        If settings.GetPlayerMode() = 1 Then
             leftPlayerName = "You"
             rightPlayerName = "CPU"
             renderer.UpdatePlayerNames(leftPlayerName, rightPlayerName, Me.CreateGraphics(), ClientSize)
@@ -1805,10 +1838,14 @@ Public Class Form1
             renderer.UpdatePlayerNames(leftPlayerName, rightPlayerName, Me.CreateGraphics(), ClientSize)
         End If
 
+        ResetPaddles()
+        'renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, New Drawing.Size(paddleHeight, paddleWidth))
         CenterBall()
         ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
 
-        currentState = GameState.Playing
+        'currentState = GameState.Playing
+        state.SetCurrentState(GameState.Playing)
+
         physicsTimer.Start()
 
         PlayGamePlayLoop(600)
@@ -1840,12 +1877,12 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub MovePointerOffScreen()
+    Public Sub MovePointerOffScreen()
         Cursor.Position = New Point(Screen.PrimaryScreen.WorkingArea.Right,
                                     Screen.PrimaryScreen.WorkingArea.Height \ 2)
     End Sub
 
-    Private Sub MovePointerCenterScreen()
+    Public Sub MovePointerCenterScreen()
         Cursor.Position = New Point(Screen.PrimaryScreen.WorkingArea.Right \ 2,
                                     Screen.PrimaryScreen.WorkingArea.Height \ 2)
     End Sub
@@ -1853,7 +1890,7 @@ Public Class Form1
     Public Sub RestartLoops()
 
 
-        Select Case currentState
+        Select Case state.GetCurrentState()
 
             Case GameState.StartScreen, GameState.EndScreen, GameState.AIDifficulty
                 PlayStartLoop(600) ' includes fade-in
@@ -1885,7 +1922,7 @@ Public Class Form1
         Audio.PlaySound("point")
     End Sub
 
-    Private Sub PlaySelectSound()
+    Public Sub PlaySelectSound()
         Audio.PlaySound("select")
     End Sub
 
@@ -1903,7 +1940,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub PlayStartLoop(durationMs As Integer)
+    Public Sub PlayStartLoop(durationMs As Integer)
 
         ' Fade‑in loop
         Audio.SetVolume("startloop", 0)
@@ -1923,7 +1960,7 @@ Public Class Form1
     End Sub
 
 
-    Private Sub PlayFullScreenSound()
+    Public Sub PlayFullScreenSound()
         Audio.PlaySound("fullscreen")
     End Sub
 
@@ -1932,16 +1969,16 @@ Public Class Form1
         Audio.PlayOverlapping("bounce")
     End Sub
 
-    Private Sub PlayMenuUpSound()
+    Public Sub PlayMenuUpSound()
         Audio.PlayOverlapping("arrow_up")
     End Sub
 
 
-    Private Sub PlayMenuMoveSound()
+    Public Sub PlayMenuMoveSound()
         Audio.PlayOverlapping("arrow_up")
     End Sub
 
-    Private Sub PlayMenuDownSound()
+    Public Sub PlayMenuDownSound()
         Audio.PlayOverlapping("arrow_down")
     End Sub
 
@@ -1998,396 +2035,424 @@ Public Class Form1
     End Sub
 
 
-    Private Sub StartScreen_MouseClick(e As MouseEventArgs)
-        If currentState <> GameState.StartScreen Then Return
-        If mouseIsClicking Then Return
-        mouseIsClicking = True
+    'Private Sub StartScreen_MouseClick(e As MouseEventArgs)
+    '    If currentState <> GameState.StartScreen Then Return
+    '    If mouseIsClicking Then Return
+    '    mouseIsClicking = True
 
-        ' Ignore middle-click logic unless needed
-        If e.Button = MouseButtons.Middle Then
-            If numberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
-                playerMode = 1
-                currentState = GameState.AIDifficulty
-            Else
-                playerMode = 2
-                StartNewMatch()
-            End If
+    '    ' Ignore middle-click logic unless needed
+    '    If e.Button = MouseButtons.Middle Then
+    '        If SettingsManager.GetNumberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
+    '            SettingsManager.SetPlayerMode(1)
+    '            GameStateManager.SetCurrentState(GameState.AIDifficulty)
+    '        Else
+    '            SettingsManager.SetPlayerMode(2)
+    '            GameStateManager.SetCurrentState(GameState.Playing)
+    '        End If
 
-            PlaySelectSound()
-            Invalidate()
-            Return
-        End If
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
 
-        ' ------------------------------
-        ' Left-click: check menu items
-        ' ------------------------------
+    '    ' ------------------------------
+    '    ' Left-click: check menu items
+    '    ' ------------------------------
 
-        ' One Player
-        If renderer.OnePlayerOptionRect.Contains(e.Location) Then
-            numberOfPlayersSelection = NumberOfPlayers.OnePlayer   ' ← update selection
-            renderer.SetStartMenuSelection(numberOfPlayersSelection)
+    '    ' One Player
+    '    If renderer.OnePlayerOptionRect.Contains(e.Location) Then
+    '        SettingsManager.SetNumberOfPlayersSelection(NumberOfPlayers.OnePlayer)   ' ← update selection
+    '        'renderer.SetStartMenuSelection(SettingsManager.GetNumberOfPlayersSelection())
 
-            playerMode = 1
-            currentState = GameState.AIDifficulty
+    '        SettingsManager.SetPlayerMode(1)
+    '        GameStateManager.SetCurrentState(GameState.AIDifficulty)
 
-            PlaySelectSound()
-            Invalidate()
-            Return
-        End If
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
 
-        ' Two Players
-        If renderer.TwoPlayersOptionRect.Contains(e.Location) Then
-            numberOfPlayersSelection = NumberOfPlayers.TwoPlayers   ' ← update selection
-            renderer.SetStartMenuSelection(numberOfPlayersSelection)
+    '    ' Two Players
+    '    If renderer.TwoPlayersOptionRect.Contains(e.Location) Then
+    '        SettingsManager.SetNumberOfPlayersSelection(NumberOfPlayers.TwoPlayers)   ' ← update selection
+    '        'renderer.SetStartMenuSelection(SettingsManager.GetNumberOfPlayersSelection())
 
-            playerMode = 2
-            StartNewMatch()
+    '        SettingsManager.SetPlayerMode(2)
+    '        GameStateManager.SetCurrentState(GameState.Playing)
 
-            PlaySelectSound()
-            Invalidate()
-            Return
-        End If
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
 
 
-    End Sub
+    'End Sub
 
-    Private Sub StartScreen_MouseMove(e As MouseEventArgs)
-        If currentState <> GameState.StartScreen Then Return
+    'Private Sub StartScreen_MouseMove(e As MouseEventArgs)
+    '    If GameStateManager.GetCurrentState <> GameState.StartScreen Then Return
 
-        Dim oldSelection = numberOfPlayersSelection
+    '    Dim oldSelection = SettingsManager.GetNumberOfPlayersSelection
 
 
 
 
-        If renderer.OnePlayerOptionRect.Contains(e.Location) Then
-            numberOfPlayersSelection = NumberOfPlayers.OnePlayer
-            renderer.SetStartMenuSelection(numberOfPlayersSelection)
 
-        ElseIf renderer.TwoPlayersOptionRect.Contains(e.Location) Then
-            numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
-            renderer.SetStartMenuSelection(numberOfPlayersSelection)
+    '    If renderer.OnePlayerOptionRect.Contains(e.Location) Then
+    '        SettingsManager.SetNumberOfPlayersSelection(NumberOfPlayers.OnePlayer)
+    '        'renderer.SetStartMenuSelection(numberOfPlayersSelection)
 
-        End If
+    '    ElseIf renderer.TwoPlayersOptionRect.Contains(e.Location) Then
+    '        'numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
+    '        SettingsManager.SetNumberOfPlayersSelection(NumberOfPlayers.TwoPlayers)
 
+    '        'renderer.SetStartMenuSelection(numberOfPlayersSelection)
 
-        If oldSelection <> numberOfPlayersSelection Then
-            PlayMenuMoveSound()
-            'PlayMenuUpSound()
+    '    End If
 
-            Invalidate()
-        End If
-    End Sub
 
-    Private Sub AIDifficulty_MouseMove(e As MouseEventArgs)
-        If currentState <> GameState.AIDifficulty Then Return
+    '    If oldSelection <> SettingsManager.GetNumberOfPlayersSelection Then
+    '        PlayMenuMoveSound()
+    '        'PlayMenuUpSound()
 
-        Dim oldSelection = aiDifficultySelection
+    '        Invalidate()
+    '    End If
+    'End Sub
 
+    'Private Sub AIDifficulty_MouseMove(e As MouseEventArgs)
+    '    If currentState <> GameState.AIDifficulty Then Return
 
-        If renderer.EasyRect.Contains(e.Location) Then
-            aiDifficultySelection = AIDifficultyLevel.Easy
-            renderer.SetAIDifficultySelection(aiDifficultySelection)
-        ElseIf renderer.NormalRect.Contains(e.Location) Then
-            aiDifficultySelection = AIDifficultyLevel.Normal
-            renderer.SetAIDifficultySelection(aiDifficultySelection)
+    '    Dim oldSelection = aiDifficultySelection
 
-        ElseIf renderer.HardRect.Contains(e.Location) Then
-            aiDifficultySelection = AIDifficultyLevel.Hard
-            renderer.SetAIDifficultySelection(aiDifficultySelection)
 
-        End If
+    '    If renderer.EasyRect.Contains(e.Location) Then
+    '        aiDifficultySelection = AIDifficultyLevel.Easy
+    '        renderer.SetAIDifficultySelection(aiDifficultySelection)
+    '    ElseIf renderer.NormalRect.Contains(e.Location) Then
+    '        aiDifficultySelection = AIDifficultyLevel.Normal
+    '        renderer.SetAIDifficultySelection(aiDifficultySelection)
 
+    '    ElseIf renderer.HardRect.Contains(e.Location) Then
+    '        aiDifficultySelection = AIDifficultyLevel.Hard
+    '        renderer.SetAIDifficultySelection(aiDifficultySelection)
 
-        If oldSelection <> aiDifficultySelection Then
-            'PlayMenuUpSound()
-            PlayMenuMoveSound()
+    '    End If
 
-            Invalidate()
-        End If
-    End Sub
 
+    '    If oldSelection <> aiDifficultySelection Then
+    '        'PlayMenuUpSound()
+    '        PlayMenuMoveSound()
 
-    Private Sub AIDifficulty_MouseClick(e As MouseEventArgs)
-        If currentState <> GameState.AIDifficulty Then Return
-        If mouseIsClicking Then Return
-        mouseIsClicking = True
-
-        ' ------------------------------
-        ' Middle-click = activate current selection
-        ' ------------------------------
-        If e.Button = MouseButtons.Middle Then
-            ActivateAIDifficulty(aiDifficultySelection)
-            PlaySelectSound()
-            Invalidate()
-            Return
-        End If
-
-        ' ------------------------------
-        ' Left-click: check menu items
-        ' ------------------------------
-
-        ' Easy
-        If renderer.EasyRect.Contains(e.Location) Then
-            aiDifficultySelection = AIDifficultyLevel.Easy
-            renderer.SetAIDifficultySelection(aiDifficultySelection)
-
-            ActivateAIDifficulty(aiDifficultySelection)
-            PlaySelectSound()
-            Invalidate()
-            Return
-        End If
-
-        ' Normal
-        If renderer.NormalRect.Contains(e.Location) Then
-            aiDifficultySelection = AIDifficultyLevel.Normal
-            renderer.SetAIDifficultySelection(aiDifficultySelection)
-
-            ActivateAIDifficulty(aiDifficultySelection)
-            PlaySelectSound()
-            Invalidate()
-            Return
-        End If
-
-        ' Hard
-        If renderer.HardRect.Contains(e.Location) Then
-            aiDifficultySelection = AIDifficultyLevel.Hard
-            renderer.SetAIDifficultySelection(aiDifficultySelection)
-
-            ActivateAIDifficulty(aiDifficultySelection)
-            PlaySelectSound()
-            Invalidate()
-            Return
-        End If
-
-    End Sub
-
-    Private Sub ActivateAIDifficulty(level As AIDifficultyLevel)
-        aiDifficultySelection = level
-        renderer.SetAIDifficultySelection(aiDifficultySelection)
-
-        SetAIModeFactor()
-        currentState = GameState.Playing
-        StartNewMatch()
-    End Sub
-
-
-    Private Sub PauseMenu_MouseMove(e As MouseEventArgs)
-        If currentState <> GameState.Pause Then Return
-
-        Dim oldSelection = pauseMenuSelection
-
-
-        If renderer.ResumeRect.Contains(e.Location) Then
-            pauseMenuSelection = 0
-            renderer.SetPauseMenuSelection(pauseMenuSelection)
-
-        ElseIf renderer.NewMatchRect.Contains(e.Location) Then
-            pauseMenuSelection = 1
-            renderer.SetPauseMenuSelection(pauseMenuSelection)
-
-        ElseIf renderer.QuitRect.Contains(e.Location) Then
-            pauseMenuSelection = 2
-            renderer.SetPauseMenuSelection(pauseMenuSelection)
-        End If
-
-
-        If oldSelection <> pauseMenuSelection Then
-            'PlayMenuUpSound()
-            PlayMenuMoveSound()
-
-            Invalidate()
-        End If
-    End Sub
-
-
-    Private Sub PauseMenu_MouseClick(e As MouseEventArgs)
-        If currentState <> GameState.Pause Then Return
-        If mouseIsClicking Then Return
-        mouseIsClicking = True
-
-        ' ------------------------------
-        ' Middle-click = activate current selection
-        ' ------------------------------
-        If e.Button = MouseButtons.Middle Then
-            Select Case pauseMenuSelection
-                Case 0 : ResumeGame()
-                Case 1 : StartNewMatch()
-                Case 2 : Quit2StartScreen()
-            End Select
-            renderer.SetPauseMenuSelection(pauseMenuSelection)
-
-            PlaySelectSound()
-            Invalidate()
-            Return
-        End If
-
-        ' ------------------------------
-        ' Left-click: check menu items
-        ' ------------------------------
-
-        ' Resume
-        If renderer.ResumeRect.Contains(e.Location) Then
-            pauseMenuSelection = 0   ' ← keep selection visually correct
-            renderer.SetPauseMenuSelection(pauseMenuSelection)
-
-            ResumeGame()
-            PlaySelectSound()
-            Invalidate()
-            Return
-        End If
-
-        ' New Match
-        If renderer.NewMatchRect.Contains(e.Location) Then
-            pauseMenuSelection = 1   ' ← keep selection visually correct
-            renderer.SetPauseMenuSelection(pauseMenuSelection)
-
-            StartNewMatch()
-            PlaySelectSound()
-            Invalidate()
-            Return
-        End If
-
-        ' Quit
-        If renderer.QuitRect.Contains(e.Location) Then
-            pauseMenuSelection = 2   ' ← keep selection visually correct
-            renderer.SetPauseMenuSelection(pauseMenuSelection)
-
-            Quit2StartScreen()
-            PlaySelectSound()
-            Invalidate()
-            Return
-        End If
-    End Sub
-
-
-    Private Sub EndScreen_MouseClick(e As MouseEventArgs)
-        If currentState <> GameState.EndScreen Then Return
-
-        PlaySelectSound()
-        currentState = GameState.StartScreen
-        winnerText = ""
-        renderer.SetWinnerText(winnerText)
-
-        Invalidate()
-    End Sub
-
-    Private Sub HandlePauseMouseWheel(delta As Integer)
-
-        ' Accumulate wheel movement
-        pauseScrollAccum += delta
-
-        ' ============================
-        ' Scroll Up → Move Selection Up
-        ' ============================
-        If pauseScrollAccum >= ScrollThreshold Then
-
-            If pauseMenuSelection > 0 Then
-                pauseMenuSelection -= 1
-                renderer.SetPauseMenuSelection(pauseMenuSelection)
-
-                PlayMenuUpSound()
-                Invalidate()
-            End If
-
-            pauseScrollAccum = 0
-            Return
-        End If
-
-        ' ============================
-        ' Scroll Down → Move Selection Down
-        ' ============================
-        If pauseScrollAccum <= -ScrollThreshold Then
-
-            If pauseMenuSelection < 2 Then
-                pauseMenuSelection += 1
-                renderer.SetPauseMenuSelection(pauseMenuSelection)
-
-                PlayMenuDownSound()
-                Invalidate()
-            End If
-
-            pauseScrollAccum = 0
-            Return
-        End If
-
-    End Sub
-
-
-    Private Sub HandleStartScreenMouseWheel(delta As Integer)
-
-        ' Accumulate wheel movement
-        startScreenScrollAccum += delta
-
-        ' Scroll up enough → select One Player
-        If startScreenScrollAccum >= ScrollThreshold Then
-            If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
-                numberOfPlayersSelection = NumberOfPlayers.OnePlayer
-                renderer.SetStartMenuSelection(numberOfPlayersSelection)
-
-                PlayMenuUpSound()
-                Invalidate()
-            End If
-
-            startScreenScrollAccum = 0
-            Return
-        End If
-
-        ' Scroll down enough → select Two Players
-        If startScreenScrollAccum <= -ScrollThreshold Then
-            If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
-                numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
-                renderer.SetStartMenuSelection(numberOfPlayersSelection)
-
-                PlayMenuDownSound()
-                Invalidate()
-            End If
-
-            startScreenScrollAccum = 0
-            Return
-        End If
-
-    End Sub
-
-
-    Private Sub HandleAIDifficultyMouseWheel(delta As Integer)
-
-        ' Accumulate wheel movement
-        aiDifficultyScrollAccum += delta
-
-        ' ============================
-        ' Scroll Up → Move Selection Up
-        ' ============================
-        If aiDifficultyScrollAccum >= ScrollThreshold Then
-
-            If aiDifficultySelection > AIDifficultyLevel.Easy Then
-                aiDifficultySelection -= 1
-                renderer.SetAIDifficultySelection(aiDifficultySelection)
-
-                PlayMenuUpSound()
-                Invalidate()
-            End If
-
-            aiDifficultyScrollAccum = 0
-            Return
-        End If
-
-        ' ============================
-        ' Scroll Down → Move Selection Down
-        ' ============================
-        If aiDifficultyScrollAccum <= -ScrollThreshold Then
-
-            If aiDifficultySelection < AIDifficultyLevel.Hard Then
-                aiDifficultySelection += 1
-                renderer.SetAIDifficultySelection(aiDifficultySelection)
-
-                PlayMenuDownSound()
-                Invalidate()
-            End If
-
-            aiDifficultyScrollAccum = 0
-            Return
-        End If
-
-    End Sub
+    '        Invalidate()
+    '    End If
+    'End Sub
+
+
+    'Private Sub AIDifficulty_MouseClick(e As MouseEventArgs)
+    '    If currentState <> GameState.AIDifficulty Then Return
+    '    If mouseIsClicking Then Return
+    '    mouseIsClicking = True
+
+    '    ' ------------------------------
+    '    ' Middle-click = activate current selection
+    '    ' ------------------------------
+    '    If e.Button = MouseButtons.Middle Then
+    '        ActivateAIDifficulty(aiDifficultySelection)
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    ' ------------------------------
+    '    ' Left-click: check menu items
+    '    ' ------------------------------
+
+    '    ' Easy
+    '    If renderer.EasyRect.Contains(e.Location) Then
+    '        aiDifficultySelection = AIDifficultyLevel.Easy
+    '        renderer.SetAIDifficultySelection(aiDifficultySelection)
+
+    '        ActivateAIDifficulty(aiDifficultySelection)
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    ' Normal
+    '    If renderer.NormalRect.Contains(e.Location) Then
+    '        aiDifficultySelection = AIDifficultyLevel.Normal
+    '        renderer.SetAIDifficultySelection(aiDifficultySelection)
+
+    '        ActivateAIDifficulty(aiDifficultySelection)
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    ' Hard
+    '    If renderer.HardRect.Contains(e.Location) Then
+    '        aiDifficultySelection = AIDifficultyLevel.Hard
+    '        renderer.SetAIDifficultySelection(aiDifficultySelection)
+
+    '        ActivateAIDifficulty(aiDifficultySelection)
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    'End Sub
+
+
+
+
+
+    'Private Sub ActivateAIDifficulty(level As AIDifficultyLevel)
+    '    aiDifficultySelection = level
+    '    renderer.SetAIDifficultySelection(aiDifficultySelection)
+
+    '    SetAIModeFactor()
+    '    currentState = GameState.Playing
+    '    StartNewMatch()
+    'End Sub
+
+
+
+
+
+    'Private Sub PauseMenu_MouseMove(e As MouseEventArgs)
+    '    If currentState <> GameState.Pause Then Return
+
+    '    Dim oldSelection = pauseMenuSelection
+
+
+    '    If renderer.ResumeRect.Contains(e.Location) Then
+    '        pauseMenuSelection = 0
+    '        renderer.SetPauseMenuSelection(pauseMenuSelection)
+
+    '    ElseIf renderer.NewMatchRect.Contains(e.Location) Then
+    '        pauseMenuSelection = 1
+    '        renderer.SetPauseMenuSelection(pauseMenuSelection)
+
+    '    ElseIf renderer.QuitRect.Contains(e.Location) Then
+    '        pauseMenuSelection = 2
+    '        renderer.SetPauseMenuSelection(pauseMenuSelection)
+    '    End If
+
+
+    '    If oldSelection <> pauseMenuSelection Then
+    '        'PlayMenuUpSound()
+    '        PlayMenuMoveSound()
+
+    '        Invalidate()
+    '    End If
+    'End Sub
+
+
+    'Private Sub PauseMenu_MouseClick(e As MouseEventArgs)
+    '    If currentState <> GameState.Pause Then Return
+    '    If mouseIsClicking Then Return
+    '    mouseIsClicking = True
+
+    '    ' ------------------------------
+    '    ' Middle-click = activate current selection
+    '    ' ------------------------------
+    '    If e.Button = MouseButtons.Middle Then
+    '        Select Case pauseMenuSelection
+    '            Case 0 : ResumeGame()
+    '            Case 1 : StartNewMatch()
+    '            Case 2 : Quit2StartScreen()
+    '        End Select
+    '        renderer.SetPauseMenuSelection(pauseMenuSelection)
+
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    ' ------------------------------
+    '    ' Left-click: check menu items
+    '    ' ------------------------------
+
+    '    ' Resume
+    '    If renderer.ResumeRect.Contains(e.Location) Then
+    '        pauseMenuSelection = 0   ' ← keep selection visually correct
+    '        renderer.SetPauseMenuSelection(pauseMenuSelection)
+
+    '        ResumeGame()
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    ' New Match
+    '    If renderer.NewMatchRect.Contains(e.Location) Then
+    '        pauseMenuSelection = 1   ' ← keep selection visually correct
+    '        renderer.SetPauseMenuSelection(pauseMenuSelection)
+
+    '        StartNewMatch()
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+
+    '    ' Quit
+    '    If renderer.QuitRect.Contains(e.Location) Then
+    '        pauseMenuSelection = 2   ' ← keep selection visually correct
+    '        renderer.SetPauseMenuSelection(pauseMenuSelection)
+
+    '        Quit2StartScreen()
+    '        PlaySelectSound()
+    '        Invalidate()
+    '        Return
+    '    End If
+    'End Sub
+
+
+    'Private Sub EndScreen_MouseClick(e As MouseEventArgs)
+    '    If currentState <> GameState.EndScreen Then Return
+
+    '    PlaySelectSound()
+    '    currentState = GameState.StartScreen
+    '    MatchManager.SetWinnerText("")
+    '    'renderer.SetWinnerText(MatchManager.GetWinnerText())
+
+    '    Invalidate()
+    'End Sub
+
+    'Private Sub HandlePauseMouseWheel(delta As Integer)
+
+    '    ' Accumulate wheel movement
+    '    pauseScrollAccum += delta
+
+    '    ' ============================
+    '    ' Scroll Up → Move Selection Up
+    '    ' ============================
+    '    If pauseScrollAccum >= ScrollThreshold Then
+
+    '        If pauseMenuSelection > 0 Then
+    '            pauseMenuSelection -= 1
+    '            renderer.SetPauseMenuSelection(pauseMenuSelection)
+
+    '            PlayMenuUpSound()
+    '            Invalidate()
+    '        End If
+
+    '        pauseScrollAccum = 0
+    '        Return
+    '    End If
+
+    '    ' ============================
+    '    ' Scroll Down → Move Selection Down
+    '    ' ============================
+    '    If pauseScrollAccum <= -ScrollThreshold Then
+
+    '        If pauseMenuSelection < 2 Then
+    '            pauseMenuSelection += 1
+    '            renderer.SetPauseMenuSelection(pauseMenuSelection)
+
+    '            PlayMenuDownSound()
+    '            Invalidate()
+    '        End If
+
+    '        pauseScrollAccum = 0
+    '        Return
+    '    End If
+
+    'End Sub
+
+
+    'Private Sub HandleStartScreenMouseWheel(delta As Integer)
+
+    '    ' Accumulate wheel movement
+    '    startScreenScrollAccum += delta
+
+    '    ' Scroll up enough → select One Player
+    '    If startScreenScrollAccum >= ScrollThreshold Then
+    '        If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
+    '            numberOfPlayersSelection = NumberOfPlayers.OnePlayer
+    '            renderer.SetStartMenuSelection(numberOfPlayersSelection)
+
+    '            PlayMenuUpSound()
+    '            Invalidate()
+    '        End If
+
+    '        startScreenScrollAccum = 0
+    '        Return
+    '    End If
+
+    '    ' Scroll down enough → select Two Players
+    '    If startScreenScrollAccum <= -ScrollThreshold Then
+    '        If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
+    '            numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
+    '            renderer.SetStartMenuSelection(numberOfPlayersSelection)
+
+    '            PlayMenuDownSound()
+    '            Invalidate()
+    '        End If
+
+    '        startScreenScrollAccum = 0
+    '        Return
+    '    End If
+
+    'End Sub
+
+
+    'Private Sub HandleAIDifficultyMouseWheel(delta As Integer)
+
+    '    ' Accumulate wheel movement
+    '    aiDifficultyScrollAccum += delta
+
+    '    ' ============================
+    '    ' Scroll Up → Move Selection Up
+    '    ' ============================
+    '    If aiDifficultyScrollAccum >= ScrollThreshold Then
+
+    '        If aiDifficultySelection > AIDifficultyLevel.Easy Then
+    '            aiDifficultySelection -= 1
+    '            renderer.SetAIDifficultySelection(aiDifficultySelection)
+
+    '            PlayMenuUpSound()
+    '            Invalidate()
+    '        End If
+
+    '        aiDifficultyScrollAccum = 0
+    '        Return
+    '    End If
+
+    '    ' ============================
+    '    ' Scroll Down → Move Selection Down
+    '    ' ============================
+    '    If aiDifficultyScrollAccum <= -ScrollThreshold Then
+
+    '        If aiDifficultySelection < AIDifficultyLevel.Hard Then
+    '            aiDifficultySelection += 1
+    '            renderer.SetAIDifficultySelection(aiDifficultySelection)
+
+    '            PlayMenuDownSound()
+    '            Invalidate()
+    '        End If
+
+    '        aiDifficultyScrollAccum = 0
+    '        Return
+    '    End If
+
+    'End Sub
+
+    'Private Sub Form1_DoubleClick(sender As Object, e As EventArgs) Handles Me.DoubleClick
+
+    'End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 End Class
