@@ -23,26 +23,22 @@ Public Class InputManager
     Private ctrlQDown As Boolean = False
     Private ctrlHDown As Boolean = False
 
-
     Private mouseIsClicking As Boolean = False
-
-
-
 
     Private startScreenScrollAccum As Integer = 0
     Private Const ScrollThreshold As Integer = 400
 
     Private aiDifficultyScrollAccum As Integer = 0
 
-
     Private pauseScrollAccum As Integer = 0
-
-
 
     Public Sub New()
         ' Initialize any necessary variables or state here
     End Sub
 
+    ' ===========================
+    '  PUBLIC INTERFACE
+    ' ===========================
 
     Public Sub OnKeyDown(e As KeyEventArgs,
                          form As Form,
@@ -150,7 +146,8 @@ Public Class InputManager
 
     End Sub
 
-    Public Sub OnKeyUp(e As KeyEventArgs, settings As SettingsManager)
+    Public Sub OnKeyUp(e As KeyEventArgs,
+                       settings As SettingsManager)
 
         ' ============================================================
         ' 1. Release Paddle Movement Keys
@@ -232,7 +229,12 @@ Public Class InputManager
 
     End Sub
 
-    Public Sub OnMouseClick(e As MouseEventArgs, settings As SettingsManager, state As GameStateManager, form As Form, match As MatchManager)
+
+    Public Sub OnMouseClick(e As MouseEventArgs,
+                            settings As SettingsManager,
+                            state As GameStateManager,
+                            form As Form,
+                            match As MatchManager)
 
         HandleAIDifficulty_MouseClick(e, settings, state, form)
         HandleStartScreen_MouseClick(e, settings, state, form)
@@ -247,24 +249,22 @@ Public Class InputManager
 
     End Sub
 
-
-
-
-    Public Sub OnMouseMove(e As MouseEventArgs, renderer As Rendering, settings As SettingsManager, state As GameStateManager, form As Form)
+    Public Sub OnMouseMove(e As MouseEventArgs,
+                           renderer As Rendering,
+                           settings As SettingsManager,
+                           state As GameStateManager,
+                           form As Form)
 
         HandleStartScreen_MouseMove(e, renderer, settings, state, form)
         HandleAIDifficulty_MouseMove(e, renderer, settings, state, form)
         HandlePauseMenu_MouseMove(e, renderer, settings, state, form)
 
-
-
     End Sub
 
-    Public Sub OnMouseWheel(e As MouseEventArgs, settings As SettingsManager, state As GameStateManager, form As Form)
-        ' Handle mouse wheel events if needed
-        ' For example, you can scroll through menu options or adjust settings.
-
-
+    Public Sub OnMouseWheel(e As MouseEventArgs,
+                            settings As SettingsManager,
+                            state As GameStateManager,
+                            form As Form)
 
         If state.GetCurrentState() = GameState.Pause Then
             HandlePauseMouseWheel(e.Delta, settings, form)
@@ -283,15 +283,14 @@ Public Class InputManager
 
     End Sub
 
+    ' ===========================
+    '  KEYBOARD HANDLERS
+    ' ===========================
 
-
-
-
-
-
-
-
-    Private Sub HandleStartScreenInput(e As KeyEventArgs, settings As SettingsManager, state As GameStateManager, form As Form)
+    Private Sub HandleStartScreenInput(e As KeyEventArgs,
+                                       settings As SettingsManager,
+                                       state As GameStateManager,
+                                       form As Form)
 
         ' ============================================================
         ' 1. Menu Navigation (Up/W and Down/S)
@@ -434,7 +433,10 @@ Public Class InputManager
 
     End Sub
 
-    Private Sub HandleAIDifficultyInput(e As KeyEventArgs, form As Form, settings As SettingsManager, state As GameStateManager)
+    Private Sub HandleAIDifficultyInput(e As KeyEventArgs,
+                                        form As Form,
+                                        settings As SettingsManager,
+                                        state As GameStateManager)
 
         ' -------------------------------
         '  AI Difficulty Menu Navigation
@@ -556,7 +558,9 @@ Public Class InputManager
 
     End Sub
 
-    Private Sub HandleGameplayInput(e As KeyEventArgs, settings As SettingsManager, form As Form)
+    Private Sub HandleGameplayInput(e As KeyEventArgs,
+                                    settings As SettingsManager,
+                                    form As Form)
 
         ' ============================================================
         ' 1. Paddle Movement (Left Player: W/S)
@@ -776,7 +780,10 @@ Public Class InputManager
 
     End Sub
 
-    Private Sub HandleEndScreenInput(e As KeyEventArgs, state As GameStateManager, form As Form, match As MatchManager)
+    Private Sub HandleEndScreenInput(e As KeyEventArgs,
+                                     state As GameStateManager,
+                                     form As Form,
+                                     match As MatchManager)
 
         ' ============================================================
         ' 1. Return to Start Screen (Space)
@@ -830,9 +837,17 @@ Public Class InputManager
 
     End Sub
 
+    ' ===========================
+    '  MOUSE CLICK HANDLERS
+    ' ===========================
 
-    Public Sub HandleStartScreen_MouseClick(e As MouseEventArgs, settings As SettingsManager, state As GameStateManager, form As Form)
+    Private Sub HandleStartScreen_MouseClick(e As MouseEventArgs,
+                                             settings As SettingsManager,
+                                             state As GameStateManager,
+                                             form As Form)
+
         If state.GetCurrentState() <> GameState.StartScreen Then Return
+
         If mouseIsClicking Then Return
         mouseIsClicking = True
 
@@ -887,8 +902,13 @@ Public Class InputManager
 
     End Sub
 
-    Public Sub HandleAIDifficulty_MouseClick(e As MouseEventArgs, settings As SettingsManager, state As GameStateManager, form As Form)
+    Private Sub HandleAIDifficulty_MouseClick(e As MouseEventArgs,
+                                              settings As SettingsManager,
+                                              state As GameStateManager,
+                                              form As Form)
+
         If state.GetCurrentState() <> GameState.AIDifficulty Then Return
+
         If mouseIsClicking Then Return
         mouseIsClicking = True
 
@@ -896,7 +916,8 @@ Public Class InputManager
         ' Middle-click = activate current selection
         ' ------------------------------
         If e.Button = MouseButtons.Middle Then
-            ActivateAIDifficulty(settings.GetAIDifficultySelection, settings, state)
+            ActivateAIDifficulty(settings.GetAIDifficultySelection, settings)
+
             Form1.PlaySelectSound()
             form.Invalidate()
             Return
@@ -909,9 +930,8 @@ Public Class InputManager
         ' Easy
         If Form1.renderer.EasyRect.Contains(e.Location) Then
             settings.SetAIDifficultySelection(AIDifficultyLevel.Easy)
-            'renderer.SetAIDifficultySelection(aiDifficultySelection)
+            ActivateAIDifficulty(settings.GetAIDifficultySelection, settings)
 
-            ActivateAIDifficulty(settings.GetAIDifficultySelection, settings, state)
             Form1.PlaySelectSound()
             form.Invalidate()
             Return
@@ -919,12 +939,9 @@ Public Class InputManager
 
         ' Normal
         If Form1.renderer.NormalRect.Contains(e.Location) Then
-            'aiDifficultySelection = AIDifficultyLevel.Normal
             settings.SetAIDifficultySelection(AIDifficultyLevel.Normal)
+            ActivateAIDifficulty(settings.GetAIDifficultySelection, settings)
 
-            'renderer.SetAIDifficultySelection(aiDifficultySelection)
-
-            ActivateAIDifficulty(settings.GetAIDifficultySelection, settings, state)
             Form1.PlaySelectSound()
             form.Invalidate()
             Return
@@ -932,12 +949,9 @@ Public Class InputManager
 
         ' Hard
         If Form1.renderer.HardRect.Contains(e.Location) Then
-            'aiDifficultySelection = AIDifficultyLevel.Hard
             settings.SetAIDifficultySelection(AIDifficultyLevel.Hard)
+            ActivateAIDifficulty(settings.GetAIDifficultySelection, settings)
 
-            'renderer.SetAIDifficultySelection(aiDifficultySelection)
-
-            ActivateAIDifficulty(settings.GetAIDifficultySelection, settings, state)
             Form1.PlaySelectSound()
             form.Invalidate()
             Return
@@ -945,8 +959,13 @@ Public Class InputManager
 
     End Sub
 
-    Public Sub HandlePauseMenu_MouseClick(e As MouseEventArgs, settings As SettingsManager, state As GameStateManager, form As Form)
+    Private Sub HandlePauseMenu_MouseClick(e As MouseEventArgs,
+                                           settings As SettingsManager,
+                                           state As GameStateManager,
+                                           form As Form)
+
         If state.GetCurrentState() <> GameState.Pause Then Return
+
         If mouseIsClicking Then Return
         mouseIsClicking = True
 
@@ -1007,27 +1026,30 @@ Public Class InputManager
         End If
     End Sub
 
-    Public Sub HandleEndScreen_MouseClick(e As MouseEventArgs,
-                                          state As GameStateManager,
-                                          form As Form,
-                                          match As MatchManager)
+    Private Sub HandleEndScreen_MouseClick(e As MouseEventArgs,
+                                           state As GameStateManager,
+                                           form As Form,
+                                           match As MatchManager)
 
         If state.GetCurrentState() <> GameState.EndScreen Then Return
 
         Form1.PlaySelectSound()
         state.SetCurrentState(GameState.StartScreen)
         match.SetWinnerText("")
-        'renderer.SetWinnerText(match.GetWinnerText())
 
         form.Invalidate()
 
     End Sub
 
-    Public Sub HandleStartScreen_MouseMove(e As MouseEventArgs,
-                                           renderer As Rendering,
-                                           settings As SettingsManager,
-                                           state As GameStateManager,
-                                           form As Form)
+    ' ===========================
+    '  MOUSE MOVE HANDLERS
+    ' ===========================
+
+    Private Sub HandleStartScreen_MouseMove(e As MouseEventArgs,
+                                            renderer As Rendering,
+                                            settings As SettingsManager,
+                                            state As GameStateManager,
+                                            form As Form)
 
         If state.GetCurrentState <> GameState.StartScreen Then Return
 
@@ -1035,30 +1057,25 @@ Public Class InputManager
 
         If renderer.OnePlayerOptionRect.Contains(e.Location) Then
             settings.SetNumberOfPlayersSelection(NumberOfPlayers.OnePlayer)
-            'renderer.SetStartMenuSelection(numberOfPlayersSelection)
 
         ElseIf renderer.TwoPlayersOptionRect.Contains(e.Location) Then
-            'numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
             settings.SetNumberOfPlayersSelection(NumberOfPlayers.TwoPlayers)
 
-            'renderer.SetStartMenuSelection(numberOfPlayersSelection)
-
         End If
-
 
         If oldSelection <> settings.GetNumberOfPlayersSelection Then
             Form1.PlayMenuMoveSound()
-            'PlayMenuUpSound()
 
             form.Invalidate()
         End If
+
     End Sub
 
-    Public Sub HandleAIDifficulty_MouseMove(e As MouseEventArgs,
-                                            renderer As Rendering,
-                                            settings As SettingsManager,
-                                            state As GameStateManager,
-                                            form As Form)
+    Private Sub HandleAIDifficulty_MouseMove(e As MouseEventArgs,
+                                             renderer As Rendering,
+                                             settings As SettingsManager,
+                                             state As GameStateManager,
+                                             form As Form)
 
         If state.GetCurrentState <> GameState.AIDifficulty Then Return
 
@@ -1067,130 +1084,69 @@ Public Class InputManager
 
         If renderer.EasyRect.Contains(e.Location) Then
             settings.SetAIDifficultySelection(AIDifficultyLevel.Easy)
-            'renderer.SetAIDifficultySelection(settings.GetAIDifficultySelection())
         ElseIf renderer.NormalRect.Contains(e.Location) Then
             settings.SetAIDifficultySelection(AIDifficultyLevel.Normal)
-            'renderer.SetAIDifficultySelection(settings.GetAIDifficultySelection())
 
         ElseIf renderer.HardRect.Contains(e.Location) Then
             settings.SetAIDifficultySelection(AIDifficultyLevel.Hard)
-            'renderer.SetAIDifficultySelection(settings.GetAIDifficultySelection())
 
         End If
 
 
         If oldSelection <> settings.GetAIDifficultySelection() Then
-            'PlayMenuUpSound()
             Form1.PlayMenuMoveSound()
 
             form.Invalidate()
         End If
     End Sub
 
+    Private Sub HandlePauseMenu_MouseMove(e As MouseEventArgs,
+                                          renderer As Rendering,
+                                          settings As SettingsManager,
+                                          state As GameStateManager,
+                                          form As Form)
 
-    Public Sub HandlePauseMenu_MouseMove(e As MouseEventArgs, renderer As Rendering, settings As SettingsManager, state As GameStateManager, form As Form)
         If state.GetCurrentState() <> GameState.Pause Then Return
 
         Dim oldSelection = settings.GetPauseMenuSelection()
 
-
         If renderer.ResumeRect.Contains(e.Location) Then
             settings.SetPauseMenuSelection(0)
-            'renderer.SetPauseMenuSelection(settings.GetPauseMenuSelection())
 
         ElseIf renderer.NewMatchRect.Contains(e.Location) Then
             settings.SetPauseMenuSelection(1)
-            'renderer.SetPauseMenuSelection(settings.GetPauseMenuSelection())
 
         ElseIf renderer.QuitRect.Contains(e.Location) Then
             settings.SetPauseMenuSelection(2)
-            'renderer.SetPauseMenuSelection(settings.GetPauseMenuSelection())
         End If
 
 
         If oldSelection <> settings.GetPauseMenuSelection() Then
-            'PlayMenuUpSound()
             Form1.PlayMenuMoveSound()
 
             form.Invalidate()
         End If
     End Sub
 
+    ' ===========================
+    '  MOUSE WHEEL HANDLERS
+    ' ===========================
 
-
-    Private Sub HandlePauseMouseWheel(delta As Integer, settings As SettingsManager, form As Form)
-
-        ' Accumulate wheel movement
-        pauseScrollAccum += delta
-
-        Dim pauseMenuSelection = settings.GetPauseMenuSelection
-
-
-        ' ============================
-        ' Scroll Up → Move Selection Up
-        ' ============================
-        If pauseScrollAccum >= ScrollThreshold Then
-
-            'Dim pauseMenuSelection = SettingsManager.GetPauseMenuSelection
-
-            If pauseMenuSelection > 0 Then
-
-                pauseMenuSelection -= 1
-
-                settings.SetPauseMenuSelection(pauseMenuSelection)
-
-
-                'renderer.SetPauseMenuSelection(pauseMenuSelection)
-
-                Form1.PlayMenuUpSound()
-                form.Invalidate()
-            End If
-
-            pauseScrollAccum = 0
-            Return
-        End If
-
-        ' ============================
-        ' Scroll Down → Move Selection Down
-        ' ============================
-        If pauseScrollAccum <= -ScrollThreshold Then
-
-            'Dim pauseMenuSelection = SettingsManager.GetPauseMenuSelection
-
-
-            If pauseMenuSelection < 2 Then
-                pauseMenuSelection += 1
-                'renderer.SetPauseMenuSelection(pauseMenuSelection)
-                settings.SetPauseMenuSelection(pauseMenuSelection)
-
-
-                Form1.PlayMenuDownSound()
-                form.Invalidate()
-            End If
-
-            pauseScrollAccum = 0
-            Return
-        End If
-
-    End Sub
-
-
-    Private Sub HandleStartScreenMouseWheel(delta As Integer, settings As SettingsManager, form As Form)
+    Private Sub HandleStartScreenMouseWheel(delta As Integer,
+                                            settings As SettingsManager,
+                                            form As Form)
 
         ' Accumulate wheel movement
         startScreenScrollAccum += delta
 
         Dim numberOfPlayersSelection = settings.GetNumberOfPlayersSelection
 
-
         ' Scroll up enough → select One Player
         If startScreenScrollAccum >= ScrollThreshold Then
 
-            'Dim numberOfPlayersSelection = SettingsManager.GetNumberOfPlayersSelection
 
             If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
                 numberOfPlayersSelection = NumberOfPlayers.OnePlayer
-                'renderer.SetStartMenuSelection(numberOfPlayersSelection)
                 settings.SetNumberOfPlayersSelection(numberOfPlayersSelection)
 
                 Form1.PlayMenuUpSound()
@@ -1204,11 +1160,9 @@ Public Class InputManager
         ' Scroll down enough → select Two Players
         If startScreenScrollAccum <= -ScrollThreshold Then
 
-            'Dim numberOfPlayersSelection = SettingsManager.GetNumberOfPlayersSelection
 
             If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
                 numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
-                'renderer.SetStartMenuSelection(numberOfPlayersSelection)
                 settings.SetNumberOfPlayersSelection(numberOfPlayersSelection)
 
 
@@ -1222,12 +1176,12 @@ Public Class InputManager
 
     End Sub
 
-
-    Private Sub HandleAIDifficultyMouseWheel(delta As Integer, settings As SettingsManager, form As Form)
+    Private Sub HandleAIDifficultyMouseWheel(delta As Integer,
+                                             settings As SettingsManager,
+                                             form As Form)
 
         ' Accumulate wheel movement
         aiDifficultyScrollAccum += delta
-
 
         Dim aiDifficultySelection = settings.GetAIDifficultySelection
 
@@ -1236,11 +1190,8 @@ Public Class InputManager
         ' ============================
         If aiDifficultyScrollAccum >= ScrollThreshold Then
 
-            'Dim aiDifficultySelection = SettingsManager.GetAIDifficultySelection
-
             If aiDifficultySelection > AIDifficultyLevel.Easy Then
                 aiDifficultySelection -= 1
-                'renderer.SetAIDifficultySelection(aiDifficultySelection)
                 settings.SetAIDifficultySelection(aiDifficultySelection)
 
                 Form1.PlayMenuUpSound()
@@ -1256,11 +1207,8 @@ Public Class InputManager
         ' ============================
         If aiDifficultyScrollAccum <= -ScrollThreshold Then
 
-            'Dim aiDifficultySelection = SettingsManager.GetAIDifficultySelection
-
             If aiDifficultySelection < AIDifficultyLevel.Hard Then
                 aiDifficultySelection += 1
-                'renderer.SetAIDifficultySelection(aiDifficultySelection)
                 settings.SetAIDifficultySelection(aiDifficultySelection)
 
 
@@ -1274,34 +1222,66 @@ Public Class InputManager
 
     End Sub
 
+    Private Sub HandlePauseMouseWheel(delta As Integer,
+                                      settings As SettingsManager,
+                                      form As Form)
+
+        ' Accumulate wheel movement
+        pauseScrollAccum += delta
+
+        Dim pauseMenuSelection = settings.GetPauseMenuSelection
 
 
+        ' ============================
+        ' Scroll Up → Move Selection Up
+        ' ============================
+        If pauseScrollAccum >= ScrollThreshold Then
 
+            If pauseMenuSelection > 0 Then
+                pauseMenuSelection -= 1
+                settings.SetPauseMenuSelection(pauseMenuSelection)
 
+                Form1.PlayMenuUpSound()
+                form.Invalidate()
+            End If
 
+            pauseScrollAccum = 0
+            Return
+        End If
 
+        ' ============================
+        ' Scroll Down → Move Selection Down
+        ' ============================
+        If pauseScrollAccum <= -ScrollThreshold Then
 
-    Private Sub ActivateAIDifficulty(level As AIDifficultyLevel, settings As SettingsManager, state As GameStateManager)
-        'aiDifficultySelection = level
+            If pauseMenuSelection < 2 Then
+                pauseMenuSelection += 1
+                settings.SetPauseMenuSelection(pauseMenuSelection)
+
+                Form1.PlayMenuDownSound()
+                form.Invalidate()
+            End If
+
+            pauseScrollAccum = 0
+            Return
+        End If
+
+    End Sub
+
+    ' ===========================
+    '  HELPER METHODS
+    ' ===========================
+
+    Private Sub ActivateAIDifficulty(level As AIDifficultyLevel,
+                                     settings As SettingsManager)
+
         settings.SetAIDifficultySelection(level)
 
-        'renderer.SetAIDifficultySelection(aiDifficultySelection)
-
         Form1.SetAIModeFactor()
-        'currentState = GameState.Playing
-        state.SetCurrentState(GameState.Playing)
+        'state.SetCurrentState(GameState.Playing)
 
         Form1.StartNewMatch()
     End Sub
-
-
-
-
-
-
-
-
-
 
 
 End Class
