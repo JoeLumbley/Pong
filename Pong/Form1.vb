@@ -166,7 +166,7 @@ Public Class Form1
     ' -------------------------------
     Private rng As New Random()
 
-    Private Audio As AudioController
+    Private audio As AudioController
 
 
 
@@ -196,7 +196,7 @@ Public Class Form1
     Private fhdSize As New Size(1920, 1080)
 
 
-    Private mouseIsClicking As Boolean = False
+    'Private mouseIsClicking As Boolean = False
 
 
     Public renderer As New Rendering(Me.CreateGraphics(), Me.ClientSize)
@@ -665,14 +665,15 @@ Public Class Form1
             renderer.UpdateBallPosition(ballPos)
 
             velY = Math.Abs(velY)
-            Audio.PlayWithCooldown("bounce", 100)
+            audio.PlayWithCooldown("bounce", 100)
 
         ElseIf ballPos.Y >= ClientSize.Height - ballDiameter Then
             ballPos.Y = ClientSize.Height - ballDiameter
             renderer.UpdateBallPosition(ballPos)
 
             velY = -Math.Abs(velY)
-            Audio.PlayWithCooldown("bounce", 100)
+            audio.PlayWithCooldown("bounce", 100)
+
         End If
 
         ' Horizontal bounce only on Start / End / AI Difficulty screens
@@ -707,11 +708,9 @@ Public Class Form1
 
             If leftPlayerName = "You" Then
                 match.SetWinnerText("You Win!")
-                'renderer.SetWinnerText(MatchManager.GetWinnerText())
 
             Else
                 match.SetWinnerText($"{leftPlayerName} Wins!")
-                'renderer.SetWinnerText(MatchManager.GetWinnerText())
 
             End If
 
@@ -725,7 +724,6 @@ Public Class Form1
             MoveBallRandom()
 
             match.SetWinnerText($"{rightPlayerName} Wins!")
-            'renderer.SetWinnerText(MatchManager.GetWinnerText())
 
             state.SetCurrentState(GameState.EndScreen)
             EndMatch()
@@ -735,21 +733,22 @@ Public Class Form1
         If ballPos.X <= 0 Then
             scoreRight += 1
             renderer.UpdateScore(scoreLeft, scoreRight, Me.CreateGraphics(), ClientSize)
-            Audio.PlayPoint()
+            audio.PlayPoint()
+
             ResetBall(1)
             ResetPaddles()
-            'renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, ClientSize)
 
         ElseIf ballPos.X >= ClientSize.Width - ballDiameter Then
             scoreLeft += 1
             renderer.UpdateScore(scoreLeft, scoreRight, Me.CreateGraphics(), ClientSize)
-            Audio.PlayPoint()
+            audio.PlayPoint()
+
             ResetBall(-1)
             ResetPaddles()
-            'renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, ClientSize)
 
         End If
     End Sub
+
 
     Public Sub ResetPaddles()
         paddleLeft.Y = (ClientSize.Height - paddleHeight) / 2
@@ -936,24 +935,20 @@ Public Class Form1
 
         physicsTimer.Stop()
 
-        Audio.FadeOutAndStopGamePlayLoop(600)
-
-        MovePointerCenterScreen()
-
-
-        'pauseMenuSelection = 0 ' Resume game
-        settings.SetPauseMenuSelection(0) ' Resume game
-
-        'GameStateManager.SetCurrentState(GameState.Pause)
-        state.SetCurrentState(GameState.Pause)
-
+        audio.FadeOutAndStopGamePlayLoop(600)
 
         moveLeftPaddleUp = False
         moveLeftPaddleDown = False
         moveRightPaddleUp = False
         moveRightPaddleDown = False
 
-        Audio.PlayPausedLoop(600)
+        settings.SetPauseMenuSelection(0) ' Resume game
+
+        MovePointerCenterScreen()
+
+        state.SetCurrentState(GameState.Pause)
+
+        audio.PlayPausedLoop(600)
 
     End Sub
 
@@ -963,11 +958,12 @@ Public Class Form1
 
         MovePointerOffScreen()
 
-
         state.SetCurrentState(GameState.Playing)
+
         physicsTimer.Start()
 
-        Audio.PlayGamePlayLoop(600)
+        audio.PlayGamePlayLoop(600)
+
     End Sub
 
     Public Sub StartNewMatch()
@@ -993,11 +989,9 @@ Public Class Form1
         End If
 
         ResetPaddles()
-        'renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, New Drawing.Size(paddleHeight, paddleWidth))
         CenterBall()
         ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
 
-        'currentState = GameState.Playing
         state.SetCurrentState(GameState.Playing)
 
         physicsTimer.Start()
@@ -1005,50 +999,6 @@ Public Class Form1
         Audio.PlayGamePlayLoop(600)
 
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    'Private Sub CreateSoundFiles()
-    '    CreateFileFromResource(Path.Combine(Application.StartupPath, "gameplayloop.mp3"), My.Resources.Resource1.TechNoir)
-    '    CreateFileFromResource(Path.Combine(Application.StartupPath, "bounce.mp3"), My.Resources.Resource1.bounce3)
-    '    CreateFileFromResource(Path.Combine(Application.StartupPath, "startloop.mp3"), My.Resources.Resource1.StartLoop)
-    '    CreateFileFromResource(Path.Combine(Application.StartupPath, "point.mp3"), My.Resources.Resource1.Score)
-    '    CreateFileFromResource(Path.Combine(Application.StartupPath, "arrow_up.mp3"), My.Resources.Resource1.ArrowUp2)
-    '    CreateFileFromResource(Path.Combine(Application.StartupPath, "arrow_down.mp3"), My.Resources.Resource1.ArrowDown2)
-    '    CreateFileFromResource(Path.Combine(Application.StartupPath, "select.mp3"), My.Resources.Resource1.Select2)
-    '    CreateFileFromResource(Path.Combine(Application.StartupPath, "pause.mp3"), My.Resources.Resource1.PauseLoop)
-    '    CreateFileFromResource(Path.Combine(Application.StartupPath, "fullscreen.mp3"), My.Resources.Resource1.FullScreen)
-    '    CreateFileFromResource(Path.Combine(Application.StartupPath, "exit.mp3"), My.Resources.Resource1.ExitSound2)
-
-    'End Sub
-
-    'Private Sub CreateFileFromResource(filepath As String, resource As Byte())
-    '    Try
-    '        If Not IO.File.Exists(filepath) Then
-    '            IO.File.WriteAllBytes(filepath, resource)
-    '        End If
-    '    Catch ex As Exception
-    '        Debug.Print($"Error creating file: {ex.Message}")
-    '    End Try
-    'End Sub
-
-
-
-
-
-
-
 
 
 
