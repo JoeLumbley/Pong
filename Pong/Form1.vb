@@ -83,7 +83,7 @@ Public Class Form1
     ' -------------------------------
     '  Audio Cooldown
     ' -------------------------------
-    Private lastPlay As New Dictionary(Of String, Integer)
+    'Private lastPlay As New Dictionary(Of String, Integer)
 
     ' -------------------------------
     '  Pong State
@@ -166,7 +166,7 @@ Public Class Form1
     ' -------------------------------
     Private rng As New Random()
 
-    Private Audio As AudioPlayer
+    Private Audio As AudioController
 
 
 
@@ -325,7 +325,7 @@ Public Class Form1
     Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
         MyBase.OnKeyDown(e)
 
-        input.OnKeyDown(e, Me, settings, state, match)
+        input.OnKeyDown(e, Me, settings, state, match, Audio)
 
     End Sub
 
@@ -338,7 +338,7 @@ Public Class Form1
 
     Private Sub Form1_MouseClick(sender As Object, e As MouseEventArgs) Handles Me.MouseClick
 
-        input.OnMouseClick(e, settings, state, Me, match)
+        input.OnMouseClick(e, settings, state, Me, match, Audio)
 
     End Sub
 
@@ -350,13 +350,13 @@ Public Class Form1
 
     Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
 
-        input.OnMouseMove(e, renderer, settings, state, Me)
+        input.OnMouseMove(e, renderer, settings, state, Me, Audio)
 
     End Sub
 
     Private Sub Form1_MouseWheel(sender As Object, e As MouseEventArgs) Handles Me.MouseWheel
 
-        input.OnMouseWheel(e, settings, state, Me)
+        input.OnMouseWheel(e, settings, state, Me, Audio)
 
     End Sub
 
@@ -367,7 +367,8 @@ Public Class Form1
     ' ===============================
 
     Private Sub AudioRestartTimer_Tick(sender As Object, e As EventArgs) Handles AudioRestartTimer.Tick
-        RestartAudioEngine()
+        'RestartAudioEngine()
+        Audio.RestartAudioEngine(state)
     End Sub
 
 
@@ -459,7 +460,7 @@ Public Class Form1
         AudioRestartTimer?.Dispose()
 
 
-        Audio?.Dispose()
+        Audio?.DisposeAudio()
         Audio = Nothing
 
 
@@ -530,15 +531,23 @@ Public Class Form1
         MoveBallRandom()
     End Sub
 
+
+
+
+
+
+
+
+
     Private Sub InitAudio()
 
-        Audio = New AudioPlayer()
+        Audio = New AudioController()
 
         CreateSoundFiles()
 
-        LoadAndRegisterSounds()
+        'LoadAndRegisterSounds()
 
-        PlayStartLoop(600)
+        'PlayStartLoop(600)
 
         InitAudioRestartTimer()
 
@@ -560,81 +569,92 @@ Public Class Form1
 
     End Sub
 
-    Private Sub RestartAudioEngine()
+    'Private Sub RestartAudioEngine()
 
-        FadeOutAndStopActiveLoops(600)
+    '    FadeOutAndStopActiveLoops(600)
 
-        If Audio.IsPlaying("bounce") Then
-            Audio.FadeOutAndStop("bounce", 600)
-        End If
+    '    If Audio.IsPlaying("bounce") Then
+    '        Audio.FadeOutAndStop("bounce", 600)
+    '    End If
 
-        ' Wait for fade-out to complete before restarting engine
-        Dim t As New Timer() With {.Interval = 700}
+    '    ' Wait for fade-out to complete before restarting engine
+    '    Dim t As New Timer() With {.Interval = 700}
 
-        AddHandler t.Tick, Sub()
-                               t.Stop()
-                               t.Dispose()
+    '    AddHandler t.Tick, Sub()
+    '                           t.Stop()
+    '                           t.Dispose()
 
-                               ' Dispose old engine
-                               Audio?.Dispose()
+    '                           ' Dispose old engine
+    '                           Audio?.Dispose()
 
-                               ' Create new engine
-                               Audio = New AudioPlayer()
+    '                           ' Create new engine
+    '                           Audio = New AudioPlayer()
 
-                               ' Reload all sounds
-                               LoadAndRegisterSounds()
+    '                           ' Reload all sounds
+    '                           LoadAndRegisterSounds()
 
-                               ' Restore loops based on game state
-                               RestartLoops()
-                           End Sub
+    '                           ' Restore loops based on game state
+    '                           RestartLoops()
+    '                       End Sub
 
-        t.Start()
+    '    t.Start()
 
-    End Sub
+    'End Sub
 
-    Private Sub LoadAndRegisterSounds()
+    'Private Sub LoadAndRegisterSounds()
 
-        ' ---------------------------------------------------------
-        ' Overlapping SFX
-        ' ---------------------------------------------------------
-        Audio.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
-        Audio.SetVolumeOverlapping("bounce", 200)
+    '    ' ---------------------------------------------------------
+    '    ' Overlapping SFX
+    '    ' ---------------------------------------------------------
+    '    Audio.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
+    '    Audio.SetVolumeOverlapping("bounce", 200)
 
-        Audio.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
-        Audio.SetVolumeOverlapping("arrow_up", 250)
+    '    Audio.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
+    '    Audio.SetVolumeOverlapping("arrow_up", 250)
 
-        Audio.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
-        Audio.SetVolumeOverlapping("arrow_down", 200)
+    '    Audio.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
+    '    Audio.SetVolumeOverlapping("arrow_down", 200)
 
-        ' ---------------------------------------------------------
-        ' Single‑instance SFX
-        ' ---------------------------------------------------------
-        Audio.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
-        Audio.SetVolume("fullscreen", 150)
+    '    ' ---------------------------------------------------------
+    '    ' Single‑instance SFX
+    '    ' ---------------------------------------------------------
+    '    Audio.AddSound("fullscreen", Path.Combine(Application.StartupPath, "fullscreen.mp3"))
+    '    Audio.SetVolume("fullscreen", 150)
 
-        Audio.AddSound("select", Path.Combine(Application.StartupPath, "select.mp3"))
-        Audio.SetVolume("select", 300)
+    '    Audio.AddSound("select", Path.Combine(Application.StartupPath, "select.mp3"))
+    '    Audio.SetVolume("select", 300)
 
-        Audio.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
-        Audio.SetVolume("point", 500)
+    '    Audio.AddSound("point", Path.Combine(Application.StartupPath, "point.mp3"))
+    '    Audio.SetVolume("point", 500)
 
-        Audio.AddSound("exit", Path.Combine(Application.StartupPath, "exit.mp3"))
-        Audio.SetVolume("exit", 300)
+    '    Audio.AddSound("exit", Path.Combine(Application.StartupPath, "exit.mp3"))
+    '    Audio.SetVolume("exit", 300)
 
-        ' ---------------------------------------------------------
-        ' Loops (Start, Gameplay, Pause)
-        ' ---------------------------------------------------------
-        Audio.AddSound("startloop", Path.Combine(Application.StartupPath, "startloop.mp3"))
-        Audio.SetVolume("startloop", startLoopVolume)
+    '    ' ---------------------------------------------------------
+    '    ' Loops (Start, Gameplay, Pause)
+    '    ' ---------------------------------------------------------
+    '    Audio.AddSound("startloop", Path.Combine(Application.StartupPath, "startloop.mp3"))
+    '    Audio.SetVolume("startloop", startLoopVolume)
 
-        Audio.AddSound("gameplayloop", Path.Combine(Application.StartupPath, "gameplayloop.mp3"))
-        Audio.SetVolume("gameplayloop", gameplayLoopVolume)
+    '    Audio.AddSound("gameplayloop", Path.Combine(Application.StartupPath, "gameplayloop.mp3"))
+    '    Audio.SetVolume("gameplayloop", gameplayLoopVolume)
 
-        Audio.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
-        Audio.SetVolume("pause", pauseLoopVolume)
+    '    Audio.AddSound("pause", Path.Combine(Application.StartupPath, "pause.mp3"))
+    '    Audio.SetVolume("pause", pauseLoopVolume)
 
 
-    End Sub
+    'End Sub
+
+
+
+
+
+
+
+
+
+
+
 
 
     Private Sub UpdatePaddles(dt As Double)
@@ -698,7 +718,7 @@ Public Class Form1
             velX = Math.Cos(angle) * speed
             velY = Math.Sin(angle) * speed
 
-            PlayWithCooldown("bounce", 100)
+            Audio.PlayWithCooldown("bounce", 100)
         End If
 
         ' RIGHT PADDLE
@@ -718,7 +738,7 @@ Public Class Form1
             velX = Math.Cos(angle) * speed
             velY = Math.Sin(angle) * speed
 
-            PlayWithCooldown("bounce", 100)
+            Audio.PlayWithCooldown("bounce", 100)
         End If
     End Sub
 
@@ -730,14 +750,14 @@ Public Class Form1
             renderer.UpdateBallPosition(ballPos)
 
             velY = Math.Abs(velY)
-            PlayWithCooldown("bounce", 100)
+            Audio.PlayWithCooldown("bounce", 100)
 
         ElseIf ballPos.Y >= ClientSize.Height - ballDiameter Then
             ballPos.Y = ClientSize.Height - ballDiameter
             renderer.UpdateBallPosition(ballPos)
 
             velY = -Math.Abs(velY)
-            PlayWithCooldown("bounce", 100)
+            Audio.PlayWithCooldown("bounce", 100)
         End If
 
         ' Horizontal bounce only on Start / End / AI Difficulty screens
@@ -750,14 +770,14 @@ Public Class Form1
                 renderer.UpdateBallPosition(ballPos)
 
                 velX = Math.Abs(velX)
-                PlayWithCooldown("bounce", 100)
+                Audio.PlayWithCooldown("bounce", 100)
 
             ElseIf ballPos.X >= ClientSize.Width - ballDiameter Then
                 ballPos.X = ClientSize.Width - ballDiameter
                 renderer.UpdateBallPosition(ballPos)
 
                 velX = -Math.Abs(velX)
-                PlayWithCooldown("bounce", 100)
+                Audio.PlayWithCooldown("bounce", 100)
             End If
         End If
     End Sub
@@ -800,7 +820,7 @@ Public Class Form1
         If ballPos.X <= 0 Then
             scoreRight += 1
             renderer.UpdateScore(scoreLeft, scoreRight, Me.CreateGraphics(), ClientSize)
-            PlayPoint()
+            Audio.PlayPoint()
             ResetBall(1)
             ResetPaddles()
             'renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, ClientSize)
@@ -808,7 +828,7 @@ Public Class Form1
         ElseIf ballPos.X >= ClientSize.Width - ballDiameter Then
             scoreLeft += 1
             renderer.UpdateScore(scoreLeft, scoreRight, Me.CreateGraphics(), ClientSize)
-            PlayPoint()
+            Audio.PlayPoint()
             ResetBall(-1)
             ResetPaddles()
             'renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, ClientSize)
@@ -824,7 +844,7 @@ Public Class Form1
 
     Public Sub EndMatch()
 
-        FadeOutAndStopGamePlayLoop(600)
+        Audio.FadeOutAndStopGamePlayLoop(600)
 
         MovePointerCenterScreen()
 
@@ -833,7 +853,7 @@ Public Class Form1
         CenterBall()
         MoveBallRandom()
 
-        PlayStartLoop(600)
+        Audio.PlayStartLoop(600)
 
     End Sub
 
@@ -862,16 +882,16 @@ Public Class Form1
         velY = Math.Sin(angle) * speed
     End Sub
 
-    Private Sub PlayWithCooldown(name As String, ms As Integer)
-        Dim now As Integer = Environment.TickCount
+    'Private Sub PlayWithCooldown(name As String, ms As Integer)
+    '    Dim now As Integer = Environment.TickCount
 
-        If lastPlay.ContainsKey(name) AndAlso now - lastPlay(name) < ms Then
-            Return
-        End If
+    '    If lastPlay.ContainsKey(name) AndAlso now - lastPlay(name) < ms Then
+    '        Return
+    '    End If
 
-        lastPlay(name) = now
-        Audio.PlayOverlapping(name)
-    End Sub
+    '    lastPlay(name) = now
+    '    Audio.PlayOverlapping(name)
+    'End Sub
 
 
     Private Sub ScaleBallSpeed4State()
@@ -908,7 +928,7 @@ Public Class Form1
 
     Public Sub Quit2StartScreen()
 
-        FadeOutAndStopPausedLoop(600)
+        Audio.FadeOutAndStopPausedLoop(600)
 
         'MovePointerCenterScreen()
 
@@ -927,7 +947,7 @@ Public Class Form1
 
         physicsTimer.Start()
 
-        PlayStartLoop(600)
+        Audio.PlayStartLoop(600)
 
     End Sub
 
@@ -936,9 +956,9 @@ Public Class Form1
 
         AudioRestartTimer?.Stop()
 
-        PlayExitSound()
+        Audio.PlayExitSound()
 
-        FadeOutAndStopActiveLoops(700)
+        Audio.FadeOutAndStopActiveLoops(700)
 
         physicsTimer?.Stop()
 
@@ -1001,7 +1021,7 @@ Public Class Form1
 
         physicsTimer.Stop()
 
-        FadeOutAndStopGamePlayLoop(600)
+        Audio.FadeOutAndStopGamePlayLoop(600)
 
         MovePointerCenterScreen()
 
@@ -1018,13 +1038,13 @@ Public Class Form1
         moveRightPaddleUp = False
         moveRightPaddleDown = False
 
-        PlayPausedLoop(600)
+        Audio.PlayPausedLoop(600)
 
     End Sub
 
     Public Sub ResumeGame()
 
-        FadeOutAndStopPausedLoop(600)
+        Audio.FadeOutAndStopPausedLoop(600)
 
         MovePointerOffScreen()
 
@@ -1032,12 +1052,12 @@ Public Class Form1
         state.SetCurrentState(GameState.Playing)
         physicsTimer.Start()
 
-        PlayGamePlayLoop(600)
+        Audio.PlayGamePlayLoop(600)
     End Sub
 
     Public Sub StartNewMatch()
-        FadeOutAndStopStartLoop(600)
-        FadeOutAndStopPausedLoop(600)
+        Audio.FadeOutAndStopStartLoop(600)
+        Audio.FadeOutAndStopPausedLoop(600)
 
         MovePointerOffScreen()
 
@@ -1067,9 +1087,21 @@ Public Class Form1
 
         physicsTimer.Start()
 
-        PlayGamePlayLoop(600)
+        Audio.PlayGamePlayLoop(600)
 
     End Sub
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     Private Sub CreateSoundFiles()
@@ -1106,114 +1138,156 @@ Public Class Form1
                                     Screen.PrimaryScreen.WorkingArea.Height \ 2)
     End Sub
 
-    Public Sub RestartLoops()
 
 
-        Select Case state.GetCurrentState()
-
-            Case GameState.StartScreen, GameState.EndScreen, GameState.AIDifficulty
-                PlayStartLoop(600) ' includes fade-in
-
-            Case GameState.Playing
-                PlayGamePlayLoop(600) ' includes fade-in
-
-            Case GameState.Pause
-                PlayPausedLoop(600)  ' includes fade-in
-
-        End Select
-
-    End Sub
-
-    Private Sub FadeOutAndStopActiveLoops(durationMs As Integer)
-        ' Fade-out and stop only loops that are actually playing
-        If Audio.IsPlaying("startloop") Then
-            Audio.FadeOutAndStop("startloop", durationMs)
-        End If
-        If Audio.IsPlaying("gameplayloop") Then
-            Audio.FadeOutAndStop("gameplayloop", durationMs)
-        End If
-        If Audio.IsPlaying("pause") Then
-            Audio.FadeOutAndStop("pause", durationMs)
-        End If
-    End Sub
-
-    Private Sub PlayPoint()
-        Audio.PlaySound("point")
-    End Sub
-
-    Public Sub PlaySelectSound()
-        Audio.PlaySound("select")
-    End Sub
 
 
-    Private Sub PlayExitSound()
-        Audio.PlaySound("exit")
-    End Sub
-
-    Private Sub PlayPausedLoop(durationMs As Integer)
-
-        ' Fade‑in loop
-        Audio.SetVolume("pause", 0)
-        Audio.LoopSound("pause")
-        Audio.FadeVolume("pause", 0, pauseLoopVolume, durationMs)
-
-    End Sub
-
-    Public Sub PlayStartLoop(durationMs As Integer)
-
-        ' Fade‑in loop
-        Audio.SetVolume("startloop", 0)
-        Audio.LoopSound("startloop")
-        Audio.FadeVolume("startloop", 0, startLoopVolume, durationMs)
-
-    End Sub
 
 
-    Private Sub PlayGamePlayLoop(durationMs As Integer)
-
-        ' Fade‑in loop
-        Audio.SetVolume("gameplayloop", 0)
-        Audio.LoopSound("gameplayloop")
-        Audio.FadeVolume("gameplayloop", 0, gameplayLoopVolume, durationMs)
-
-    End Sub
 
 
-    Public Sub PlayFullScreenSound()
-        Audio.PlaySound("fullscreen")
-    End Sub
 
 
-    Private Sub PlayBounce()
-        Audio.PlayOverlapping("bounce")
-    End Sub
 
-    Public Sub PlayMenuUpSound()
-        Audio.PlayOverlapping("arrow_up")
-    End Sub
+    'Public Sub RestartLoops()
 
 
-    Public Sub PlayMenuMoveSound()
-        Audio.PlayOverlapping("arrow_up")
-    End Sub
+    '    Select Case state.GetCurrentState()
 
-    Public Sub PlayMenuDownSound()
-        Audio.PlayOverlapping("arrow_down")
-    End Sub
+    '        Case GameState.StartScreen, GameState.EndScreen, GameState.AIDifficulty
+    '            PlayStartLoop(600) ' includes fade-in
+
+    '        Case GameState.Playing
+    '            PlayGamePlayLoop(600) ' includes fade-in
+
+    '        Case GameState.Pause
+    '            PlayPausedLoop(600)  ' includes fade-in
+
+    '    End Select
+
+    'End Sub
+
+    'Private Sub FadeOutAndStopActiveLoops(durationMs As Integer)
+    '    ' Fade-out and stop only loops that are actually playing
+    '    If Audio.IsPlaying("startloop") Then
+    '        Audio.FadeOutAndStop("startloop", durationMs)
+    '    End If
+    '    If Audio.IsPlaying("gameplayloop") Then
+    '        Audio.FadeOutAndStop("gameplayloop", durationMs)
+    '    End If
+    '    If Audio.IsPlaying("pause") Then
+    '        Audio.FadeOutAndStop("pause", durationMs)
+    '    End If
+    'End Sub
+
+    'Private Sub PlayPoint()
+    '    Audio.PlaySound("point")
+    'End Sub
+
+    'Public Sub PlaySelectSound()
+    '    Audio.PlaySound("select")
+    'End Sub
 
 
-    Private Sub FadeOutAndStopGamePlayLoop(durationMs As Integer)
-        If Audio.IsPlaying("gameplayloop") Then Audio.FadeOutAndStop("gameplayloop", durationMs)
-    End Sub
+    'Private Sub PlayExitSound()
+    '    Audio.PlaySound("exit")
+    'End Sub
+
+    'Private Sub PlayPausedLoop(durationMs As Integer)
+
+    '    ' Fade‑in loop
+    '    Audio.SetVolume("pause", 0)
+    '    Audio.LoopSound("pause")
+    '    Audio.FadeVolume("pause", 0, pauseLoopVolume, durationMs)
+
+    'End Sub
+
+    'Public Sub PlayStartLoop(durationMs As Integer)
+
+    '    ' Fade‑in loop
+    '    Audio.SetVolume("startloop", 0)
+    '    Audio.LoopSound("startloop")
+    '    Audio.FadeVolume("startloop", 0, startLoopVolume, durationMs)
+
+    'End Sub
 
 
-    Private Sub FadeOutAndStopStartLoop(durationMs As Integer)
-        If Audio.IsPlaying("startloop") Then Audio.FadeOutAndStop("startloop", durationMs)
-    End Sub
+    'Private Sub PlayGamePlayLoop(durationMs As Integer)
 
-    Private Sub FadeOutAndStopPausedLoop(durationMs As Integer)
-        If Audio.IsPlaying("pause") Then Audio.FadeOutAndStop("pause", durationMs)
-    End Sub
+    '    ' Fade‑in loop
+    '    Audio.SetVolume("gameplayloop", 0)
+    '    Audio.LoopSound("gameplayloop")
+    '    Audio.FadeVolume("gameplayloop", 0, gameplayLoopVolume, durationMs)
+
+    'End Sub
+
+
+    'Public Sub PlayFullScreenSound()
+    '    Audio.PlaySound("fullscreen")
+    'End Sub
+
+
+    'Private Sub PlayBounce()
+    '    Audio.PlayOverlapping("bounce")
+    'End Sub
+
+    'Public Sub PlayMenuUpSound()
+    '    Audio.PlayOverlapping("arrow_up")
+    'End Sub
+
+
+    'Public Sub PlayMenuMoveSound()
+    '    Audio.PlayOverlapping("arrow_up")
+    'End Sub
+
+    'Public Sub PlayMenuDownSound()
+    '    Audio.PlayOverlapping("arrow_down")
+    'End Sub
+
+
+    'Private Sub FadeOutAndStopGamePlayLoop(durationMs As Integer)
+    '    If Audio.IsPlaying("gameplayloop") Then Audio.FadeOutAndStop("gameplayloop", durationMs)
+    'End Sub
+
+
+    'Private Sub FadeOutAndStopStartLoop(durationMs As Integer)
+    '    If Audio.IsPlaying("startloop") Then Audio.FadeOutAndStop("startloop", durationMs)
+    'End Sub
+
+    'Private Sub FadeOutAndStopPausedLoop(durationMs As Integer)
+    '    If Audio.IsPlaying("pause") Then Audio.FadeOutAndStop("pause", durationMs)
+    'End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Private Function IsDarkMode() As Boolean
         If Environment.OSVersion.Version.Build >= 22000 Then

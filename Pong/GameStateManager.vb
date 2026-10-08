@@ -26,16 +26,16 @@ Public Class GameStateManager
     End Sub
 
 
-    Public Sub GoToStartScreen(match As MatchManager)
-        currentState = GameState.StartScreen
-        match.SetWinnerText(String.Empty)
-        'renderer.SetWinnerText("")
-        Form1.PlayStartLoop(600)
-        'Form1.ResetForMenu()
-        Form1.CenterBall()
-        Form1.MoveBallRandom()
-        Form1.MovePointerCenterScreen()
-    End Sub
+    'Public Sub GoToStartScreen(match As MatchManager)
+    '    currentState = GameState.StartScreen
+    '    match.SetWinnerText(String.Empty)
+    '    'renderer.SetWinnerText("")
+    '    Form1.PlayStartLoop(600)
+    '    'Form1.ResetForMenu()
+    '    Form1.CenterBall()
+    '    Form1.MoveBallRandom()
+    '    Form1.MovePointerCenterScreen()
+    'End Sub
 
     Public Sub GoToAIDifficulty()
         currentState = GameState.AIDifficulty

@@ -44,7 +44,8 @@ Public Class InputManager
                          form As Form,
                          settings As SettingsManager,
                          state As GameStateManager,
-                         match As MatchManager)
+                         match As MatchManager,
+                         audio As AudioController)
 
         ' ============================================================
         ' 1. Fullscreen Toggle (F11 / F)
@@ -62,7 +63,7 @@ Public Class InputManager
                 fKeyDown = True
             End If
 
-            Form1.PlayFullScreenSound()
+            audio.PlayFullScreenSound()
             Form1.ToggleFullScreen()
             form.Invalidate()
             Return
@@ -78,7 +79,7 @@ Public Class InputManager
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
-            Form1.PlayFullScreenSound()
+            audio.PlayFullScreenSound()
             Form1.ToggleFullScreen()
             form.Invalidate()
             Return
@@ -122,23 +123,23 @@ Public Class InputManager
         Select Case state.GetCurrentState()
 
             Case GameState.StartScreen
-                HandleStartScreenInput(e, settings, state, form)
+                HandleStartScreenInput(e, settings, state, form, audio)
                 Return
 
             Case GameState.EndScreen
-                HandleEndScreenInput(e, state, form, match)
+                HandleEndScreenInput(e, state, form, match, audio)
                 Return
 
             Case GameState.Playing
-                HandleGameplayInput(e, settings, form)
+                HandleGameplayInput(e, settings, form, audio)
                 Return
 
             Case GameState.Pause
-                HandlePauseInput(e, settings, form)
+                HandlePauseInput(e, settings, form, audio)
                 Return
 
             Case GameState.AIDifficulty
-                HandleAIDifficultyInput(e, form, settings, state)
+                HandleAIDifficultyInput(e, form, settings, state, audio)
                 Return
 
         End Select
@@ -234,12 +235,13 @@ Public Class InputManager
                             settings As SettingsManager,
                             state As GameStateManager,
                             form As Form,
-                            match As MatchManager)
+                            match As MatchManager,
+                            audio As AudioController)
 
-        HandleAIDifficulty_MouseClick(e, settings, state, form)
-        HandleStartScreen_MouseClick(e, settings, state, form)
-        HandlePauseMenu_MouseClick(e, settings, state, form)
-        HandleEndScreen_MouseClick(e, state, form, match)
+        HandleAIDifficulty_MouseClick(e, settings, state, form, audio)
+        HandleStartScreen_MouseClick(e, settings, state, form, audio)
+        HandlePauseMenu_MouseClick(e, settings, state, form, audio)
+        HandleEndScreen_MouseClick(e, state, form, match, audio)
 
     End Sub
 
@@ -253,31 +255,33 @@ Public Class InputManager
                            renderer As Rendering,
                            settings As SettingsManager,
                            state As GameStateManager,
-                           form As Form)
+                           form As Form,
+                           audio As AudioController)
 
-        HandleStartScreen_MouseMove(e, renderer, settings, state, form)
-        HandleAIDifficulty_MouseMove(e, renderer, settings, state, form)
-        HandlePauseMenu_MouseMove(e, renderer, settings, state, form)
+        HandleStartScreen_MouseMove(e, renderer, settings, state, form, audio)
+        HandleAIDifficulty_MouseMove(e, renderer, settings, state, form, audio)
+        HandlePauseMenu_MouseMove(e, renderer, settings, state, form, audio)
 
     End Sub
 
     Public Sub OnMouseWheel(e As MouseEventArgs,
                             settings As SettingsManager,
                             state As GameStateManager,
-                            form As Form)
+                            form As Form,
+                            audio As AudioController)
 
         If state.GetCurrentState() = GameState.Pause Then
-            HandlePauseMouseWheel(e.Delta, settings, form)
+            HandlePauseMouseWheel(e.Delta, settings, form, audio)
             Return
         End If
 
         If state.GetCurrentState() = GameState.StartScreen Then
-            HandleStartScreenMouseWheel(e.Delta, settings, form)
+            HandleStartScreenMouseWheel(e.Delta, settings, form, audio)
             Return
         End If
 
         If state.GetCurrentState() = GameState.AIDifficulty Then
-            HandleAIDifficultyMouseWheel(e.Delta, settings, form)
+            HandleAIDifficultyMouseWheel(e.Delta, settings, form, audio)
             Return
         End If
 
@@ -290,7 +294,8 @@ Public Class InputManager
     Private Sub HandleStartScreenInput(e As KeyEventArgs,
                                        settings As SettingsManager,
                                        state As GameStateManager,
-                                       form As Form)
+                                       form As Form,
+                                       audio As AudioController)
 
         ' ============================================================
         ' 1. Menu Navigation (Up/W and Down/S)
@@ -308,7 +313,7 @@ Public Class InputManager
                     settings.SetNumberOfPlayersSelection(NumberOfPlayers.OnePlayer)
                     'renderer.SetStartMenuSelection(settings.GetNumberOfPlayersSelection())
 
-                    Form1.PlayMenuUpSound()
+                    audio.PlayMenuUpSound()
                     form.Invalidate()
                 End If
                 Return
@@ -321,7 +326,7 @@ Public Class InputManager
                     settings.SetNumberOfPlayersSelection(NumberOfPlayers.OnePlayer)
                     'renderer.SetStartMenuSelection(settings.GetNumberOfPlayersSelection())
 
-                    Form1.PlayMenuUpSound()
+                    audio.PlayMenuUpSound()
                     form.Invalidate()
                 End If
                 Return
@@ -338,7 +343,7 @@ Public Class InputManager
                     settings.SetNumberOfPlayersSelection(NumberOfPlayers.TwoPlayers)
                     'renderer.SetStartMenuSelection(settings.GetNumberOfPlayersSelection())
 
-                    Form1.PlayMenuDownSound()
+                    audio.PlayMenuDownSound()
                     form.Invalidate()
                 End If
                 Return
@@ -351,7 +356,7 @@ Public Class InputManager
                     settings.SetNumberOfPlayersSelection(NumberOfPlayers.TwoPlayers)
                     'renderer.SetStartMenuSelection(settings.GetNumberOfPlayersSelection())
 
-                    Form1.PlayMenuDownSound()
+                    audio.PlayMenuDownSound()
                     form.Invalidate()
                 End If
                 Return
@@ -367,7 +372,7 @@ Public Class InputManager
                 settings.SetPlayerMode(1)
                 state.SetCurrentState(GameState.AIDifficulty)
 
-                Form1.PlaySelectSound()
+                audio.PlaySelectSound()
                 form.Invalidate()
                 Return
 
@@ -378,7 +383,7 @@ Public Class InputManager
                 settings.SetPlayerMode(2)
                 Form1.StartNewMatch()
 
-                Form1.PlaySelectSound()
+                audio.PlaySelectSound()
                 form.Invalidate()
                 Return
 
@@ -398,7 +403,7 @@ Public Class InputManager
                     Form1.StartNewMatch()
                 End If
 
-                Form1.PlaySelectSound()
+                audio.PlaySelectSound()
                 form.Invalidate()
                 Return
 
@@ -414,7 +419,7 @@ Public Class InputManager
                     Form1.StartNewMatch()
                 End If
 
-                Form1.PlaySelectSound()
+                audio.PlaySelectSound()
                 form.Invalidate()
                 Return
 
@@ -436,7 +441,8 @@ Public Class InputManager
     Private Sub HandleAIDifficultyInput(e As KeyEventArgs,
                                         form As Form,
                                         settings As SettingsManager,
-                                        state As GameStateManager)
+                                        state As GameStateManager,
+                                        audio As AudioController)
 
         ' -------------------------------
         '  AI Difficulty Menu Navigation
@@ -454,7 +460,7 @@ Public Class InputManager
                 settings.SetAIDifficultySelection(settings.GetAIDifficultySelection() - 1)
                 Form1.renderer.SetAIDifficultySelection(settings.GetAIDifficultySelection())
 
-                Form1.PlayMenuUpSound()
+                audio.PlayMenuUpSound()
                 form.Invalidate()
             End If
 
@@ -474,7 +480,7 @@ Public Class InputManager
                 settings.SetAIDifficultySelection(settings.GetAIDifficultySelection() + 1)
                 Form1.renderer.SetAIDifficultySelection(settings.GetAIDifficultySelection())
 
-                Form1.PlayMenuDownSound()
+                audio.PlayMenuDownSound()
                 form.Invalidate()
             End If
 
@@ -512,7 +518,7 @@ Public Class InputManager
             state.SetCurrentState(GameState.Playing)
             Form1.StartNewMatch()
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
 
             Return
@@ -534,7 +540,7 @@ Public Class InputManager
 
             state.SetCurrentState(GameState.Playing)
             Form1.StartNewMatch()
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
 
             Return
@@ -549,7 +555,7 @@ Public Class InputManager
             escapeKeyDown = True
 
             state.SetCurrentState(GameState.StartScreen)
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
 
             Return
@@ -560,7 +566,8 @@ Public Class InputManager
 
     Private Sub HandleGameplayInput(e As KeyEventArgs,
                                     settings As SettingsManager,
-                                    form As Form)
+                                    form As Form,
+                                    audio As AudioController)
 
         ' ============================================================
         ' 1. Paddle Movement (Left Player: W/S)
@@ -595,7 +602,7 @@ Public Class InputManager
             If pKeyDown Then Return
             pKeyDown = True
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             Form1.PauseGame()
             form.Invalidate()
             Return
@@ -605,7 +612,7 @@ Public Class InputManager
             If pauseKeyDown Then Return
             pauseKeyDown = True
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             Form1.PauseGame()
             form.Invalidate()
             Return
@@ -615,7 +622,7 @@ Public Class InputManager
             If mediaPlayPauseKeyDown Then Return
             mediaPlayPauseKeyDown = True
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             Form1.PauseGame()
             form.Invalidate()
             Return
@@ -630,7 +637,7 @@ Public Class InputManager
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             Form1.PauseGame()
             form.Invalidate()
             Return
@@ -641,7 +648,8 @@ Public Class InputManager
 
     Private Sub HandlePauseInput(e As KeyEventArgs,
                                  settings As SettingsManager,
-                                 form As Form)
+                                 form As Form,
+                                 audio As AudioController)
 
         ' ============================================================
         ' 1. Resume Game (P, Pause/Break, MediaPlayPause)
@@ -651,7 +659,7 @@ Public Class InputManager
             pKeyDown = True
 
             Form1.ResumeGame()
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
 
             form.Invalidate()
             Return
@@ -662,7 +670,7 @@ Public Class InputManager
             pauseKeyDown = True
 
             Form1.ResumeGame()
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
 
             form.Invalidate()
             Return
@@ -673,7 +681,7 @@ Public Class InputManager
             mediaPlayPauseKeyDown = True
 
             Form1.ResumeGame()
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
 
             form.Invalidate()
             Return
@@ -688,7 +696,7 @@ Public Class InputManager
                 settings.SetPauseMenuSelection(settings.GetPauseMenuSelection() - 1)
                 'renderer.SetPauseMenuSelection(settings.GetPauseMenuSelection())
 
-                Form1.PlayMenuUpSound()
+                audio.PlayMenuUpSound()
                 form.Invalidate()
             End If
             Return
@@ -699,7 +707,7 @@ Public Class InputManager
                 settings.SetPauseMenuSelection(settings.GetPauseMenuSelection() + 1)
                 'renderer.SetPauseMenuSelection(settings.GetPauseMenuSelection())
 
-                Form1.PlayMenuDownSound()
+                audio.PlayMenuDownSound()
                 form.Invalidate()
             End If
             Return
@@ -711,7 +719,7 @@ Public Class InputManager
         ' ============================================================
         If e.KeyCode = Keys.R Then
             Form1.ResumeGame()
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
 
             form.Invalidate()
             Return
@@ -719,7 +727,7 @@ Public Class InputManager
 
         If e.KeyCode = Keys.N Then
             Form1.StartNewMatch()
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
 
             form.Invalidate()
             Return
@@ -727,7 +735,7 @@ Public Class InputManager
 
         If e.KeyCode = Keys.Q Then
             Form1.Quit2StartScreen()
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
@@ -741,7 +749,7 @@ Public Class InputManager
             escapeKeyDown = True
 
             Form1.Quit2StartScreen()
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
@@ -759,7 +767,7 @@ Public Class InputManager
                 Case 1 : Form1.StartNewMatch()
                 Case 2 : Form1.Quit2StartScreen()
             End Select
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
@@ -773,7 +781,7 @@ Public Class InputManager
                 Case 1 : Form1.StartNewMatch()
                 Case 2 : Form1.Quit2StartScreen()
             End Select
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
@@ -783,7 +791,8 @@ Public Class InputManager
     Private Sub HandleEndScreenInput(e As KeyEventArgs,
                                      state As GameStateManager,
                                      form As Form,
-                                     match As MatchManager)
+                                     match As MatchManager,
+                                     audio As AudioController)
 
         ' ============================================================
         ' 1. Return to Start Screen (Space)
@@ -792,7 +801,7 @@ Public Class InputManager
             If spaceKeyDown Then Return
             spaceKeyDown = True
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             state.SetCurrentState(GameState.StartScreen)
             match.SetWinnerText("")
             'renderer.SetWinnerText(match.GetWinnerText())
@@ -809,7 +818,7 @@ Public Class InputManager
             If enterKeyDown Then Return
             enterKeyDown = True
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             state.SetCurrentState(GameState.StartScreen)
             match.SetWinnerText("")
             'renderer.SetWinnerText(MatchManager.GetWinnerText())
@@ -826,7 +835,7 @@ Public Class InputManager
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             state.SetCurrentState(GameState.StartScreen)
             match.SetWinnerText("")
             'renderer.SetWinnerText(MatchManager.GetWinnerText())
@@ -844,7 +853,8 @@ Public Class InputManager
     Private Sub HandleStartScreen_MouseClick(e As MouseEventArgs,
                                              settings As SettingsManager,
                                              state As GameStateManager,
-                                             form As Form)
+                                             form As Form,
+                                             audio As AudioController)
 
         If state.GetCurrentState() <> GameState.StartScreen Then Return
 
@@ -863,7 +873,7 @@ Public Class InputManager
 
             End If
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
@@ -875,12 +885,11 @@ Public Class InputManager
         ' One Player
         If Form1.renderer.OnePlayerOptionRect.Contains(e.Location) Then
             settings.SetNumberOfPlayersSelection(NumberOfPlayers.OnePlayer)   ' ← update selection
-            'renderer.SetStartMenuSelection(settings.GetNumberOfPlayersSelection())
 
             settings.SetPlayerMode(1)
             state.SetCurrentState(GameState.AIDifficulty)
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
@@ -888,13 +897,11 @@ Public Class InputManager
         ' Two Players
         If Form1.renderer.TwoPlayersOptionRect.Contains(e.Location) Then
             settings.SetNumberOfPlayersSelection(NumberOfPlayers.TwoPlayers)   ' ← update selection
-            'renderer.SetStartMenuSelection(settings.GetNumberOfPlayersSelection())
 
             settings.SetPlayerMode(2)
-            'GameStateManager.SetCurrentState(GameState.Playing)
             Form1.StartNewMatch()
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
@@ -905,7 +912,8 @@ Public Class InputManager
     Private Sub HandleAIDifficulty_MouseClick(e As MouseEventArgs,
                                               settings As SettingsManager,
                                               state As GameStateManager,
-                                              form As Form)
+                                              form As Form,
+                                              audio As AudioController)
 
         If state.GetCurrentState() <> GameState.AIDifficulty Then Return
 
@@ -918,7 +926,7 @@ Public Class InputManager
         If e.Button = MouseButtons.Middle Then
             ActivateAIDifficulty(settings.GetAIDifficultySelection, settings)
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
@@ -932,7 +940,7 @@ Public Class InputManager
             settings.SetAIDifficultySelection(AIDifficultyLevel.Easy)
             ActivateAIDifficulty(settings.GetAIDifficultySelection, settings)
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
@@ -942,7 +950,7 @@ Public Class InputManager
             settings.SetAIDifficultySelection(AIDifficultyLevel.Normal)
             ActivateAIDifficulty(settings.GetAIDifficultySelection, settings)
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
@@ -952,7 +960,7 @@ Public Class InputManager
             settings.SetAIDifficultySelection(AIDifficultyLevel.Hard)
             ActivateAIDifficulty(settings.GetAIDifficultySelection, settings)
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
@@ -962,7 +970,8 @@ Public Class InputManager
     Private Sub HandlePauseMenu_MouseClick(e As MouseEventArgs,
                                            settings As SettingsManager,
                                            state As GameStateManager,
-                                           form As Form)
+                                           form As Form,
+                                           audio As AudioController)
 
         If state.GetCurrentState() <> GameState.Pause Then Return
 
@@ -978,10 +987,8 @@ Public Class InputManager
                 Case 1 : Form1.StartNewMatch()
                 Case 2 : Form1.Quit2StartScreen()
             End Select
-            'renderer.SetPauseMenuSelection(pauseMenuSelection)
-            'SettingsManager.SetPauseMenuSelection(SettingsManager.GetPauseMenuSelection())
 
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
@@ -992,12 +999,10 @@ Public Class InputManager
 
         ' Resume
         If Form1.renderer.ResumeRect.Contains(e.Location) Then
-            'pauseMenuSelection = 0   ' ← keep selection visually correct
-
             settings.SetPauseMenuSelection(0)
 
             Form1.ResumeGame()
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
@@ -1005,8 +1010,9 @@ Public Class InputManager
         ' New Match
         If Form1.renderer.NewMatchRect.Contains(e.Location) Then
             settings.SetPauseMenuSelection(1)
+
             Form1.StartNewMatch()
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
@@ -1014,26 +1020,24 @@ Public Class InputManager
         ' Quit
         If Form1.renderer.QuitRect.Contains(e.Location) Then
             settings.SetPauseMenuSelection(2)
-            Form1.Quit2StartScreen()
-            Form1.PlaySelectSound()
-            form.Invalidate()
-            Return
 
             Form1.Quit2StartScreen()
-            Form1.PlaySelectSound()
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
+
     End Sub
 
     Private Sub HandleEndScreen_MouseClick(e As MouseEventArgs,
                                            state As GameStateManager,
                                            form As Form,
-                                           match As MatchManager)
+                                           match As MatchManager,
+                                           audio As AudioController)
 
         If state.GetCurrentState() <> GameState.EndScreen Then Return
 
-        Form1.PlaySelectSound()
+        audio.PlaySelectSound()
         state.SetCurrentState(GameState.StartScreen)
         match.SetWinnerText("")
 
@@ -1049,7 +1053,8 @@ Public Class InputManager
                                             renderer As Rendering,
                                             settings As SettingsManager,
                                             state As GameStateManager,
-                                            form As Form)
+                                            form As Form,
+                                            audio As AudioController)
 
         If state.GetCurrentState <> GameState.StartScreen Then Return
 
@@ -1064,7 +1069,7 @@ Public Class InputManager
         End If
 
         If oldSelection <> settings.GetNumberOfPlayersSelection Then
-            Form1.PlayMenuMoveSound()
+            audio.PlayMenuMoveSound()
 
             form.Invalidate()
         End If
@@ -1075,7 +1080,8 @@ Public Class InputManager
                                              renderer As Rendering,
                                              settings As SettingsManager,
                                              state As GameStateManager,
-                                             form As Form)
+                                             form As Form,
+                                             audio As AudioController)
 
         If state.GetCurrentState <> GameState.AIDifficulty Then Return
 
@@ -1094,7 +1100,7 @@ Public Class InputManager
 
 
         If oldSelection <> settings.GetAIDifficultySelection() Then
-            Form1.PlayMenuMoveSound()
+            audio.PlayMenuMoveSound()
 
             form.Invalidate()
         End If
@@ -1104,7 +1110,8 @@ Public Class InputManager
                                           renderer As Rendering,
                                           settings As SettingsManager,
                                           state As GameStateManager,
-                                          form As Form)
+                                          form As Form,
+                                          audio As AudioController)
 
         If state.GetCurrentState() <> GameState.Pause Then Return
 
@@ -1122,7 +1129,7 @@ Public Class InputManager
 
 
         If oldSelection <> settings.GetPauseMenuSelection() Then
-            Form1.PlayMenuMoveSound()
+            audio.PlayMenuMoveSound()
 
             form.Invalidate()
         End If
@@ -1134,7 +1141,8 @@ Public Class InputManager
 
     Private Sub HandleStartScreenMouseWheel(delta As Integer,
                                             settings As SettingsManager,
-                                            form As Form)
+                                            form As Form,
+                                            audio As AudioController)
 
         ' Accumulate wheel movement
         startScreenScrollAccum += delta
@@ -1149,7 +1157,7 @@ Public Class InputManager
                 numberOfPlayersSelection = NumberOfPlayers.OnePlayer
                 settings.SetNumberOfPlayersSelection(numberOfPlayersSelection)
 
-                Form1.PlayMenuUpSound()
+                audio.PlayMenuUpSound()
                 form.Invalidate()
             End If
 
@@ -1166,7 +1174,7 @@ Public Class InputManager
                 settings.SetNumberOfPlayersSelection(numberOfPlayersSelection)
 
 
-                Form1.PlayMenuDownSound()
+                audio.PlayMenuDownSound()
                 form.Invalidate()
             End If
 
@@ -1178,7 +1186,8 @@ Public Class InputManager
 
     Private Sub HandleAIDifficultyMouseWheel(delta As Integer,
                                              settings As SettingsManager,
-                                             form As Form)
+                                             form As Form,
+                                             audio As AudioController)
 
         ' Accumulate wheel movement
         aiDifficultyScrollAccum += delta
@@ -1194,7 +1203,7 @@ Public Class InputManager
                 aiDifficultySelection -= 1
                 settings.SetAIDifficultySelection(aiDifficultySelection)
 
-                Form1.PlayMenuUpSound()
+                audio.PlayMenuUpSound()
                 form.Invalidate()
             End If
 
@@ -1212,7 +1221,7 @@ Public Class InputManager
                 settings.SetAIDifficultySelection(aiDifficultySelection)
 
 
-                Form1.PlayMenuDownSound()
+                audio.PlayMenuDownSound()
                 form.Invalidate()
             End If
 
@@ -1224,7 +1233,8 @@ Public Class InputManager
 
     Private Sub HandlePauseMouseWheel(delta As Integer,
                                       settings As SettingsManager,
-                                      form As Form)
+                                      form As Form,
+                                      audio As AudioController)
 
         ' Accumulate wheel movement
         pauseScrollAccum += delta
@@ -1241,7 +1251,7 @@ Public Class InputManager
                 pauseMenuSelection -= 1
                 settings.SetPauseMenuSelection(pauseMenuSelection)
 
-                Form1.PlayMenuUpSound()
+                audio.PlayMenuUpSound()
                 form.Invalidate()
             End If
 
@@ -1258,7 +1268,7 @@ Public Class InputManager
                 pauseMenuSelection += 1
                 settings.SetPauseMenuSelection(pauseMenuSelection)
 
-                Form1.PlayMenuDownSound()
+                audio.PlayMenuDownSound()
                 form.Invalidate()
             End If
 
