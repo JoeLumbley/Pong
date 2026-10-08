@@ -44,8 +44,11 @@ Public Class InputManager
     End Sub
 
 
-    Public Sub OnKeyDown(e As KeyEventArgs, form As Form, settings As SettingsManager, state As GameStateManager, match As MatchManager)
-        ' Handle key down events and update the corresponding flags
+    Public Sub OnKeyDown(e As KeyEventArgs,
+                         form As Form,
+                         settings As SettingsManager,
+                         state As GameStateManager,
+                         match As MatchManager)
 
         ' ============================================================
         ' 1. Fullscreen Toggle (F11 / F)
@@ -54,7 +57,7 @@ Public Class InputManager
 
             ' Repeat‑guard
             If (e.KeyCode = Keys.F11 AndAlso f11KeyDown) OrElse
-           (e.KeyCode = Keys.F AndAlso fKeyDown) Then Return
+            (e.KeyCode = Keys.F AndAlso fKeyDown) Then Return
 
             ' Mark correct key as down
             If e.KeyCode = Keys.F11 Then
@@ -147,7 +150,7 @@ Public Class InputManager
 
     End Sub
 
-    Public Sub OnKeyUp(e As KeyEventArgs, setting As SettingsManager)
+    Public Sub OnKeyUp(e As KeyEventArgs, settings As SettingsManager)
 
         ' ============================================================
         ' 1. Release Paddle Movement Keys
@@ -162,7 +165,7 @@ Public Class InputManager
             sKeyDown = False
         End If
 
-        If setting.GetPlayerMode() = 2 Then
+        If settings.GetPlayerMode() = 2 Then
             If e.KeyCode = Keys.Up Then
                 Form1.moveRightPaddleUp = False
                 upKeyDown = False
