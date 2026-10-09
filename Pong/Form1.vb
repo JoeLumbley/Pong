@@ -147,7 +147,7 @@ Public Class Form1
         MyBase.OnLoad(e)
 
         InitWindow()
-        InitTimers()
+        InitPhysicsTimer()
         InitGameplay()
         InitAudio()
         InitBall()
@@ -254,7 +254,7 @@ Public Class Form1
 
     Private Sub Form1_MouseClick(sender As Object, e As MouseEventArgs) Handles Me.MouseClick
 
-        input.OnMouseClick(e, settings, state, Me, match, Audio)
+        input.OnMouseClick(e, settings, state, Me, match, audio)
 
     End Sub
 
@@ -266,13 +266,13 @@ Public Class Form1
 
     Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
 
-        input.OnMouseMove(e, renderer, settings, state, Me, Audio)
+        input.OnMouseMove(e, renderer, settings, state, Me, audio)
 
     End Sub
 
     Private Sub Form1_MouseWheel(sender As Object, e As MouseEventArgs) Handles Me.MouseWheel
 
-        input.OnMouseWheel(e, settings, state, Me, Audio)
+        input.OnMouseWheel(e, settings, state, Me, audio)
 
     End Sub
 
@@ -282,7 +282,7 @@ Public Class Form1
 
     Private Sub AudioRestartTimer_Tick(sender As Object, e As EventArgs) Handles AudioRestartTimer.Tick
         'RestartAudioEngine()
-        Audio.RestartAudioEngine(state)
+        audio.RestartAudioEngine(state)
     End Sub
 
     ' ===============================
@@ -373,8 +373,8 @@ Public Class Form1
         AudioRestartTimer?.Dispose()
 
 
-        Audio?.DisposeAudio()
-        Audio = Nothing
+        audio?.DisposeAudio()
+        audio = Nothing
 
 
     End Sub
@@ -406,10 +406,12 @@ Public Class Form1
         Me.WindowState = FormWindowState.Normal
     End Sub
 
-    Private Sub InitTimers()
-        physicsTimer.Interval = 15
+    Private Sub InitPhysicsTimer()
 
+        physicsTimer.Interval = 15
         AddHandler physicsTimer.Tick, AddressOf PhysicsTick
+
+        physicsTimer.Start()
 
         physicsStopwatch.Start()
 
@@ -418,24 +420,24 @@ Public Class Form1
 
     Private Sub InitGameplay()
         InitPaddles()
-        InitPhysics()
+        'InitPhysics()
     End Sub
 
     Private Sub InitPaddles()
         paddleLeft = New Rectangle(50,
-                                    (ClientSize.Height - paddleHeight) / 2,
-                                    paddleWidth,
-                                    paddleHeight)
+                                  (ClientSize.Height - paddleHeight) / 2,
+                                   paddleWidth,
+                                   paddleHeight)
 
         paddleRight = New Rectangle(ClientSize.Width - 50 - paddleWidth,
-                                     (ClientSize.Height - paddleHeight) / 2,
-                                     paddleWidth,
-                                     paddleHeight)
+                                   (ClientSize.Height - paddleHeight) / 2,
+                                    paddleWidth,
+                                    paddleHeight)
     End Sub
 
-    Private Sub InitPhysics()
-        physicsTimer.Start()
-    End Sub
+    'Private Sub InitPhysics()
+    '    physicsTimer.Start()
+    'End Sub
 
     Private Sub InitBall()
         ScaleBallDiameter()

@@ -410,7 +410,7 @@ Public Class Rendering
         DisposeFonts()
 
         hudScoreFont = New Font("Segoe UI", CSng(size.Height / 15.0F), FontStyle.Bold)
-        hudLabelFont = New Font("Segoe UI", CSng(size.Height / 60.0F))
+        hudLabelFont = New Font("Segoe UI", CSng(size.Height / 55.0F), FontStyle.Bold)
         pauseTitleFont = New Font("Segoe UI", CSng(size.Height / 18.0F), FontStyle.Bold)
         pauseMenuFont = New Font("Segoe UI", CSng(size.Height / 28.0F))
         startTitleFont = New Font("Segoe UI", CSng(size.Height / 12.0F), FontStyle.Bold)
@@ -419,7 +419,7 @@ Public Class Rendering
         aiTitleFont = New Font("Segoe UI", CSng(size.Height / 18.0F), FontStyle.Bold)
         gameOverFont = New Font("Segoe UI", CSng(size.Height / 20.0F), FontStyle.Bold)
         gameOverInfoFont = New Font("Segoe UI", CSng(size.Height / 45.0F))
-        keyboardFont = New Font("Segoe UI", CSng(size.Height / 80.0F))
+        keyboardFont = New Font("Segoe UI", CSng(size.Height / 70.0F), FontStyle.Bold)
         fpsFont = New Font("Segoe UI", CSng(size.Height / 75.0F), FontStyle.Bold)
 
         CachePause(g, size)
