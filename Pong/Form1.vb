@@ -40,32 +40,6 @@ Imports Pong.Enums
 
 Public Class Form1
 
-    ' -------------------------------
-    '  Game State
-    ' -------------------------------
-
-    'Private Enum GameState
-    '    StartScreen
-    '    Playing
-    '    Pause
-    '    EndScreen
-    '    AIDifficulty
-    'End Enum
-
-
-    'Private currentState As GameState = GameState.StartScreen
-    'Private winnerText As String = String.Empty
-
-    ' -------------------------------
-    '  Player Mode
-    ' -------------------------------
-    'Private playerMode As Integer = 1       ' 1 = Single Player (AI), 2 = Two Players
-    'Private numberOfPlayersSelection As Integer = 0   ' 0 = "1 Player", 1 = "2 Players"
-
-    'Private Enum NumberOfPlayers
-    '    OnePlayer
-    '    TwoPlayers
-    'End Enum
 
     ' -------------------------------
     '  Ball / Physics
@@ -80,10 +54,6 @@ Public Class Form1
     Private physicsTimer As New Timer()
     Private physicsStopwatch As New Stopwatch()
 
-    ' -------------------------------
-    '  Audio Cooldown
-    ' -------------------------------
-    'Private lastPlay As New Dictionary(Of String, Integer)
 
     ' -------------------------------
     '  Pong State
@@ -112,47 +82,10 @@ Public Class Form1
     Private paddleRightVelocity As Single
 
     ' -------------------------------
-    '  Pause Menu
-    ' -------------------------------
-    'Private pauseMenuSelection As Integer = 0
-
-
-
-    'Public aiDifficultySelection As Integer = 0 ' 0 = Easy, 1 = Normal, 2 = Hard
-    'Public aiOptions() As String = {"Easy", "Normal", "Hard"}
-
-    'Private Enum AIDifficultyLevel
-    '    Easy
-    '    Normal
-    '    Hard
-    'End Enum
-
-    ' -------------------------------
     '  Player Names
     ' -------------------------------
     Private leftPlayerName As String = "Left"
     Private rightPlayerName As String = "Right"
-
-    ' -------------------------------
-    '  Input Repeat Guards
-    ' -------------------------------
-    'Private pauseKeyDown As Boolean = False
-    'Private pKeyDown As Boolean = False
-    'Private mediaPlayPauseKeyDown As Boolean = False
-    'Private f11KeyDown As Boolean = False
-    'Private fKeyDown As Boolean = False
-    'Private escapeKeyDown As Boolean = False
-    'Private spaceKeyDown As Boolean = False
-    'Private enterKeyDown As Boolean = False
-    'Private upKeyDown As Boolean = False
-    'Private downKeyDown As Boolean = False
-
-    'Private wKeyDown As Boolean = False
-    'Private sKeyDown As Boolean = False
-    'Private ctrlQDown As Boolean = False
-    'Private ctrlHDown As Boolean = False
-
-
 
     ' -------------------------------
     '  AI Difficulty
@@ -168,35 +101,23 @@ Public Class Form1
 
     Private audio As AudioController
 
-
-
     Private WithEvents AudioRestartTimer As Timer
 
+    'Private Const DWMWA_USE_IMMERSIVE_DARK_MODE As Integer = 20
 
-    'Private gameplayLoopVolume As Integer = 50
-    'Private startLoopVolume As Integer = 75
-    'Private pauseLoopVolume As Integer = 40
-
-
-    Private Const DWMWA_USE_IMMERSIVE_DARK_MODE As Integer = 20
-
-    <DllImport("dwmapi.dll")>
-    Private Shared Function DwmSetWindowAttribute(
-        hWnd As IntPtr,
-        attr As Integer,
-        ByRef attrValue As Integer,
-        attrSize As Integer
-    ) As Integer
-    End Function
-
-    'Private showKeyboardHints As Boolean = True
+    '<DllImport("dwmapi.dll")>
+    'Private Shared Function DwmSetWindowAttribute(
+    '    hWnd As IntPtr,
+    '    attr As Integer,
+    '    ByRef attrValue As Integer,
+    '    attrSize As Integer
+    ') As Integer
+    'End Function
 
 
-    Private hdSize As New Size(1280, 720)
-    Private fhdSize As New Size(1920, 1080)
+    'Private hdSize As New Size(1280, 720)
+    'Private fhdSize As New Size(1920, 1080)
 
-
-    'Private mouseIsClicking As Boolean = False
 
 
     Public renderer As New Rendering(Me.CreateGraphics(), Me.ClientSize)
@@ -214,14 +135,9 @@ Public Class Form1
     Private resource As New ResourceManager()
 
 
-
-    'Private startScreenScrollAccum As Integer = 0
-    'Private Const ScrollThreshold As Integer = 400
-
-    'Private aiDifficultyScrollAccum As Integer = 0
+    Private window As New WindowManager
 
 
-    'Private pauseScrollAccum As Integer = 0
 
     ' ===============================
     '  FORM LIFECYCLE
@@ -236,7 +152,7 @@ Public Class Form1
         InitAudio()
         InitBall()
 
-        MovePointerCenterScreen()
+        window.MovePointerCenterScreen()
 
     End Sub
 
@@ -307,7 +223,6 @@ Public Class Form1
     '  RENDERING
     ' ===============================
 
-
     Protected Overrides Sub OnPaint(e As PaintEventArgs)
         MyBase.OnPaint(e)
 
@@ -315,7 +230,6 @@ Public Class Form1
         renderer.Render(e.Graphics, state.GetCurrentState(), settings, match, Me)
 
     End Sub
-
 
     Protected Overrides Sub OnPaintBackground(pevent As PaintEventArgs)
         ' Suppress background painting to avoid flicker
@@ -327,7 +241,7 @@ Public Class Form1
     Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
         MyBase.OnKeyDown(e)
 
-        input.OnKeyDown(e, Me, settings, state, match, Audio)
+        input.OnKeyDown(e, Me, settings, state, match, audio, window)
 
     End Sub
 
@@ -362,8 +276,6 @@ Public Class Form1
 
     End Sub
 
-
-
     ' ===============================
     '  AUDIO RESTART
     ' ===============================
@@ -373,11 +285,9 @@ Public Class Form1
         Audio.RestartAudioEngine(state)
     End Sub
 
-
     ' ===============================
     '  RESIZE / SCALING
     ' ===============================
-
 
     Protected Overrides Sub OnResize(e As EventArgs)
         MyBase.OnResize(e)
@@ -445,6 +355,7 @@ Public Class Form1
         aiDifficulty = ClientSize.Height / 1080.0
 
         Invalidate()
+
     End Sub
 
     ' ===============================
@@ -478,10 +389,10 @@ Public Class Form1
         Me.DoubleBuffered = True
         Me.BackColor = Color.Black
 
-        Dim dark As Boolean = IsDarkMode()
+        Dim dark As Boolean = window.IsDarkMode()
 
         ' Apply Windows 11 dark title bar
-        ApplyDarkTitleBar(dark)
+        window.ApplyDarkTitleBar(dark, Me.Handle)
 
         Me.StartPosition = FormStartPosition.CenterScreen
         Me.MinimumSize = New Size(256, 256)
@@ -504,7 +415,6 @@ Public Class Form1
 
 
     End Sub
-
 
     Private Sub InitGameplay()
         InitPaddles()
@@ -533,24 +443,11 @@ Public Class Form1
         MoveBallRandom()
     End Sub
 
-
-
-
-
-
-
-
-
     Private Sub InitAudio()
 
         resource.CreateAudioFilesAsNeeded()
 
         Audio = New AudioController()
-
-
-        'LoadAndRegisterSounds()
-
-        'PlayStartLoop(600)
 
         InitAudioRestartTimer()
 
@@ -760,7 +657,7 @@ Public Class Form1
 
         Audio.FadeOutAndStopGamePlayLoop(600)
 
-        MovePointerCenterScreen()
+        window.MovePointerCenterScreen()
 
         speed = 200 * (ClientSize.Height / 1080.0)
 
@@ -785,7 +682,6 @@ Public Class Form1
     Public Sub ResetBall(direction As Integer)
         CenterBall()
         ServeBall(direction)
-        'trail.Clear()
         renderer.ClearTrail()
 
     End Sub
@@ -795,18 +691,6 @@ Public Class Form1
         velX = Math.Cos(angle) * speed * direction
         velY = Math.Sin(angle) * speed
     End Sub
-
-    'Private Sub PlayWithCooldown(name As String, ms As Integer)
-    '    Dim now As Integer = Environment.TickCount
-
-    '    If lastPlay.ContainsKey(name) AndAlso now - lastPlay(name) < ms Then
-    '        Return
-    '    End If
-
-    '    lastPlay(name) = now
-    '    Audio.PlayOverlapping(name)
-    'End Sub
-
 
     Private Sub ScaleBallSpeed4State()
 
@@ -844,11 +728,8 @@ Public Class Form1
 
         Audio.FadeOutAndStopPausedLoop(600)
 
-        'MovePointerCenterScreen()
-
         speed = 200 * (ClientSize.Height / 1080.0)
         match.SetWinnerText("")
-        'renderer.SetWinnerText(MatchManager.GetWinnerText())
 
         scoreLeft = 0
         scoreRight = 0
@@ -856,7 +737,6 @@ Public Class Form1
         CenterBall()
         MoveBallRandom()
 
-        'currentState = GameState.StartScreen
         state.SetCurrentState(GameState.StartScreen)
 
         physicsTimer.Start()
@@ -891,45 +771,45 @@ Public Class Form1
 
     End Sub
 
-    Public Sub ToggleFullScreen()
+    'Public Sub ToggleFullScreen()
 
-        ' Are we in fullscreen mode?
-        If Me.FormBorderStyle = FormBorderStyle.None Then
-            ' Yes, we are in fullscreen mode
+    '    ' Are we in fullscreen mode?
+    '    If Me.FormBorderStyle = FormBorderStyle.None Then
+    '        ' Yes, we are in fullscreen mode
 
-            ' Switch to windowed mode
-            Me.FormBorderStyle = FormBorderStyle.Sizable
+    '        ' Switch to windowed mode
+    '        Me.FormBorderStyle = FormBorderStyle.Sizable
 
-            Me.WindowState = FormWindowState.Normal
-            Me.Size = hdSize
+    '        Me.WindowState = FormWindowState.Normal
+    '        Me.Size = hdSize
 
-            ' Center window
-            Dim screenBounds As Rectangle = Screen.PrimaryScreen.WorkingArea
-            Dim centerX As Integer = (screenBounds.Width - Me.Width) \ 2
-            Dim centerY As Integer = (screenBounds.Height - Me.Height) \ 2
-            Me.Location = New Point(centerX, centerY)
+    '        ' Center window
+    '        Dim screenBounds As Rectangle = Screen.PrimaryScreen.WorkingArea
+    '        Dim centerX As Integer = (screenBounds.Width - Me.Width) \ 2
+    '        Dim centerY As Integer = (screenBounds.Height - Me.Height) \ 2
+    '        Me.Location = New Point(centerX, centerY)
 
 
-        Else
-            ' No, we are NOT in fullscreen
+    '    Else
+    '        ' No, we are NOT in fullscreen
 
-            ' Switch to fullscreen mode
-            Me.FormBorderStyle = FormBorderStyle.None
+    '        ' Switch to fullscreen mode
+    '        Me.FormBorderStyle = FormBorderStyle.None
 
-            Me.WindowState = FormWindowState.Normal
-            Me.Size = hdSize
+    '        Me.WindowState = FormWindowState.Normal
+    '        Me.Size = hdSize
 
-            ' Center window
-            Dim screenBounds As Rectangle = Screen.PrimaryScreen.WorkingArea
-            Dim centerX As Integer = (screenBounds.Width - Me.Width) \ 2
-            Dim centerY As Integer = (screenBounds.Height - Me.Height) \ 2
-            Me.Location = New Point(centerX, centerY)
+    '        ' Center window
+    '        Dim screenBounds As Rectangle = Screen.PrimaryScreen.WorkingArea
+    '        Dim centerX As Integer = (screenBounds.Width - Me.Width) \ 2
+    '        Dim centerY As Integer = (screenBounds.Height - Me.Height) \ 2
+    '        Me.Location = New Point(centerX, centerY)
 
-            Me.WindowState = FormWindowState.Maximized
+    '        Me.WindowState = FormWindowState.Maximized
 
-        End If
+    '    End If
 
-    End Sub
+    'End Sub
 
     Public Sub PauseGame()
 
@@ -944,7 +824,7 @@ Public Class Form1
 
         settings.SetPauseMenuSelection(0) ' Resume game
 
-        MovePointerCenterScreen()
+        window.MovePointerCenterScreen()
 
         state.SetCurrentState(GameState.Pause)
 
@@ -954,9 +834,9 @@ Public Class Form1
 
     Public Sub ResumeGame()
 
-        Audio.FadeOutAndStopPausedLoop(600)
+        audio.FadeOutAndStopPausedLoop(600)
 
-        MovePointerOffScreen()
+        window.MovePointerOffScreen()
 
         state.SetCurrentState(GameState.Playing)
 
@@ -967,10 +847,12 @@ Public Class Form1
     End Sub
 
     Public Sub StartNewMatch()
-        Audio.FadeOutAndStopStartLoop(600)
-        Audio.FadeOutAndStopPausedLoop(600)
 
-        MovePointerOffScreen()
+        audio.FadeOutAndStopStartLoop(600)
+
+        audio.FadeOutAndStopPausedLoop(600)
+
+        window.MovePointerOffScreen()
 
         speed = 800 * (ClientSize.Height / 1080.0)
 
@@ -996,73 +878,58 @@ Public Class Form1
 
         physicsTimer.Start()
 
-        Audio.PlayGamePlayLoop(600)
+        audio.PlayGamePlayLoop(600)
 
     End Sub
 
 
+    'Public Sub MovePointerOffScreen()
+    '    Cursor.Position = New Point(Screen.PrimaryScreen.WorkingArea.Right,
+    '                                Screen.PrimaryScreen.WorkingArea.Height \ 2)
+    'End Sub
+
+    'Public Sub MovePointerCenterScreen()
+    '    Cursor.Position = New Point(Screen.PrimaryScreen.WorkingArea.Right \ 2,
+    '                                Screen.PrimaryScreen.WorkingArea.Height \ 2)
+    'End Sub
+
+    'Private Function IsDarkMode() As Boolean
+    '    If Environment.OSVersion.Version.Build >= 22000 Then
+    '        ' Windows 11+
+    '        Return Application.SystemColorMode = SystemColorMode.Dark
+    '    Else
+    '        ' Windows 10 fallback
+    '        Return IsSystemDarkMode_Win10()
+    '    End If
+    'End Function
 
 
-    Public Sub MovePointerOffScreen()
-        Cursor.Position = New Point(Screen.PrimaryScreen.WorkingArea.Right,
-                                    Screen.PrimaryScreen.WorkingArea.Height \ 2)
-    End Sub
+    'Private Function IsSystemDarkMode_Win10() As Boolean
+    '    Try
+    '        Dim key As RegistryKey =
+    '        Registry.CurrentUser.OpenSubKey(
+    '            "Software\Microsoft\Windows\CurrentVersion\Themes\Personalize")
 
-    Public Sub MovePointerCenterScreen()
-        Cursor.Position = New Point(Screen.PrimaryScreen.WorkingArea.Right \ 2,
-                                    Screen.PrimaryScreen.WorkingArea.Height \ 2)
-    End Sub
+    '        If key Is Nothing Then Return False
 
-
-
-
-    Private Function IsDarkMode() As Boolean
-        If Environment.OSVersion.Version.Build >= 22000 Then
-            ' Windows 11+
-            Return Application.SystemColorMode = SystemColorMode.Dark
-        Else
-            ' Windows 10 fallback
-            Return IsSystemDarkMode_Win10()
-        End If
-    End Function
+    '        Dim value As Object = key.GetValue("AppsUseLightTheme", 1)
+    '        Return CInt(value) = 0
+    '    Catch
+    '        Return False
+    '    End Try
+    'End Function
 
 
-    Private Function IsSystemDarkMode_Win10() As Boolean
-        Try
-            Dim key As RegistryKey =
-            Registry.CurrentUser.OpenSubKey(
-                "Software\Microsoft\Windows\CurrentVersion\Themes\Personalize")
+    'Private Sub ApplyDarkTitleBar(isDark As Boolean)
+    '    If Environment.OSVersion.Version.Build < 22000 Then Exit Sub ' Only Windows 11+
 
-            If key Is Nothing Then Return False
+    '    Dim value As Integer = If(isDark, 1, 0)
+    '    DwmSetWindowAttribute(Me.Handle,
+    '                          DWMWA_USE_IMMERSIVE_DARK_MODE,
+    '                          value,
+    '                          Marshal.SizeOf(value))
 
-            Dim value As Object = key.GetValue("AppsUseLightTheme", 1)
-            Return CInt(value) = 0
-        Catch
-            Return False
-        End Try
-    End Function
-
-
-    Private Sub ApplyDarkTitleBar(isDark As Boolean)
-        If Environment.OSVersion.Version.Build < 22000 Then Exit Sub ' Only Windows 11+
-
-        Dim value As Integer = If(isDark, 1, 0)
-        DwmSetWindowAttribute(Me.Handle,
-                              DWMWA_USE_IMMERSIVE_DARK_MODE,
-                              value,
-                              Marshal.SizeOf(value))
-
-    End Sub
-
-
-
-
-
-
-
-
-
-
+    'End Sub
 
 
 End Class

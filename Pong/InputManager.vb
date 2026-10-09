@@ -4,6 +4,7 @@ Imports Pong.GameStateManager
 Imports Pong.Rendering
 
 Public Class InputManager
+
     ' -------------------------------
     '  Input Repeat Guards
     ' -------------------------------
@@ -45,7 +46,8 @@ Public Class InputManager
                          settings As SettingsManager,
                          state As GameStateManager,
                          match As MatchManager,
-                         audio As AudioController)
+                         audio As AudioController,
+                         window As WindowManager)
 
         ' ============================================================
         ' 1. Fullscreen Toggle (F11 / F)
@@ -64,7 +66,7 @@ Public Class InputManager
             End If
 
             audio.PlayFullScreenSound()
-            Form1.ToggleFullScreen()
+            window.ToggleFullScreen(form)
             form.Invalidate()
             Return
         End If
@@ -80,7 +82,7 @@ Public Class InputManager
             escapeKeyDown = True
 
             audio.PlayFullScreenSound()
-            Form1.ToggleFullScreen()
+            window.ToggleFullScreen(form)
             form.Invalidate()
             Return
         End If

@@ -1,4 +1,5 @@
 ﻿Imports System.Windows.Forms.AxHost
+Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports Pong.Enums
 
 Public Class MatchManager
@@ -13,11 +14,11 @@ Public Class MatchManager
         winnerText = text
     End Sub
 
-    Public Sub StartNewMatch(audio As AudioController)
+    Public Sub StartNewMatch(state As GameStateManager, audio As AudioController, window As WindowManager)
         audio.FadeOutAndStopStartLoop(600)
         audio.FadeOutAndStopPausedLoop(600)
 
-        'MovePointerOffScreen()
+        window.MovePointerOffScreen()
 
         'speed = 800 * (ClientSize.Height / 1080.0)
 
@@ -39,13 +40,27 @@ Public Class MatchManager
         'CenterBall()
         'ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
 
-        'State.SetCurrentState(GameState.Playing)
+        state.SetCurrentState(GameState.Playing)
 
         'physicsTimer.Start()
 
         audio.PlayGamePlayLoop(600)
 
     End Sub
+    'Public Sub EndMatch(audio As AudioController, window As WindowManager, )
+
+    '    audio.FadeOutAndStopGamePlayLoop(600)
+
+    '    window.MovePointerCenterScreen()
+
+    '    speed = 200 * (ClientSize.Height / 1080.0)
+
+    '    CenterBall()
+    '    MoveBallRandom()
+
+    '    audio.PlayStartLoop(600)
+
+    'End Sub
 
 
 
