@@ -234,6 +234,54 @@ Public Class Rendering
 
     Private startRadius As Integer
 
+    Private ReadOnly form As Form
+    Private ReadOnly model As GameModel
+    Private ReadOnly renderer As Rendering
+    Private ReadOnly settings As SettingsManager
+    Private ReadOnly state As GameStateManager
+    Private ReadOnly audio As AudioController
+    Private ReadOnly window As WindowManager
+    Private ReadOnly physics As PhysicsEngine
+
+    Public Sub New(form As Form,
+                   model As GameModel,
+                   renderer As Rendering,
+                   settings As SettingsManager,
+                   state As GameStateManager,
+                   audio As AudioController,
+                   window As WindowManager,
+                   physics As PhysicsEngine)
+
+        Me.form = form
+        Me.model = model
+        Me.renderer = renderer
+        Me.settings = settings
+        Me.state = state
+        Me.audio = audio
+        Me.window = window
+        Me.physics = physics
+
+        InitGraphics()
+
+        'clientSize = size
+        'g.SmoothingMode = SmoothingMode.AntiAlias
+        'g.PixelOffsetMode = PixelOffsetMode.HighQuality
+
+        'ScaleBall()
+        InitGraphics()
+        InitTrails()
+        'InitPaddles(Size)
+        CacheHUD()
+        CachePause()
+        CacheKeyboardHints()
+        CacheAIDifficulty()
+        CacheStartScreen()
+
+        fpsStopwatch.Start()
+        blinkStopwatch.Start()
+
+
+    End Sub
 
     ' ============================================================
     '   PUBLIC RECT ACCESSORS
@@ -275,31 +323,32 @@ Public Class Rendering
     ' ============================================================
 
 
-    Public Sub New(g As Graphics, size As Size)
-        'clientSize = size
-        g.SmoothingMode = SmoothingMode.AntiAlias
-        g.PixelOffsetMode = PixelOffsetMode.HighQuality
+    'Public Sub New(g As Graphics, size As Size)
+    '    'clientSize = size
+    '    g.SmoothingMode = SmoothingMode.AntiAlias
+    '    g.PixelOffsetMode = PixelOffsetMode.HighQuality
 
-        ScaleBall(size)
-        InitGraphics(g, size)
-        InitTrails()
-        InitPaddles(size)
-        CacheHUD(g, size)
-        CachePause(g, size)
-        CacheKeyboardHints(g, size)
-        CacheAIDifficulty(g, size)
-        CacheStartScreen(g, size)   ' <<< NEW
+    '    ScaleBall(size)
+    '    InitGraphics(g, size)
+    '    InitTrails()
+    '    InitPaddles(size)
+    '    CacheHUD(g, size)
+    '    CachePause(g, size)
+    '    CacheKeyboardHints(g, size)
+    '    CacheAIDifficulty(g, size)
+    '    CacheStartScreen(g, size)   ' <<< NEW
 
-        fpsStopwatch.Start()
-        blinkStopwatch.Start()
-    End Sub
+    '    fpsStopwatch.Start()
+    '    blinkStopwatch.Start()
+    'End Sub
 
 
-    Private Sub CacheStartScreen(g As Graphics, size As Size)
+    Private Sub CacheStartScreen()
+        Dim g = form.CreateGraphics()
         Dim title As String = "PONG"
         startTitleSize = g.MeasureString(title, startTitleFont)
-        startTitleX = (size.Width - startTitleSize.Width) / 2.0F
-        startTitleY = size.Height * 0.15F
+        startTitleX = (form.ClientSize.Width - startTitleSize.Width) / 2.0F
+        startTitleY = form.ClientSize.Height * 0.15F
 
         Dim option1 As String = "1 Player"
         Dim option2 As String = "2 Players"
@@ -308,11 +357,11 @@ Public Class Rendering
         startOption2Size = g.MeasureString(option2, startMenuFont)
 
 
-        Dim startMenuSpacing = size.Height * 0.12F
+        Dim startMenuSpacing = form.ClientSize.Height * 0.12F
 
-        startOption1X = (size.Width - startOption1Size.Width) / 2.0F
-        startOption1Y = size.Height * 0.4F
-        startOption2X = (size.Width - startOption2Size.Width) / 2.0F
+        startOption1X = (form.ClientSize.Width - startOption1Size.Width) / 2.0F
+        startOption1Y = form.ClientSize.Height * 0.4F
+        startOption2X = (form.ClientSize.Width - startOption2Size.Width) / 2.0F
         startOption2Y = startOption1Y + startMenuSpacing
 
         onePlayerRect = New Rectangle(
@@ -327,7 +376,7 @@ Public Class Rendering
         CInt(startOption2Size.Width),
         CInt(startOption2Size.Height))
 
-        startRadius = size.Height \ 64
+        startRadius = form.ClientSize.Height \ 64
 
         ' Precompute paths
         onePlayerPath?.Dispose()
@@ -338,8 +387,8 @@ Public Class Rendering
 
         Dim info As String = "Press SPACE to Start"
         startInfoSize = g.MeasureString(info, startInfoFont)
-        startInfoX = (size.Width - startInfoSize.Width) / 2.0F
-        startInfoY = size.Height * 0.65F
+        startInfoX = (form.ClientSize.Width - startInfoSize.Width) / 2.0F
+        startInfoY = form.ClientSize.Height * 0.65F
     End Sub
 
 
@@ -359,7 +408,7 @@ Public Class Rendering
         ballDiameter = CInt(Math.Min(size.Width, size.Height) / 18.0F)
     End Sub
 
-    Public Sub InitGraphics(g As Graphics, size As Size)
+    Public Sub InitGraphics()
         ballBrush = New SolidBrush(Color.DeepSkyBlue)
         paddleBrush = New SolidBrush(Color.White)
         scoreBrush = New SolidBrush(Color.White)
@@ -369,7 +418,7 @@ Public Class Rendering
         dimBrush = New SolidBrush(Color.FromArgb(120, 0, 0, 0))
         fsIndicatorBrush = New SolidBrush(Color.FromArgb(120, 255, 255, 255))
 
-        RescaleFonts(g, size)
+        RescaleFonts()
     End Sub
 
     Private Sub InitPaddles(size As Size)
@@ -406,28 +455,28 @@ Public Class Rendering
     ' ============================================================
     '   FONT / LAYOUT RESCALING
     ' ============================================================
-    Public Sub RescaleFonts(g As Graphics, size As Size)
+    Public Sub RescaleFonts()
         DisposeFonts()
 
-        hudScoreFont = New Font("Segoe UI", CSng(size.Height / 15.0F), FontStyle.Bold)
-        hudLabelFont = New Font("Segoe UI", CSng(size.Height / 55.0F), FontStyle.Bold)
-        pauseTitleFont = New Font("Segoe UI", CSng(size.Height / 18.0F), FontStyle.Bold)
-        pauseMenuFont = New Font("Segoe UI", CSng(size.Height / 28.0F))
-        startTitleFont = New Font("Segoe UI", CSng(size.Height / 12.0F), FontStyle.Bold)
-        startMenuFont = New Font("Segoe UI", CSng(size.Height / 30.0F))
-        startInfoFont = New Font("Segoe UI", CSng(size.Height / 45.0F))
-        aiTitleFont = New Font("Segoe UI", CSng(size.Height / 18.0F), FontStyle.Bold)
-        gameOverFont = New Font("Segoe UI", CSng(size.Height / 20.0F), FontStyle.Bold)
-        gameOverInfoFont = New Font("Segoe UI", CSng(size.Height / 45.0F))
-        keyboardFont = New Font("Segoe UI", CSng(size.Height / 70.0F), FontStyle.Bold)
-        fpsFont = New Font("Segoe UI", CSng(size.Height / 75.0F), FontStyle.Bold)
+        hudScoreFont = New Font("Segoe UI", CSng(form.ClientSize.Height / 15.0F), FontStyle.Bold)
+        hudLabelFont = New Font("Segoe UI", CSng(form.ClientSize.Height / 55.0F), FontStyle.Bold)
+        pauseTitleFont = New Font("Segoe UI", CSng(form.ClientSize.Height / 18.0F), FontStyle.Bold)
+        pauseMenuFont = New Font("Segoe UI", CSng(form.ClientSize.Height / 28.0F))
+        startTitleFont = New Font("Segoe UI", CSng(form.ClientSize.Height / 12.0F), FontStyle.Bold)
+        startMenuFont = New Font("Segoe UI", CSng(form.ClientSize.Height / 30.0F))
+        startInfoFont = New Font("Segoe UI", CSng(form.ClientSize.Height / 45.0F))
+        aiTitleFont = New Font("Segoe UI", CSng(form.ClientSize.Height / 18.0F), FontStyle.Bold)
+        gameOverFont = New Font("Segoe UI", CSng(form.ClientSize.Height / 20.0F), FontStyle.Bold)
+        gameOverInfoFont = New Font("Segoe UI", CSng(form.ClientSize.Height / 45.0F))
+        keyboardFont = New Font("Segoe UI", CSng(form.ClientSize.Height / 70.0F), FontStyle.Bold)
+        fpsFont = New Font("Segoe UI", CSng(form.ClientSize.Height / 75.0F), FontStyle.Bold)
 
-        CachePause(g, size)
-        CacheHUD(g, size)
-        CacheKeyboardHints(g, size)
-        CacheAIDifficulty(g, size)
-        CacheStartScreen(g, size)
-        RescalePaddles(size)
+        CachePause()
+        CacheHUD()
+        CacheKeyboardHints()
+        CacheAIDifficulty()
+        CacheStartScreen()
+        RescalePaddles(form.ClientSize)
     End Sub
 
     Private Sub RescalePaddles(size As Size)
@@ -449,16 +498,17 @@ Public Class Rendering
     ' ============================================================
     '   HUD LAYOUT
     ' ============================================================
-    Private Sub CacheHUD(g As Graphics, size As Size)
-        Dim halfWidth As Single = size.Width / 2.0F
+    Private Sub CacheHUD()
+        Dim g = form.CreateGraphics()
+        Dim halfWidth As Single = form.ClientSize.Width / 2.0F
 
         leftScoreSize = g.MeasureString(scoreLeft.ToString(), hudScoreFont)
         rightScoreSize = g.MeasureString(scoreRight.ToString(), hudScoreFont)
         leftLabelSize = g.MeasureString(leftPlayerName, hudLabelFont)
         rightLabelSize = g.MeasureString(rightPlayerName, hudLabelFont)
 
-        scoreY = 10 + CSng(size.Height / 25.0F)
-        labelY = scoreY - CSng(size.Height / 200.0F)
+        scoreY = 10 + CSng(form.ClientSize.Height / 25.0F)
+        labelY = scoreY - CSng(form.ClientSize.Height / 200.0F)
 
         leftScoreX = (halfWidth - leftScoreSize.Width) / 2.0F
         rightScoreX = halfWidth + (halfWidth - rightScoreSize.Width) / 2.0F
@@ -470,19 +520,20 @@ Public Class Rendering
     '   PAUSE LAYOUT
     ' ============================================================
 
-    Private Sub CachePause(g As Graphics, size As Size)
+    Private Sub CachePause()
+        Dim g = form.CreateGraphics()
         pauseTitleSize = g.MeasureString(pauseTitle, pauseTitleFont)
-        pauseTitleX = (size.Width - pauseTitleSize.Width) / 2.0F
-        pauseTitleY = size.Height * 0.25F
+        pauseTitleX = (form.ClientSize.Width - pauseTitleSize.Width) / 2.0F
+        pauseTitleY = form.ClientSize.Height * 0.25F
 
-        pauseMenuSpacing = size.Height * 0.12F
-        pauseMenuStartY = pauseTitleY + pauseTitleSize.Height + (size.Height * 0.01F)
+        pauseMenuSpacing = form.ClientSize.Height * 0.12F
+        pauseMenuStartY = pauseTitleY + pauseTitleSize.Height + (form.ClientSize.Height * 0.01F)
 
         ReDim pauseMenuItemSizes(pauseMenuItems.Length - 1)
         ReDim pauseMenuItemX(pauseMenuItems.Length - 1)
         ReDim pauseMenuItemY(pauseMenuItems.Length - 1)
 
-        Dim radius As Integer = size.Height \ 64
+        Dim radius As Integer = form.ClientSize.Height \ 64
 
         ' Dispose old paths
         pauseResumePath?.Dispose()
@@ -491,7 +542,7 @@ Public Class Rendering
 
         For i As Integer = 0 To pauseMenuItems.Length - 1
             pauseMenuItemSizes(i) = g.MeasureString(pauseMenuItems(i), pauseMenuFont)
-            pauseMenuItemX(i) = (size.Width - pauseMenuItemSizes(i).Width) / 2.0F
+            pauseMenuItemX(i) = (form.ClientSize.Width - pauseMenuItemSizes(i).Width) / 2.0F
             pauseMenuItemY(i) = pauseMenuStartY + i * pauseMenuSpacing
 
             Dim rect As New Rectangle(
@@ -518,7 +569,9 @@ Public Class Rendering
     ' ============================================================
     '   KEYBOARD HINT LAYOUT
     ' ============================================================
-    Private Sub CacheKeyboardHints(g As Graphics, size As Size)
+    Private Sub CacheKeyboardHints()
+
+        Dim g = form.CreateGraphics()
         hintLeftText = "W S - Move Paddle"
         hintLeftSize = g.MeasureString(hintLeftText, keyboardFont)
 
@@ -531,15 +584,15 @@ Public Class Rendering
         End If
 
         hintRightSize = g.MeasureString(hintRightText, keyboardFont)
-        hintRightX = size.Width - hintRightSize.Width - 10
+        hintRightX = form.ClientSize.Width - hintRightSize.Width - 10
 
         pauseSize = g.MeasureString(pauseText, keyboardFont)
-        pauseY = size.Height - pauseSize.Height - 10
+        pauseY = form.ClientSize.Height - pauseSize.Height - 10
 
         Dim fpsTwoDigit As String = "FPS: 00"
         fpsSize = g.MeasureString(fpsTwoDigit, keyboardFont)
-        fpsX = size.Width - fpsSize.Width - 10
-        fpsY = size.Height - fpsSize.Height - 10
+        fpsX = form.ClientSize.Width - fpsSize.Width - 10
+        fpsY = form.ClientSize.Height - fpsSize.Height - 10
     End Sub
 
     ' ============================================================
@@ -547,19 +600,20 @@ Public Class Rendering
     ' ============================================================
 
 
-    Private Sub CacheAIDifficulty(g As Graphics, size As Size)
+    Private Sub CacheAIDifficulty()
+        Dim g = form.CreateGraphics()
         aiTitleSize = g.MeasureString("Difficulty", aiTitleFont)
-        aiTitleX = (size.Width - aiTitleSize.Width) / 2.0F
-        aiTitleY = size.Height * 0.2F
+        aiTitleX = (form.ClientSize.Width - aiTitleSize.Width) / 2.0F
+        aiTitleY = form.ClientSize.Height * 0.2F
 
-        Dim baseY As Single = size.Height * 0.4F
-        Dim spacing As Single = size.Height * 0.03F
+        Dim baseY As Single = form.ClientSize.Height * 0.4F
+        Dim spacing As Single = form.ClientSize.Height * 0.03F
 
         ReDim aiOptionSizes(aiOptions.Length - 1)
         ReDim aiOptionX(aiOptions.Length - 1)
         ReDim aiOptionY(aiOptions.Length - 1)
 
-        Dim radius As Integer = size.Height \ 64
+        Dim radius As Integer = form.ClientSize.Height \ 64
 
         aiEasyPath?.Dispose()
         aiNormalPath?.Dispose()
@@ -567,7 +621,7 @@ Public Class Rendering
 
         For i As Integer = 0 To aiOptions.Length - 1
             aiOptionSizes(i) = g.MeasureString(aiOptions(i), startMenuFont)
-            aiOptionX(i) = (size.Width - aiOptionSizes(i).Width) / 2.0F
+            aiOptionX(i) = (form.ClientSize.Width - aiOptionSizes(i).Width) / 2.0F
             aiOptionY(i) = baseY + i * (aiOptionSizes(i).Height + spacing)
 
             Dim rect As New Rectangle(
@@ -591,8 +645,8 @@ Public Class Rendering
 
         Dim info As String = "Press SPACE to Start"
         aiInfoSize = g.MeasureString(info, startInfoFont)
-        aiInfoX = (size.Width - aiInfoSize.Width) / 2.0F
-        aiInfoY = size.Height * 0.75F
+        aiInfoX = (form.ClientSize.Width - aiInfoSize.Width) / 2.0F
+        aiInfoY = form.ClientSize.Height * 0.75F
     End Sub
 
 
@@ -674,13 +728,13 @@ Public Class Rendering
     Public Sub UpdateScore(leftScore As Integer, rightScore As Integer, g As Graphics, size As Size)
         scoreLeft = leftScore
         scoreRight = rightScore
-        CacheHUD(g, size)
+        CacheHUD()
     End Sub
 
     Public Sub UpdatePlayerNames(leftName As String, rightName As String, g As Graphics, size As Size)
         leftPlayerName = leftName
         rightPlayerName = rightName
-        CacheHUD(g, size)
+        CacheHUD()
     End Sub
 
     Public Sub UpdatePaddlePositions(leftY As Single, rightY As Single, size As Size)
@@ -694,7 +748,7 @@ Public Class Rendering
 
     Public Sub SetPlayerMode(mode As Integer, g As Graphics, size As Size)
         numberOfPlayersSelection = If(mode = 2, 1, 0)
-        CacheKeyboardHints(g, size)
+        CacheKeyboardHints()
     End Sub
 
     Public Sub SetWinnerText(text As String)

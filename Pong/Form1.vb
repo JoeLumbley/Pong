@@ -120,7 +120,7 @@ Public Class Form1
 
 
 
-    Public renderer As New Rendering(Me.CreateGraphics(), Me.ClientSize)
+    Public renderer As New Rendering(Me, model, renderer, settings, state, audio, window, physics)
 
     Private input As New InputManager
 
@@ -130,13 +130,16 @@ Public Class Form1
     Private state As New GameStateManager()
 
 
-    Private match As New MatchManager()
+    Private match As New MatchManager(Me, model, renderer, settings, state, audio, window, physics)
 
     Private resource As New ResourceManager()
 
 
-    Private window As New WindowManager
+    Private window As New WindowManager(Me, model, renderer)
 
+    Private model As New GameModel(Me.ClientSize)
+
+    Private physics As New PhysicsEngine(model, audio, renderer, state)
 
 
     ' ===============================
@@ -347,7 +350,7 @@ Public Class Form1
         ' -------------------------------
         ' Rescale fonts
         ' -------------------------------
-        renderer.RescaleFonts(Me.CreateGraphics(), ClientSize)
+        renderer.RescaleFonts()
 
         ' -------------------------------
         ' AI difficulty scaling
@@ -380,30 +383,32 @@ Public Class Form1
     End Sub
 
     Private Sub InitWindow()
-        Me.Text = "PONG - Code with Joe"
+        'Me.Text = "PONG - Code with Joe"
 
         Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or
                     ControlStyles.UserPaint Or
                     ControlStyles.OptimizedDoubleBuffer, True)
 
         Me.DoubleBuffered = True
-        Me.BackColor = Color.Black
+        'Me.BackColor = Color.Black
 
-        Dim dark As Boolean = window.IsDarkMode()
+        'Dim dark As Boolean = window.IsDarkMode()
 
-        ' Apply Windows 11 dark title bar
-        window.ApplyDarkTitleBar(dark, Me.Handle)
+        '' Apply Windows 11 dark title bar
+        'window.ApplyDarkTitleBar(dark, Me.Handle)
 
-        Me.StartPosition = FormStartPosition.CenterScreen
-        Me.MinimumSize = New Size(256, 256)
-        Me.Size = New Size(1280, 720)
+        'Me.StartPosition = FormStartPosition.CenterScreen
+        'Me.MinimumSize = New Size(256, 256)
+        'Me.Size = New Size(1280, 720)
 
-        Dim screenBounds As Rectangle = Screen.PrimaryScreen.WorkingArea
-        Dim centerX As Integer = (screenBounds.Width - Me.Width) \ 2
-        Dim centerY As Integer = (screenBounds.Height - Me.Height) \ 2
-        Me.Location = New Point(centerX, centerY)
+        'Dim screenBounds As Rectangle = Screen.PrimaryScreen.WorkingArea
+        'Dim centerX As Integer = (screenBounds.Width - Me.Width) \ 2
+        'Dim centerY As Integer = (screenBounds.Height - Me.Height) \ 2
+        'Me.Location = New Point(centerX, centerY)
 
-        Me.WindowState = FormWindowState.Normal
+        'Me.WindowState = FormWindowState.Normal
+
+        window.InitWindow()
     End Sub
 
     Private Sub InitPhysicsTimer()
