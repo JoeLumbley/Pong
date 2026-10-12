@@ -15,6 +15,7 @@ Public Class AudioController
     Private lastPlay As New Dictionary(Of String, Integer)
 
 
+    Private ReadOnly model As GameModel
 
 
 
@@ -30,9 +31,10 @@ Public Class AudioController
 
 
 
-
-    Public Sub New()
+    Public Sub New(model As GameModel)
         InitAudio()
+
+        Me.model = model
     End Sub
 
 
@@ -140,7 +142,7 @@ Public Class AudioController
 
     Private Sub RestartLoops(state As GameStateManager)
 
-        Select Case state.GetCurrentState()
+        Select Case model.State
 
             Case GameState.StartScreen, GameState.EndScreen, GameState.AIDifficulty
                 PlayStartLoop(600) ' includes fade-in

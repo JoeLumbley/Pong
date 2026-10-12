@@ -21,17 +21,17 @@ Public Class Rendering
     ' ============================================================
     '   CORE STATE
     ' ============================================================
-    Private currentState As GameState = GameState.StartScreen
+    'Private currentState As GameState = GameState.StartScreen
     'Private formBorderStyle As FormBorderStyle
     'Private clientSize As Size
 
     ' ============================================================
     '   BALL / PHYSICS
     ' ============================================================
-    Private ballPos As PointF
-    Private ballDiameter As Integer
-    Private velX As Double
-    Private velY As Double
+    'Private ballPos As PointF
+    'Private ballDiameter As Integer
+    'Private velX As Double
+    'Private velY As Double
 
     ' ============================================================
     '   FPS
@@ -88,10 +88,10 @@ Public Class Rendering
     ' ============================================================
     '   PLAYER NAMES / SCORES
     ' ============================================================
-    Private leftPlayerName As String = "Left"
-    Private rightPlayerName As String = "Right"
-    Private scoreLeft As Integer = 0
-    Private scoreRight As Integer = 0
+    'Private leftPlayerName As String = "Left"
+    'Private rightPlayerName As String = "Right"
+    'Private scoreLeft As Integer = 0
+    'Private scoreRight As Integer = 0
 
     ' ============================================================
     '   HUD LAYOUT CACHE
@@ -188,15 +188,15 @@ Public Class Rendering
     ' ============================================================
     '   GAME OVER SCREEN
     ' ============================================================
-    Private winnerText As String = ""
+    'Private winnerText As String = ""
 
     ' ============================================================
     '   UI BRUSHES / PENS
     ' ============================================================
-    Private lightBrush As New SolidBrush(Color.FromArgb(32, 255, 255, 255))
+    Private lightBrush As New SolidBrush(Color.FromArgb(255, 32, 32, 32))
     Private darkBrush As New SolidBrush(Color.FromArgb(64, 0, 0, 0))
-    Private outlinePen As New Pen(Color.FromArgb(32, 255, 255, 255), 2)
-    Private darkOutlinePen As New Pen(Color.FromArgb(32, 0, 0, 0), 2)
+    Private outlinePen As New Pen(Color.FromArgb(255, 73, 73, 73), 3)
+    Private darkOutlinePen As New Pen(Color.FromArgb(32, 0, 0, 0), 3)
 
 
     ' ============================================================
@@ -280,6 +280,11 @@ Public Class Rendering
         fpsStopwatch.Start()
         blinkStopwatch.Start()
 
+
+        labelY = form.ClientSize.Height / 2
+
+
+        scoreY = form.ClientSize.Height / 2
 
     End Sub
 
@@ -405,7 +410,7 @@ Public Class Rendering
     '   INITIALIZATION
     ' ============================================================
     Private Sub ScaleBall(size As Size)
-        ballDiameter = CInt(Math.Min(size.Width, size.Height) / 18.0F)
+        model.BallDiameter = CInt(Math.Min(size.Width, size.Height) / 18.0F)
     End Sub
 
     Public Sub InitGraphics()
@@ -438,11 +443,11 @@ Public Class Rendering
 
     Private Sub InitTrails()
         For i As Integer = 0 To TrailLength - 1
-            Dim size As Integer = ballDiameter - (TrailLength - i) * 2
+            Dim size As Integer = model.BallDiameter - (TrailLength - i) * 2
             If size < 10 Then size = 10
 
             trailSizes(i) = size
-            trailOffsets(i) = CSng((ballDiameter - size) / 2.0F)
+            trailOffsets(i) = CSng((model.BallDiameter - size) / 2.0F)
 
             Dim t As Double = i / CDbl(TrailLength)
             Dim alpha As Integer = CInt(16 * t * t)
@@ -500,20 +505,23 @@ Public Class Rendering
     ' ============================================================
     Private Sub CacheHUD()
         Dim g = form.CreateGraphics()
+
         Dim halfWidth As Single = form.ClientSize.Width / 2.0F
 
-        leftScoreSize = g.MeasureString(scoreLeft.ToString(), hudScoreFont)
-        rightScoreSize = g.MeasureString(scoreRight.ToString(), hudScoreFont)
-        leftLabelSize = g.MeasureString(leftPlayerName, hudLabelFont)
-        rightLabelSize = g.MeasureString(rightPlayerName, hudLabelFont)
+        ' Measure
+        Dim leftLabelSize = g.MeasureString(model.LeftPlayerName, hudLabelFont)
+        Dim rightLabelSize = g.MeasureString(model.RightPlayerName, hudLabelFont)
 
-        scoreY = 10 + CSng(form.ClientSize.Height / 25.0F)
-        labelY = scoreY - CSng(form.ClientSize.Height / 200.0F)
+        Dim leftScoreSize = g.MeasureString(model.ScoreLeft.ToString(), hudScoreFont)
+        Dim rightScoreSize = g.MeasureString(model.ScoreRight.ToString(), hudScoreFont)
 
-        leftScoreX = (halfWidth - leftScoreSize.Width) / 2.0F
-        rightScoreX = halfWidth + (halfWidth - rightScoreSize.Width) / 2.0F
-        leftLabelX = (halfWidth - leftLabelSize.Width) / 2.0F
-        rightLabelX = halfWidth + (halfWidth - rightLabelSize.Width) / 2.0F
+        ' Center horizontally
+        leftLabelX = (halfWidth - leftLabelSize.Width) / 2
+        rightLabelX = halfWidth + (halfWidth - rightLabelSize.Width) / 2
+
+        leftScoreX = (halfWidth - leftScoreSize.Width) / 2
+        rightScoreX = halfWidth + (halfWidth - rightScoreSize.Width) / 2
+
     End Sub
 
     ' ============================================================
@@ -665,25 +673,29 @@ Public Class Rendering
     End Sub
 
     Public Sub UpdateBallPosition(deltaTime As Double)
-        ballPos.X += CSng(velX * deltaTime)
-        ballPos.Y += CSng(velY * deltaTime)
+        model.BallPos = New PointF(model.BallPos.X + CSng(model.VelX * deltaTime),
+                                   model.BallPos.Y + CSng(model.VelY * deltaTime))
+
+
+        'model.BallPos.X += CSng(model.VelX * deltaTime)
+        'model.BallPos.Y += CSng(model.VelY * deltaTime)
         UpdateTrail()
     End Sub
 
-    Public Sub UpdateBallPosition(newPos As PointF)
-        ballPos = newPos
-        UpdateTrail()
-    End Sub
+    'Public Sub UpdateBallPosition(newPos As PointF)
+    '    ballPos = newPos
+    '    UpdateTrail()
+    'End Sub
 
-    Public Sub UpdateBallVelocity(newVelX As Double, newVelY As Double)
-        velX = newVelX
-        velY = newVelY
-    End Sub
+    'Public Sub UpdateBallVelocity(newVelX As Double, newVelY As Double)
+    '    velX = newVelX
+    '    velY = newVelY
+    'End Sub
 
-    Public Sub UpdateBallDiameter(newDiameter As Integer)
-        ballDiameter = newDiameter
-        InitTrails()
-    End Sub
+    'Public Sub UpdateBallDiameter(newDiameter As Integer)
+    '    ballDiameter = newDiameter
+    '    InitTrails()
+    'End Sub
 
     Public Sub UpdateBallBrush(newBrush As SolidBrush)
         ballBrush?.Dispose()
@@ -694,14 +706,14 @@ Public Class Rendering
         If trailPoints Is Nothing Then Exit Sub
 
         trailIndex = (trailIndex + 1) Mod TrailLength
-        trailPoints(trailIndex) = ballPos
+        trailPoints(trailIndex) = model.BallPos
 
         If trailCount < TrailLength Then
             trailCount += 1
         End If
 
         If trailCount = 1 Then
-            trailSizes(0) = ballDiameter
+            trailSizes(0) = model.BallDiameter
             trailOffsets(0) = 0
             trailAlpha(0) = 16
             Exit Sub
@@ -709,8 +721,8 @@ Public Class Rendering
 
         For i As Integer = 0 To trailCount - 1
             Dim t As Double = 1.0 - (i / (trailCount - 1))
-            trailSizes(i) = CInt(ballDiameter * (0.5 + 0.5 * t))
-            trailOffsets(i) = CSng(ballDiameter * (0.25 * (1 - t)))
+            trailSizes(i) = CInt(model.BallDiameter * (0.5 + 0.5 * t))
+            trailOffsets(i) = CSng(model.BallDiameter * (0.25 * (1 - t)))
             trailAlpha(i) = CInt(16 * (0.2 + 0.8 * t))
         Next
     End Sub
@@ -726,14 +738,14 @@ Public Class Rendering
     End Sub
 
     Public Sub UpdateScore(leftScore As Integer, rightScore As Integer, g As Graphics, size As Size)
-        scoreLeft = leftScore
-        scoreRight = rightScore
+        model.ScoreLeft = leftScore
+        model.ScoreRight = rightScore
         CacheHUD()
     End Sub
 
     Public Sub UpdatePlayerNames(leftName As String, rightName As String, g As Graphics, size As Size)
-        leftPlayerName = leftName
-        rightPlayerName = rightName
+        model.LeftPlayerName = leftName
+        model.RightPlayerName = rightName
         CacheHUD()
     End Sub
 
@@ -751,13 +763,13 @@ Public Class Rendering
         CacheKeyboardHints()
     End Sub
 
-    Public Sub SetWinnerText(text As String)
-        winnerText = text
-    End Sub
+    'Public Sub SetWinnerText(text As String)
+    '    winnerText = text
+    'End Sub
 
-    Public Sub SetGameState(state As GameState)
-        currentState = state
-    End Sub
+    'Public Sub SetGameState(state As GameState)
+    '    currentState = state
+    'End Sub
 
     Public Sub SetAIDifficultySelection(sel As Integer)
         aiDifficultySelection = sel
@@ -847,20 +859,55 @@ Public Class Rendering
     End Sub
 
     Private Sub DrawBall(g As Graphics)
-        g.FillEllipse(ballBrush, ballPos.X, ballPos.Y, ballDiameter, ballDiameter)
+        g.FillEllipse(ballBrush, model.BallPos.X, model.BallPos.Y, model.BallDiameter, model.BallDiameter)
     End Sub
 
     Private Sub DrawPaddles(g As Graphics)
-        g.FillRectangle(paddleBrush, paddleLeft)
-        g.FillRectangle(paddleBrush, paddleRight)
+        g.FillRectangle(paddleBrush, model.PaddleLeft)
+        g.FillRectangle(paddleBrush, model.PaddleRight)
     End Sub
 
+    'Private Sub DrawHUD(g As Graphics)
+    '    g.DrawString(model.LeftPlayerName, hudLabelFont, labelBrush, leftLabelX, labelY)
+    '    g.DrawString(model.RightPlayerName, hudLabelFont, labelBrush, rightLabelX, labelY)
+    '    g.DrawString(model.ScoreLeft.ToString(), hudScoreFont, scoreBrush, leftScoreX, scoreY)
+    '    g.DrawString(model.ScoreRight.ToString(), hudScoreFont, scoreBrush, rightScoreX, scoreY)
+    'End Sub
+
+
     Private Sub DrawHUD(g As Graphics)
-        g.DrawString(leftPlayerName, hudLabelFont, labelBrush, leftLabelX, labelY)
-        g.DrawString(rightPlayerName, hudLabelFont, labelBrush, rightLabelX, labelY)
-        g.DrawString(scoreLeft.ToString(), hudScoreFont, scoreBrush, leftScoreX, scoreY)
-        g.DrawString(scoreRight.ToString(), hudScoreFont, scoreBrush, rightScoreX, scoreY)
+
+        Dim halfWidth As Single = form.ClientSize.Width / 2.0F
+
+        ' Measure
+        Dim leftLabelSize = g.MeasureString(model.LeftPlayerName, hudLabelFont)
+        Dim rightLabelSize = g.MeasureString(model.RightPlayerName, hudLabelFont)
+
+        Dim leftScoreSize = g.MeasureString(model.ScoreLeft.ToString(), hudScoreFont)
+        Dim rightScoreSize = g.MeasureString(model.ScoreRight.ToString(), hudScoreFont)
+
+        ' Center horizontally
+        Dim leftLabelX As Single = (halfWidth - leftLabelSize.Width) / 2
+        Dim rightLabelX As Single = halfWidth + (halfWidth - rightLabelSize.Width) / 2
+
+        Dim leftScoreX As Single = (halfWidth - leftScoreSize.Width) / 2
+        Dim rightScoreX As Single = halfWidth + (halfWidth - rightScoreSize.Width) / 2
+
+        labelY = form.ClientSize.Height / 32
+
+
+        scoreY = form.ClientSize.Height / 20
+
+
+        ' Draw
+        g.DrawString(model.LeftPlayerName, hudLabelFont, labelBrush, leftLabelX, labelY)
+        g.DrawString(model.RightPlayerName, hudLabelFont, labelBrush, rightLabelX, labelY)
+
+        g.DrawString(model.ScoreLeft.ToString(), hudScoreFont, scoreBrush, leftScoreX, scoreY)
+        g.DrawString(model.ScoreRight.ToString(), hudScoreFont, scoreBrush, rightScoreX, scoreY)
+
     End Sub
+
 
     Private Sub DrawGamePlayScreen(g As Graphics)
         DrawTrail(g)
@@ -1023,11 +1070,11 @@ Public Class Rendering
     End Sub
 
     Private Sub DrawGameOver(g As Graphics, match As MatchManager, form As Form)
-        Dim titleSize = g.MeasureString(match.GetWinnerText(), gameOverFont)
+        Dim titleSize = g.MeasureString(model.WinnerText, gameOverFont)
         Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
 
         Using titleBrush As New SolidBrush(titleColor)
-            g.DrawString(match.GetWinnerText(), gameOverFont, titleBrush,
+            g.DrawString(model.WinnerText, gameOverFont, titleBrush,
                          CSng((form.ClientSize.Width - titleSize.Width) / 2.0F),
                          CSng(form.ClientSize.Height * 0.35F))
         End Using

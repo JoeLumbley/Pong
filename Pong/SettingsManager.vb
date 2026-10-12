@@ -9,7 +9,7 @@ Public Class SettingsManager
 
 
 
-    Private playerMode As Integer = 1       ' 1 = Single Player (AI), 2 = Two Players
+    'Private playerMode As Integer = 1       ' 1 = Single Player (AI), 2 = Two Players
     Private numberOfPlayersSelection As Integer = 0   ' 0 = "1 Player", 1 = "2 Players"
 
     Private showKeyboardHints As Boolean = True
@@ -34,15 +34,15 @@ Public Class SettingsManager
 
 
 
-    Public Function GetPlayerMode() As Integer
-        Return playerMode
-    End Function
+    'Public Function GetPlayerMode() As Integer
+    '    Return playerMode
+    'End Function
 
-    Public Sub SetPlayerMode(mode As Integer)
-        If mode = 1 OrElse mode = 2 Then
-            playerMode = mode
-        End If
-    End Sub
+    'Public Sub SetPlayerMode(mode As Integer)
+    '    If mode = 1 OrElse mode = 2 Then
+    '        playerMode = mode
+    '    End If
+    'End Sub
 
     Public Function GetNumberOfPlayersSelection() As Integer
         Return numberOfPlayersSelection

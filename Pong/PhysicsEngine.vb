@@ -7,6 +7,9 @@ Public Class PhysicsEngine
     Private ReadOnly audio As AudioController
     Private ReadOnly renderer As Rendering
     Private ReadOnly state As GameStateManager
+    Private ReadOnly form As Form
+    Private ReadOnly settings As SettingsManager
+    Private ReadOnly match As MatchManager
 
     Private physicsTimer As Timer
     Private stopwatch As Stopwatch
@@ -14,12 +17,18 @@ Public Class PhysicsEngine
     Public Sub New(model As GameModel,
                    audio As AudioController,
                    renderer As Rendering,
-                   state As GameStateManager)
+                   state As GameStateManager,
+                   form As Form,
+                   setting As SettingsManager,
+                   match As MatchManager)
 
         Me.model = model
         Me.audio = audio
         Me.renderer = renderer
         Me.state = state
+        Me.form = form
+        Me.settings = settings
+        Me.match = match
 
         physicsTimer = New Timer With {.Interval = 15}
         AddHandler physicsTimer.Tick, AddressOf Tick
@@ -59,14 +68,64 @@ Public Class PhysicsEngine
         End If
 
         HandleWallCollisions()
-        HandlePaddleCollisions()
-        CheckScore()
+        'HandlePaddleCollisions()
+        'CheckScore()
 
-        TrackPaddleVelocities()
+        'TrackPaddleVelocities()
 
-        renderer.UpdateBallPosition(model.ballPos)
-        renderer.UpdatePaddlePositions(model.paddleLeft.Y, model.paddleRight.Y, model.ClientSize)
+        ''renderer.UpdateBallPosition(model.ballPos)
+        ''renderer.UpdatePaddlePositions(model.paddleLeft.Y, model.paddleRight.Y, model.ClientSize)
+        'renderer.UpdateTrail()
+
+
+        'form.Invalidate()
+
+
+
+
+
+        HandleWallCollisions()
         renderer.UpdateTrail()
+
+        Select Case model.State
+            Case GameState.StartScreen
+                renderer.UpdateStartScreenFX()
+
+            Case GameState.Playing
+                'UpdatePaddles(dt)
+                MovePaddles(dt)
+
+                If model.PlayerMode = 1 Then
+                    UpdateAI(dt)
+                End If
+
+                HandlePaddleCollisions()
+                CheckScore()
+
+                TrackPaddleVelocities()
+
+
+                '' Track paddle velocities for spin
+                'model.PaddleLeftVelocity = model.PaddleLeft.Y - model.LastPaddleLeftY
+                'model.LastPaddleLeftY = model.PaddleLeft.Y
+
+                'model.PaddleRightVelocity = model.PaddleRight.Y - model.LastPaddleRightY
+                'model.LastPaddleRightY = model.PaddleRight.Y
+
+            Case GameState.AIDifficulty
+                renderer.UpdateStartScreenFX()
+
+            Case GameState.Pause
+                    ' No updates needed for Pause screen
+
+            Case GameState.EndScreen
+                renderer.UpdateStartScreenFX()
+
+        End Select
+
+
+        form.Invalidate()
+
     End Sub
 
     ' ============================================================
@@ -117,10 +176,10 @@ Public Class PhysicsEngine
     ' ============================================================
     Private Sub UpdateAI(dt As Double)
 
-        Dim right = model.paddleRight
+        Dim right = model.PaddleRight
 
-        Dim targetY As Single = model.ballPos.Y + model.ballDiameter / 2
-        Dim paddleCenter As Single = right.Y + model.paddleHeight / 2
+        Dim targetY As Single = model.BallPos.Y + model.BallDiameter / 2
+        Dim paddleCenter As Single = right.Y + model.PaddleHeight / 2
 
         Dim factor As Double = model.aiModeFactor * model.AIDifficultyScale
 
@@ -130,9 +189,9 @@ Public Class PhysicsEngine
             right.Y += CSng(model.paddleSpeed * dt * factor)
         End If
 
-        right.Y = Math.Max(0, Math.Min(model.ClientSize.Height - model.paddleHeight, right.Y))
+        right.Y = Math.Max(0, Math.Min(model.ClientSize.Height - model.PaddleHeight, right.Y))
 
-        model.paddleRight = right
+        model.PaddleRight = right
     End Sub
 
     ' ============================================================
@@ -240,12 +299,15 @@ Public Class PhysicsEngine
 
         If model.scoreLeft >= 10 Then
             model.WinnerText = $"{model.LeftPlayerName} Wins!"
-            state.SetCurrentState(GameState.EndScreen)
+            model.State = GameState.EndScreen
+            match.EndMatch()
         End If
 
         If model.scoreRight >= 10 Then
             model.WinnerText = $"{model.RightPlayerName} Wins!"
-            state.SetCurrentState(GameState.EndScreen)
+            model.State = GameState.EndScreen
+            match.EndMatch()
+
         End If
 
     End Sub
@@ -288,10 +350,10 @@ Public Class PhysicsEngine
             (model.ClientSize.Height - model.BallDiameter) / 2.0F)
     End Sub
 
-    Private Sub MoveBallRandom()
-        Dim angle As Double = model.rng.NextDouble() * Math.PI * 2.0
-        model.velX = Math.Cos(angle) * model.BallSpeed
-        model.velY = Math.Sin(angle) * model.BallSpeed
+    Public Sub MoveBallRandom()
+        Dim angle As Double = model.RNG.NextDouble() * Math.PI * 2.0
+        model.VelX = Math.Cos(angle) * model.BallSpeed
+        model.VelY = Math.Sin(angle) * model.BallSpeed
     End Sub
 
     Public Sub ServeBall(direction As Integer)

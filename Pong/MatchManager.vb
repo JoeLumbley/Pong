@@ -13,7 +13,7 @@ Public Class MatchManager
     Private ReadOnly window As WindowManager
     Private ReadOnly physics As PhysicsEngine
 
-    Private winnerText As String = String.Empty
+    'Private winnerText As String = String.Empty
 
 
     ' -------------------------------
@@ -43,13 +43,13 @@ Public Class MatchManager
     End Sub
 
 
-    Public Function GetWinnerText() As String
-        Return winnerText
-    End Function
+    'Public Function GetWinnerText() As String
+    '    Return winnerText
+    'End Function
 
-    Public Sub SetWinnerText(text As String)
-        winnerText = text
-    End Sub
+    'Public Sub SetWinnerText(text As String)
+    '    winnerText = text
+    'End Sub
 
     Public Sub StartNewMatch()
         audio.FadeOutAndStopStartLoop(600)
@@ -63,7 +63,7 @@ Public Class MatchManager
         model.ScoreRight = 0
         'renderer.UpdateScore(0, 0, form.CreateGraphics(), form.ClientSize)
 
-        If settings.GetPlayerMode() = 1 Then
+        If model.PlayerMode = 1 Then
             '    leftPlayerName = "You"
             '    rightPlayerName = "CPU"
             model.LeftPlayerName = "You"
@@ -81,7 +81,7 @@ Public Class MatchManager
         physics.CenterBall()
         physics.ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
 
-        state.SetCurrentState(GameState.Playing)
+        model.State = GameState.Playing
 
         physics.Start()
 
@@ -90,20 +90,20 @@ Public Class MatchManager
     End Sub
 
 
-    'Public Sub EndMatch(audio As AudioController, window As WindowManager, )
+    Public Sub EndMatch()
 
-    '    audio.FadeOutAndStopGamePlayLoop(600)
+        audio.FadeOutAndStopGamePlayLoop(600)
 
-    '    window.MovePointerCenterScreen()
+        window.MovePointerCenterScreen()
 
-    '    speed = 200 * (ClientSize.Height / 1080.0)
+        model.BallSpeed = 200 * (model.ClientSize.Height / 1080.0)
 
-    '    CenterBall()
-    '    MoveBallRandom()
+        physics.CenterBall()
+        physics.MoveBallRandom()
 
-    '    audio.PlayStartLoop(600)
+        audio.PlayStartLoop(600)
 
-    'End Sub
+    End Sub
 
 
 
