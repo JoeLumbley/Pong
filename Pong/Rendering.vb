@@ -193,10 +193,13 @@ Public Class Rendering
     ' ============================================================
     '   UI BRUSHES / PENS
     ' ============================================================
-    Private lightBrush As New SolidBrush(Color.FromArgb(255, 32, 32, 32))
+    Private lightBrush As New SolidBrush(Color.FromArgb(255, 42, 42, 42))
     Private darkBrush As New SolidBrush(Color.FromArgb(64, 0, 0, 0))
-    Private outlinePen As New Pen(Color.FromArgb(255, 73, 73, 73), 3)
-    Private darkOutlinePen As New Pen(Color.FromArgb(32, 0, 0, 0), 3)
+
+
+
+    Private outlinePen As New Pen(Color.FromArgb(255, 64, 64, 64), 2)
+    Private darkOutlinePen As New Pen(Color.FromArgb(32, 0, 0, 0), 2)
 
 
     ' ============================================================
@@ -522,6 +525,13 @@ Public Class Rendering
         leftScoreX = (halfWidth - leftScoreSize.Width) / 2
         rightScoreX = halfWidth + (halfWidth - rightScoreSize.Width) / 2
 
+        labelY = form.ClientSize.Height / 32
+
+
+        scoreY = form.ClientSize.Height / 20
+
+
+
     End Sub
 
     ' ============================================================
@@ -737,13 +747,13 @@ Public Class Rendering
         Next
     End Sub
 
-    Public Sub UpdateScore(leftScore As Integer, rightScore As Integer, g As Graphics, size As Size)
+    Public Sub UpdateScore(leftScore As Integer, rightScore As Integer)
         model.ScoreLeft = leftScore
         model.ScoreRight = rightScore
         CacheHUD()
     End Sub
 
-    Public Sub UpdatePlayerNames(leftName As String, rightName As String, g As Graphics, size As Size)
+    Public Sub UpdatePlayerNames(leftName As String, rightName As String)
         model.LeftPlayerName = leftName
         model.RightPlayerName = rightName
         CacheHUD()
@@ -877,26 +887,26 @@ Public Class Rendering
 
     Private Sub DrawHUD(g As Graphics)
 
-        Dim halfWidth As Single = form.ClientSize.Width / 2.0F
+        'Dim halfWidth As Single = form.ClientSize.Width / 2.0F
 
-        ' Measure
-        Dim leftLabelSize = g.MeasureString(model.LeftPlayerName, hudLabelFont)
-        Dim rightLabelSize = g.MeasureString(model.RightPlayerName, hudLabelFont)
+        '' Measure
+        'Dim leftLabelSize = g.MeasureString(model.LeftPlayerName, hudLabelFont)
+        'Dim rightLabelSize = g.MeasureString(model.RightPlayerName, hudLabelFont)
 
-        Dim leftScoreSize = g.MeasureString(model.ScoreLeft.ToString(), hudScoreFont)
-        Dim rightScoreSize = g.MeasureString(model.ScoreRight.ToString(), hudScoreFont)
+        'Dim leftScoreSize = g.MeasureString(model.ScoreLeft.ToString(), hudScoreFont)
+        'Dim rightScoreSize = g.MeasureString(model.ScoreRight.ToString(), hudScoreFont)
 
-        ' Center horizontally
-        Dim leftLabelX As Single = (halfWidth - leftLabelSize.Width) / 2
-        Dim rightLabelX As Single = halfWidth + (halfWidth - rightLabelSize.Width) / 2
+        '' Center horizontally
+        'Dim leftLabelX As Single = (halfWidth - leftLabelSize.Width) / 2
+        'Dim rightLabelX As Single = halfWidth + (halfWidth - rightLabelSize.Width) / 2
 
-        Dim leftScoreX As Single = (halfWidth - leftScoreSize.Width) / 2
-        Dim rightScoreX As Single = halfWidth + (halfWidth - rightScoreSize.Width) / 2
+        'Dim leftScoreX As Single = (halfWidth - leftScoreSize.Width) / 2
+        'Dim rightScoreX As Single = halfWidth + (halfWidth - rightScoreSize.Width) / 2
 
-        labelY = form.ClientSize.Height / 32
+        'labelY = form.ClientSize.Height / 32
 
 
-        scoreY = form.ClientSize.Height / 20
+        'scoreY = form.ClientSize.Height / 20
 
 
         ' Draw

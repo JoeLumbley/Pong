@@ -59,22 +59,29 @@ Public Class MatchManager
 
         model.BallSpeed = 800 * (model.ClientSize.Height / 1080.0)
 
+
         model.ScoreLeft = 0
         model.ScoreRight = 0
+
+
+        renderer.UpdateScore(model.ScoreLeft, model.ScoreRight)
+
+        'model.ScoreLeft = 0
+        'model.ScoreRight = 0
         'renderer.UpdateScore(0, 0, form.CreateGraphics(), form.ClientSize)
 
         If model.PlayerMode = 1 Then
-            '    leftPlayerName = "You"
-            '    rightPlayerName = "CPU"
+
             model.LeftPlayerName = "You"
             model.RightPlayerName = "CPU"
+            renderer.UpdatePlayerNames(model.LeftPlayerName, model.RightPlayerName)
 
-            'renderer.UpdatePlayerNames("You", "CPU", form.CreateGraphics(), form.ClientSize)
         Else
-            '    leftPlayerName = "Left"
-            '    rightPlayerName = "Right"
+
             model.LeftPlayerName = "Left"
             model.RightPlayerName = "Right"
+            renderer.UpdatePlayerNames(model.LeftPlayerName, model.RightPlayerName)
+
         End If
 
         physics.ResetPaddles()

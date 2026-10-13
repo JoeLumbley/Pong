@@ -281,24 +281,45 @@ Public Class PhysicsEngine
     ' ============================================================
     Private Sub CheckScore()
 
-        If model.ballPos.X <= 0 Then
-            model.scoreRight += 1
+        If model.BallPos.X <= 0 Then
+
+
+            model.ScoreRight += 1
+            renderer.UpdateScore(model.ScoreLeft, model.ScoreRight)
+
             audio.PlayPoint()
             ResetBall(1)
             ResetPaddles()
             Return
         End If
 
-        If model.ballPos.X >= model.ClientSize.Width - model.ballDiameter Then
-            model.scoreLeft += 1
+        If model.BallPos.X >= model.ClientSize.Width - model.BallDiameter Then
+
+            model.ScoreLeft += 1
+            renderer.UpdateScore(model.ScoreLeft, model.ScoreRight)
+
             audio.PlayPoint()
             ResetBall(-1)
             ResetPaddles()
             Return
         End If
 
-        If model.scoreLeft >= 10 Then
-            model.WinnerText = $"{model.LeftPlayerName} Wins!"
+        If model.ScoreLeft >= 10 Then
+
+            ' 1 player wins - You Win!
+            ' 2 player wins - Left Wins!
+
+            If model.PlayerMode = 1 Then
+                model.WinnerText = "You Win!"
+            Else
+                model.WinnerText = "Left Wins!"
+            End If
+
+            'model.WinnerText = $"{model.LeftPlayerName} Wins!"
+
+            '
+
+
             model.State = GameState.EndScreen
             match.EndMatch()
         End If

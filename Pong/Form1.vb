@@ -820,9 +820,9 @@ Public Class Form1
 
     Public Sub SetAIModeFactor()
         Select Case settings.GetAIDifficultySelection()
-            Case AIDifficultyLevel.Easy : model.AIModeFactor = 0.6
-            Case AIDifficultyLevel.Normal : model.AIModeFactor = 0.63
-            Case AIDifficultyLevel.Hard : model.AIModeFactor = 0.65
+            Case AIDifficultyLevel.Easy : model.AIModeFactor = 0.5
+            Case AIDifficultyLevel.Normal : model.AIModeFactor = 0.5599
+            Case AIDifficultyLevel.Hard : model.AIModeFactor = 0.5999
         End Select
     End Sub
 
@@ -833,8 +833,12 @@ Public Class Form1
         model.BallSpeed = 200 * (ClientSize.Height / 1080.0)
         model.WinnerText = String.Empty
 
+
         model.ScoreLeft = 0
         model.ScoreRight = 0
+
+        renderer.UpdateScore(model.ScoreLeft, model.ScoreRight)
+
 
         physics.CenterBall()
         physics.MoveBallRandom()
@@ -958,18 +962,27 @@ Public Class Form1
 
         model.BallSpeed = 800 * (ClientSize.Height / 1080.0)
 
+
+
         model.ScoreLeft = 0
         model.ScoreRight = 0
+
+        renderer.UpdateScore(model.ScoreLeft, model.ScoreRight)
+
         'renderer.UpdateScore(model.ScoreLeft, model.ScoreRight, Me.CreateGraphics(), ClientSize)
 
         If model.PlayerMode = 1 Then
+
             model.LeftPlayerName = "You"
             model.RightPlayerName = "CPU"
-            'renderer.UpdatePlayerNames(model.LeftPlayerName, model.RightPlayerName, Me.CreateGraphics(), ClientSize)
+            renderer.UpdatePlayerNames(model.LeftPlayerName, model.RightPlayerName)
+
         Else
+
             model.LeftPlayerName = "Left"
             model.RightPlayerName = "Right"
-            'renderer.UpdatePlayerNames(leftPlayerName, rightPlayerName, Me.CreateGraphics(), ClientSize)
+            renderer.UpdatePlayerNames(model.LeftPlayerName, model.RightPlayerName)
+
         End If
 
         physics.ResetPaddles()
