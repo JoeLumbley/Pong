@@ -74,8 +74,6 @@ Public Class Form1
 
 
         renderer.InitGraphics(Me, model)
-        'renderer.InitTrails()
-        'renderer.
 
         InitWindow()
         'InitPhysicsTimer()

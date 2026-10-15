@@ -6,9 +6,7 @@ Public Class PhysicsEngine
     Private ReadOnly model As GameModel
     Private ReadOnly audio As AudioController
     Private ReadOnly renderer As Rendering
-    'Private ReadOnly state As GameStateManager
     Private ReadOnly form As Form
-    'Private ReadOnly settings As SettingsManager
     Private ReadOnly match As MatchManager
     Private ReadOnly window As WindowManager
 
@@ -25,9 +23,7 @@ Public Class PhysicsEngine
         Me.model = model
         Me.audio = audio
         Me.renderer = renderer
-        'Me.state = state
         Me.form = form
-        'Me.settings = settings
         Me.match = match
         Me.window = window
 
@@ -69,23 +65,7 @@ Public Class PhysicsEngine
         End If
 
         HandleWallCollisions()
-        'HandlePaddleCollisions()
-        'CheckScore()
 
-        'TrackPaddleVelocities()
-
-        ''renderer.UpdateBallPosition(model.ballPos)
-        ''renderer.UpdatePaddlePositions(model.paddleLeft.Y, model.paddleRight.Y, model.ClientSize)
-        'renderer.UpdateTrail()
-
-
-        'form.Invalidate()
-
-
-
-
-
-        HandleWallCollisions()
         renderer.UpdateTrail(model)
 
         Select Case model.State
@@ -93,7 +73,6 @@ Public Class PhysicsEngine
                 renderer.UpdateStartScreenFX()
 
             Case GameState.Playing
-                'UpdatePaddles(dt)
                 MovePaddles(dt)
 
                 If model.PlayerMode = 1 Then
@@ -105,13 +84,6 @@ Public Class PhysicsEngine
 
                 TrackPaddleVelocities()
 
-
-                '' Track paddle velocities for spin
-                'model.PaddleLeftVelocity = model.PaddleLeft.Y - model.LastPaddleLeftY
-                'model.LastPaddleLeftY = model.PaddleLeft.Y
-
-                'model.PaddleRightVelocity = model.PaddleRight.Y - model.LastPaddleRightY
-                'model.LastPaddleRightY = model.PaddleRight.Y
 
             Case GameState.AIDifficulty
                 renderer.UpdateStartScreenFX()
@@ -133,10 +105,10 @@ Public Class PhysicsEngine
     ' BALL MOVEMENT
     ' ============================================================
     Private Sub MoveBall(dt As Double)
-        model.ballPos = New PointF(
-            model.ballPos.X + CSng(model.velX * dt),
-            model.ballPos.Y + CSng(model.velY * dt)
-        )
+        model.BallPos = New PointF(
+                        model.BallPos.X + CSng(model.VelX * dt),
+                        model.BallPos.Y + CSng(model.VelY * dt))
+
     End Sub
 
     ' ============================================================
@@ -307,8 +279,6 @@ Public Class PhysicsEngine
 
         If model.ScoreLeft >= 10 Then
 
-            ' 1 player wins - You Win!
-            ' 2 player wins - Left Wins!
 
             If model.PlayerMode = 1 Then
                 model.WinnerText = "You Win!"
@@ -317,13 +287,8 @@ Public Class PhysicsEngine
             End If
             model.WinnerIs = 1
 
-            'model.WinnerText = $"{model.LeftPlayerName} Wins!"
-
-            '
-
-
             model.State = GameState.EndScreen
-            'EndMatch()
+
             match.EndMatch(audio, window, model, Me)
 
         End If
@@ -333,28 +298,10 @@ Public Class PhysicsEngine
             model.WinnerIs = 2
 
             model.State = GameState.EndScreen
-            'EndMatch()
             match.EndMatch(audio, window, model, Me)
         End If
 
     End Sub
-
-
-    'Public Sub EndMatch()
-
-    '    audio.FadeOutAndStopGamePlayLoop(600)
-
-    '    window.MovePointerCenterScreen()
-
-    '    model.BallSpeed = 200 * (model.ClientSize.Height / 1080.0)
-
-    '    CenterBall()
-    '    MoveBallRandom()
-
-    '    audio.PlayStartLoop(600)
-
-    'End Sub
-
 
 
     ' ============================================================
