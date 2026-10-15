@@ -30,15 +30,6 @@
 ' SOFTWARE.
 
 
-Imports System.Diagnostics
-Imports System.Drawing
-Imports System.Drawing.Drawing2D
-Imports System.IO
-Imports System.Reflection.Emit
-Imports System.Reflection.Metadata
-Imports System.Runtime.InteropServices
-Imports Microsoft.Win32
-Imports Pong.Enums
 
 Public Class Form1
 
