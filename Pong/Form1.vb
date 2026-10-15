@@ -73,19 +73,45 @@ Public Class Form1
         MyBase.OnLoad(e)
 
 
-        renderer.InitGraphics(Me, model)
-
-        InitWindow()
-        'InitPhysicsTimer()
-        InitGameplay()
         InitAudio()
-        InitBall()
+        InitWindow()
+        InitPhysics()
+        'InitGameplay()
+        'InitBall()
+        renderer.InitGraphics(Me, model)
 
     End Sub
 
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Me.WindowState = FormWindowState.Maximized
     End Sub
+
+
+    ' ===============================
+    '  CLEANUP / FILES
+    ' ===============================
+
+    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+
+
+
+        AudioRestartTimer?.Stop()
+        physics.StopTimer()
+
+        AudioRestartTimer?.Dispose()
+
+        audio?.DisposeAudio()
+        audio = Nothing
+
+        model.Dispose()
+
+
+    End Sub
+
+
+
+
+
 
 
     ' ===============================
@@ -107,6 +133,7 @@ Public Class Form1
     ' ===============================
     '  INPUT HANDLING
     ' ===============================
+
     Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
         MyBase.OnKeyDown(e)
 
@@ -169,23 +196,6 @@ Public Class Form1
 
     End Sub
 
-    ' ===============================
-    '  CLEANUP / FILES
-    ' ===============================
-
-    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-
-
-        AudioRestartTimer?.Stop()
-        physics.StopTimer()
-
-        AudioRestartTimer?.Dispose()
-
-        audio?.DisposeAudio()
-        audio = Nothing
-
-
-    End Sub
 
     Private Sub InitWindow()
 
@@ -201,31 +211,24 @@ Public Class Form1
 
     End Sub
 
-    Private Sub InitGameplay()
-        'InitPaddles()
-        'renderer.InitPaddles(ClientSize)
-        InitPhysics()
-    End Sub
+    'Private Sub InitGameplay()
+    '    InitPhysics()
+    'End Sub
 
     Private Sub InitPhysics()
         physics.Start()
     End Sub
 
-    Private Sub InitBall()
-        renderer.ScaleBall(model)
-        physics.CenterBall()
-        physics.MoveBallRandom()
-    End Sub
+    'Private Sub InitBall()
+    '    renderer.ScaleBall(model)
+    '    physics.CenterBall()
+    '    physics.MoveBallRandom()
+    'End Sub
 
     Private Sub InitAudio()
-
         resource.CreateAudioFilesAsNeeded()
-
         audio.InitAudio()
-
-
         InitAudioRestartTimer()
-
     End Sub
 
     Private Sub InitAudioRestartTimer()

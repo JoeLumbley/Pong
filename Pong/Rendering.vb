@@ -358,16 +358,15 @@ Public Class Rendering
 
 
         RescalePaddles(form.ClientSize, model)
+
         ScaleBall(model)
 
         RescaleFonts(form)
 
         CacheStartScreen(form)
         CacheAIDifficulty(form)
-
         CacheHUD(form, model)
         CachePause(form)
-
         CacheKeyboardHints(form)
 
         fpsStopwatch.Start()
@@ -375,8 +374,6 @@ Public Class Rendering
 
 
         labelY = form.ClientSize.Height / 32
-
-
         scoreY = form.ClientSize.Height / 20
 
 
