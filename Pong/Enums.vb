@@ -28,4 +28,11 @@
     End Enum
 
 
+    Public Enum PauseMenu
+        ResumeMatch
+        NewMatch
+        QuitMatch
+    End Enum
+
+
 End Class

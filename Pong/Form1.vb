@@ -59,7 +59,7 @@ Public Class Form1
 
     'Private state As New GameStateManager(model, audio, renderer, Me, physics)
 
-    Private input As New InputManager(model)
+    Private input As New InputManager()
 
 
     Private resource As New ResourceManager()
@@ -117,7 +117,7 @@ Public Class Form1
     Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
         MyBase.OnKeyUp(e)
 
-        input.OnKeyUp(e, settings)
+        input.OnKeyUp(e, model)
 
     End Sub
 
@@ -135,13 +135,13 @@ Public Class Form1
 
     Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
 
-        input.OnMouseMove(e, renderer, settings, Me, audio)
+        input.OnMouseMove(e, renderer, settings, Me, audio, model)
 
     End Sub
 
     Private Sub Form1_MouseWheel(sender As Object, e As MouseEventArgs) Handles Me.MouseWheel
 
-        input.OnMouseWheel(e, settings, Me, audio)
+        input.OnMouseWheel(e, settings, Me, audio, model)
 
     End Sub
 

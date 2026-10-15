@@ -57,13 +57,13 @@ Public Class SettingsManager
 
 
 
-    Public Function GetPauseMenuSelection() As Integer
-        Return pauseMenuSelection
-    End Function
+    'Public Function GetPauseMenuSelection() As Integer
+    '    Return pauseMenuSelection
+    'End Function
 
-    Public Sub SetPauseMenuSelection(selection As Integer)
-        pauseMenuSelection = selection
-    End Sub
+    'Public Sub SetPauseMenuSelection(selection As Integer)
+    '    pauseMenuSelection = selection
+    'End Sub
 
 
     Public Function GetAIDifficultySelection() As Integer

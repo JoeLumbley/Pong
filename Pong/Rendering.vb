@@ -870,7 +870,7 @@ Public Class Rendering
                 DrawBall(g, model)
                 DrawPaddles(g, model)
                 DrawHUD(g, model)
-                DrawPauseScreen(g, settings, form)
+                DrawPauseScreen(g, settings, form, model)
                 If settings.GetShowKeyboardHints() Then DrawPauseHints(g, form)
 
             Case GameState.EndScreen
@@ -1062,7 +1062,8 @@ Public Class Rendering
 
     Private Sub DrawPauseScreen(g As Graphics,
                                 settings As SettingsManager,
-                                form As Form)
+                                form As Form,
+                                model As GameModel)
 
         ' Dim the game
         g.FillRectangle(dimBrush, form.ClientRectangle)
@@ -1081,13 +1082,20 @@ Public Class Rendering
 
             'Dim gPath As GraphicsPath = pauseResumePath
 
+            'Select Case i
+            '    Case 0 : gPath = pauseResumePath
+            '    Case 1 : gPath = pauseNewPath
+            '    Case 2 : gPath = pauseQuitPath
+            'End Select
+
             Select Case i
-                Case 0 : gPath = pauseResumePath
-                Case 1 : gPath = pauseNewPath
-                Case 2 : gPath = pauseQuitPath
+                Case PauseMenu.ResumeMatch : gPath = pauseResumePath
+                Case PauseMenu.NewMatch : gPath = pauseNewPath
+                Case PauseMenu.QuitMatch : gPath = pauseQuitPath
             End Select
 
-            If i = settings.GetPauseMenuSelection Then
+
+            If i = model.PauseSelection Then
                 g.FillPath(lightBrush, gPath)
                 g.DrawPath(outlinePen, gPath)
             Else
@@ -1095,7 +1103,7 @@ Public Class Rendering
                 g.DrawPath(darkOutlinePen, gPath)
             End If
 
-            Dim brush As SolidBrush = If(i = settings.GetPauseMenuSelection, whiteBrush, grayBrush)
+            Dim brush As SolidBrush = If(i = model.PauseSelection, whiteBrush, grayBrush)
             g.DrawString(text, pauseMenuFont, brush, x, y)
         Next
     End Sub
