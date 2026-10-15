@@ -1,37 +1,11 @@
 ﻿
-Imports System.Drawing
-    Imports System.Drawing.Drawing2D
-Imports System.Diagnostics
+Imports System.Drawing.Drawing2D
 Imports Pong.Enums
+
 
 Public Class Rendering
     Implements IDisposable
 
-    ' ============================================================
-    '   PUBLIC ENUMS
-    ' ============================================================
-    'Public Enum GameState
-    '    StartScreen
-    '    Playing
-    '    Pause
-    '    EndScreen
-    '    AIDifficulty
-    'End Enum
-
-    ' ============================================================
-    '   CORE STATE
-    ' ============================================================
-    'Private currentState As GameState = GameState.StartScreen
-    'Private formBorderStyle As FormBorderStyle
-    'Private clientSize As Size
-
-    ' ============================================================
-    '   BALL / PHYSICS
-    ' ============================================================
-    'Private ballPos As PointF
-    'Private ballDiameter As Integer
-    'Private velX As Double
-    'Private velY As Double
 
     ' ============================================================
     '   FPS
@@ -85,13 +59,6 @@ Public Class Rendering
     Private paddleWidth As Integer
     Private paddleHeight As Integer
 
-    ' ============================================================
-    '   PLAYER NAMES / SCORES
-    ' ============================================================
-    'Private leftPlayerName As String = "Left"
-    'Private rightPlayerName As String = "Right"
-    'Private scoreLeft As Integer = 0
-    'Private scoreRight As Integer = 0
 
     ' ============================================================
     '   HUD LAYOUT CACHE
@@ -238,57 +205,11 @@ Public Class Rendering
     Private startRadius As Integer
 
 
-
     ' -------------------------------
     '  Random
     ' -------------------------------
     Private rng As New Random()
 
-
-    'Private form As Form
-    'Private model As GameModel
-    'Private ReadOnly renderer As Rendering
-    'Private ReadOnly settings As SettingsManager
-    'Private ReadOnly state As GameStateManager
-    'Private ReadOnly audio As AudioController
-    'Private ReadOnly window As WindowManager
-    'Private ReadOnly physics As PhysicsEngine
-
-    'Public Sub New()
-
-    'Me.form = form
-    'Me.model = model
-    'Me.settings = settings
-    'Me.audio = audio
-    'Me.window = window
-    'Me.physics = physics
-
-    'InitGraphics()
-
-    'clientSize = size
-    'g.SmoothingMode = SmoothingMode.AntiAlias
-    'g.PixelOffsetMode = PixelOffsetMode.HighQuality
-
-    'ScaleBall()
-    'InitGraphics()
-    'InitTrails()
-    'InitPaddles(Size)
-    'CacheHUD()
-    'CachePause()
-    'CacheKeyboardHints()
-    'CacheAIDifficulty()
-    'CacheStartScreen()
-
-    'fpsStopwatch.Start()
-    'blinkStopwatch.Start()
-
-
-    'labelY = form.ClientSize.Height / 2
-
-
-    'scoreY = form.ClientSize.Height / 2
-
-    'End Sub
 
     ' ============================================================
     '   PUBLIC RECT ACCESSORS
@@ -1001,77 +922,12 @@ Public Class Rendering
         g.FillRectangle(paddleBrush, model.RightPaddleRect)
     End Sub
 
-    'Private Sub DrawHUD(g As Graphics)
-    '    g.DrawString(model.LeftPlayerName, hudLabelFont, labelBrush, leftLabelX, labelY)
-    '    g.DrawString(model.RightPlayerName, hudLabelFont, labelBrush, rightLabelX, labelY)
-    '    g.DrawString(model.ScoreLeft.ToString(), hudScoreFont, scoreBrush, leftScoreX, scoreY)
-    '    g.DrawString(model.ScoreRight.ToString(), hudScoreFont, scoreBrush, rightScoreX, scoreY)
-    'End Sub
-
 
     Private Sub DrawHUD(g As Graphics, model As GameModel)
 
-        'If model.State = GameState.EndScreen Then
-        '    ' This is the end so fade in and out
-
-        '    Dim scoreAlphaColor As Color = Color.FromArgb(fadeAlpha, Color.White)
-        '    Dim labelAlphaColor As Color = Color.FromArgb(fadeAlpha, Color.Gray)
-
-        '    ' Who won?
-        '    If model.WinnerIs = 1 Then
-        '        ' Left paddle won
-
-        '        ' Fade left paddle score in and out
-        '        Using scoreAlphaBrush As New SolidBrush(scoreAlphaColor)
-        '            g.DrawString(model.ScoreLeft.ToString(), hudScoreFont, scoreAlphaBrush, leftScoreX, scoreY)
-        '        End Using
-
-        '        ' Fade laft paddle label in and out
-        '        Using labelAlphaBrush As New SolidBrush(labelAlphaColor)
-        '            g.DrawString(model.LeftPlayerName, hudLabelFont, labelAlphaBrush, leftLabelX, labelY)
-        '        End Using
-
-        '        ' Draw right paddle - No fade
-        '        g.DrawString(model.RightPlayerName, hudLabelFont, labelBrush, rightLabelX, labelY)
-        '        g.DrawString(model.ScoreRight.ToString(), hudScoreFont, scoreBrush, rightScoreX, scoreY)
-
-        '    Else
-        '        ' Right paddle won
-
-        '        ' Fade right paddle score in and out
-        '        Using scoreAlphaBrush As New SolidBrush(scoreAlphaColor)
-        '            g.DrawString(model.ScoreRight.ToString(), hudScoreFont, scoreAlphaBrush, rightScoreX, scoreY)
-        '        End Using
-
-        '        ' Fade right paddle label in and out
-        '        Using labelAlphaBrush As New SolidBrush(labelAlphaColor)
-        '            g.DrawString(model.RightPlayerName, hudLabelFont, labelAlphaBrush, rightLabelX, labelY)
-        '        End Using
-
-        '        ' Draw left paddle - No fade
-        '        g.DrawString(model.LeftPlayerName, hudLabelFont, labelBrush, leftLabelX, labelY)
-        '        g.DrawString(model.ScoreLeft.ToString(), hudScoreFont, scoreBrush, leftScoreX, scoreY)
-
-        '    End If
-
-        'Else
-        '    ' Not the end screen so don't fade
-
-        '    ' Draw right paddle score
-        '    g.DrawString(model.RightPlayerName, hudLabelFont, labelBrush, rightLabelX, labelY)
-        '    g.DrawString(model.ScoreRight.ToString(), hudScoreFont, scoreBrush, rightScoreX, scoreY)
-
-        '    ' Draw left paddle score
-        '    g.DrawString(model.LeftPlayerName, hudLabelFont, labelBrush, leftLabelX, labelY)
-        '    g.DrawString(model.ScoreLeft.ToString(), hudScoreFont, scoreBrush, leftScoreX, scoreY)
-
-        'End If
-
-
-
-
+        ' Is this the end screen?
         If model.State <> GameState.EndScreen Then
-            ' Thi is NOT the end screen so don't fade
+            ' This is NOT the end screen so don't fade
 
             ' Draw right paddle score
             g.DrawString(model.RightPlayerName, hudLabelFont, labelBrush, rightLabelX, labelY)
@@ -1131,7 +987,6 @@ Public Class Rendering
     End Sub
 
 
-
     Private Sub DrawGamePlayScreen(g As Graphics, model As GameModel)
         DrawTrail(g)
         DrawBall(g, model)
@@ -1142,28 +997,20 @@ Public Class Rendering
 
     Private Sub DrawStartScreen(g As Graphics, settings As SettingsManager)
 
-
-
+        ' --- Title Rendering (fade‑in alpha) ---
         Dim titleColor As Color = Color.FromArgb(fadeAlpha, 255, 255, 255)
-
         Using titleBrush As New SolidBrush(titleColor)
             g.DrawString("PONG", startTitleFont, titleBrush, startTitleX, startTitleY)
         End Using
 
 
-
-
-
+        ' --- Menu Option Highlighting (shape fill + outline) ---
         Dim opt1Brush As SolidBrush = If(settings.GetNumberOfPlayersSelection = 0, whiteBrush, grayBrush)
         Dim opt2Brush As SolidBrush = If(settings.GetNumberOfPlayersSelection = 1, whiteBrush, grayBrush)
 
-        ' Fill/outline using precomputed paths
         If settings.GetNumberOfPlayersSelection = 0 Then
-
-            ' Use light brush for one player to show that it is selected
             g.FillPath(lightBrush, onePlayerPath)
             g.DrawPath(outlinePen, onePlayerPath)
-            ' Use dark brush for two players to show that it is NOT selected
             g.FillPath(darkBrush, twoPlayersPath)
             g.DrawPath(darkOutlinePen, twoPlayersPath)
         Else
@@ -1173,18 +1020,13 @@ Public Class Rendering
             g.DrawPath(outlinePen, twoPlayersPath)
         End If
 
-        g.DrawString("1 Player",
-                     startMenuFont,
-                     opt1Brush,
-                     startOption1X,
-                     startOption1Y)
 
-        g.DrawString("2 Players",
-                     startMenuFont,
-                     opt2Brush,
-                     startOption2X,
-                     startOption2Y)
+        ' --- Menu Option Labels (text) ---
+        g.DrawString("1 Player", startMenuFont, opt1Brush, startOption1X, startOption1Y)
+        g.DrawString("2 Players", startMenuFont, opt2Brush, startOption2X, startOption2Y)
 
+
+        ' --- Blink Indicator ("Press SPACE to Start") ---
         If blinkVisible Then
             g.DrawString("Press SPACE to Start",
                          startInfoFont,
@@ -1192,8 +1034,8 @@ Public Class Rendering
                          startInfoX,
                          startInfoY)
         End If
-    End Sub
 
+    End Sub
 
 
     Public Sub UpdateStartScreenFX()
@@ -1500,15 +1342,6 @@ Public Class Rendering
             g.DrawPath(pen, path)
         End Using
     End Sub
-
-    ' ============================================================
-    '   CLIENT RECTANGLE
-    ' ============================================================
-    'Private ReadOnly Property ClientRectangle As Rectangle
-    '    Get
-    '        Return New Rectangle(0, 0, clientSize.Width, clientSize.Height)
-    '    End Get
-    'End Property
 
 
     ' ============================================================
