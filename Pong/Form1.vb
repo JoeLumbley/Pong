@@ -103,7 +103,7 @@ Public Class Form1
         audio?.DisposeAudio()
         audio = Nothing
 
-        model.Dispose()
+        model?.Dispose()
 
 
     End Sub
