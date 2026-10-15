@@ -42,86 +42,15 @@ Imports Pong.Enums
 
 Public Class Form1
 
-
-    '' -------------------------------
-    ''  Ball / Physics
-    '' -------------------------------
-    'Private ballPos As PointF
-    'Private ballDiameter As Integer = 60
-
-    'Private velX As Double
-    'Private velY As Double
-    'Private speed As Double = 200
-
-    'Private physicsTimer As New Timer()
-    'Private physicsStopwatch As New Stopwatch()
-
-
-    '' -------------------------------
-    ''  Pong State
-    '' -------------------------------
-    'Private paddleLeft As Rectangle
-    'Private paddleRight As Rectangle
-
-    'Private paddleWidth As Integer = 32
-    'Private paddleHeight As Integer = 128
-    'Private paddleSpeed As Integer = 700
-
-    'Public moveLeftPaddleUp As Boolean
-    'Public moveLeftPaddleDown As Boolean
-    'Public moveRightPaddleUp As Boolean
-    'Public moveRightPaddleDown As Boolean
-
-    'Private scoreLeft As Integer = 0
-    'Private scoreRight As Integer = 0
-
-    '' -------------------------------
-    ''  Paddle Velocity (Spin)
-    '' -------------------------------
-    'Private lastPaddleLeftY As Single
-    'Private paddleLeftVelocity As Single
-    'Private lastPaddleRightY As Single
-    'Private paddleRightVelocity As Single
-
-    '' -------------------------------
-    ''  Player Names
-    '' -------------------------------
-    'Private leftPlayerName As String = "Left"
-    'Private rightPlayerName As String = "Right"
-
-    '' -------------------------------
-    ''  AI Difficulty
-    '' -------------------------------
-    'Private aiDifficulty As Double = 1.0   ' 1.0 = normal
-    'Private aiModeFactor As Double = 1.0         ' 1.0 = normal
-
-
     ' -------------------------------
     '  Random
     ' -------------------------------
     Private rng As New Random()
 
 
-    'Private model As New GameModel(Me.ClientSize)
-
-
 
     Private WithEvents AudioRestartTimer As Timer
 
-    'Private Const DWMWA_USE_IMMERSIVE_DARK_MODE As Integer = 20
-
-    '<DllImport("dwmapi.dll")>
-    'Private Shared Function DwmSetWindowAttribute(
-    '    hWnd As IntPtr,
-    '    attr As Integer,
-    '    ByRef attrValue As Integer,
-    '    attrSize As Integer
-    ') As Integer
-    'End Function
-
-
-    'Private hdSize As New Size(1280, 720)
-    'Private fhdSize As New Size(1920, 1080)
 
     Private model As New GameModel(ClientSize)
 
@@ -145,42 +74,12 @@ Public Class Form1
     Private resource As New ResourceManager()
 
 
-
-
-
-
     ' ===============================
     '  FORM LIFECYCLE
     ' ===============================
 
     Protected Overrides Sub OnLoad(e As EventArgs)
         MyBase.OnLoad(e)
-
-
-        'model = New GameModel(Me.ClientSize)
-
-        'window = New WindowManager(Me, model)
-
-
-        'audio = New AudioController()
-
-
-        'physics = New PhysicsEngine(model, audio, renderer, Me, match, window)
-
-
-        'match = New MatchManager()
-
-        'renderer = New Rendering(Me, model, audio, window)
-
-        'physics = New PhysicsEngine(model, audio, renderer, Me, match, window)
-
-        'state = New GameStateManager(model, audio, renderer, Me, physics)
-
-        'input = New InputManager(model, state)
-
-
-
-
 
 
         renderer.InitGraphics(Me, model)
@@ -193,79 +92,11 @@ Public Class Form1
         InitAudio()
         InitBall()
 
-
-
-
-
-
-
-
-        window.MovePointerCenterScreen()
-
     End Sub
 
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-
-        'ScaleBallDiameter()
         Me.WindowState = FormWindowState.Maximized
     End Sub
-
-
-    ' ===============================
-    '  PHYSICS LOOP
-    ' ===============================
-
-    'Private Sub PhysicsTick(sender As Object, e As EventArgs)
-    '    If Me.WindowState = FormWindowState.Minimized Then Return
-
-    '    Dim dt As Double = physicsStopwatch.Elapsed.TotalSeconds
-    '    physicsStopwatch.Restart()
-    '    dt = Math.Min(dt, 0.05)
-
-    '    ' Ball movement
-    '    ballPos.X += CSng(velX * dt)
-    '    ballPos.Y += CSng(velY * dt)
-    '    renderer.UpdateBallPosition(ballPos)
-
-    '    HandleWallCollisions()
-    '    renderer.UpdateTrail()
-
-    '    Select Case state.GetCurrentState()
-    '        Case GameState.StartScreen
-    '            renderer.UpdateStartScreenFX()
-
-    '        Case GameState.Playing
-    '            UpdatePaddles(dt)
-
-    '            If settings.GetPlayerMode() = 1 Then
-    '                UpdateAI(dt)
-    '            End If
-
-    '            HandlePaddleCollisions()
-    '            CheckScore()
-
-    '            ' Track paddle velocities for spin
-    '            paddleLeftVelocity = paddleLeft.Y - lastPaddleLeftY
-    '            lastPaddleLeftY = paddleLeft.Y
-
-    '            paddleRightVelocity = paddleRight.Y - lastPaddleRightY
-    '            lastPaddleRightY = paddleRight.Y
-
-    '        Case GameState.AIDifficulty
-    '            renderer.UpdateStartScreenFX()
-
-    '        Case GameState.Pause
-    '            ' No updates needed for Pause screen
-
-    '        Case GameState.EndScreen
-    '            renderer.UpdateStartScreenFX()
-
-    '    End Select
-
-
-    '    Invalidate()
-
-    'End Sub
 
 
     ' ===============================
@@ -330,7 +161,6 @@ Public Class Form1
     ' ===============================
 
     Private Sub AudioRestartTimer_Tick(sender As Object, e As EventArgs) Handles AudioRestartTimer.Tick
-        'RestartAudioEngine()
         audio.RestartAudioEngine(model)
     End Sub
 
@@ -348,100 +178,7 @@ Public Class Form1
 
         If Me.WindowState = FormWindowState.Minimized Then Return
 
-
         renderer.OnResize(Me, model, physics)
-
-        'renderer.UpdateFormState(Me.FormBorderStyle, ClientSize)
-
-        'model.ClientSize = ClientSize
-        '' -------------------------------
-        '' Scale ball + speed
-        '' -------------------------------
-        'ScaleBallDiameter()
-        ''renderer.UpdateBallDiameter(ballDiameter)
-        'ScaleBallSpeed4State()
-        'ScalePaddleSpeed()
-
-        ' -------------------------------
-        ' Scale paddles
-        ' -------------------------------
-        'paddleHeight = ClientSize.Height / 8
-        'paddleWidth = ClientSize.Height / 25
-
-
-
-        'Dim paddleHeight = ClientSize.Height / 8
-        'Dim paddleWidth = ClientSize.Height / 25
-        'Dim paddleLeft As Rectangle = model.PaddleLeft
-        'Dim paddleRight As Rectangle = model.PaddleHeight
-
-
-        'renderer.RescalePaddles(ClientSize)
-
-        'model.PaddleHeight = model.ClientSize.Height / 8
-        'model.PaddleWidth = model.ClientSize.Height / 25
-
-
-
-        'paddleRight.Height = paddleHeight
-        'paddleRight.Width = paddleWidth
-
-        'model.PaddleLeft.X = model.ClientSize.Height / 25
-
-        'model.LeftPaddleRect = New Rectangle(model.ClientSize.Height / 25,
-        '                                (model.ClientSize.Height - model.PaddleHeight) / 2,
-        '                                 model.PaddleWidth,
-        '                                 model.PaddleHeight)
-
-
-
-
-
-
-
-        'model.RightPaddleRect = New Rectangle(model.ClientSize.Width - model.ClientSize.Height / 25 - model.PaddleWidth,
-        '                                 (model.ClientSize.Height - model.PaddleHeight) / 2,
-        '                                 model.PaddleWidth,
-        '                                 model.PaddleHeight)
-
-        'renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, ClientSize)
-
-        'physics.ResetPaddles()
-        'physics.CenterBall()
-
-        '' -------------------------------
-        '' Preserve ball direction
-        '' -------------------------------
-        'If model.State = GameState.Playing OrElse model.State = GameState.Pause Then
-        '    physics.ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
-        'Else
-        '    physics.MoveBallRandom()
-        'End If
-
-        ' -------------------------------
-        ' Clear trail safely (no resizing)
-        ' -------------------------------
-        'trail.Clear()
-
-        'renderer.UpdateBallPosition(ballPos)
-
-        'renderer.UpdateTrail(model)
-
-        'renderer.ClearTrail()
-
-        '' -------------------------------
-        '' Rescale fonts
-        '' -------------------------------
-        'renderer.RescaleFonts(Me)
-
-        '' -------------------------------
-        '' AI difficulty scaling
-        '' -------------------------------
-        'model.AIDifficultyScale = ClientSize.Height / 1080.0
-
-
-
-
 
         Invalidate()
 
@@ -457,9 +194,7 @@ Public Class Form1
         AudioRestartTimer?.Stop()
         physics.StopTimer()
 
-        'physics.Dispose()
         AudioRestartTimer?.Dispose()
-
 
         audio?.DisposeAudio()
         audio = Nothing
@@ -468,68 +203,43 @@ Public Class Form1
     End Sub
 
     Private Sub InitWindow()
-        'Me.Text = "PONG - Code with Joe"
 
         Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or
                     ControlStyles.UserPaint Or
                     ControlStyles.OptimizedDoubleBuffer, True)
 
         Me.DoubleBuffered = True
-        'Me.BackColor = Color.Black
-
-        'Dim dark As Boolean = window.IsDarkMode()
-
-        '' Apply Windows 11 dark title bar
-        'window.ApplyDarkTitleBar(dark, Me.Handle)
-
-        'Me.StartPosition = FormStartPosition.CenterScreen
-        'Me.MinimumSize = New Size(256, 256)
-        'Me.Size = New Size(1280, 720)
-
-        'Dim screenBounds As Rectangle = Screen.PrimaryScreen.WorkingArea
-        'Dim centerX As Integer = (screenBounds.Width - Me.Width) \ 2
-        'Dim centerY As Integer = (screenBounds.Height - Me.Height) \ 2
-        'Me.Location = New Point(centerX, centerY)
-
-        'Me.WindowState = FormWindowState.Normal
 
         window.InitWindow(Me)
+
+        window.MovePointerCenterScreen()
+
     End Sub
-
-    'Private Sub InitPhysicsTimer()
-
-    '    physicsTimer.Interval = 15
-    '    AddHandler physicsTimer.Tick, AddressOf PhysicsTick
-
-    '    physicsTimer.Start()
-
-    '    physicsStopwatch.Start()
-
-
-    'End Sub
 
     Private Sub InitGameplay()
         'InitPaddles()
         'renderer.InitPaddles(ClientSize)
-        'InitPhysics()
-        physics.Start()
+        InitPhysics()
     End Sub
 
     Private Sub InitPaddles()
-        model.LeftPaddleRect = New Rectangle(50,
-                                  (ClientSize.Height - model.PaddleHeight) / 2,
-                                   model.PaddleWidth,
-                                   model.PaddleHeight)
 
-        model.RightPaddleRect = New Rectangle(ClientSize.Width - 50 - model.PaddleWidth,
+        model.LeftPaddleRect = New Rectangle(
+                                   50,
                                    (ClientSize.Height - model.PaddleHeight) / 2,
+                                   model.PaddleWidth,model.PaddleHeight)
+
+        model.RightPaddleRect = New Rectangle(
+                                    ClientSize.Width - 50 - model.PaddleWidth,
+                                    (ClientSize.Height - model.PaddleHeight) / 2,
                                     model.PaddleWidth,
                                     model.PaddleHeight)
+
     End Sub
 
-    'Private Sub InitPhysics()
-    '    physicsTimer.Start()
-    'End Sub
+    Private Sub InitPhysics()
+        physics.Start()
+    End Sub
 
     Private Sub InitBall()
         renderer.ScaleBall(model)

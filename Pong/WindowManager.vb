@@ -46,10 +46,11 @@ Public Class WindowManager
         form.MinimumSize = New Size(256, 256)
         form.Size = New Size(1280, 720)
 
-        Dim screenBounds As Rectangle = Screen.PrimaryScreen.WorkingArea
-        Dim centerX As Integer = (screenBounds.Width - form.Width) \ 2
-        Dim centerY As Integer = (screenBounds.Height - form.Height) \ 2
-        form.Location = New Point(centerX, centerY)
+        'Dim screenBounds As Rectangle = Screen.PrimaryScreen.WorkingArea
+        'Dim centerX As Integer = (screenBounds.Width - form.Width) \ 2
+        'Dim centerY As Integer = (screenBounds.Height - form.Height) \ 2
+        'form.Location = New Point(centerX, centerY)
+        CenterWindow(form)
 
         form.WindowState = FormWindowState.Normal
 
