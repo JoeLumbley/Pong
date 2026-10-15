@@ -6,10 +6,11 @@ Public Class PhysicsEngine
     Private ReadOnly model As GameModel
     Private ReadOnly audio As AudioController
     Private ReadOnly renderer As Rendering
-    Private ReadOnly state As GameStateManager
+    'Private ReadOnly state As GameStateManager
     Private ReadOnly form As Form
-    Private ReadOnly settings As SettingsManager
+    'Private ReadOnly settings As SettingsManager
     Private ReadOnly match As MatchManager
+    Private ReadOnly window As WindowManager
 
     Private physicsTimer As Timer
     Private stopwatch As Stopwatch
@@ -17,18 +18,18 @@ Public Class PhysicsEngine
     Public Sub New(model As GameModel,
                    audio As AudioController,
                    renderer As Rendering,
-                   state As GameStateManager,
                    form As Form,
-                   setting As SettingsManager,
-                   match As MatchManager)
+                   match As MatchManager,
+                   window As WindowManager)
 
         Me.model = model
         Me.audio = audio
         Me.renderer = renderer
-        Me.state = state
+        'Me.state = state
         Me.form = form
-        Me.settings = settings
+        'Me.settings = settings
         Me.match = match
+        Me.window = window
 
         physicsTimer = New Timer With {.Interval = 15}
         AddHandler physicsTimer.Tick, AddressOf Tick
@@ -85,7 +86,7 @@ Public Class PhysicsEngine
 
 
         HandleWallCollisions()
-        renderer.UpdateTrail()
+        renderer.UpdateTrail(model)
 
         Select Case model.State
             Case GameState.StartScreen
@@ -143,32 +144,32 @@ Public Class PhysicsEngine
     ' ============================================================
     Private Sub MovePaddles(dt As Double)
 
-        Dim left = model.paddleLeft
-        Dim right = model.paddleRight
+        Dim left = model.LeftPaddleRect
+        Dim right = model.RightPaddleRect
 
         If model.LeftPaddleUp Then
-            left.Y -= CInt(model.paddleSpeed * dt)
+            left.Y -= CInt(model.PaddleSpeed * dt)
         End If
 
         If model.LeftPaddleDown Then
-            left.Y += CInt(model.paddleSpeed * dt)
+            left.Y += CInt(model.PaddleSpeed * dt)
         End If
 
         If model.PlayerMode = 2 Then
             If model.RightPaddleUp Then
-                right.Y -= CInt(model.paddleSpeed * dt)
+                right.Y -= CInt(model.PaddleSpeed * dt)
             End If
 
             If model.RightPaddleDown Then
-                right.Y += CInt(model.paddleSpeed * dt)
+                right.Y += CInt(model.PaddleSpeed * dt)
             End If
         End If
 
-        left.Y = Math.Max(0, Math.Min(model.ClientSize.Height - model.paddleHeight, left.Y))
-        right.Y = Math.Max(0, Math.Min(model.ClientSize.Height - model.paddleHeight, right.Y))
+        left.Y = Math.Max(0, Math.Min(model.ClientSize.Height - model.PaddleHeight, left.Y))
+        right.Y = Math.Max(0, Math.Min(model.ClientSize.Height - model.PaddleHeight, right.Y))
 
-        model.paddleLeft = left
-        model.paddleRight = right
+        model.LeftPaddleRect = left
+        model.RightPaddleRect = right
     End Sub
 
     ' ============================================================
@@ -176,22 +177,22 @@ Public Class PhysicsEngine
     ' ============================================================
     Private Sub UpdateAI(dt As Double)
 
-        Dim right = model.PaddleRight
+        Dim right = model.RightPaddleRect
 
         Dim targetY As Single = model.BallPos.Y + model.BallDiameter / 2
         Dim paddleCenter As Single = right.Y + model.PaddleHeight / 2
 
-        Dim factor As Double = model.aiModeFactor * model.AIDifficultyScale
+        Dim factor As Double = model.AIModeFactor * model.AIDifficultyScale
 
         If targetY < paddleCenter - 20 Then
-            right.Y -= CSng(model.paddleSpeed * dt * factor)
+            right.Y -= CSng(model.PaddleSpeed * dt * factor)
         ElseIf targetY > paddleCenter + 20 Then
-            right.Y += CSng(model.paddleSpeed * dt * factor)
+            right.Y += CSng(model.PaddleSpeed * dt * factor)
         End If
 
         right.Y = Math.Max(0, Math.Min(model.ClientSize.Height - model.PaddleHeight, right.Y))
 
-        model.PaddleRight = right
+        model.RightPaddleRect = right
     End Sub
 
     ' ============================================================
@@ -199,15 +200,15 @@ Public Class PhysicsEngine
     ' ============================================================
     Private Sub HandleWallCollisions()
 
-        Dim pos = model.ballPos
+        Dim pos = model.BallPos
 
         If pos.Y <= 0 Then
             pos.Y = 0
-            model.velY = Math.Abs(model.velY)
+            model.VelY = Math.Abs(model.VelY)
             audio.PlayWithCooldown("bounce", 100)
-        ElseIf pos.Y >= model.ClientSize.Height - model.ballDiameter Then
-            pos.Y = model.ClientSize.Height - model.ballDiameter
-            model.velY = -Math.Abs(model.velY)
+        ElseIf pos.Y >= model.ClientSize.Height - model.BallDiameter Then
+            pos.Y = model.ClientSize.Height - model.BallDiameter
+            model.VelY = -Math.Abs(model.VelY)
             audio.PlayWithCooldown("bounce", 100)
         End If
 
@@ -217,16 +218,16 @@ Public Class PhysicsEngine
 
             If pos.X <= 0 Then
                 pos.X = 0
-                model.velX = Math.Abs(model.velX)
+                model.VelX = Math.Abs(model.VelX)
                 audio.PlayWithCooldown("bounce", 100)
-            ElseIf pos.X >= model.ClientSize.Width - model.ballDiameter Then
-                pos.X = model.ClientSize.Width - model.ballDiameter
-                model.velX = -Math.Abs(model.velX)
+            ElseIf pos.X >= model.ClientSize.Width - model.BallDiameter Then
+                pos.X = model.ClientSize.Width - model.BallDiameter
+                model.VelX = -Math.Abs(model.VelX)
                 audio.PlayWithCooldown("bounce", 100)
             End If
         End If
 
-        model.ballPos = pos
+        model.BallPos = pos
     End Sub
 
     ' ============================================================
@@ -234,28 +235,28 @@ Public Class PhysicsEngine
     ' ============================================================
     Private Sub HandlePaddleCollisions()
 
-        Dim ballRect As New RectangleF(model.ballPos.X, model.ballPos.Y, model.ballDiameter, model.ballDiameter)
+        Dim ballRect As New RectangleF(model.BallPos.X, model.BallPos.Y, model.BallDiameter, model.BallDiameter)
         Dim angle As Double
 
-        If ballRect.IntersectsWith(model.paddleLeft) AndAlso model.velX < 0 Then
+        If ballRect.IntersectsWith(model.LeftPaddleRect) AndAlso model.VelX < 0 Then
             angle = ComputeLeftPaddleAngle()
-            model.velX = Math.Cos(angle) * model.BallSpeed
-            model.velY = Math.Sin(angle) * model.BallSpeed
+            model.VelX = Math.Cos(angle) * model.BallSpeed
+            model.VelY = Math.Sin(angle) * model.BallSpeed
             audio.PlayWithCooldown("bounce", 100)
         End If
 
-        If ballRect.IntersectsWith(model.paddleRight) AndAlso model.velX > 0 Then
+        If ballRect.IntersectsWith(model.RightPaddleRect) AndAlso model.VelX > 0 Then
             angle = ComputeRightPaddleAngle()
-            model.velX = Math.Cos(angle) * model.BallSpeed
-            model.velY = Math.Sin(angle) * model.BallSpeed
+            model.VelX = Math.Cos(angle) * model.BallSpeed
+            model.VelY = Math.Sin(angle) * model.BallSpeed
             audio.PlayWithCooldown("bounce", 100)
         End If
     End Sub
 
     Private Function ComputeLeftPaddleAngle() As Double
-        If model.paddleLeftVelocity < -1 Then
+        If model.PaddleLeftVelocity < -1 Then
             Return 315 * (Math.PI / 180.0)
-        ElseIf model.paddleLeftVelocity > 1 Then
+        ElseIf model.PaddleLeftVelocity > 1 Then
             Return 45 * (Math.PI / 180.0)
         Else
             Return 0
@@ -263,9 +264,9 @@ Public Class PhysicsEngine
     End Function
 
     Private Function ComputeRightPaddleAngle() As Double
-        If model.paddleRightVelocity < -1 Then
+        If model.PaddleRightVelocity < -1 Then
             Return 225 * (Math.PI / 180.0)
-        ElseIf model.paddleRightVelocity > 1 Then
+        ElseIf model.PaddleRightVelocity > 1 Then
             Return 135 * (Math.PI / 180.0)
         Else
             If model.PlayerMode = 1 Then
@@ -285,7 +286,7 @@ Public Class PhysicsEngine
 
 
             model.ScoreRight += 1
-            renderer.UpdateScore(model.ScoreLeft, model.ScoreRight)
+            renderer.UpdateScore(model.ScoreLeft, model.ScoreRight, form, model)
 
             audio.PlayPoint()
             ResetBall(1)
@@ -296,7 +297,7 @@ Public Class PhysicsEngine
         If model.BallPos.X >= model.ClientSize.Width - model.BallDiameter Then
 
             model.ScoreLeft += 1
-            renderer.UpdateScore(model.ScoreLeft, model.ScoreRight)
+            renderer.UpdateScore(model.ScoreLeft, model.ScoreRight, form, model)
 
             audio.PlayPoint()
             ResetBall(-1)
@@ -314,6 +315,7 @@ Public Class PhysicsEngine
             Else
                 model.WinnerText = "Left Wins!"
             End If
+            model.WinnerIs = 1
 
             'model.WinnerText = $"{model.LeftPlayerName} Wins!"
 
@@ -321,17 +323,39 @@ Public Class PhysicsEngine
 
 
             model.State = GameState.EndScreen
-            match.EndMatch()
+            'EndMatch()
+            match.EndMatch(audio, window, model, Me)
+
         End If
 
-        If model.scoreRight >= 10 Then
+        If model.ScoreRight >= 10 Then
             model.WinnerText = $"{model.RightPlayerName} Wins!"
-            model.State = GameState.EndScreen
-            match.EndMatch()
+            model.WinnerIs = 2
 
+            model.State = GameState.EndScreen
+            'EndMatch()
+            match.EndMatch(audio, window, model, Me)
         End If
 
     End Sub
+
+
+    'Public Sub EndMatch()
+
+    '    audio.FadeOutAndStopGamePlayLoop(600)
+
+    '    window.MovePointerCenterScreen()
+
+    '    model.BallSpeed = 200 * (model.ClientSize.Height / 1080.0)
+
+    '    CenterBall()
+    '    MoveBallRandom()
+
+    '    audio.PlayStartLoop(600)
+
+    'End Sub
+
+
 
     ' ============================================================
     ' RESET HELPERS
@@ -345,7 +369,7 @@ Public Class PhysicsEngine
     Public Sub PrepareNewMatch()
         model.BallSpeed = 800 * (model.ClientSize.Height / 1080.0)
         CenterBall()
-        ServeBall(If(model.rng.Next(0, 2) = 0, -1, 1))
+        ServeBall(If(model.RNG.Next(0, 2) = 0, -1, 1))
     End Sub
 
     Public Sub ResetForMenu()
@@ -355,14 +379,14 @@ Public Class PhysicsEngine
     End Sub
 
     Public Sub ResetPaddles()
-        Dim left = model.PaddleLeft
-        Dim right = model.PaddleRight
+        Dim left = model.LeftPaddleRect
+        Dim right = model.RightPaddleRect
 
         left.Y = (model.ClientSize.Height - model.PaddleHeight) / 2
         right.Y = (model.ClientSize.Height - model.PaddleHeight) / 2
 
-        model.PaddleLeft = left
-        model.PaddleRight = right
+        model.LeftPaddleRect = left
+        model.RightPaddleRect = right
     End Sub
 
     Public Sub CenterBall()
@@ -387,11 +411,11 @@ Public Class PhysicsEngine
     ' PADDLE VELOCITY TRACKING
     ' ============================================================
     Private Sub TrackPaddleVelocities()
-        model.paddleLeftVelocity = model.paddleLeft.Y - model.lastPaddleLeftY
-        model.lastPaddleLeftY = model.paddleLeft.Y
+        model.PaddleLeftVelocity = model.LeftPaddleRect.Y - model.LastPaddleLeftY
+        model.LastPaddleLeftY = model.LeftPaddleRect.Y
 
-        model.paddleRightVelocity = model.paddleRight.Y - model.lastPaddleRightY
-        model.lastPaddleRightY = model.paddleRight.Y
+        model.PaddleRightVelocity = model.RightPaddleRect.Y - model.LastPaddleRightY
+        model.LastPaddleRightY = model.RightPaddleRect.Y
     End Sub
 
 End Class

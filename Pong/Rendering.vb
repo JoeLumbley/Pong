@@ -138,8 +138,8 @@ Public Class Rendering
     Private onePlayerRect As Rectangle
     Private twoPlayersRect As Rectangle
 
-    Private titleAlpha As Integer = 255
-    Private titleFadeIn As Boolean = True
+    Private fadeAlpha As Integer = 255
+    Private alphaFadeIn As Boolean = True
     Private blinkVisible As Boolean = True
     Private blinkStopwatch As New Stopwatch()
 
@@ -237,59 +237,58 @@ Public Class Rendering
 
     Private startRadius As Integer
 
-    Private ReadOnly form As Form
-    Private ReadOnly model As GameModel
-    Private ReadOnly renderer As Rendering
-    Private ReadOnly settings As SettingsManager
-    Private ReadOnly state As GameStateManager
-    Private ReadOnly audio As AudioController
-    Private ReadOnly window As WindowManager
-    Private ReadOnly physics As PhysicsEngine
-
-    Public Sub New(form As Form,
-                   model As GameModel,
-                   renderer As Rendering,
-                   settings As SettingsManager,
-                   state As GameStateManager,
-                   audio As AudioController,
-                   window As WindowManager,
-                   physics As PhysicsEngine)
-
-        Me.form = form
-        Me.model = model
-        Me.renderer = renderer
-        Me.settings = settings
-        Me.state = state
-        Me.audio = audio
-        Me.window = window
-        Me.physics = physics
-
-        InitGraphics()
-
-        'clientSize = size
-        'g.SmoothingMode = SmoothingMode.AntiAlias
-        'g.PixelOffsetMode = PixelOffsetMode.HighQuality
-
-        'ScaleBall()
-        InitGraphics()
-        InitTrails()
-        'InitPaddles(Size)
-        CacheHUD()
-        CachePause()
-        CacheKeyboardHints()
-        CacheAIDifficulty()
-        CacheStartScreen()
-
-        fpsStopwatch.Start()
-        blinkStopwatch.Start()
 
 
-        labelY = form.ClientSize.Height / 2
+    ' -------------------------------
+    '  Random
+    ' -------------------------------
+    Private rng As New Random()
 
 
-        scoreY = form.ClientSize.Height / 2
+    'Private form As Form
+    'Private model As GameModel
+    'Private ReadOnly renderer As Rendering
+    'Private ReadOnly settings As SettingsManager
+    'Private ReadOnly state As GameStateManager
+    'Private ReadOnly audio As AudioController
+    'Private ReadOnly window As WindowManager
+    'Private ReadOnly physics As PhysicsEngine
 
-    End Sub
+    'Public Sub New()
+
+    'Me.form = form
+    'Me.model = model
+    'Me.settings = settings
+    'Me.audio = audio
+    'Me.window = window
+    'Me.physics = physics
+
+    'InitGraphics()
+
+    'clientSize = size
+    'g.SmoothingMode = SmoothingMode.AntiAlias
+    'g.PixelOffsetMode = PixelOffsetMode.HighQuality
+
+    'ScaleBall()
+    'InitGraphics()
+    'InitTrails()
+    'InitPaddles(Size)
+    'CacheHUD()
+    'CachePause()
+    'CacheKeyboardHints()
+    'CacheAIDifficulty()
+    'CacheStartScreen()
+
+    'fpsStopwatch.Start()
+    'blinkStopwatch.Start()
+
+
+    'labelY = form.ClientSize.Height / 2
+
+
+    'scoreY = form.ClientSize.Height / 2
+
+    'End Sub
 
     ' ============================================================
     '   PUBLIC RECT ACCESSORS
@@ -351,7 +350,7 @@ Public Class Rendering
     'End Sub
 
 
-    Private Sub CacheStartScreen()
+    Private Sub CacheStartScreen(form As Form)
         Dim g = form.CreateGraphics()
         Dim title As String = "PONG"
         startTitleSize = g.MeasureString(title, startTitleFont)
@@ -412,11 +411,17 @@ Public Class Rendering
     ' ============================================================
     '   INITIALIZATION
     ' ============================================================
-    Private Sub ScaleBall(size As Size)
-        model.BallDiameter = CInt(Math.Min(size.Width, size.Height) / 18.0F)
+    Public Sub ScaleBall(model As GameModel)
+        'model.BallDiameter = CInt(Math.Min(size.Width, size.Height) / 18.0F)
+        model.BallDiameter = CInt(model.ClientSize.Height / 18.0F)
+
     End Sub
 
-    Public Sub InitGraphics()
+    Public Sub InitGraphics(form As Form, model As GameModel)
+
+        'Me.form = form
+        'Me.model = model
+
         ballBrush = New SolidBrush(Color.DeepSkyBlue)
         paddleBrush = New SolidBrush(Color.White)
         scoreBrush = New SolidBrush(Color.White)
@@ -426,25 +431,52 @@ Public Class Rendering
         dimBrush = New SolidBrush(Color.FromArgb(120, 0, 0, 0))
         fsIndicatorBrush = New SolidBrush(Color.FromArgb(120, 255, 255, 255))
 
-        RescaleFonts()
+
+        InitTrails(model)
+        InitPaddles(form)
+
+
+        RescalePaddles(form.ClientSize, model)
+        ScaleBall(model)
+
+        RescaleFonts(form)
+
+        CacheStartScreen(form)
+        CacheAIDifficulty(form)
+
+        CacheHUD(form, model)
+        CachePause(form)
+
+        CacheKeyboardHints(form)
+
+        fpsStopwatch.Start()
+        blinkStopwatch.Start()
+
+
+        labelY = form.ClientSize.Height / 32
+
+
+        scoreY = form.ClientSize.Height / 20
+
+
     End Sub
 
-    Private Sub InitPaddles(size As Size)
-        paddleHeight = size.Height \ 8
-        paddleWidth = size.Width \ 50
+    Public Sub InitPaddles(form As Form)
+        paddleHeight = form.ClientSize.Height \ 8
+        paddleWidth = form.ClientSize.Width \ 50
 
-        paddleLeft = New RectangleF(size.Width / 50.0F,
-                                    (size.Height - paddleHeight) / 2.0F,
+        paddleLeft = New RectangleF(form.ClientSize.Width / 50.0F,
+                                    (form.ClientSize.Height - paddleHeight) / 2.0F,
                                     paddleWidth,
                                     paddleHeight)
 
-        paddleRight = New RectangleF(size.Width - size.Width / 50.0F - paddleWidth,
-                                     (size.Height - paddleHeight) / 2.0F,
+        paddleRight = New RectangleF(form.ClientSize.Width - form.ClientSize.Width / 50.0F - paddleWidth,
+                                     (form.ClientSize.Height - paddleHeight) / 2.0F,
                                      paddleWidth,
                                      paddleHeight)
     End Sub
 
-    Private Sub InitTrails()
+    Public Sub InitTrails(model As GameModel)
         For i As Integer = 0 To TrailLength - 1
             Dim size As Integer = model.BallDiameter - (TrailLength - i) * 2
             If size < 10 Then size = 10
@@ -463,7 +495,77 @@ Public Class Rendering
     ' ============================================================
     '   FONT / LAYOUT RESCALING
     ' ============================================================
-    Public Sub RescaleFonts()
+    Public Sub OnResize(form As Form, model As GameModel, physics As PhysicsEngine)
+
+        If form.WindowState = FormWindowState.Minimized Then Return
+
+        model.ClientSize = form.ClientSize
+
+        ScaleBall(model)
+
+        ScaleBallSpeed4State(model)
+        ScalePaddleSpeed(model)
+        RescalePaddles(form.ClientSize, model)
+        physics.ResetPaddles()
+        physics.CenterBall()
+
+
+        If model.State = GameState.Playing OrElse model.State = GameState.Pause Then
+            physics.ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
+        Else
+            physics.MoveBallRandom()
+        End If
+
+        UpdateTrail(model)
+        ClearTrail()
+
+
+
+
+        RescaleFonts(form)
+
+
+
+        CacheStartScreen(form)
+        CacheAIDifficulty(form)
+
+        CacheHUD(form, model)
+        CachePause(form)
+
+        CacheKeyboardHints(form)
+
+
+        ' -------------------------------
+        ' AI difficulty scaling
+        ' -------------------------------
+        model.AIDifficultyScale = model.ClientSize.Height / 1080.0
+
+    End Sub
+    Private Sub ScaleBallSpeed4State(model As GameModel)
+
+        If model.State = GameState.StartScreen OrElse
+           model.State = GameState.EndScreen OrElse
+           model.State = GameState.AIDifficulty Then
+
+            model.BallSpeed = 200 * (model.ClientSize.Height / 1080.0)
+
+        Else
+
+            model.BallSpeed = 800 * (model.ClientSize.Height / 1080.0)
+
+        End If
+
+    End Sub
+
+    Private Sub ScalePaddleSpeed(model As GameModel)
+        model.PaddleSpeed = CInt(400 * Math.Sqrt(model.ClientSize.Height / 1080.0))
+    End Sub
+
+
+
+
+
+    Public Sub RescaleFonts(form As Form)
         DisposeFonts()
 
         hudScoreFont = New Font("Segoe UI", CSng(form.ClientSize.Height / 15.0F), FontStyle.Bold)
@@ -479,34 +581,49 @@ Public Class Rendering
         keyboardFont = New Font("Segoe UI", CSng(form.ClientSize.Height / 70.0F), FontStyle.Bold)
         fpsFont = New Font("Segoe UI", CSng(form.ClientSize.Height / 75.0F), FontStyle.Bold)
 
-        CachePause()
-        CacheHUD()
-        CacheKeyboardHints()
-        CacheAIDifficulty()
-        CacheStartScreen()
-        RescalePaddles(form.ClientSize)
     End Sub
 
-    Private Sub RescalePaddles(size As Size)
+    Public Sub RescalePaddles(size As Size, model As GameModel)
         paddleHeight = size.Height \ 8
         paddleWidth = size.Height \ 30
+
+        model.PaddleHeight = paddleHeight
+        model.PaddleWidth = paddleWidth
 
         paddleLeft.Width = paddleWidth
         paddleLeft.Height = paddleHeight
         paddleRight.Width = paddleWidth
         paddleRight.Height = paddleHeight
 
-        paddleLeft.X = size.Width / 50.0F
-        paddleRight.X = size.Width - size.Width / 50.0F - paddleWidth
+
+
+
+        paddleLeft.X = size.Height / 25.0F
+        paddleRight.X = size.Width - size.Height / 25.0F - paddleWidth
+
+
+
 
         paddleLeft.Y = (size.Height - paddleHeight) / 2.0F
         paddleRight.Y = (size.Height - paddleHeight) / 2.0F
+
+        model.LeftPaddleRect = New Rectangle(paddleLeft.X,
+                                             paddleLeft.Y,
+                                             paddleLeft.Width,
+                                             paddleLeft.Height)
+
+        model.RightPaddleRect = New Rectangle(paddleRight.X,
+                                             paddleRight.Y,
+                                             paddleRight.Width,
+                                             paddleRight.Height)
+
+
     End Sub
 
     ' ============================================================
     '   HUD LAYOUT
     ' ============================================================
-    Private Sub CacheHUD()
+    Public Sub CacheHUD(form As Form, model As GameModel)
         Dim g = form.CreateGraphics()
 
         Dim halfWidth As Single = form.ClientSize.Width / 2.0F
@@ -525,10 +642,10 @@ Public Class Rendering
         leftScoreX = (halfWidth - leftScoreSize.Width) / 2
         rightScoreX = halfWidth + (halfWidth - rightScoreSize.Width) / 2
 
-        labelY = form.ClientSize.Height / 32
+        labelY = form.ClientSize.Height / 14
 
 
-        scoreY = form.ClientSize.Height / 20
+        scoreY = form.ClientSize.Height / 12
 
 
 
@@ -538,7 +655,7 @@ Public Class Rendering
     '   PAUSE LAYOUT
     ' ============================================================
 
-    Private Sub CachePause()
+    Private Sub CachePause(form As Form)
         Dim g = form.CreateGraphics()
         pauseTitleSize = g.MeasureString(pauseTitle, pauseTitleFont)
         pauseTitleX = (form.ClientSize.Width - pauseTitleSize.Width) / 2.0F
@@ -587,7 +704,7 @@ Public Class Rendering
     ' ============================================================
     '   KEYBOARD HINT LAYOUT
     ' ============================================================
-    Private Sub CacheKeyboardHints()
+    Private Sub CacheKeyboardHints(form As Form)
 
         Dim g = form.CreateGraphics()
         hintLeftText = "W S - Move Paddle"
@@ -618,7 +735,7 @@ Public Class Rendering
     ' ============================================================
 
 
-    Private Sub CacheAIDifficulty()
+    Private Sub CacheAIDifficulty(form As Form)
         Dim g = form.CreateGraphics()
         aiTitleSize = g.MeasureString("Difficulty", aiTitleFont)
         aiTitleX = (form.ClientSize.Width - aiTitleSize.Width) / 2.0F
@@ -682,14 +799,14 @@ Public Class Rendering
         End If
     End Sub
 
-    Public Sub UpdateBallPosition(deltaTime As Double)
+    Public Sub UpdateBallPosition(deltaTime As Double, model As GameModel)
         model.BallPos = New PointF(model.BallPos.X + CSng(model.VelX * deltaTime),
                                    model.BallPos.Y + CSng(model.VelY * deltaTime))
 
 
         'model.BallPos.X += CSng(model.VelX * deltaTime)
         'model.BallPos.Y += CSng(model.VelY * deltaTime)
-        UpdateTrail()
+        UpdateTrail(model)
     End Sub
 
     'Public Sub UpdateBallPosition(newPos As PointF)
@@ -712,8 +829,9 @@ Public Class Rendering
         ballBrush = newBrush
     End Sub
 
-    Public Sub UpdateTrail()
+    Public Sub UpdateTrail(model As GameModel)
         If trailPoints Is Nothing Then Exit Sub
+        If model Is Nothing Then Return
 
         trailIndex = (trailIndex + 1) Mod TrailLength
         trailPoints(trailIndex) = model.BallPos
@@ -747,16 +865,21 @@ Public Class Rendering
         Next
     End Sub
 
-    Public Sub UpdateScore(leftScore As Integer, rightScore As Integer)
+    Public Sub UpdateScore(leftScore As Integer, rightScore As Integer, form As Form, model As GameModel)
         model.ScoreLeft = leftScore
         model.ScoreRight = rightScore
-        CacheHUD()
+        CacheHUD(form, model)
     End Sub
 
-    Public Sub UpdatePlayerNames(leftName As String, rightName As String)
+    Public Sub UpdatePlayerNames(leftName As String,
+                                 rightName As String,
+                                 form As Form,
+                                 model As GameModel)
+
         model.LeftPlayerName = leftName
         model.RightPlayerName = rightName
-        CacheHUD()
+        CacheHUD(form, model)
+
     End Sub
 
     Public Sub UpdatePaddlePositions(leftY As Single, rightY As Single, size As Size)
@@ -768,9 +891,9 @@ Public Class Rendering
         showKeyboardHints = Not showKeyboardHints
     End Sub
 
-    Public Sub SetPlayerMode(mode As Integer, g As Graphics, size As Size)
+    Public Sub SetPlayerMode(form As Form, mode As Integer)
         numberOfPlayersSelection = If(mode = 2, 1, 0)
-        CacheKeyboardHints()
+        CacheKeyboardHints(form)
     End Sub
 
     'Public Sub SetWinnerText(text As String)
@@ -800,7 +923,8 @@ Public Class Rendering
                       state As GameState,
                       settings As SettingsManager,
                       match As MatchManager,
-                      form As Form)
+                      form As Form,
+                      model As GameModel)
 
 
         g.CompositingMode = CompositingMode.SourceOver
@@ -812,32 +936,32 @@ Public Class Rendering
         Select Case state
             Case GameState.StartScreen
                 DrawTrail(g)
-                DrawBall(g)
+                DrawBall(g, model)
                 DrawStartScreen(g, settings)
                 If settings.GetShowKeyboardHints() Then DrawStartHints(g, form)
 
             Case GameState.Playing
-                DrawGamePlayScreen(g)
+                DrawGamePlayScreen(g, model)
                 If settings.GetShowKeyboardHints() Then DrawGamePlayHints(g)
 
             Case GameState.Pause
                 DrawTrail(g)
-                DrawBall(g)
-                DrawPaddles(g)
-                DrawHUD(g)
+                DrawBall(g, model)
+                DrawPaddles(g, model)
+                DrawHUD(g, model)
                 DrawPauseScreen(g, settings, form)
                 If settings.GetShowKeyboardHints() Then DrawPauseHints(g, form)
 
             Case GameState.EndScreen
                 DrawTrail(g)
-                DrawBall(g)
-                DrawHUD(g)
-                DrawGameOver(g, match, form)
+                DrawBall(g, model)
+                DrawHUD(g, model)
+                DrawGameOver(g, match, form, model)
                 If settings.GetShowKeyboardHints() Then DrawGameOverHints(g, form)
 
             Case GameState.AIDifficulty
                 DrawTrail(g)
-                DrawBall(g)
+                DrawBall(g, model)
                 DrawAIDifficultyScreen(g, settings)
                 If settings.GetShowKeyboardHints() Then DrawAIDifficultyHints(g, form)
         End Select
@@ -868,13 +992,13 @@ Public Class Rendering
         Next
     End Sub
 
-    Private Sub DrawBall(g As Graphics)
+    Private Sub DrawBall(g As Graphics, model As GameModel)
         g.FillEllipse(ballBrush, model.BallPos.X, model.BallPos.Y, model.BallDiameter, model.BallDiameter)
     End Sub
 
-    Private Sub DrawPaddles(g As Graphics)
-        g.FillRectangle(paddleBrush, model.PaddleLeft)
-        g.FillRectangle(paddleBrush, model.PaddleRight)
+    Private Sub DrawPaddles(g As Graphics, model As GameModel)
+        g.FillRectangle(paddleBrush, model.LeftPaddleRect)
+        g.FillRectangle(paddleBrush, model.RightPaddleRect)
     End Sub
 
     'Private Sub DrawHUD(g As Graphics)
@@ -885,54 +1009,150 @@ Public Class Rendering
     'End Sub
 
 
-    Private Sub DrawHUD(g As Graphics)
+    Private Sub DrawHUD(g As Graphics, model As GameModel)
 
-        'Dim halfWidth As Single = form.ClientSize.Width / 2.0F
+        'If model.State = GameState.EndScreen Then
+        '    ' This is the end so fade in and out
 
-        '' Measure
-        'Dim leftLabelSize = g.MeasureString(model.LeftPlayerName, hudLabelFont)
-        'Dim rightLabelSize = g.MeasureString(model.RightPlayerName, hudLabelFont)
+        '    Dim scoreAlphaColor As Color = Color.FromArgb(fadeAlpha, Color.White)
+        '    Dim labelAlphaColor As Color = Color.FromArgb(fadeAlpha, Color.Gray)
 
-        'Dim leftScoreSize = g.MeasureString(model.ScoreLeft.ToString(), hudScoreFont)
-        'Dim rightScoreSize = g.MeasureString(model.ScoreRight.ToString(), hudScoreFont)
+        '    ' Who won?
+        '    If model.WinnerIs = 1 Then
+        '        ' Left paddle won
 
-        '' Center horizontally
-        'Dim leftLabelX As Single = (halfWidth - leftLabelSize.Width) / 2
-        'Dim rightLabelX As Single = halfWidth + (halfWidth - rightLabelSize.Width) / 2
+        '        ' Fade left paddle score in and out
+        '        Using scoreAlphaBrush As New SolidBrush(scoreAlphaColor)
+        '            g.DrawString(model.ScoreLeft.ToString(), hudScoreFont, scoreAlphaBrush, leftScoreX, scoreY)
+        '        End Using
 
-        'Dim leftScoreX As Single = (halfWidth - leftScoreSize.Width) / 2
-        'Dim rightScoreX As Single = halfWidth + (halfWidth - rightScoreSize.Width) / 2
+        '        ' Fade laft paddle label in and out
+        '        Using labelAlphaBrush As New SolidBrush(labelAlphaColor)
+        '            g.DrawString(model.LeftPlayerName, hudLabelFont, labelAlphaBrush, leftLabelX, labelY)
+        '        End Using
 
-        'labelY = form.ClientSize.Height / 32
+        '        ' Draw right paddle - No fade
+        '        g.DrawString(model.RightPlayerName, hudLabelFont, labelBrush, rightLabelX, labelY)
+        '        g.DrawString(model.ScoreRight.ToString(), hudScoreFont, scoreBrush, rightScoreX, scoreY)
+
+        '    Else
+        '        ' Right paddle won
+
+        '        ' Fade right paddle score in and out
+        '        Using scoreAlphaBrush As New SolidBrush(scoreAlphaColor)
+        '            g.DrawString(model.ScoreRight.ToString(), hudScoreFont, scoreAlphaBrush, rightScoreX, scoreY)
+        '        End Using
+
+        '        ' Fade right paddle label in and out
+        '        Using labelAlphaBrush As New SolidBrush(labelAlphaColor)
+        '            g.DrawString(model.RightPlayerName, hudLabelFont, labelAlphaBrush, rightLabelX, labelY)
+        '        End Using
+
+        '        ' Draw left paddle - No fade
+        '        g.DrawString(model.LeftPlayerName, hudLabelFont, labelBrush, leftLabelX, labelY)
+        '        g.DrawString(model.ScoreLeft.ToString(), hudScoreFont, scoreBrush, leftScoreX, scoreY)
+
+        '    End If
+
+        'Else
+        '    ' Not the end screen so don't fade
+
+        '    ' Draw right paddle score
+        '    g.DrawString(model.RightPlayerName, hudLabelFont, labelBrush, rightLabelX, labelY)
+        '    g.DrawString(model.ScoreRight.ToString(), hudScoreFont, scoreBrush, rightScoreX, scoreY)
+
+        '    ' Draw left paddle score
+        '    g.DrawString(model.LeftPlayerName, hudLabelFont, labelBrush, leftLabelX, labelY)
+        '    g.DrawString(model.ScoreLeft.ToString(), hudScoreFont, scoreBrush, leftScoreX, scoreY)
+
+        'End If
 
 
-        'scoreY = form.ClientSize.Height / 20
 
 
-        ' Draw
-        g.DrawString(model.LeftPlayerName, hudLabelFont, labelBrush, leftLabelX, labelY)
-        g.DrawString(model.RightPlayerName, hudLabelFont, labelBrush, rightLabelX, labelY)
+        If model.State <> GameState.EndScreen Then
+            ' Thi is NOT the end screen so don't fade
 
-        g.DrawString(model.ScoreLeft.ToString(), hudScoreFont, scoreBrush, leftScoreX, scoreY)
-        g.DrawString(model.ScoreRight.ToString(), hudScoreFont, scoreBrush, rightScoreX, scoreY)
+            ' Draw right paddle score
+            g.DrawString(model.RightPlayerName, hudLabelFont, labelBrush, rightLabelX, labelY)
+            g.DrawString(model.ScoreRight.ToString(), hudScoreFont, scoreBrush, rightScoreX, scoreY)
+
+            ' Draw left paddle score
+            g.DrawString(model.LeftPlayerName, hudLabelFont, labelBrush, leftLabelX, labelY)
+            g.DrawString(model.ScoreLeft.ToString(), hudScoreFont, scoreBrush, leftScoreX, scoreY)
+
+        Else
+            ' This is the end so fade in and out
+
+            Dim scoreAlphaColor As Color = Color.FromArgb(fadeAlpha, Color.White)
+            Dim labelAlphaColor As Color = Color.FromArgb(fadeAlpha, Color.Gray)
+
+            ' Who won?
+            If model.WinnerIs = 1 Then
+                ' Left paddle won
+
+                ' Fade left paddle score in and out
+                Using scoreAlphaBrush As New SolidBrush(scoreAlphaColor)
+                    g.DrawString(model.ScoreLeft.ToString(), hudScoreFont, scoreAlphaBrush, leftScoreX, scoreY)
+                End Using
+
+                ' Fade laft paddle label in and out
+                Using labelAlphaBrush As New SolidBrush(labelAlphaColor)
+                    g.DrawString(model.LeftPlayerName, hudLabelFont, labelAlphaBrush, leftLabelX, labelY)
+                End Using
+
+                ' Draw right paddle - No fade
+                g.DrawString(model.RightPlayerName, hudLabelFont, labelBrush, rightLabelX, labelY)
+                g.DrawString(model.ScoreRight.ToString(), hudScoreFont, scoreBrush, rightScoreX, scoreY)
+
+            Else
+                ' Right paddle won
+
+                ' Fade right paddle score in and out
+                Using scoreAlphaBrush As New SolidBrush(scoreAlphaColor)
+                    g.DrawString(model.ScoreRight.ToString(), hudScoreFont, scoreAlphaBrush, rightScoreX, scoreY)
+                End Using
+
+                ' Fade right paddle label in and out
+                Using labelAlphaBrush As New SolidBrush(labelAlphaColor)
+                    g.DrawString(model.RightPlayerName, hudLabelFont, labelAlphaBrush, rightLabelX, labelY)
+                End Using
+
+                ' Draw left paddle - No fade
+                g.DrawString(model.LeftPlayerName, hudLabelFont, labelBrush, leftLabelX, labelY)
+                g.DrawString(model.ScoreLeft.ToString(), hudScoreFont, scoreBrush, leftScoreX, scoreY)
+
+            End If
+
+
+        End If
+
 
     End Sub
 
 
-    Private Sub DrawGamePlayScreen(g As Graphics)
+
+    Private Sub DrawGamePlayScreen(g As Graphics, model As GameModel)
         DrawTrail(g)
-        DrawBall(g)
-        DrawPaddles(g)
-        DrawHUD(g)
+        DrawBall(g, model)
+        DrawPaddles(g, model)
+        DrawHUD(g, model)
     End Sub
 
 
     Private Sub DrawStartScreen(g As Graphics, settings As SettingsManager)
-        Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
+
+
+
+        Dim titleColor As Color = Color.FromArgb(fadeAlpha, 255, 255, 255)
 
         Using titleBrush As New SolidBrush(titleColor)
             g.DrawString("PONG", startTitleFont, titleBrush, startTitleX, startTitleY)
         End Using
+
+
+
+
 
         Dim opt1Brush As SolidBrush = If(settings.GetNumberOfPlayersSelection = 0, whiteBrush, grayBrush)
         Dim opt2Brush As SolidBrush = If(settings.GetNumberOfPlayersSelection = 1, whiteBrush, grayBrush)
@@ -977,17 +1197,17 @@ Public Class Rendering
 
 
     Public Sub UpdateStartScreenFX()
-        If titleFadeIn Then
-            titleAlpha += 2
-            If titleAlpha >= 255 Then
-                titleAlpha = 255
-                titleFadeIn = False
+        If alphaFadeIn Then
+            fadeAlpha += 2
+            If fadeAlpha >= 255 Then
+                fadeAlpha = 255
+                alphaFadeIn = False
             End If
         Else
-            titleAlpha -= 2
-            If titleAlpha <= 64 Then
-                titleAlpha = 64
-                titleFadeIn = True
+            fadeAlpha -= 2
+            If fadeAlpha <= 64 Then
+                fadeAlpha = 64
+                alphaFadeIn = True
             End If
         End If
 
@@ -1040,7 +1260,7 @@ Public Class Rendering
 
 
     Private Sub DrawAIDifficultyScreen(g As Graphics, settings As SettingsManager)
-        Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
+        Dim titleColor As Color = Color.FromArgb(fadeAlpha, 255, 255, 255)
 
         Using titleBrush As New SolidBrush(titleColor)
             g.DrawString("Difficulty", aiTitleFont, titleBrush, aiTitleX, aiTitleY)
@@ -1079,9 +1299,9 @@ Public Class Rendering
         End If
     End Sub
 
-    Private Sub DrawGameOver(g As Graphics, match As MatchManager, form As Form)
+    Private Sub DrawGameOver(g As Graphics, match As MatchManager, form As Form, model As GameModel)
         Dim titleSize = g.MeasureString(model.WinnerText, gameOverFont)
-        Dim titleColor As Color = Color.FromArgb(titleAlpha, 255, 255, 255)
+        Dim titleColor As Color = Color.FromArgb(fadeAlpha, 255, 255, 255)
 
         Using titleBrush As New SolidBrush(titleColor)
             g.DrawString(model.WinnerText, gameOverFont, titleBrush,

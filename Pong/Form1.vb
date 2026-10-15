@@ -101,9 +101,9 @@ Public Class Form1
     ' -------------------------------
     Private rng As New Random()
 
-    Private audio As AudioController
 
-    Private model As New GameModel(Me.ClientSize)
+    'Private model As New GameModel(Me.ClientSize)
+
 
 
     Private WithEvents AudioRestartTimer As Timer
@@ -123,27 +123,30 @@ Public Class Form1
     'Private hdSize As New Size(1280, 720)
     'Private fhdSize As New Size(1920, 1080)
 
+    Private model As New GameModel(ClientSize)
 
-
-    Public renderer As New Rendering(Me, model, renderer, settings, state, audio, window, physics)
-
-    Private input As New InputManager(Me, model, renderer, settings, state, audio, window, physics)
+    Private window As New WindowManager()
 
     Private settings As New SettingsManager()
 
+    Private audio As New AudioController
 
-    Private state As New GameStateManager()
+    Private match As New MatchManager
 
+    Public renderer As New Rendering()
 
-    Private match As MatchManager
+    Private physics As New PhysicsEngine(model, audio, renderer, Me, match, window)
+
+    'Private state As New GameStateManager(model, audio, renderer, Me, physics)
+
+    Private input As New InputManager(model)
+
 
     Private resource As New ResourceManager()
 
 
-    Private window As New WindowManager(Me, model, renderer)
 
 
-    Private physics As New PhysicsEngine(model, audio, renderer, state, Me, settings, match)
 
 
     ' ===============================
@@ -153,16 +156,36 @@ Public Class Form1
     Protected Overrides Sub OnLoad(e As EventArgs)
         MyBase.OnLoad(e)
 
-        resource.CreateAudioFilesAsNeeded()
 
-        audio = New AudioController(model)
+        'model = New GameModel(Me.ClientSize)
 
-        match = New MatchManager(Me, model, renderer, settings, state, audio, window, physics)
-
-
-        physics = New PhysicsEngine(model, audio, renderer, state, Me, settings, match)
+        'window = New WindowManager(Me, model)
 
 
+        'audio = New AudioController()
+
+
+        'physics = New PhysicsEngine(model, audio, renderer, Me, match, window)
+
+
+        'match = New MatchManager()
+
+        'renderer = New Rendering(Me, model, audio, window)
+
+        'physics = New PhysicsEngine(model, audio, renderer, Me, match, window)
+
+        'state = New GameStateManager(model, audio, renderer, Me, physics)
+
+        'input = New InputManager(model, state)
+
+
+
+
+
+
+        renderer.InitGraphics(Me, model)
+        'renderer.InitTrails()
+        'renderer.
 
         InitWindow()
         'InitPhysicsTimer()
@@ -182,7 +205,8 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        ScaleBallDiameter()
+
+        'ScaleBallDiameter()
         Me.WindowState = FormWindowState.Maximized
     End Sub
 
@@ -252,7 +276,7 @@ Public Class Form1
         MyBase.OnPaint(e)
 
         renderer.UpdateFPS()
-        renderer.Render(e.Graphics, model.State, settings, match, Me)
+        renderer.Render(e.Graphics, model.State, settings, match, Me, model)
 
     End Sub
 
@@ -266,7 +290,7 @@ Public Class Form1
     Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
         MyBase.OnKeyDown(e)
 
-        input.OnKeyDown(e, Me, settings, state, match, audio, window)
+        input.OnKeyDown(e, Me, settings, match, audio, window, renderer, physics, model)
 
     End Sub
 
@@ -279,7 +303,7 @@ Public Class Form1
 
     Private Sub Form1_MouseClick(sender As Object, e As MouseEventArgs) Handles Me.MouseClick
 
-        input.OnMouseClick(e, settings, state, Me, match, audio)
+        input.OnMouseClick(e, settings, Me, match, audio, renderer, window, physics, model)
 
     End Sub
 
@@ -291,13 +315,13 @@ Public Class Form1
 
     Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
 
-        input.OnMouseMove(e, renderer, settings, state, Me, audio)
+        input.OnMouseMove(e, renderer, settings, Me, audio)
 
     End Sub
 
     Private Sub Form1_MouseWheel(sender As Object, e As MouseEventArgs) Handles Me.MouseWheel
 
-        input.OnMouseWheel(e, settings, state, Me, audio)
+        input.OnMouseWheel(e, settings, Me, audio)
 
     End Sub
 
@@ -307,7 +331,7 @@ Public Class Form1
 
     Private Sub AudioRestartTimer_Tick(sender As Object, e As EventArgs) Handles AudioRestartTimer.Tick
         'RestartAudioEngine()
-        audio.RestartAudioEngine(state)
+        audio.RestartAudioEngine(model)
     End Sub
 
     Private Sub InvalidateForm()
@@ -324,17 +348,19 @@ Public Class Form1
 
         If Me.WindowState = FormWindowState.Minimized Then Return
 
+
+        renderer.OnResize(Me, model, physics)
+
         'renderer.UpdateFormState(Me.FormBorderStyle, ClientSize)
-        model.ClientSize = ClientSize
 
-
-        ' -------------------------------
-        ' Scale ball + speed
-        ' -------------------------------
-        ScaleBallDiameter()
-        'renderer.UpdateBallDiameter(ballDiameter)
-        ScaleBallSpeed4State()
-        ScalePaddleSpeed()
+        'model.ClientSize = ClientSize
+        '' -------------------------------
+        '' Scale ball + speed
+        '' -------------------------------
+        'ScaleBallDiameter()
+        ''renderer.UpdateBallDiameter(ballDiameter)
+        'ScaleBallSpeed4State()
+        'ScalePaddleSpeed()
 
         ' -------------------------------
         ' Scale paddles
@@ -349,8 +375,11 @@ Public Class Form1
         'Dim paddleLeft As Rectangle = model.PaddleLeft
         'Dim paddleRight As Rectangle = model.PaddleHeight
 
-        model.PaddleHeight = model.ClientSize.Height / 8
-        model.PaddleWidth = model.ClientSize.Height / 25
+
+        'renderer.RescalePaddles(ClientSize)
+
+        'model.PaddleHeight = model.ClientSize.Height / 8
+        'model.PaddleWidth = model.ClientSize.Height / 25
 
 
 
@@ -359,10 +388,10 @@ Public Class Form1
 
         'model.PaddleLeft.X = model.ClientSize.Height / 25
 
-        model.PaddleLeft = New Rectangle(model.ClientSize.Height / 25,
-                                        (model.ClientSize.Height - model.PaddleHeight) / 2,
-                                         model.PaddleWidth,
-                                         model.PaddleHeight)
+        'model.LeftPaddleRect = New Rectangle(model.ClientSize.Height / 25,
+        '                                (model.ClientSize.Height - model.PaddleHeight) / 2,
+        '                                 model.PaddleWidth,
+        '                                 model.PaddleHeight)
 
 
 
@@ -370,24 +399,24 @@ Public Class Form1
 
 
 
-        model.PaddleRight = New Rectangle(model.ClientSize.Width - model.ClientSize.Height / 25 - model.PaddleWidth,
-                                         (model.ClientSize.Height - model.PaddleHeight) / 2,
-                                         model.PaddleWidth,
-                                         model.PaddleHeight)
+        'model.RightPaddleRect = New Rectangle(model.ClientSize.Width - model.ClientSize.Height / 25 - model.PaddleWidth,
+        '                                 (model.ClientSize.Height - model.PaddleHeight) / 2,
+        '                                 model.PaddleWidth,
+        '                                 model.PaddleHeight)
 
         'renderer.UpdatePaddlePositions(paddleLeft.Y, paddleRight.Y, ClientSize)
 
-        physics.ResetPaddles()
-        physics.CenterBall()
+        'physics.ResetPaddles()
+        'physics.CenterBall()
 
-        ' -------------------------------
-        ' Preserve ball direction
-        ' -------------------------------
-        If model.State = GameState.Playing OrElse model.State = GameState.Pause Then
-            physics.ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
-        Else
-            physics.MoveBallRandom()
-        End If
+        '' -------------------------------
+        '' Preserve ball direction
+        '' -------------------------------
+        'If model.State = GameState.Playing OrElse model.State = GameState.Pause Then
+        '    physics.ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
+        'Else
+        '    physics.MoveBallRandom()
+        'End If
 
         ' -------------------------------
         ' Clear trail safely (no resizing)
@@ -396,19 +425,19 @@ Public Class Form1
 
         'renderer.UpdateBallPosition(ballPos)
 
-        renderer.UpdateTrail()
+        'renderer.UpdateTrail(model)
 
-        renderer.ClearTrail()
+        'renderer.ClearTrail()
 
-        ' -------------------------------
-        ' Rescale fonts
-        ' -------------------------------
-        renderer.RescaleFonts()
+        '' -------------------------------
+        '' Rescale fonts
+        '' -------------------------------
+        'renderer.RescaleFonts(Me)
 
-        ' -------------------------------
-        ' AI difficulty scaling
-        ' -------------------------------
-        model.AIDifficultyScale = ClientSize.Height / 1080.0
+        '' -------------------------------
+        '' AI difficulty scaling
+        '' -------------------------------
+        'model.AIDifficultyScale = ClientSize.Height / 1080.0
 
 
 
@@ -464,7 +493,7 @@ Public Class Form1
 
         'Me.WindowState = FormWindowState.Normal
 
-        window.InitWindow()
+        window.InitWindow(Me)
     End Sub
 
     'Private Sub InitPhysicsTimer()
@@ -480,18 +509,19 @@ Public Class Form1
     'End Sub
 
     Private Sub InitGameplay()
-        InitPaddles()
+        'InitPaddles()
+        'renderer.InitPaddles(ClientSize)
         'InitPhysics()
         physics.Start()
     End Sub
 
     Private Sub InitPaddles()
-        model.PaddleLeft = New Rectangle(50,
+        model.LeftPaddleRect = New Rectangle(50,
                                   (ClientSize.Height - model.PaddleHeight) / 2,
                                    model.PaddleWidth,
                                    model.PaddleHeight)
 
-        model.PaddleRight = New Rectangle(ClientSize.Width - 50 - model.PaddleWidth,
+        model.RightPaddleRect = New Rectangle(ClientSize.Width - 50 - model.PaddleWidth,
                                    (ClientSize.Height - model.PaddleHeight) / 2,
                                     model.PaddleWidth,
                                     model.PaddleHeight)
@@ -502,18 +532,17 @@ Public Class Form1
     'End Sub
 
     Private Sub InitBall()
-        ScaleBallDiameter()
+        renderer.ScaleBall(model)
         physics.CenterBall()
         physics.MoveBallRandom()
     End Sub
 
     Private Sub InitAudio()
 
-        'resource.CreateAudioFilesAsNeeded()
+        resource.CreateAudioFilesAsNeeded()
 
-        'audio = New AudioController()
+        audio.InitAudio()
 
-        'physics = New PhysicsEngine(model, audio, renderer, state)
 
         InitAudioRestartTimer()
 
@@ -538,37 +567,37 @@ Public Class Form1
     Private Sub UpdatePaddles(dt As Double)
 
         Dim paddleSpeed As Double = model.PaddleSpeed
-        Dim paddle = model.PaddleLeft
+        Dim paddle = model.LeftPaddleRect
 
         If model.LeftPaddleUp Then paddle.Y -= CSng(paddleSpeed * dt)
         If model.LeftPaddleDown Then paddle.Y += CSng(paddleSpeed * dt)
 
-        model.PaddleLeft = paddle
+        model.LeftPaddleRect = paddle
 
 
 
 
         If model.PlayerMode = 2 Then
 
-            paddle = model.PaddleRight
+            paddle = model.RightPaddleRect
 
 
             If model.RightPaddleUp Then paddle.Y -= CSng(paddleSpeed * dt)
             If model.RightPaddleDown Then paddle.Y += CSng(paddleSpeed * dt)
 
-            model.PaddleRight = paddle
+            model.RightPaddleRect = paddle
 
 
         End If
 
-        paddle = model.PaddleLeft
-        paddle.Y = Math.Max(0, Math.Min(ClientSize.Height - model.PaddleHeight, model.PaddleLeft.Y))
-        model.PaddleLeft = paddle
+        paddle = model.LeftPaddleRect
+        paddle.Y = Math.Max(0, Math.Min(ClientSize.Height - model.PaddleHeight, model.LeftPaddleRect.Y))
+        model.LeftPaddleRect = paddle
 
 
-        paddle = model.PaddleRight
-        paddle.Y = Math.Max(0, Math.Min(ClientSize.Height - model.PaddleHeight, model.PaddleRight.Y))
-        model.PaddleRight = paddle
+        paddle = model.RightPaddleRect
+        paddle.Y = Math.Max(0, Math.Min(ClientSize.Height - model.PaddleHeight, model.RightPaddleRect.Y))
+        model.RightPaddleRect = paddle
 
         'renderer.UpdatePaddlePositions(model.PaddleLeft.Y, model.PaddleRight.Y, ClientSize)
 
@@ -794,62 +823,62 @@ Public Class Form1
     '    velY = Math.Sin(angle) * speed
     'End Sub
 
-    Private Sub ScaleBallSpeed4State()
+    'Private Sub ScaleBallSpeed4State()
 
-        If model.State = GameState.StartScreen OrElse
-           model.State = GameState.EndScreen OrElse
-           model.State = GameState.AIDifficulty Then
+    '    If model.State = GameState.StartScreen OrElse
+    '       model.State = GameState.EndScreen OrElse
+    '       model.State = GameState.AIDifficulty Then
 
-            model.BallSpeed = 200 * (ClientSize.Height / 1080.0)
+    '        model.BallSpeed = 200 * (ClientSize.Height / 1080.0)
 
-        Else
+    '    Else
 
-            model.BallSpeed = 800 * (ClientSize.Height / 1080.0)
+    '        model.BallSpeed = 800 * (ClientSize.Height / 1080.0)
 
-        End If
+    '    End If
 
-    End Sub
+    'End Sub
 
-    Private Sub ScalePaddleSpeed()
-        model.PaddleSpeed = CInt(400 * Math.Sqrt(ClientSize.Height / 1080.0))
-    End Sub
+    'Private Sub ScalePaddleSpeed()
+    '    model.PaddleSpeed = CInt(400 * Math.Sqrt(ClientSize.Height / 1080.0))
+    'End Sub
 
     Private Sub ScaleBallDiameter()
         model.BallDiameter = CInt(ClientSize.Height / 18.0F)
     End Sub
 
-    Public Sub SetAIModeFactor()
-        Select Case settings.GetAIDifficultySelection()
-            Case AIDifficultyLevel.Easy : model.AIModeFactor = 0.5
-            Case AIDifficultyLevel.Normal : model.AIModeFactor = 0.5599
-            Case AIDifficultyLevel.Hard : model.AIModeFactor = 0.5999
-        End Select
-    End Sub
+    'Public Sub SetAIModeFactor()
+    '    Select Case settings.GetAIDifficultySelection()
+    '        Case AIDifficultyLevel.Easy : model.AIModeFactor = 0.5
+    '        Case AIDifficultyLevel.Normal : model.AIModeFactor = 0.5599
+    '        Case AIDifficultyLevel.Hard : model.AIModeFactor = 0.5999
+    '    End Select
+    'End Sub
 
-    Public Sub Quit2StartScreen()
+    'Public Sub Quit2StartScreen()
 
-        Audio.FadeOutAndStopPausedLoop(600)
+    '    Audio.FadeOutAndStopPausedLoop(600)
 
-        model.BallSpeed = 200 * (ClientSize.Height / 1080.0)
-        model.WinnerText = String.Empty
-
-
-        model.ScoreLeft = 0
-        model.ScoreRight = 0
-
-        renderer.UpdateScore(model.ScoreLeft, model.ScoreRight)
+    '    model.BallSpeed = 200 * (ClientSize.Height / 1080.0)
+    '    model.WinnerText = String.Empty
 
 
-        physics.CenterBall()
-        physics.MoveBallRandom()
+    '    model.ScoreLeft = 0
+    '    model.ScoreRight = 0
 
-        model.State = GameState.StartScreen
+    '    renderer.UpdateScore(model.ScoreLeft, model.ScoreRight, Me, model)
 
-        physics.Start()
 
-        audio.PlayStartLoop(600)
+    '    physics.CenterBall()
+    '    physics.MoveBallRandom()
 
-    End Sub
+    '    model.State = GameState.StartScreen
+
+    '    physics.Start()
+
+    '    audio.PlayStartLoop(600)
+
+    'End Sub
 
 
     Public Sub QuitGame()
@@ -917,85 +946,85 @@ Public Class Form1
 
     'End Sub
 
-    Public Sub PauseGame()
+    'Public Sub PauseGame()
 
-        physics.StopTimer()
+    '    physics.StopTimer()
 
-        audio.FadeOutAndStopGamePlayLoop(600)
+    '    audio.FadeOutAndStopGamePlayLoop(600)
 
-        model.LeftPaddleUp = False
-        model.LeftPaddleDown = False
-        model.RightPaddleUp = False
-        model.RightPaddleDown = False
+    '    model.LeftPaddleUp = False
+    '    model.LeftPaddleDown = False
+    '    model.RightPaddleUp = False
+    '    model.RightPaddleDown = False
 
-        settings.SetPauseMenuSelection(0) ' Resume game
+    '    settings.SetPauseMenuSelection(0) ' Resume game
 
-        window.MovePointerCenterScreen()
+    '    window.MovePointerCenterScreen()
 
-        model.State = GameState.Pause
+    '    model.State = GameState.Pause
 
-        audio.PlayPausedLoop(600)
+    '    audio.PlayPausedLoop(600)
 
-    End Sub
+    'End Sub
 
-    Public Sub ResumeGame()
+    'Public Sub ResumeGame()
 
-        audio.FadeOutAndStopPausedLoop(600)
+    '    audio.FadeOutAndStopPausedLoop(600)
 
-        window.MovePointerOffScreen()
+    '    window.MovePointerOffScreen()
 
-        model.State = GameState.Playing
+    '    model.State = GameState.Playing
 
-        physics.Start()
+    '    physics.Start()
 
-        audio.PlayGamePlayLoop(600)
+    '    audio.PlayGamePlayLoop(600)
 
-    End Sub
+    'End Sub
 
-    Public Sub StartNewMatch()
+    'Public Sub StartNewMatch()
 
-        audio.FadeOutAndStopStartLoop(600)
+    '    audio.FadeOutAndStopStartLoop(600)
 
-        audio.FadeOutAndStopPausedLoop(600)
+    '    audio.FadeOutAndStopPausedLoop(600)
 
-        window.MovePointerOffScreen()
+    '    window.MovePointerOffScreen()
 
-        model.BallSpeed = 800 * (ClientSize.Height / 1080.0)
+    '    model.BallSpeed = 800 * (ClientSize.Height / 1080.0)
 
 
 
-        model.ScoreLeft = 0
-        model.ScoreRight = 0
+    '    model.ScoreLeft = 0
+    '    model.ScoreRight = 0
 
-        renderer.UpdateScore(model.ScoreLeft, model.ScoreRight)
+    '    renderer.UpdateScore(model.ScoreLeft, model.ScoreRight, Me, model)
 
-        'renderer.UpdateScore(model.ScoreLeft, model.ScoreRight, Me.CreateGraphics(), ClientSize)
+    '    'renderer.UpdateScore(model.ScoreLeft, model.ScoreRight, Me.CreateGraphics(), ClientSize)
 
-        If model.PlayerMode = 1 Then
+    '    If model.PlayerMode = 1 Then
 
-            model.LeftPlayerName = "You"
-            model.RightPlayerName = "CPU"
-            renderer.UpdatePlayerNames(model.LeftPlayerName, model.RightPlayerName)
+    '        model.LeftPlayerName = "You"
+    '        model.RightPlayerName = "CPU"
+    '        renderer.UpdatePlayerNames(model.LeftPlayerName, model.RightPlayerName, Me, model)
 
-        Else
+    '    Else
 
-            model.LeftPlayerName = "Left"
-            model.RightPlayerName = "Right"
-            renderer.UpdatePlayerNames(model.LeftPlayerName, model.RightPlayerName)
+    '        model.LeftPlayerName = "Left"
+    '        model.RightPlayerName = "Right"
+    '        renderer.UpdatePlayerNames(model.LeftPlayerName, model.RightPlayerName, Me, model)
 
-        End If
+    '    End If
 
-        physics.ResetPaddles()
-        physics.CenterBall()
-        physics.ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
+    '    physics.ResetPaddles()
+    '    physics.CenterBall()
+    '    physics.ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
 
-        model.State = GameState.Playing
+    '    model.State = GameState.Playing
 
-        physics.Start()
+    '    physics.Start()
 
-        audio.PlayGamePlayLoop(600)
+    '    audio.PlayGamePlayLoop(600)
 
-    End Sub
+    'End Sub
 
 
     'Public Sub MovePointerOffScreen()

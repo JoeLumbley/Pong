@@ -22,6 +22,8 @@ Public Class ResourceManager
         CreateFileFromResource(Path.Combine(Application.StartupPath, "pause.mp3"), My.Resources.Resource1.PauseLoop)
         CreateFileFromResource(Path.Combine(Application.StartupPath, "fullscreen.mp3"), My.Resources.Resource1.FullScreen)
         CreateFileFromResource(Path.Combine(Application.StartupPath, "exit.mp3"), My.Resources.Resource1.ExitSound2)
+        CreateFileFromResource(Path.Combine(Application.StartupPath, "paddlereturn.mp3"), My.Resources.Resource1.paddlereturn)
+
 
     End Sub
 

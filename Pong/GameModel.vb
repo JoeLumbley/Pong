@@ -35,8 +35,8 @@ Public Class GameModel
     ' ============================================================
     ' PADDLES
     ' ============================================================
-    Public Property PaddleLeft As Rectangle
-    Public Property PaddleRight As Rectangle
+    Public Property LeftPaddleRect As Rectangle
+    Public Property RightPaddleRect As Rectangle
 
     Public Property PaddleWidth As Integer = 32
     Public Property PaddleHeight As Integer = 128
@@ -61,6 +61,9 @@ Public Class GameModel
     Public Property ScoreRight As Integer = 0
 
     Public Property WinnerText As String = ""
+
+    Public Property WinnerIs As Integer = 0
+
 
     ' ============================================================
     ' AI DIFFICULTY
@@ -101,12 +104,12 @@ Public Class GameModel
         ClientSize = initialClientSize
 
         ' Initialize paddles centered
-        PaddleLeft = New Rectangle(50,
+        LeftPaddleRect = New Rectangle(50,
                                    (ClientSize.Height - PaddleHeight) \ 2,
                                    PaddleWidth,
                                    PaddleHeight)
 
-        PaddleRight = New Rectangle(ClientSize.Width - 50 - PaddleWidth,
+        RightPaddleRect = New Rectangle(ClientSize.Width - 50 - PaddleWidth,
                                     (ClientSize.Height - PaddleHeight) \ 2,
                                     PaddleWidth,
                                     PaddleHeight)

@@ -10,14 +10,14 @@ Public Class WindowManager
 
     Private Const DWMWA_USE_IMMERSIVE_DARK_MODE As Integer = 20
 
-    Private ReadOnly form As Form
-    Private ReadOnly model As GameModel
-    Private ReadOnly renderer As Rendering
+    'Private ReadOnly form As Form
+    'Private ReadOnly model As GameModel
+    'Private ReadOnly renderer As Rendering
 
-    Public Sub New(form As Form, model As GameModel, renderer As Rendering)
-        Me.form = form
-        Me.model = model
-        Me.renderer = renderer
+    Public Sub New()
+        'Me.form = form
+        'Me.model = model
+        'Me.renderer = renderer
     End Sub
 
 
@@ -26,7 +26,7 @@ Public Class WindowManager
     '  Initialize Window
     ' ==========================
 
-    Public Sub InitWindow()
+    Public Sub InitWindow(form As Form)
         form.Text = "PONG - Code with Joe"
 
         'form.SetStyle(ControlStyles.AllPaintingInWmPaint Or
@@ -60,7 +60,7 @@ Public Class WindowManager
     ' ==========================
 
 
-    Public Sub ToggleFullScreen()
+    Public Sub ToggleFullScreen(form As Form)
 
         ' Are we in fullscreen mode?
         If form.FormBorderStyle = FormBorderStyle.None Then
@@ -78,7 +78,7 @@ Public Class WindowManager
             'Dim centerY As Integer = (screenBounds.Height - form.Height) \ 2
             'form.Location = New Point(centerX, centerY)
 
-            CenterWindow()
+            CenterWindow(form)
 
         Else
             ' No, we are NOT in fullscreen
@@ -95,7 +95,7 @@ Public Class WindowManager
             'Dim centerY As Integer = (screenBounds.Height - form.Height) \ 2
             'form.Location = New Point(centerX, centerY)
 
-            CenterWindow()
+            CenterWindow(form)
 
             form.WindowState = FormWindowState.Maximized
 
@@ -106,7 +106,7 @@ Public Class WindowManager
     ' ============================================================
     ' WINDOW CENTERING
     ' ============================================================
-    Private Sub CenterWindow()
+    Private Sub CenterWindow(form As Form)
         Dim bounds As Rectangle = Screen.PrimaryScreen.WorkingArea
         Dim x As Integer = (bounds.Width - form.Width) \ 2
         Dim y As Integer = (bounds.Height - form.Height) \ 2

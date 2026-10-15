@@ -15,7 +15,7 @@ Public Class AudioController
     Private lastPlay As New Dictionary(Of String, Integer)
 
 
-    Private ReadOnly model As GameModel
+    'Private ReadOnly model As GameModel
 
 
 
@@ -31,14 +31,14 @@ Public Class AudioController
 
 
 
-    Public Sub New(model As GameModel)
-        InitAudio()
+    Public Sub New()
+        'InitAudio()
 
-        Me.model = model
+        'Me.model = model
     End Sub
 
 
-    Private Sub InitAudio()
+    Public Sub InitAudio()
 
         Audio = New AudioPlayer()
 
@@ -57,13 +57,17 @@ Public Class AudioController
         ' Overlapping SFX
         ' ---------------------------------------------------------
         Audio.AddOverlapping("bounce", Path.Combine(Application.StartupPath, "bounce.mp3"))
-        Audio.SetVolumeOverlapping("bounce", 200)
+        Audio.SetVolumeOverlapping("bounce", 1000)
 
         Audio.AddOverlapping("arrow_up", Path.Combine(Application.StartupPath, "arrow_up.mp3"))
         Audio.SetVolumeOverlapping("arrow_up", 250)
 
         Audio.AddOverlapping("arrow_down", Path.Combine(Application.StartupPath, "arrow_down.mp3"))
         Audio.SetVolumeOverlapping("arrow_down", 200)
+
+        Audio.AddOverlapping("paddlereturn", Path.Combine(Application.StartupPath, "paddlereturn.mp3"))
+        Audio.SetVolumeOverlapping("paddlereturn", 200)
+
 
         ' ---------------------------------------------------------
         ' Single‑instance SFX
@@ -95,7 +99,7 @@ Public Class AudioController
 
     End Sub
 
-    Public Sub RestartAudioEngine(state As GameStateManager)
+    Public Sub RestartAudioEngine(model As GameModel)
 
         FadeOutAndStopActiveLoops(600)
 
@@ -120,7 +124,7 @@ Public Class AudioController
                                LoadAndRegisterSounds()
 
                                ' Restore loops based on game state
-                               RestartLoops(state)
+                               RestartLoops(model)
                            End Sub
 
         t.Start()
@@ -140,7 +144,7 @@ Public Class AudioController
         End If
     End Sub
 
-    Private Sub RestartLoops(state As GameStateManager)
+    Private Sub RestartLoops(model As GameModel)
 
         Select Case model.State
 

@@ -151,6 +151,9 @@
   <data name="hit4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Music\hit4.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="paddlereturn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Music\paddlereturn.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="PauseLoop" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Music\PauseLoop.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -177,5 +180,14 @@
   </data>
   <data name="TechNoir" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Music\TechNoir.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="wallbounce" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Music\wallbounce.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="wopper" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Music\wopper.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="wopper2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Music\wopper2.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
