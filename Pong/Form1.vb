@@ -122,7 +122,7 @@ Public Class Form1
         MyBase.OnPaint(e)
 
         renderer.UpdateFPS()
-        renderer.Render(e.Graphics, model.State, settings, match, Me, model)
+        renderer.Render(e.Graphics, model.State, match, Me, model)
 
     End Sub
 
@@ -137,7 +137,7 @@ Public Class Form1
     Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
         MyBase.OnKeyDown(e)
 
-        input.OnKeyDown(e, Me, settings, match, audio, window, renderer, physics, model)
+        input.OnKeyDown(e, Me, match, audio, window, renderer, physics, model)
 
     End Sub
 
@@ -150,7 +150,7 @@ Public Class Form1
 
     Private Sub Form1_MouseClick(sender As Object, e As MouseEventArgs) Handles Me.MouseClick
 
-        input.OnMouseClick(e, settings, Me, match, audio, renderer, window, physics, model)
+        input.OnMouseClick(e, Me, match, audio, renderer, window, physics, model)
 
     End Sub
 
@@ -162,13 +162,13 @@ Public Class Form1
 
     Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
 
-        input.OnMouseMove(e, renderer, settings, Me, audio, model)
+        input.OnMouseMove(e, renderer, Me, audio, model)
 
     End Sub
 
     Private Sub Form1_MouseWheel(sender As Object, e As MouseEventArgs) Handles Me.MouseWheel
 
-        input.OnMouseWheel(e, settings, Me, audio, model)
+        input.OnMouseWheel(e, Me, audio, model)
 
     End Sub
 

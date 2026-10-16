@@ -68,7 +68,6 @@ Public Class InputManager
 
     Public Sub OnKeyDown(e As KeyEventArgs,
                          form As Form,
-                         settings As SettingsManager,
                          match As MatchManager,
                          audio As AudioController,
                          window As WindowManager,
@@ -138,7 +137,10 @@ Public Class InputManager
 
             'showKeyboardHints = Not showKeyboardHints
             'Form1.renderer.ToggleKeyboardHints()
-            settings.toggleShowKeyboardHints()
+            'settings.toggleShowKeyboardHints()
+            'model.ShowKeyboardHints = Not model.ShowKeyboardHints
+
+            toggleShowKeyboardHints(model)
 
             form.Invalidate()
 
@@ -152,29 +154,40 @@ Public Class InputManager
         Select Case model.State
 
             Case GameState.StartScreen
-                HandleStartScreenInput(e, settings, form, audio, renderer, match, window, physics, model)
+                HandleStartScreen_KeyDown(e, form, audio, renderer, match, window, physics, model)
                 Return
 
             Case GameState.EndScreen
-                HandleEndScreenInput(e, form, audio, model)
+                HandleEndScreen_KeyDown(e, form, audio, model)
                 Return
 
             Case GameState.Playing
-                HandleGameplayInput(e, settings, form, audio, match, window, physics, model)
+                HandleGameplay_KeyDown(e, form, audio, match, window, physics, model)
                 Return
 
             Case GameState.Pause
-                HandlePauseInput(e, settings, form, audio, window, physics, renderer, match, model)
+                HandlePause_KeyDown(e, form, audio, window, physics, renderer, match, model)
                 Return
 
             Case GameState.AIDifficulty
-                HandleAIDifficultyInput(e, form, settings, audio, match, window, model, physics, renderer)
+                HandleAIDifficulty_KeyDown(e, form, audio, match, window, model, physics, renderer)
                 Return
 
         End Select
 
 
     End Sub
+
+
+    Public Sub ToggleShowKeyboardHints(model As GameModel)
+
+        model.ShowKeyboardHints = Not model.ShowKeyboardHints
+
+    End Sub
+
+
+
+
 
     Public Sub OnKeyUp(e As KeyEventArgs,
                        model As GameModel)
@@ -192,7 +205,7 @@ Public Class InputManager
             sKeyDown = False
         End If
 
-        If model.PlayerMode = 2 Then
+        If model.PlayerMode = NumberOfPlayers.TwoPlayers Then
             If e.KeyCode = Keys.Up Then
                 model.RightPaddleUp = False
                 upKeyDown = False
@@ -261,7 +274,6 @@ Public Class InputManager
 
 
     Public Sub OnMouseClick(e As MouseEventArgs,
-                            settings As SettingsManager,
                             form As Form,
                             match As MatchManager,
                             audio As AudioController,
@@ -270,9 +282,9 @@ Public Class InputManager
                             physics As PhysicsEngine,
                             model As GameModel)
 
-        HandleAIDifficulty_MouseClick(e, settings, form, audio, match, window, model, physics, renderer)
-        HandleStartScreen_MouseClick(e, settings, form, audio, renderer, match, window, physics, model)
-        HandlePauseMenu_MouseClick(e, settings, form, audio, window, physics, renderer, match, model)
+        HandleAIDifficulty_MouseClick(e, form, audio, match, window, model, physics, renderer)
+        HandleStartScreen_MouseClick(e, form, audio, renderer, match, window, physics, model)
+        HandlePauseMenu_MouseClick(e, form, audio, window, physics, renderer, match, model)
         HandleEndScreen_MouseClick(e, form, audio, model)
 
     End Sub
@@ -285,35 +297,33 @@ Public Class InputManager
 
     Public Sub OnMouseMove(e As MouseEventArgs,
                            renderer As Rendering,
-                           settings As SettingsManager,
                            form As Form,
                            audio As AudioController,
                            model As GameModel)
 
-        HandleStartScreen_MouseMove(e, renderer, settings, form, audio, model)
-        HandleAIDifficulty_MouseMove(e, renderer, settings, form, audio, model)
-        HandlePauseMenu_MouseMove(e, renderer, settings, form, audio, model)
+        HandleStartScreen_MouseMove(e, renderer, form, audio, model)
+        HandleAIDifficulty_MouseMove(e, renderer, form, audio, model)
+        HandlePauseMenu_MouseMove(e, renderer, form, audio, model)
 
     End Sub
 
     Public Sub OnMouseWheel(e As MouseEventArgs,
-                            settings As SettingsManager,
                             form As Form,
                             audio As AudioController,
                             model As GameModel)
 
         If model.State = GameState.Pause Then
-            HandlePauseMouseWheel(e.Delta, settings, form, audio, model)
+            HandlePauseMouseWheel(e.Delta, form, audio, model)
             Return
         End If
 
         If model.State = GameState.StartScreen Then
-            HandleStartScreenMouseWheel(e.Delta, settings, form, audio)
+            HandleStartScreenMouseWheel(e.Delta, form, audio, model)
             Return
         End If
 
         If model.State = GameState.AIDifficulty Then
-            HandleAIDifficultyMouseWheel(e.Delta, settings, form, audio)
+            HandleAIDifficultyMouseWheel(e.Delta, form, audio, model)
             Return
         End If
 
@@ -323,8 +333,7 @@ Public Class InputManager
     '  KEYBOARD HANDLERS
     ' ===========================
 
-    Private Sub HandleStartScreenInput(e As KeyEventArgs,
-                                       settings As SettingsManager,
+    Private Sub HandleStartScreen_KeyDown(e As KeyEventArgs,
                                        form As Form,
                                        audio As AudioController,
                                        renderer As Rendering,
@@ -345,9 +354,9 @@ Public Class InputManager
                 If upKeyDown Then Return
                 upKeyDown = True
 
-                If settings.GetNumberOfPlayersSelection() <> NumberOfPlayers.OnePlayer Then
-                    settings.SetNumberOfPlayersSelection(NumberOfPlayers.OnePlayer)
-                    'renderer.SetStartMenuSelection(settings.GetNumberOfPlayersSelection())
+                If model.PlayerSelection <> NumberOfPlayers.OnePlayer Then
+
+                    model.PlayerSelection = NumberOfPlayers.OnePlayer
 
                     audio.PlayMenuUpSound()
                     form.Invalidate()
@@ -358,9 +367,9 @@ Public Class InputManager
                 If wKeyDown Then Return
                 wKeyDown = True
 
-                If settings.GetNumberOfPlayersSelection() <> NumberOfPlayers.OnePlayer Then
-                    settings.SetNumberOfPlayersSelection(NumberOfPlayers.OnePlayer)
-                    'renderer.SetStartMenuSelection(settings.GetNumberOfPlayersSelection())
+                If model.PlayerSelection <> NumberOfPlayers.OnePlayer Then
+
+                    model.PlayerSelection = NumberOfPlayers.OnePlayer
 
                     audio.PlayMenuUpSound()
                     form.Invalidate()
@@ -375,9 +384,9 @@ Public Class InputManager
                 If downKeyDown Then Return
                 downKeyDown = True
 
-                If settings.GetNumberOfPlayersSelection() <> NumberOfPlayers.TwoPlayers Then
-                    settings.SetNumberOfPlayersSelection(NumberOfPlayers.TwoPlayers)
-                    'renderer.SetStartMenuSelection(settings.GetNumberOfPlayersSelection())
+                If model.PlayerSelection <> NumberOfPlayers.TwoPlayers Then
+
+                    model.PlayerSelection = NumberOfPlayers.TwoPlayers
 
                     audio.PlayMenuDownSound()
                     form.Invalidate()
@@ -388,9 +397,9 @@ Public Class InputManager
                 If sKeyDown Then Return
                 sKeyDown = True
 
-                If settings.GetNumberOfPlayersSelection() <> NumberOfPlayers.TwoPlayers Then
-                    settings.SetNumberOfPlayersSelection(NumberOfPlayers.TwoPlayers)
-                    'renderer.SetStartMenuSelection(settings.GetNumberOfPlayersSelection())
+                If model.PlayerSelection <> NumberOfPlayers.TwoPlayers Then
+
+                    model.PlayerSelection = NumberOfPlayers.TwoPlayers
 
                     audio.PlayMenuDownSound()
                     form.Invalidate()
@@ -402,11 +411,13 @@ Public Class InputManager
         ' 2. Direct Selection via Number Keys (1 or 2)
         ' ============================================================
             Case Keys.D1, Keys.NumPad1
-                settings.SetNumberOfPlayersSelection(NumberOfPlayers.OnePlayer)
-                'renderer.SetStartMenuSelection(settings.GetNumberOfPlayersSelection())
 
-                model.PlayerMode = 1
-                renderer.SetPlayerMode(form, model.PlayerMode)
+
+                model.PlayerSelection = NumberOfPlayers.OnePlayer
+                model.PlayerMode = NumberOfPlayers.OnePlayer
+                renderer.CacheKeyboardHints(form, model)
+
+                'renderer.SetPlayerMode(form, model.PlayerMode)
 
                 model.State = GameState.AIDifficulty
 
@@ -415,11 +426,12 @@ Public Class InputManager
                 Return
 
             Case Keys.D2, Keys.NumPad2
-                settings.SetNumberOfPlayersSelection(NumberOfPlayers.TwoPlayers)
-                'renderer.SetStartMenuSelection(settings.GetNumberOfPlayersSelection())
 
-                model.PlayerMode = 2
-                renderer.SetPlayerMode(form, model.PlayerMode)
+                model.PlayerSelection = NumberOfPlayers.TwoPlayers
+                model.PlayerMode = NumberOfPlayers.TwoPlayers
+                renderer.CacheKeyboardHints(form, model)
+
+                'renderer.SetPlayerMode(form, model.PlayerMode)
 
                 'Form1.StartNewMatch()
                 match.StartNewMatch(audio, window, model, physics, renderer, form)
@@ -436,14 +448,23 @@ Public Class InputManager
                 If spaceKeyDown Then Return
                 spaceKeyDown = True
 
-                If settings.GetNumberOfPlayersSelection() = NumberOfPlayers.OnePlayer Then
-                    model.PlayerMode = 1
-                    renderer.SetPlayerMode(form, model.PlayerMode)
+                If model.PlayerSelection = NumberOfPlayers.OnePlayer Then
+
+                    'model.PlayerSelection = NumberOfPlayers.OnePlayer
+
+                    model.PlayerMode = NumberOfPlayers.OnePlayer
+                    renderer.CacheKeyboardHints(form, model)
+
+                    'renderer.SetPlayerMode(form, model.PlayerMode)
 
                     model.State = GameState.AIDifficulty
                 Else
-                    model.PlayerMode = 2
-                    renderer.SetPlayerMode(form, model.PlayerMode)
+                    'model.PlayerSelection = NumberOfPlayers.TwoPlayers
+
+                    model.PlayerMode = NumberOfPlayers.TwoPlayers
+                    renderer.CacheKeyboardHints(form, model)
+
+                    'renderer.SetPlayerMode(form, model.PlayerMode)
 
                     'Form1.StartNewMatch()
                     match.StartNewMatch(audio, window, model, physics, renderer, form)
@@ -458,14 +479,23 @@ Public Class InputManager
                 If enterKeyDown Then Return
                 enterKeyDown = True
 
-                If settings.GetNumberOfPlayersSelection() = NumberOfPlayers.OnePlayer Then
-                    model.PlayerMode = 1
-                    renderer.SetPlayerMode(form, model.PlayerMode)
+                If model.PlayerSelection = NumberOfPlayers.OnePlayer Then
+
+                    'model.PlayerSelection = NumberOfPlayers.OnePlayer
+
+                    model.PlayerMode = NumberOfPlayers.OnePlayer
+                    renderer.CacheKeyboardHints(form, model)
+
+                    'renderer.SetPlayerMode(form, model.PlayerMode)
 
                     model.State = GameState.AIDifficulty
                 Else
-                    model.PlayerMode = 2
-                    renderer.SetPlayerMode(form, model.PlayerMode)
+                    'model.PlayerSelection = NumberOfPlayers.TwoPlayers
+
+                    model.PlayerMode = NumberOfPlayers.TwoPlayers
+                    renderer.CacheKeyboardHints(form, model)
+
+                    'renderer.SetPlayerMode(form, model.PlayerMode)
 
                     'Form1.StartNewMatch()
                     match.StartNewMatch(audio, window, model, physics, renderer, form)
@@ -491,9 +521,8 @@ Public Class InputManager
 
     End Sub
 
-    Private Sub HandleAIDifficultyInput(e As KeyEventArgs,
+    Private Sub HandleAIDifficulty_KeyDown(e As KeyEventArgs,
                                         form As Form,
-                                        settings As SettingsManager,
                                         audio As AudioController,
                                         match As MatchManager,
                                         window As WindowManager,
@@ -513,9 +542,12 @@ Public Class InputManager
 
             If e.KeyCode = Keys.Up Then upKeyDown = True Else wKeyDown = True
 
-            If settings.GetAIDifficultySelection() > 0 Then
-                settings.SetAIDifficultySelection(settings.GetAIDifficultySelection() - 1)
-                renderer.SetAIDifficultySelection(settings.GetAIDifficultySelection())
+            'If settings.GetAIDifficultySelection() > 0 Then
+            '    settings.SetAIDifficultySelection(settings.GetAIDifficultySelection() - 1)
+            '    renderer.SetAIDifficultySelection(settings.GetAIDifficultySelection())
+            If model.AISelection > AIDifficultyLevel.Easy Then
+                model.AISelection -= 1
+                renderer.SetAIDifficultySelection(model.AISelection)
 
                 audio.PlayMenuUpSound()
                 form.Invalidate()
@@ -533,9 +565,12 @@ Public Class InputManager
 
             If e.KeyCode = Keys.Down Then downKeyDown = True Else sKeyDown = True
 
-            If settings.GetAIDifficultySelection() < settings.GetAIOptionsLength() - 1 Then
-                settings.SetAIDifficultySelection(settings.GetAIDifficultySelection() + 1)
-                renderer.SetAIDifficultySelection(settings.GetAIDifficultySelection())
+            'If settings.GetAIDifficultySelection() < settings.GetAIOptionsLength() - 1 Then
+            '    settings.SetAIDifficultySelection(settings.GetAIDifficultySelection() + 1)
+            '    renderer.SetAIDifficultySelection(settings.GetAIDifficultySelection())
+            If model.AISelection < AIDifficultyLevel.Hard Then
+                model.AISelection += 1
+                renderer.SetAIDifficultySelection(model.AISelection)
 
                 audio.PlayMenuDownSound()
                 form.Invalidate()
@@ -565,7 +600,11 @@ Public Class InputManager
 
         If directSelectDifficulty.HasValue Then
 
-            settings.SetAIDifficultySelection(directSelectDifficulty.Value)
+            'settings.SetAIDifficultySelection(directSelectDifficulty.Value)
+            model.AISelection = directSelectDifficulty.Value
+
+
+
             'Form1.renderer.SetAIDifficultySelection(settings.GetAIDifficultySelection())
 
             ' Update AI mode factor
@@ -626,8 +665,7 @@ Public Class InputManager
 
     End Sub
 
-    Private Sub HandleGameplayInput(e As KeyEventArgs,
-                                    settings As SettingsManager,
+    Private Sub HandleGameplay_KeyDown(e As KeyEventArgs,
                                     form As Form,
                                     audio As AudioController,
                                     match As MatchManager,
@@ -650,7 +688,7 @@ Public Class InputManager
         ' ============================================================
         ' 2. Paddle Movement (Right Player: Up/Down in 2‑Player mode)
         ' ============================================================
-        If model.PlayerMode = 2 Then
+        If model.PlayerMode = NumberOfPlayers.TwoPlayers Then
             If e.KeyCode = Keys.Up Then
                 model.RightPaddleUp = True
             End If
@@ -670,7 +708,7 @@ Public Class InputManager
 
             audio.PlaySelectSound()
             'Form1.PauseGame()
-            match.PauseGame(audio, window, physics, model, settings)
+            match.PauseGame(audio, window, physics, model)
 
             form.Invalidate()
             Return
@@ -682,7 +720,7 @@ Public Class InputManager
 
             audio.PlaySelectSound()
             'Form1.PauseGame()
-            match.PauseGame(audio, window, physics, model, settings)
+            match.PauseGame(audio, window, physics, model)
 
             form.Invalidate()
             Return
@@ -694,7 +732,7 @@ Public Class InputManager
 
             audio.PlaySelectSound()
             'Form1.PauseGame()
-            match.PauseGame(audio, window, physics, model, settings)
+            match.PauseGame(audio, window, physics, model)
 
 
             form.Invalidate()
@@ -712,7 +750,7 @@ Public Class InputManager
 
             audio.PlaySelectSound()
             'Form1.PauseGame()
-            match.PauseGame(audio, window, physics, model, settings)
+            match.PauseGame(audio, window, physics, model)
 
             form.Invalidate()
             Return
@@ -721,8 +759,7 @@ Public Class InputManager
 
     End Sub
 
-    Private Sub HandlePauseInput(e As KeyEventArgs,
-                                 settings As SettingsManager,
+    Private Sub HandlePause_KeyDown(e As KeyEventArgs,
                                  form As Form,
                                  audio As AudioController,
                                  window As WindowManager,
@@ -912,7 +949,7 @@ Public Class InputManager
 
     End Sub
 
-    Private Sub HandleEndScreenInput(e As KeyEventArgs,
+    Private Sub HandleEndScreen_KeyDown(e As KeyEventArgs,
                                      form As Form,
                                      audio As AudioController,
                                      model As GameModel)
@@ -974,7 +1011,6 @@ Public Class InputManager
     ' ===========================
 
     Private Sub HandleStartScreen_MouseClick(e As MouseEventArgs,
-                                             settings As SettingsManager,
                                              form As Form,
                                              audio As AudioController,
                                              renderer As Rendering,
@@ -988,16 +1024,22 @@ Public Class InputManager
         If mouseIsClicking Then Return
         mouseIsClicking = True
 
-        ' Ignore middle-click logic unless needed
+        ' Ignore middle-click logic unless needed`
         If e.Button = MouseButtons.Middle Then
-            If settings.GetNumberOfPlayersSelection = NumberOfPlayers.OnePlayer Then
-                model.PlayerMode = 1
-                renderer.SetPlayerMode(form, model.PlayerMode)
+            If model.PlayerSelection = NumberOfPlayers.OnePlayer Then
+                'model.PlayerSelection = NumberOfPlayers.OnePlayer
+                model.PlayerMode = NumberOfPlayers.OnePlayer
+                renderer.CacheKeyboardHints(form, model)
+
+                'renderer.SetPlayerMode(form, model.PlayerMode)
 
                 model.State = GameState.AIDifficulty
             Else
-                model.PlayerMode = 2
-                renderer.SetPlayerMode(form, model.PlayerMode)
+                'model.PlayerSelection = NumberOfPlayers.TwoPlayers
+                model.PlayerMode = NumberOfPlayers.TwoPlayers
+                renderer.CacheKeyboardHints(form, model)
+
+                'renderer.SetPlayerMode(form, model.PlayerMode)
 
                 model.State = GameState.Playing
                 'Form1.StartNewMatch()
@@ -1017,10 +1059,12 @@ Public Class InputManager
 
         ' One Player
         If Form1.renderer.OnePlayerOptionRect.Contains(e.Location) Then
-            settings.SetNumberOfPlayersSelection(NumberOfPlayers.OnePlayer)   ' ← update selection
+            model.PlayerSelection = NumberOfPlayers.OnePlayer   ' ← update selection
 
-            model.PlayerMode = 1
-            renderer.SetPlayerMode(form, model.PlayerMode)
+            model.PlayerMode = NumberOfPlayers.OnePlayer
+            renderer.CacheKeyboardHints(form, model)
+
+            'renderer.SetPlayerMode(form, model.PlayerMode)
 
             model.State = GameState.AIDifficulty
 
@@ -1031,10 +1075,12 @@ Public Class InputManager
 
         ' Two Players
         If Form1.renderer.TwoPlayersOptionRect.Contains(e.Location) Then
-            settings.SetNumberOfPlayersSelection(NumberOfPlayers.TwoPlayers)   ' ← update selection
+            model.PlayerSelection = NumberOfPlayers.TwoPlayers   ' ← update selection
 
-            model.PlayerMode = 2
-            renderer.SetPlayerMode(form, model.PlayerMode)
+            model.PlayerMode = NumberOfPlayers.TwoPlayers
+            renderer.CacheKeyboardHints(form, model)
+
+            'renderer.SetPlayerMode(form, model.PlayerMode)
 
             'Form1.StartNewMatch()
             match.StartNewMatch(audio, window, model, physics, renderer, form)
@@ -1048,7 +1094,6 @@ Public Class InputManager
     End Sub
 
     Private Sub HandleAIDifficulty_MouseClick(e As MouseEventArgs,
-                                              settings As SettingsManager,
                                               form As Form,
                                               audio As AudioController,
                                               match As MatchManager,
@@ -1066,7 +1111,11 @@ Public Class InputManager
         ' Middle-click = activate current selection
         ' ------------------------------
         If e.Button = MouseButtons.Middle Then
-            ActivateAIDifficulty(settings.GetAIDifficultySelection, match, audio, window, model, physics, renderer, form)
+            ActivateAIDifficulty(model.AISelection, match, audio, window, model, physics, renderer, form)
+
+
+
+
 
             audio.PlaySelectSound()
             form.Invalidate()
@@ -1079,8 +1128,8 @@ Public Class InputManager
 
         ' Easy
         If renderer.EasyRect.Contains(e.Location) Then
-            settings.SetAIDifficultySelection(AIDifficultyLevel.Easy)
-            ActivateAIDifficulty(settings.GetAIDifficultySelection, match, audio, window, model, physics, renderer, form)
+            model.AISelection = AIDifficultyLevel.Easy
+            ActivateAIDifficulty(model.AISelection, match, audio, window, model, physics, renderer, form)
 
             audio.PlaySelectSound()
             form.Invalidate()
@@ -1089,8 +1138,8 @@ Public Class InputManager
 
         ' Normal
         If renderer.NormalRect.Contains(e.Location) Then
-            settings.SetAIDifficultySelection(AIDifficultyLevel.Normal)
-            ActivateAIDifficulty(settings.GetAIDifficultySelection, match, audio, window, model, physics, renderer, form)
+            model.AISelection = AIDifficultyLevel.Normal
+            ActivateAIDifficulty(model.AISelection, match, audio, window, model, physics, renderer, form)
 
             audio.PlaySelectSound()
             form.Invalidate()
@@ -1099,8 +1148,8 @@ Public Class InputManager
 
         ' Hard
         If renderer.HardRect.Contains(e.Location) Then
-            settings.SetAIDifficultySelection(AIDifficultyLevel.Hard)
-            ActivateAIDifficulty(settings.GetAIDifficultySelection, match, audio, window, model, physics, renderer, form)
+            model.AISelection = AIDifficultyLevel.Hard
+            ActivateAIDifficulty(model.AISelection, match, audio, window, model, physics, renderer, form)
 
             audio.PlaySelectSound()
             form.Invalidate()
@@ -1110,7 +1159,6 @@ Public Class InputManager
     End Sub
 
     Private Sub HandlePauseMenu_MouseClick(e As MouseEventArgs,
-                                           settings As SettingsManager,
                                            form As Form,
                                            audio As AudioController,
                                            window As WindowManager,
@@ -1214,24 +1262,23 @@ Public Class InputManager
 
     Private Sub HandleStartScreen_MouseMove(e As MouseEventArgs,
                                             renderer As Rendering,
-                                            settings As SettingsManager,
                                             form As Form,
                                             audio As AudioController,
                                             model As GameModel)
 
         If model.State <> GameState.StartScreen Then Return
 
-        Dim oldSelection = settings.GetNumberOfPlayersSelection
+        Dim oldSelection = model.PlayerSelection
 
         If renderer.OnePlayerOptionRect.Contains(e.Location) Then
-            settings.SetNumberOfPlayersSelection(NumberOfPlayers.OnePlayer)
+            model.PlayerSelection = NumberOfPlayers.OnePlayer
 
         ElseIf renderer.TwoPlayersOptionRect.Contains(e.Location) Then
-            settings.SetNumberOfPlayersSelection(NumberOfPlayers.TwoPlayers)
+            model.PlayerSelection = NumberOfPlayers.TwoPlayers
 
         End If
 
-        If oldSelection <> settings.GetNumberOfPlayersSelection Then
+        If oldSelection <> model.PlayerSelection Then
             audio.PlayMenuMoveSound()
 
             form.Invalidate()
@@ -1241,28 +1288,27 @@ Public Class InputManager
 
     Private Sub HandleAIDifficulty_MouseMove(e As MouseEventArgs,
                                              renderer As Rendering,
-                                             settings As SettingsManager,
                                              form As Form,
                                              audio As AudioController,
                                              model As GameModel)
 
         If model.State <> GameState.AIDifficulty Then Return
 
-        Dim oldSelection = settings.GetAIDifficultySelection()
+        Dim oldSelection = model.AISelection
 
 
         If renderer.EasyRect.Contains(e.Location) Then
-            settings.SetAIDifficultySelection(AIDifficultyLevel.Easy)
+            model.AISelection = AIDifficultyLevel.Easy
         ElseIf renderer.NormalRect.Contains(e.Location) Then
-            settings.SetAIDifficultySelection(AIDifficultyLevel.Normal)
+            model.AISelection = AIDifficultyLevel.Normal
 
         ElseIf renderer.HardRect.Contains(e.Location) Then
-            settings.SetAIDifficultySelection(AIDifficultyLevel.Hard)
+            model.AISelection = AIDifficultyLevel.Hard
 
         End If
 
 
-        If oldSelection <> settings.GetAIDifficultySelection() Then
+        If oldSelection <> model.AISelection Then
             audio.PlayMenuMoveSound()
 
             form.Invalidate()
@@ -1271,7 +1317,6 @@ Public Class InputManager
 
     Private Sub HandlePauseMenu_MouseMove(e As MouseEventArgs,
                                           renderer As Rendering,
-                                          settings As SettingsManager,
                                           form As Form,
                                           audio As AudioController,
                                           model As GameModel)
@@ -1308,14 +1353,14 @@ Public Class InputManager
     ' ===========================
 
     Private Sub HandleStartScreenMouseWheel(delta As Integer,
-                                            settings As SettingsManager,
                                             form As Form,
-                                            audio As AudioController)
+                                            audio As AudioController,
+                                            model As GameModel)
 
         ' Accumulate wheel movement
         startScreenScrollAccum += delta
 
-        Dim numberOfPlayersSelection = settings.GetNumberOfPlayersSelection
+        Dim numberOfPlayersSelection = model.PlayerSelection
 
         ' Scroll up enough → select One Player
         If startScreenScrollAccum >= ScrollThreshold Then
@@ -1323,7 +1368,7 @@ Public Class InputManager
 
             If numberOfPlayersSelection <> NumberOfPlayers.OnePlayer Then
                 numberOfPlayersSelection = NumberOfPlayers.OnePlayer
-                settings.SetNumberOfPlayersSelection(numberOfPlayersSelection)
+                model.PlayerSelection = numberOfPlayersSelection
 
                 audio.PlayMenuUpSound()
                 form.Invalidate()
@@ -1339,7 +1384,7 @@ Public Class InputManager
 
             If numberOfPlayersSelection <> NumberOfPlayers.TwoPlayers Then
                 numberOfPlayersSelection = NumberOfPlayers.TwoPlayers
-                settings.SetNumberOfPlayersSelection(numberOfPlayersSelection)
+                model.PlayerSelection = numberOfPlayersSelection
 
 
                 audio.PlayMenuDownSound()
@@ -1353,14 +1398,14 @@ Public Class InputManager
     End Sub
 
     Private Sub HandleAIDifficultyMouseWheel(delta As Integer,
-                                             settings As SettingsManager,
                                              form As Form,
-                                             audio As AudioController)
+                                             audio As AudioController,
+                                             model As GameModel)
 
         ' Accumulate wheel movement
         aiDifficultyScrollAccum += delta
 
-        Dim aiDifficultySelection = settings.GetAIDifficultySelection
+        Dim aiDifficultySelection = model.AISelection
 
         ' ============================
         ' Scroll Up → Move Selection Up
@@ -1369,7 +1414,7 @@ Public Class InputManager
 
             If aiDifficultySelection > AIDifficultyLevel.Easy Then
                 aiDifficultySelection -= 1
-                settings.SetAIDifficultySelection(aiDifficultySelection)
+                model.AISelection = aiDifficultySelection
 
                 audio.PlayMenuUpSound()
                 form.Invalidate()
@@ -1386,7 +1431,7 @@ Public Class InputManager
 
             If aiDifficultySelection < AIDifficultyLevel.Hard Then
                 aiDifficultySelection += 1
-                settings.SetAIDifficultySelection(aiDifficultySelection)
+                model.AISelection = aiDifficultySelection
 
 
                 audio.PlayMenuDownSound()
@@ -1400,7 +1445,6 @@ Public Class InputManager
     End Sub
 
     Private Sub HandlePauseMouseWheel(delta As Integer,
-                                      settings As SettingsManager,
                                       form As Form,
                                       audio As AudioController,
                                       model As GameModel)

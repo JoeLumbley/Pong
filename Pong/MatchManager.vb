@@ -51,7 +51,7 @@ Public Class MatchManager
 
         'renderer.UpdateScore(model.ScoreLeft, model.ScoreRight, Me.CreateGraphics(), ClientSize)
 
-        If model.PlayerMode = 1 Then
+        If model.PlayerMode = NumberOfPlayers.OnePlayer Then
 
             model.LeftPlayerName = "You"
             model.RightPlayerName = "CPU"
@@ -80,8 +80,7 @@ Public Class MatchManager
     Public Sub PauseGame(audio As AudioController,
                          window As WindowManager,
                          physics As PhysicsEngine,
-                         model As GameModel,
-                         settings As SettingsManager)
+                         model As GameModel)
 
         physics.StopTimer()
 

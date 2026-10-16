@@ -328,12 +328,14 @@ Public Class GameModel
     ' ============================================================
     ' PLAYER MODE / MENU SELECTIONS
     ' ============================================================
-    Public Property PlayerMode As Integer = 1   ' 1 = Single Player, 2 = Two Players
+    Public Property PlayerMode As Integer = NumberOfPlayers.OnePlayer
     Public Property PlayerSelection As NumberOfPlayers = NumberOfPlayers.OnePlayer
     Public Property AISelection As AIDifficultyLevel = AIDifficultyLevel.Easy
 
     ' Pause menu selection (0 = Resume, 1 = New Match, 2 = Quit)
-    Public Property PauseSelection As Integer = 0
+    'Public Property PauseSelection As Integer = 0
+    Public Property PauseSelection As Integer = PauseMenu.ResumeMatch
+
 
     ' ============================================================
     ' PLAYER NAMES

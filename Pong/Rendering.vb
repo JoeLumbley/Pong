@@ -101,7 +101,7 @@ Public Class Rendering
     ' ============================================================
     '   START SCREEN
     ' ============================================================
-    Private numberOfPlayersSelection As Integer = 0
+    'Private numberOfPlayersSelection As Integer = 0
     Private onePlayerRect As Rectangle
     Private twoPlayersRect As Rectangle
 
@@ -367,7 +367,7 @@ Public Class Rendering
         CacheAIDifficulty(form)
         CacheHUD(form, model)
         CachePause(form)
-        CacheKeyboardHints(form)
+        CacheKeyboardHints(form, model)
 
         fpsStopwatch.Start()
         blinkStopwatch.Start()
@@ -450,7 +450,7 @@ Public Class Rendering
         CacheHUD(form, model)
         CachePause(form)
 
-        CacheKeyboardHints(form)
+        CacheKeyboardHints(form, model)
 
 
         ' -------------------------------
@@ -622,13 +622,13 @@ Public Class Rendering
     ' ============================================================
     '   KEYBOARD HINT LAYOUT
     ' ============================================================
-    Private Sub CacheKeyboardHints(form As Form)
+    Public Sub CacheKeyboardHints(form As Form, model As GameModel)
 
         Dim g = form.CreateGraphics()
         hintLeftText = "W S - Move Paddle"
         hintLeftSize = g.MeasureString(hintLeftText, keyboardFont)
 
-        If numberOfPlayersSelection = 1 Then
+        If model.PlayerMode = NumberOfPlayers.TwoPlayers Then
             hintRightText = "Arrows - Move Paddle"
             pauseText = "P - Pause Match"
         Else
@@ -809,10 +809,10 @@ Public Class Rendering
         showKeyboardHints = Not showKeyboardHints
     End Sub
 
-    Public Sub SetPlayerMode(form As Form, mode As Integer)
-        numberOfPlayersSelection = If(mode = 2, 1, 0)
-        CacheKeyboardHints(form)
-    End Sub
+    'Public Sub SetPlayerMode(form As Form, mode As Integer)
+    '    numberOfPlayersSelection = If(mode = 2, 1, 0)
+    '    CacheKeyboardHints(form)
+    'End Sub
 
     'Public Sub SetWinnerText(text As String)
     '    winnerText = text
@@ -826,20 +826,19 @@ Public Class Rendering
         aiDifficultySelection = sel
     End Sub
 
-    Public Sub SetStartMenuSelection(sel As Integer)
-        numberOfPlayersSelection = sel
-    End Sub
+    'Public Sub SetStartMenuSelection(sel As Integer)
+    '    numberOfPlayersSelection = sel
+    'End Sub
 
-    Public Sub SetPauseMenuSelection(sel As Integer)
-        pauseMenuSelection = sel
-    End Sub
+    'Public Sub SetPauseMenuSelection(sel As Integer)
+    '    pauseMenuSelection = sel
+    'End Sub
 
     ' ============================================================
     '   RENDERING PIPELINE
     ' ============================================================
     Public Sub Render(g As Graphics,
                       state As GameState,
-                      settings As SettingsManager,
                       match As MatchManager,
                       form As Form,
                       model As GameModel)
@@ -855,33 +854,33 @@ Public Class Rendering
             Case GameState.StartScreen
                 DrawTrail(g)
                 DrawBall(g, model)
-                DrawStartScreen(g, settings)
-                If settings.GetShowKeyboardHints() Then DrawStartHints(g, form)
+                DrawStartScreen(g, model)
+                If model.ShowKeyboardHints() Then DrawStartHints(g, form)
 
             Case GameState.Playing
                 DrawGamePlayScreen(g, model)
-                If settings.GetShowKeyboardHints() Then DrawGamePlayHints(g)
+                If model.ShowKeyboardHints() Then DrawGamePlayHints(g)
 
             Case GameState.Pause
                 DrawTrail(g)
                 DrawBall(g, model)
                 DrawPaddles(g, model)
                 DrawHUD(g, model)
-                DrawPauseScreen(g, settings, form, model)
-                If settings.GetShowKeyboardHints() Then DrawPauseHints(g, form)
+                DrawPauseScreen(g, form, model)
+                If model.ShowKeyboardHints() Then DrawPauseHints(g, form)
 
             Case GameState.EndScreen
                 DrawTrail(g)
                 DrawBall(g, model)
                 DrawHUD(g, model)
                 DrawGameOver(g, match, form, model)
-                If settings.GetShowKeyboardHints() Then DrawGameOverHints(g, form)
+                If model.ShowKeyboardHints() Then DrawGameOverHints(g, form)
 
             Case GameState.AIDifficulty
                 DrawTrail(g)
                 DrawBall(g, model)
-                DrawAIDifficultyScreen(g, settings)
-                If settings.GetShowKeyboardHints() Then DrawAIDifficultyHints(g, form)
+                DrawAIDifficultyScreen(g, model)
+                If model.ShowKeyboardHints() Then DrawAIDifficultyHints(g, form)
         End Select
     End Sub
 
@@ -992,7 +991,7 @@ Public Class Rendering
     End Sub
 
 
-    Private Sub DrawStartScreen(g As Graphics, settings As SettingsManager)
+    Private Sub DrawStartScreen(g As Graphics, model As GameModel)
 
         ' --- Title Rendering (fade‑in alpha) ---
         Dim titleColor As Color = Color.FromArgb(fadeAlpha, 255, 255, 255)
@@ -1002,10 +1001,10 @@ Public Class Rendering
 
 
         ' --- Menu Option Highlighting (shape fill + outline) ---
-        Dim opt1Brush As SolidBrush = If(settings.GetNumberOfPlayersSelection = 0, whiteBrush, grayBrush)
-        Dim opt2Brush As SolidBrush = If(settings.GetNumberOfPlayersSelection = 1, whiteBrush, grayBrush)
+        Dim opt1Brush As SolidBrush = If(model.PlayerSelection = NumberOfPlayers.OnePlayer, whiteBrush, grayBrush)
+        Dim opt2Brush As SolidBrush = If(model.PlayerSelection = NumberOfPlayers.TwoPlayers, whiteBrush, grayBrush)
 
-        If settings.GetNumberOfPlayersSelection = 0 Then
+        If model.PlayerSelection = NumberOfPlayers.OnePlayer Then
             g.FillPath(lightBrush, onePlayerPath)
             g.DrawPath(outlinePen, onePlayerPath)
             g.FillPath(darkBrush, twoPlayersPath)
@@ -1058,7 +1057,6 @@ Public Class Rendering
 
 
     Private Sub DrawPauseScreen(g As Graphics,
-                                settings As SettingsManager,
                                 form As Form,
                                 model As GameModel)
 
@@ -1102,11 +1100,13 @@ Public Class Rendering
 
             Dim brush As SolidBrush = If(i = model.PauseSelection, whiteBrush, grayBrush)
             g.DrawString(text, pauseMenuFont, brush, x, y)
+
         Next
+
     End Sub
 
 
-    Private Sub DrawAIDifficultyScreen(g As Graphics, settings As SettingsManager)
+    Private Sub DrawAIDifficultyScreen(g As Graphics, model As GameModel)
         Dim titleColor As Color = Color.FromArgb(fadeAlpha, 255, 255, 255)
 
         Using titleBrush As New SolidBrush(titleColor)
@@ -1115,17 +1115,17 @@ Public Class Rendering
 
         Dim gPath As GraphicsPath = aiEasyPath
 
-        For i As Integer = 0 To aiOptions.Length - 1
+        For i As Integer = AIDifficultyLevel.Easy To AIDifficultyLevel.Hard
 
             'Dim gPath As GraphicsPath = aiEasyPath
 
             Select Case i
-                Case 0 : gPath = aiEasyPath
-                Case 1 : gPath = aiNormalPath
-                Case 2 : gPath = aiHardPath
+                Case AIDifficultyLevel.Easy : gPath = aiEasyPath
+                Case AIDifficultyLevel.Normal : gPath = aiNormalPath
+                Case AIDifficultyLevel.Hard : gPath = aiHardPath
             End Select
 
-            If i = settings.GetAIDifficultySelection Then
+            If i = model.AISelection Then
                 g.FillPath(lightBrush, gPath)
                 g.DrawPath(outlinePen, gPath)
             Else
@@ -1134,7 +1134,7 @@ Public Class Rendering
             End If
 
             Dim brush As SolidBrush =
-            If(i = settings.GetAIDifficultySelection, whiteBrush, grayBrush)
+            If(i = model.AISelection, whiteBrush, grayBrush)
 
             g.DrawString(aiOptions(i), startMenuFont, brush,
                      aiOptionX(i), aiOptionY(i))

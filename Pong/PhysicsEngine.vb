@@ -59,7 +59,7 @@ Public Class PhysicsEngine
         MoveBall(dt)
         MovePaddles(dt)
 
-        If model.PlayerMode = 1 AndAlso model.State = GameState.Playing Then
+        If model.PlayerMode = NumberOfPlayers.OnePlayer AndAlso model.State = GameState.Playing Then
             UpdateAI(dt)
         End If
 
@@ -74,7 +74,7 @@ Public Class PhysicsEngine
             Case GameState.Playing
                 MovePaddles(dt)
 
-                If model.PlayerMode = 1 Then
+                If model.PlayerMode = NumberOfPlayers.OnePlayer Then
                     UpdateAI(dt)
                 End If
 
@@ -126,7 +126,7 @@ Public Class PhysicsEngine
             left.Y += CInt(model.PaddleSpeed * dt)
         End If
 
-        If model.PlayerMode = 2 Then
+        If model.PlayerMode = NumberOfPlayers.TwoPlayers Then
             If model.RightPaddleUp Then
                 right.Y -= CInt(model.PaddleSpeed * dt)
             End If
@@ -240,7 +240,7 @@ Public Class PhysicsEngine
         ElseIf model.PaddleRightVelocity > 1 Then
             Return 135 * (Math.PI / 180.0)
         Else
-            If model.PlayerMode = 1 Then
+            If model.PlayerMode = NumberOfPlayers.OnePlayer Then
                 Return 175 * (Math.PI / 180.0)
             Else
                 Return 180 * (Math.PI / 180.0)
@@ -279,7 +279,7 @@ Public Class PhysicsEngine
         If model.ScoreLeft >= 10 Then
 
 
-            If model.PlayerMode = 1 Then
+            If model.PlayerMode = NumberOfPlayers.OnePlayer Then
                 model.WinnerText = "You Win!"
             Else
                 model.WinnerText = "Left Wins!"
