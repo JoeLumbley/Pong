@@ -414,12 +414,17 @@ Public Class InputManager
 
 
                 model.PlayerSelection = NumberOfPlayers.OnePlayer
-                model.PlayerMode = NumberOfPlayers.OnePlayer
-                renderer.CacheKeyboardHints(form, model)
+                'model.PlayerMode = NumberOfPlayers.OnePlayer
+                'renderer.CacheKeyboardHints(form, model)
 
-                'renderer.SetPlayerMode(form, model.PlayerMode)
+                ''renderer.SetPlayerMode(form, model.PlayerMode)
 
-                model.State = GameState.AIDifficulty
+                'model.State = GameState.AIDifficulty
+
+
+
+                HandleOnePlayerSelection(model, renderer, form)
+
 
                 audio.PlaySelectSound()
                 form.Invalidate()
@@ -428,13 +433,18 @@ Public Class InputManager
             Case Keys.D2, Keys.NumPad2
 
                 model.PlayerSelection = NumberOfPlayers.TwoPlayers
-                model.PlayerMode = NumberOfPlayers.TwoPlayers
-                renderer.CacheKeyboardHints(form, model)
+                'model.PlayerMode = NumberOfPlayers.TwoPlayers
+                'renderer.CacheKeyboardHints(form, model)
 
-                'renderer.SetPlayerMode(form, model.PlayerMode)
+                ''renderer.SetPlayerMode(form, model.PlayerMode)
 
-                'Form1.StartNewMatch()
-                match.StartNewMatch(audio, window, model, physics, renderer, form)
+                ''Form1.StartNewMatch()
+                'match.StartNewMatch(audio, window, model, physics, renderer, form)
+
+
+
+                HandleTwoPlayerSelection(model, renderer, form, match, audio, window, physics)
+
 
                 audio.PlaySelectSound()
                 form.Invalidate()
@@ -450,62 +460,57 @@ Public Class InputManager
 
                 If model.PlayerSelection = NumberOfPlayers.OnePlayer Then
 
-                    'model.PlayerSelection = NumberOfPlayers.OnePlayer
+                    'model.PlayerMode = NumberOfPlayers.OnePlayer
+                    'renderer.CacheKeyboardHints(form, model)
 
-                    model.PlayerMode = NumberOfPlayers.OnePlayer
-                    renderer.CacheKeyboardHints(form, model)
+                    'model.State = GameState.AIDifficulty
 
-                    'renderer.SetPlayerMode(form, model.PlayerMode)
+                    HandleOnePlayerSelection(model, renderer, form)
 
-                    model.State = GameState.AIDifficulty
                 Else
-                    'model.PlayerSelection = NumberOfPlayers.TwoPlayers
+                    'model.PlayerMode = NumberOfPlayers.TwoPlayers
+                    'renderer.CacheKeyboardHints(form, model)
 
-                    model.PlayerMode = NumberOfPlayers.TwoPlayers
-                    renderer.CacheKeyboardHints(form, model)
+                    'match.StartNewMatch(audio, window, model, physics, renderer, form)
 
-                    'renderer.SetPlayerMode(form, model.PlayerMode)
+                    HandleTwoPlayerSelection(model, renderer, form, match, audio, window, physics)
 
-                    'Form1.StartNewMatch()
-                    match.StartNewMatch(audio, window, model, physics, renderer, form)
 
                 End If
 
                 audio.PlaySelectSound()
                 form.Invalidate()
+
                 Return
 
             Case Keys.Enter
+
                 If enterKeyDown Then Return
                 enterKeyDown = True
 
                 If model.PlayerSelection = NumberOfPlayers.OnePlayer Then
 
-                    'model.PlayerSelection = NumberOfPlayers.OnePlayer
+                    'model.PlayerMode = NumberOfPlayers.OnePlayer
+                    'renderer.CacheKeyboardHints(form, model)
 
-                    model.PlayerMode = NumberOfPlayers.OnePlayer
-                    renderer.CacheKeyboardHints(form, model)
+                    'model.State = GameState.AIDifficulty
 
-                    'renderer.SetPlayerMode(form, model.PlayerMode)
+                    HandleOnePlayerSelection(model, renderer, form)
 
-                    model.State = GameState.AIDifficulty
                 Else
-                    'model.PlayerSelection = NumberOfPlayers.TwoPlayers
+                    'model.PlayerMode = NumberOfPlayers.TwoPlayers
+                    'renderer.CacheKeyboardHints(form, model)
 
-                    model.PlayerMode = NumberOfPlayers.TwoPlayers
-                    renderer.CacheKeyboardHints(form, model)
+                    'match.StartNewMatch(audio, window, model, physics, renderer, form)
 
-                    'renderer.SetPlayerMode(form, model.PlayerMode)
-
-                    'Form1.StartNewMatch()
-                    match.StartNewMatch(audio, window, model, physics, renderer, form)
+                    HandleTwoPlayerSelection(model, renderer, form, match, audio, window, physics)
 
                 End If
 
                 audio.PlaySelectSound()
                 form.Invalidate()
-                Return
 
+                Return
 
         ' ============================================================
         ' 4. Escape (Exit Game)
@@ -521,14 +526,39 @@ Public Class InputManager
 
     End Sub
 
+
+    Private Sub HandleOnePlayerSelection(model As GameModel,
+                                         renderer As Rendering,
+                                         form As Form)
+
+        model.PlayerMode = NumberOfPlayers.OnePlayer
+        renderer.CacheKeyboardHints(form, model)
+        model.State = GameState.AIDifficulty
+    End Sub
+
+    Private Sub HandleTwoPlayerSelection(model As GameModel,
+                                         renderer As Rendering,
+                                         form As Form,
+                                         match As MatchManager,
+                                         audio As AudioController,
+                                         window As WindowManager,
+                                         physics As PhysicsEngine)
+
+        model.PlayerMode = NumberOfPlayers.TwoPlayers
+        renderer.CacheKeyboardHints(form, model)
+        match.StartNewMatch(audio, window, model, physics, renderer, form)
+    End Sub
+
+
+
     Private Sub HandleAIDifficulty_KeyDown(e As KeyEventArgs,
-                                        form As Form,
-                                        audio As AudioController,
-                                        match As MatchManager,
-                                        window As WindowManager,
-                                        model As GameModel,
-                                        physics As PhysicsEngine,
-                                        renderer As Rendering)
+                                           form As Form,
+                                           audio As AudioController,
+                                           match As MatchManager,
+                                           window As WindowManager,
+                                           model As GameModel,
+                                           physics As PhysicsEngine,
+                                           renderer As Rendering)
 
         ' -------------------------------
         '  AI Difficulty Menu Navigation
@@ -703,36 +733,36 @@ Public Class InputManager
         ' 3. Pause Game (P, Pause/Break, MediaPlayPause)
         ' ============================================================
         If e.KeyCode = Keys.P Then
+
             If pKeyDown Then Return
             pKeyDown = True
 
-            audio.PlaySelectSound()
-            'Form1.PauseGame()
             match.PauseGame(audio, window, physics, model)
 
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
 
         If e.KeyCode = Keys.Pause Then
+
             If pauseKeyDown Then Return
             pauseKeyDown = True
 
-            audio.PlaySelectSound()
-            'Form1.PauseGame()
             match.PauseGame(audio, window, physics, model)
 
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
 
         If e.KeyCode = Keys.MediaPlayPause Then
+
             If mediaPlayPauseKeyDown Then Return
             mediaPlayPauseKeyDown = True
 
-            audio.PlaySelectSound()
-            'Form1.PauseGame()
             match.PauseGame(audio, window, physics, model)
+            audio.PlaySelectSound()
 
 
             form.Invalidate()
@@ -745,13 +775,13 @@ Public Class InputManager
         ' ============================================================
         If Form1.FormBorderStyle <> FormBorderStyle.None AndAlso
            e.KeyCode = Keys.Escape Then
+
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
-            audio.PlaySelectSound()
-            'Form1.PauseGame()
             match.PauseGame(audio, window, physics, model)
 
+            audio.PlaySelectSound()
             form.Invalidate()
             Return
         End If
@@ -775,7 +805,6 @@ Public Class InputManager
             If pKeyDown Then Return
             pKeyDown = True
 
-            'Form1.ResumeGame()
             match.ResumeGame(audio, window, physics, model)
 
             audio.PlaySelectSound()
@@ -788,7 +817,6 @@ Public Class InputManager
             If pauseKeyDown Then Return
             pauseKeyDown = True
 
-            'Form1.ResumeGame()
             match.ResumeGame(audio, window, physics, model)
 
             audio.PlaySelectSound()
@@ -798,10 +826,10 @@ Public Class InputManager
         End If
 
         If e.KeyCode = Keys.MediaPlayPause Then
+
             If mediaPlayPauseKeyDown Then Return
             mediaPlayPauseKeyDown = True
 
-            'Form1.ResumeGame()
             match.ResumeGame(audio, window, physics, model)
 
             audio.PlaySelectSound()
@@ -815,31 +843,24 @@ Public Class InputManager
         ' 2. Pause Menu Navigation (Up/W and Down/S)
         ' ============================================================
         If e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.W Then
-            'If model.PauseSelection > 0 Then
+
             If model.PauseSelection > PauseMenu.ResumeMatch Then
 
-                'settings.SetPauseMenuSelection(settings.GetPauseMenuSelection() - 1)
                 model.PauseSelection -= 1
-
-
-
-
-                'renderer.SetPauseMenuSelection(settings.GetPauseMenuSelection())
 
                 audio.PlayMenuUpSound()
                 form.Invalidate()
             End If
             Return
+
         End If
 
 
         If e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.S Then
-            'If model.PauseSelection < 2 Then
+
             If model.PauseSelection < PauseMenu.QuitMatch Then
 
-                'settings.SetPauseMenuSelection(settings.GetPauseMenuSelection() + 1)
                 model.PauseSelection += 1
-                'renderer.SetPauseMenuSelection(settings.GetPauseMenuSelection())
 
                 audio.PlayMenuDownSound()
                 form.Invalidate()
@@ -853,7 +874,7 @@ Public Class InputManager
         ' 3. Direct Hotkeys (R = Resume, N = New Match, Q = Quit)
         ' ============================================================
         If e.KeyCode = Keys.R Then
-            'Form1.ResumeGame()
+
             match.ResumeGame(audio, window, physics, model)
 
             audio.PlaySelectSound()
@@ -863,7 +884,7 @@ Public Class InputManager
         End If
 
         If e.KeyCode = Keys.N Then
-            'Form1.StartNewMatch()
+
             match.StartNewMatch(audio, window, model, physics, renderer, form)
 
             audio.PlaySelectSound()
@@ -873,8 +894,7 @@ Public Class InputManager
         End If
 
         If e.KeyCode = Keys.Q Then
-            'Form1.Quit2StartScreen()
-            'state?.Quit2StartScreen()
+
             match.Quit2StartScreen(audio, window, physics, model, renderer, form)
 
             audio.PlaySelectSound()
@@ -890,10 +910,7 @@ Public Class InputManager
             If escapeKeyDown Then Return
             escapeKeyDown = True
 
-            'Form1.Quit2StartScreen()
-            'state.Quit2StartScreen()
             match.Quit2StartScreen(audio, window, physics, model, renderer, form)
-
 
             audio.PlaySelectSound()
             form.Invalidate()
@@ -908,11 +925,6 @@ Public Class InputManager
             If enterKeyDown Then Return
             enterKeyDown = True
 
-            'Select Case model.PauseSelection
-            '    Case 0 : match.ResumeGame(audio, window, physics, model)
-            '    Case 1 : match.StartNewMatch(audio, window, model, physics, renderer, form)
-            '    Case 2 : match.Quit2StartScreen(audio, window, physics, model, renderer, form)
-            'End Select
             Select Case model.PauseSelection
                 Case PauseMenu.ResumeMatch : match.ResumeGame(audio, window, physics, model)
                 Case PauseMenu.NewMatch : match.StartNewMatch(audio, window, model, physics, renderer, form)
@@ -928,13 +940,6 @@ Public Class InputManager
         If e.KeyCode = Keys.Space Then
             If spaceKeyDown Then Return
             spaceKeyDown = True
-
-
-            'Select Case model.PauseSelection
-            '    Case 0 : match.ResumeGame(audio, window, physics, model)
-            '    Case 1 : match.StartNewMatch(audio, window, model, physics, renderer, form)
-            '    Case 2 : match.Quit2StartScreen(audio, window, physics, model, renderer, form)
-            'End Select
 
             Select Case model.PauseSelection
                 Case PauseMenu.ResumeMatch : match.ResumeGame(audio, window, physics, model)
@@ -964,7 +969,6 @@ Public Class InputManager
             audio.PlaySelectSound()
             model.State = GameState.StartScreen
             model.WinnerText = String.Empty
-            'renderer.SetWinnerText(match.GetWinnerText())
 
             form.Invalidate()
             Return
@@ -981,7 +985,6 @@ Public Class InputManager
             audio.PlaySelectSound()
             model.State = GameState.StartScreen
             model.WinnerText = String.Empty
-            'renderer.SetWinnerText(MatchManager.GetWinnerText())
 
             form.Invalidate()
             Return
@@ -998,7 +1001,6 @@ Public Class InputManager
             audio.PlaySelectSound()
             model.State = GameState.StartScreen
             model.WinnerText = String.Empty
-            'renderer.SetWinnerText(MatchManager.GetWinnerText())
 
             form.Invalidate()
             Return
@@ -1027,24 +1029,12 @@ Public Class InputManager
         ' Ignore middle-click logic unless needed`
         If e.Button = MouseButtons.Middle Then
             If model.PlayerSelection = NumberOfPlayers.OnePlayer Then
-                'model.PlayerSelection = NumberOfPlayers.OnePlayer
-                model.PlayerMode = NumberOfPlayers.OnePlayer
-                renderer.CacheKeyboardHints(form, model)
 
-                'renderer.SetPlayerMode(form, model.PlayerMode)
+                HandleOnePlayerSelection(model, renderer, form)
 
-                model.State = GameState.AIDifficulty
             Else
-                'model.PlayerSelection = NumberOfPlayers.TwoPlayers
-                model.PlayerMode = NumberOfPlayers.TwoPlayers
-                renderer.CacheKeyboardHints(form, model)
 
-                'renderer.SetPlayerMode(form, model.PlayerMode)
-
-                model.State = GameState.Playing
-                'Form1.StartNewMatch()
-                match.StartNewMatch(audio, window, model, physics, renderer, form)
-
+                HandleTwoPlayerSelection(model, renderer, form, match, audio, window, physics)
 
             End If
 
@@ -1059,14 +1049,10 @@ Public Class InputManager
 
         ' One Player
         If Form1.renderer.OnePlayerOptionRect.Contains(e.Location) Then
+
             model.PlayerSelection = NumberOfPlayers.OnePlayer   ' ← update selection
 
-            model.PlayerMode = NumberOfPlayers.OnePlayer
-            renderer.CacheKeyboardHints(form, model)
-
-            'renderer.SetPlayerMode(form, model.PlayerMode)
-
-            model.State = GameState.AIDifficulty
+            HandleOnePlayerSelection(model, renderer, form)
 
             audio.PlaySelectSound()
             form.Invalidate()
@@ -1075,15 +1061,10 @@ Public Class InputManager
 
         ' Two Players
         If Form1.renderer.TwoPlayersOptionRect.Contains(e.Location) Then
+
             model.PlayerSelection = NumberOfPlayers.TwoPlayers   ' ← update selection
 
-            model.PlayerMode = NumberOfPlayers.TwoPlayers
-            renderer.CacheKeyboardHints(form, model)
-
-            'renderer.SetPlayerMode(form, model.PlayerMode)
-
-            'Form1.StartNewMatch()
-            match.StartNewMatch(audio, window, model, physics, renderer, form)
+            HandleTwoPlayerSelection(model, renderer, form, match, audio, window, physics)
 
             audio.PlaySelectSound()
             form.Invalidate()
@@ -1111,6 +1092,8 @@ Public Class InputManager
         ' Middle-click = activate current selection
         ' ------------------------------
         If e.Button = MouseButtons.Middle Then
+
+
             ActivateAIDifficulty(model.AISelection, match, audio, window, model, physics, renderer, form)
 
 
@@ -1129,6 +1112,8 @@ Public Class InputManager
         ' Easy
         If renderer.EasyRect.Contains(e.Location) Then
             model.AISelection = AIDifficultyLevel.Easy
+
+
             ActivateAIDifficulty(model.AISelection, match, audio, window, model, physics, renderer, form)
 
             audio.PlaySelectSound()
