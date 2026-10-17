@@ -124,7 +124,6 @@ Public Class MatchManager
     End Sub
 
     Public Sub Quit2StartScreen(audio As AudioController,
-                                window As WindowManager,
                                 physics As PhysicsEngine,
                                 model As GameModel,
                                 renderer As Rendering,
