@@ -33,37 +33,28 @@
 
 Public Class Form1
 
-    ' -------------------------------
-    '  Random
-    ' -------------------------------
-    Private rng As New Random()
+    Private window As New WindowManager
 
-
-
-    Private WithEvents AudioRestartTimer As Timer
-
+    Private resource As New ResourceManager
 
     Private model As New GameModel(ClientSize)
 
-    Private window As New WindowManager()
+    Private match As New MatchManager
 
-    Private settings As New SettingsManager()
+    Private input As New InputManager
 
     Private audio As New AudioController
 
-    Private match As New MatchManager
-
-    Public renderer As New Rendering()
+    Public renderer As New Rendering
 
     Private physics As New PhysicsEngine(model, audio, renderer, Me, match, window)
 
-    'Private state As New GameStateManager(model, audio, renderer, Me, physics)
+    ' -------------------------------
+    '  Random
+    ' -------------------------------
+    Private rng As New Random
 
-    Private input As New InputManager()
-
-
-    Private resource As New ResourceManager()
-
+    Private WithEvents AudioRestartTimer As Timer
 
     ' ===============================
     '  FORM LIFECYCLE
@@ -72,12 +63,9 @@ Public Class Form1
     Protected Overrides Sub OnLoad(e As EventArgs)
         MyBase.OnLoad(e)
 
-
         InitAudio()
         InitWindow()
         InitPhysics()
-        'InitGameplay()
-        'InitBall()
         renderer.InitGraphics(Me, model)
 
     End Sub
@@ -93,8 +81,6 @@ Public Class Form1
 
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-
-
         AudioRestartTimer?.Stop()
         physics.StopTimer()
 
@@ -105,14 +91,7 @@ Public Class Form1
 
         model?.Dispose()
 
-
     End Sub
-
-
-
-
-
-
 
     ' ===============================
     '  RENDERING
@@ -211,19 +190,10 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub InitGameplay()
-    '    InitPhysics()
-    'End Sub
 
     Private Sub InitPhysics()
         physics.Start()
     End Sub
-
-    'Private Sub InitBall()
-    '    renderer.ScaleBall(model)
-    '    physics.CenterBall()
-    '    physics.MoveBallRandom()
-    'End Sub
 
     Private Sub InitAudio()
         resource.CreateAudioFilesAsNeeded()
@@ -251,9 +221,9 @@ Public Class Form1
 
         AudioRestartTimer?.Stop()
 
-        Audio.PlayExitSound()
+        audio.PlayExitSound()
 
-        Audio.FadeOutAndStopActiveLoops(700)
+        audio.FadeOutAndStopActiveLoops(700)
 
         physics.StopTimer()
 
