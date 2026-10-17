@@ -153,13 +153,27 @@ Public Class PhysicsEngine
         Dim targetY As Single = model.BallPos.Y + model.BallDiameter / 2
         Dim paddleCenter As Single = right.Y + model.PaddleHeight / 2
 
-        Dim factor As Double = model.AIModeFactor * model.AIDifficultyScale
+        Dim factor As Double = Math.Max(model.AIModeFactor * model.AIDifficultyScale, 0.25)
 
-        If targetY < paddleCenter - 20 Then
+        'If targetY < paddleCenter - (model.ClientSize.Height \ 128) Then
+        '    right.Y -= CSng(model.PaddleSpeed * dt * factor)
+        'ElseIf targetY > paddleCenter + (model.ClientSize.Height \ 128) Then
+        '    right.Y += CSng(model.PaddleSpeed * dt * factor)
+        'End If
+
+        If targetY < paddleCenter Then
             right.Y -= CSng(model.PaddleSpeed * dt * factor)
-        ElseIf targetY > paddleCenter + 20 Then
+        ElseIf targetY > paddleCenter Then
             right.Y += CSng(model.PaddleSpeed * dt * factor)
         End If
+
+        'If targetY < paddleCenter Then
+        '    right.Y -= CSng(model.PaddleSpeed * dt * 0.25)
+        'ElseIf targetY > paddleCenter Then
+        '    right.Y += CSng(model.PaddleSpeed * dt * 0.25)
+        'End If
+
+
 
         right.Y = Math.Max(0, Math.Min(model.ClientSize.Height - model.PaddleHeight, right.Y))
 

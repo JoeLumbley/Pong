@@ -456,7 +456,9 @@ Public Class Rendering
         ' -------------------------------
         ' AI difficulty scaling
         ' -------------------------------
-        model.AIDifficultyScale = model.ClientSize.Height / 1080.0
+        'model.AIDifficultyScale = model.ClientSize.Height / 1080.0
+        model.AIDifficultyScale = model.ClientSize.Height / 2000
+
 
     End Sub
     Private Sub ScaleBallSpeed4State(model As GameModel)
@@ -465,18 +467,18 @@ Public Class Rendering
            model.State = GameState.EndScreen OrElse
            model.State = GameState.AIDifficulty Then
 
-            model.BallSpeed = 200 * (model.ClientSize.Height / 1080.0)
+            model.BallSpeed = 200 * (model.ClientSize.Height / 1080)
 
         Else
 
-            model.BallSpeed = 800 * (model.ClientSize.Height / 1080.0)
+            model.BallSpeed = 800 * (model.ClientSize.Height / 1080)
 
         End If
 
     End Sub
 
     Private Sub ScalePaddleSpeed(model As GameModel)
-        model.PaddleSpeed = CInt(400 * Math.Sqrt(model.ClientSize.Height / 1080.0))
+        model.PaddleSpeed = CInt(350 * Math.Sqrt(model.ClientSize.Height / 1080))
     End Sub
 
 
