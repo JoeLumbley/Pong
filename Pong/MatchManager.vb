@@ -91,10 +91,6 @@ Public Class MatchManager
         model.RightPaddleUp = False
         model.RightPaddleDown = False
 
-        'settings.SetPauseMenuSelection(0) ' Resume game
-
-
-        'model.PauseSelection = 0 ' Resume game
         model.PauseSelection = PauseMenu.ResumeMatch
 
         window.MovePointerCenterScreen()

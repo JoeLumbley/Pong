@@ -246,30 +246,6 @@ Public Class Rendering
         Return pauseQuitRect
     End Function
 
-    ' ============================================================
-    '   CONSTRUCTOR
-    ' ============================================================
-
-
-    'Public Sub New(g As Graphics, size As Size)
-    '    'clientSize = size
-    '    g.SmoothingMode = SmoothingMode.AntiAlias
-    '    g.PixelOffsetMode = PixelOffsetMode.HighQuality
-
-    '    ScaleBall(size)
-    '    InitGraphics(g, size)
-    '    InitTrails()
-    '    InitPaddles(size)
-    '    CacheHUD(g, size)
-    '    CachePause(g, size)
-    '    CacheKeyboardHints(g, size)
-    '    CacheAIDifficulty(g, size)
-    '    CacheStartScreen(g, size)   ' <<< NEW
-
-    '    fpsStopwatch.Start()
-    '    blinkStopwatch.Start()
-    'End Sub
-
 
     Private Sub CacheStartScreen(form As Form)
         Dim g = form.CreateGraphics()
@@ -321,13 +297,6 @@ Public Class Rendering
 
 
 
-    ' ============================================================
-    '   FORM STATE UPDATE
-    ' ============================================================
-    'Public Sub UpdateFormState(style As FormBorderStyle, size As Size)
-    '    formBorderStyle = style
-    '    clientSize = size
-    'End Sub
 
     ' ============================================================
     '   INITIALIZATION
@@ -339,9 +308,6 @@ Public Class Rendering
     End Sub
 
     Public Sub InitGraphics(form As Form, model As GameModel)
-
-        'Me.form = form
-        'Me.model = model
 
         ballBrush = New SolidBrush(Color.DeepSkyBlue)
         paddleBrush = New SolidBrush(Color.White)
@@ -724,25 +690,9 @@ Public Class Rendering
                                    model.BallPos.Y + CSng(model.VelY * deltaTime))
 
 
-        'model.BallPos.X += CSng(model.VelX * deltaTime)
-        'model.BallPos.Y += CSng(model.VelY * deltaTime)
         UpdateTrail(model)
     End Sub
 
-    'Public Sub UpdateBallPosition(newPos As PointF)
-    '    ballPos = newPos
-    '    UpdateTrail()
-    'End Sub
-
-    'Public Sub UpdateBallVelocity(newVelX As Double, newVelY As Double)
-    '    velX = newVelX
-    '    velY = newVelY
-    'End Sub
-
-    'Public Sub UpdateBallDiameter(newDiameter As Integer)
-    '    ballDiameter = newDiameter
-    '    InitTrails()
-    'End Sub
 
     Public Sub UpdateBallBrush(newBrush As SolidBrush)
         ballBrush?.Dispose()
@@ -811,30 +761,11 @@ Public Class Rendering
         showKeyboardHints = Not showKeyboardHints
     End Sub
 
-    'Public Sub SetPlayerMode(form As Form, mode As Integer)
-    '    numberOfPlayersSelection = If(mode = 2, 1, 0)
-    '    CacheKeyboardHints(form)
-    'End Sub
-
-    'Public Sub SetWinnerText(text As String)
-    '    winnerText = text
-    'End Sub
-
-    'Public Sub SetGameState(state As GameState)
-    '    currentState = state
-    'End Sub
 
     Public Sub SetAIDifficultySelection(sel As Integer)
         aiDifficultySelection = sel
     End Sub
 
-    'Public Sub SetStartMenuSelection(sel As Integer)
-    '    numberOfPlayersSelection = sel
-    'End Sub
-
-    'Public Sub SetPauseMenuSelection(sel As Integer)
-    '    pauseMenuSelection = sel
-    'End Sub
 
     ' ============================================================
     '   RENDERING PIPELINE
@@ -1077,13 +1008,6 @@ Public Class Rendering
             Dim x = pauseMenuItemX(i)
             Dim y = pauseMenuItemY(i)
 
-            'Dim gPath As GraphicsPath = pauseResumePath
-
-            'Select Case i
-            '    Case 0 : gPath = pauseResumePath
-            '    Case 1 : gPath = pauseNewPath
-            '    Case 2 : gPath = pauseQuitPath
-            'End Select
 
             Select Case i
                 Case PauseMenu.ResumeMatch : gPath = pauseResumePath

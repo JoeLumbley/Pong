@@ -60,7 +60,7 @@ Public Class InputManager
             End If
 
             audio.PlayFullScreenSound()
-            window.ToggleFullScreen(form)
+            window.ToggleFullScreen()
             form.Invalidate()
             Return
         End If
@@ -76,7 +76,7 @@ Public Class InputManager
             escapeKeyDown = True
 
             audio.PlayFullScreenSound()
-            window.ToggleFullScreen(form)
+            window.ToggleFullScreen()
             form.Invalidate()
             Return
         End If

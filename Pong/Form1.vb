@@ -33,7 +33,9 @@
 
 Public Class Form1
 
-    Private window As New WindowManager
+    'Private window As New WindowManager
+    Private window As New WindowManager(Me)
+
 
     Private resource As New ResourceManager
 
@@ -184,7 +186,7 @@ Public Class Form1
 
         Me.DoubleBuffered = True
 
-        window.InitWindow(Me)
+        window.InitWindow()
 
         window.MovePointerCenterScreen()
 

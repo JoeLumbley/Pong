@@ -15,26 +15,7 @@ Public Class AudioController
     Private lastPlay As New Dictionary(Of String, Integer)
 
 
-    'Private ReadOnly model As GameModel
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     Public Sub New()
-        'InitAudio()
-
-        'Me.model = model
     End Sub
 
 
@@ -42,7 +23,6 @@ Public Class AudioController
 
         Audio = New AudioPlayer()
 
-        'CreateSoundFiles()
 
         LoadAndRegisterSounds()
 
