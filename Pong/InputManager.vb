@@ -673,7 +673,7 @@ Public Class InputManager
         ' ============================================================
         ' 4. Escape (Pause only when windowed)
         ' ============================================================
-        If Form1.FormBorderStyle <> FormBorderStyle.None AndAlso
+        If form.FormBorderStyle <> FormBorderStyle.None AndAlso
            e.KeyCode = Keys.Escape Then
 
             If escapeKeyDown Then Return
@@ -948,7 +948,7 @@ Public Class InputManager
         ' ------------------------------
 
         ' One Player
-        If Form1.renderer.OnePlayerOptionRect.Contains(e.Location) Then
+        If renderer.OnePlayerOptionRect.Contains(e.Location) Then
 
             model.PlayerSelection = NumberOfPlayers.OnePlayer   ' ← update selection
 
@@ -960,7 +960,7 @@ Public Class InputManager
         End If
 
         ' Two Players
-        If Form1.renderer.TwoPlayersOptionRect.Contains(e.Location) Then
+        If renderer.TwoPlayersOptionRect.Contains(e.Location) Then
 
             model.PlayerSelection = NumberOfPlayers.TwoPlayers   ' ← update selection
 
