@@ -1,12 +1,4 @@
-﻿'Imports Pong.Enums
-
-'Public Class GameStateManager
-
-
-
-'End Class
-
-
+﻿
 
 Imports Pong.Enums
 
@@ -15,134 +7,231 @@ Public Class GameStateManager
     Private ReadOnly model As GameModel
     Private ReadOnly audio As AudioController
     Private ReadOnly physics As PhysicsEngine
-    Private ReadOnly match As MatchManager
     Private ReadOnly window As WindowManager
 
     Public Sub New(model As GameModel,
                    audio As AudioController,
                    physics As PhysicsEngine,
-                   match As MatchManager,
                    window As WindowManager)
 
         Me.model = model
         Me.audio = audio
         Me.physics = physics
-        Me.match = match
         Me.window = window
+
+
+        AddHandler physics.MatchWon, AddressOf EndMatch
+
+
     End Sub
 
-    ' ============================================================
-    ' STATE TRANSITIONS
-    ' ============================================================
+#Region "Properties"
+
+    Public ReadOnly Property CurrentState As GameState
+        Get
+            Return model.State
+        End Get
+    End Property
+
+#End Region
+
+#Region "State Transitions"
 
     Public Sub GoToStartScreen()
-        model.State = GameState.StartScreen
 
-        model.ScoreLeft = 0
-        model.ScoreRight = 0
-        model.WinnerText = ""
+        ResetScores()
+
+        model.WinnerText = String.Empty
         model.WinnerIs = 0
 
-        physics.ResetForMenu()
-        window.MovePointerCenterScreen()
+        PrepareMenuMode()
 
-        audio.FadeOutAndStopGamePlayLoop(600)
-        audio.FadeOutAndStopPausedLoop(600)
-        audio.PlayStartLoop(600)
+        SetState(GameState.StartScreen)
+
     End Sub
 
     Public Sub GoToAIDifficulty()
-        model.State = GameState.AIDifficulty
 
-        physics.ResetForMenu()
-        window.MovePointerCenterScreen()
+        PrepareMenuMode()
 
-        audio.FadeOutAndStopGamePlayLoop(600)
-        audio.FadeOutAndStopPausedLoop(600)
-        audio.PlayStartLoop(600)
+        SetState(GameState.AIDifficulty)
+
     End Sub
 
     Public Sub StartMatch()
-        audio.FadeOutAndStopStartLoop(600)
-        audio.FadeOutAndStopPausedLoop(600)
+
+        StopMenuAudio()
 
         window.MovePointerOffScreen()
 
-        model.ScoreLeft = 0
-        model.ScoreRight = 0
+        ResetScores()
 
-        If model.PlayerMode = NumberOfPlayers.OnePlayer Then
-            model.LeftPlayerName = "You"
-            model.RightPlayerName = "CPU"
-        Else
-            model.LeftPlayerName = "Left"
-            model.RightPlayerName = "Right"
-        End If
+        ConfigurePlayerNames()
 
         physics.PrepareNewMatch()
 
-        model.State = GameState.Playing
+        SetState(GameState.Playing)
+
         physics.Start()
+
         audio.PlayGamePlayLoop(600)
+
     End Sub
 
     Public Sub PauseGame()
+
         If model.State <> GameState.Playing Then Return
 
-        physics.StopTimer()
+        physics.Stop()
+
         audio.FadeOutAndStopGamePlayLoop(600)
 
-        model.LeftPaddleUp = False
-        model.LeftPaddleDown = False
-        model.RightPaddleUp = False
-        model.RightPaddleDown = False
+        ClearMovementFlags()
 
         model.PauseSelection = PauseMenu.ResumeMatch
 
         window.MovePointerCenterScreen()
 
-        model.State = GameState.Pause
+        SetState(GameState.Pause)
+
         audio.PlayPausedLoop(600)
+
     End Sub
 
     Public Sub ResumeGame()
+
         If model.State <> GameState.Pause Then Return
 
         audio.FadeOutAndStopPausedLoop(600)
+
         window.MovePointerOffScreen()
 
-        model.State = GameState.Playing
+        SetState(GameState.Playing)
+
         physics.Start()
+
         audio.PlayGamePlayLoop(600)
+
     End Sub
 
-    Public Sub EndMatch()
-        model.State = GameState.EndScreen
+    Public Sub EndMatch(winnerId As Integer,
+                        winnerText As String)
 
-        physics.ResetForMenu()
+        model.WinnerIs = winnerId
+        model.WinnerText = winnerText
+
+        physics.ResetForEnd()
+
         window.MovePointerCenterScreen()
 
         audio.FadeOutAndStopGamePlayLoop(600)
+
+        SetState(GameState.EndScreen)
+
         audio.PlayStartLoop(600)
+
     End Sub
 
     Public Sub QuitToStartScreen()
-        audio.FadeOutAndStopPausedLoop(600)
+
+        ResetScores()
+
+        model.WinnerText = String.Empty
+        model.WinnerIs = 0
+
+        PrepareEnd()
+
+        SetState(GameState.StartScreen)
+
+        physics.Start()
+
+    End Sub
+
+#End Region
+
+#Region "Helpers"
+
+    Private Sub SetState(state As GameState)
+
+        model.State = state
+
+    End Sub
+
+    Private Sub ResetScores()
 
         model.ScoreLeft = 0
         model.ScoreRight = 0
-        model.WinnerText = ""
+
+    End Sub
+
+    Private Sub ConfigurePlayerNames()
+
+        If model.PlayerMode = NumberOfPlayers.OnePlayer Then
+
+            model.LeftPlayerName = "You"
+            model.RightPlayerName = "CPU"
+
+        Else
+
+            model.LeftPlayerName = "Left"
+            model.RightPlayerName = "Right"
+
+        End If
+
+    End Sub
+
+    Private Sub PrepareMenuMode()
 
         physics.ResetForMenu()
 
-        model.State = GameState.StartScreen
-        physics.Start()
+        window.MovePointerCenterScreen()
+
+        StopGameplayAudio()
+
         audio.PlayStartLoop(600)
+
     End Sub
 
-    Public Sub ToggleFullScreen()
-        window.ToggleFullScreen()
-        model.IsFullscreen = Not model.IsFullscreen
+
+    Private Sub PrepareEnd()
+
+        physics.ResetForEnd()
+
+        window.MovePointerCenterScreen()
+
+        StopGameplayAudio()
+
+        audio.PlayStartLoop(600)
+
     End Sub
+
+
+    Private Sub StopGameplayAudio()
+
+        audio.FadeOutAndStopGamePlayLoop(600)
+        audio.FadeOutAndStopPausedLoop(600)
+
+    End Sub
+
+    Private Sub StopMenuAudio()
+
+        audio.FadeOutAndStopStartLoop(600)
+        audio.FadeOutAndStopPausedLoop(600)
+
+    End Sub
+
+    Private Sub ClearMovementFlags()
+
+        model.Input.LeftUp = False
+        model.Input.LeftDown = False
+
+        model.Input.RightUp = False
+        model.Input.RightDown = False
+
+    End Sub
+
+#End Region
 
 End Class
+
+

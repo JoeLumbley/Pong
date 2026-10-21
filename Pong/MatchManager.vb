@@ -82,14 +82,14 @@ Public Class MatchManager
                          physics As PhysicsEngine,
                          model As GameModel)
 
-        physics.StopTimer()
+        physics.Stop()
 
         audio.FadeOutAndStopGamePlayLoop(600)
 
-        model.LeftPaddleUp = False
-        model.LeftPaddleDown = False
-        model.RightPaddleUp = False
-        model.RightPaddleDown = False
+        model.Input.LeftUp = False
+        model.Input.LeftDown = False
+        model.Input.RightUp = False
+        model.Input.RightDown = False
 
         model.PauseSelection = PauseMenu.ResumeMatch
 

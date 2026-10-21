@@ -3,6 +3,11 @@
 Public Class GameModel
     Implements IDisposable
 
+
+
+
+    Public Property Input As New InputState
+
     ' ============================================================
     ' GAME STATE
     ' ============================================================
@@ -15,8 +20,6 @@ Public Class GameModel
     Public Property PlayerSelection As NumberOfPlayers = NumberOfPlayers.OnePlayer
     Public Property AISelection As AIDifficultyLevel = AIDifficultyLevel.Easy
 
-    ' Pause menu selection (0 = Resume, 1 = New Match, 2 = Quit)
-    'Public Property PauseSelection As Integer = 0
     Public Property PauseSelection As Integer = PauseMenu.ResumeMatch
 
 
@@ -47,10 +50,10 @@ Public Class GameModel
     Public Property PaddleSpeed As Integer = 700
 
     ' Movement flags (set by InputManager, consumed by PhysicsEngine)
-    Public Property LeftPaddleUp As Boolean
-    Public Property LeftPaddleDown As Boolean
-    Public Property RightPaddleUp As Boolean
-    Public Property RightPaddleDown As Boolean
+    'Public Property LeftPaddleUp As Boolean
+    'Public Property LeftPaddleDown As Boolean
+    'Public Property RightPaddleUp As Boolean
+    'Public Property RightPaddleDown As Boolean
 
     ' Paddle velocity (for spin)
     Public Property LastPaddleLeftY As Single
@@ -87,7 +90,7 @@ Public Class GameModel
     ' ============================================================
     ' MOUSE STATE
     ' ============================================================
-    Public Property MouseIsClicking As Boolean = False
+    'Public Property MouseIsClicking As Boolean = False
 
     ' ============================================================
     ' AUDIO COOLDOWN
@@ -150,5 +153,8 @@ Public Class GameModel
         Dispose(True)
         GC.SuppressFinalize(Me)
     End Sub
+
+
+
 
 End Class

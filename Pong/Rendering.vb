@@ -211,6 +211,7 @@ Public Class Rendering
     Private rng As New Random()
 
 
+
     ' ============================================================
     '   PUBLIC RECT ACCESSORS
     ' ============================================================
@@ -772,7 +773,6 @@ Public Class Rendering
     ' ============================================================
     Public Sub Render(g As Graphics,
                       state As GameState,
-                      match As MatchManager,
                       form As Form,
                       model As GameModel)
 
@@ -806,7 +806,7 @@ Public Class Rendering
                 DrawTrail(g)
                 DrawBall(g, model)
                 DrawHUD(g, model)
-                DrawGameOver(g, match, form, model)
+                DrawGameOver(g, form, model)
                 If model.ShowKeyboardHints() Then DrawGameOverHints(g, form)
 
             Case GameState.AIDifficulty
@@ -1072,7 +1072,7 @@ Public Class Rendering
         End If
     End Sub
 
-    Private Sub DrawGameOver(g As Graphics, match As MatchManager, form As Form, model As GameModel)
+    Private Sub DrawGameOver(g As Graphics, form As Form, model As GameModel)
         Dim titleSize = g.MeasureString(model.WinnerText, gameOverFont)
         Dim titleColor As Color = Color.FromArgb(fadeAlpha, 255, 255, 255)
 

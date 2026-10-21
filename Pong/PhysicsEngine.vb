@@ -2,36 +2,45 @@
 
 Public Class PhysicsEngine
 
+
+
     Private ReadOnly model As GameModel
     Private ReadOnly audio As AudioController
-    Private ReadOnly renderer As Rendering
-    Private ReadOnly form As Form
-    Private ReadOnly match As MatchManager
-    Private ReadOnly window As WindowManager
 
-    Private physicsTimer As Timer
-    Private stopwatch As Stopwatch
+
+    Private ReadOnly physicsTimer As Timer
+    Private ReadOnly stopwatch As Stopwatch
+
+
+
+    Private Const WinningScore As Integer = 10
+
+    Public Event MatchWon(winnerId As Integer,
+                          winnerText As String)
+
+    Public Event FrameUpdated()
+
+
+
 
     Public Sub New(model As GameModel,
-                   audio As AudioController,
-                   renderer As Rendering,
-                   form As Form,
-                   match As MatchManager,
-                   window As WindowManager)
+               audio As AudioController)
 
         Me.model = model
         Me.audio = audio
-        Me.renderer = renderer
-        Me.form = form
-        Me.match = match
-        Me.window = window
 
-        physicsTimer = New Timer With {.Interval = 15}
-        AddHandler physicsTimer.Tick, AddressOf Tick
+        physicsTimer = New Timer With {
+            .Interval = 15
+        }
+
+        AddHandler physicsTimer.Tick,
+        AddressOf Tick
 
         stopwatch = New Stopwatch()
-        stopwatch.Start()
+
     End Sub
+
+
 
     ' ============================================================
     ' START / STOP
@@ -41,64 +50,65 @@ Public Class PhysicsEngine
         physicsTimer.Start()
     End Sub
 
-    Public Sub StopTimer()
+
+
+    Public Sub [Stop]()
+
         physicsTimer.Stop()
+
     End Sub
+
 
     ' ============================================================
     ' MAIN PHYSICS LOOP
-    ' ============================================================
-    Private Sub Tick(sender As Object, e As EventArgs)
+    '' ============================================================
+
+
+    Private Sub Tick(
+        sender As Object,
+        e As EventArgs)
+
         If model.State = GameState.Pause Then Return
 
-        Dim dt As Double = stopwatch.Elapsed.TotalSeconds
+        Dim dt As Double =
+            stopwatch.Elapsed.TotalSeconds
+
         stopwatch.Restart()
 
         dt = Math.Min(dt, 0.05)
 
-        MoveBall(dt)
-        MovePaddles(dt)
 
-        If model.PlayerMode = NumberOfPlayers.OnePlayer AndAlso model.State = GameState.Playing Then
-            UpdateAI(dt)
-        End If
+        MoveBall(dt)
 
         HandleWallCollisions()
 
-        renderer.UpdateTrail(model)
-
         Select Case model.State
-            Case GameState.StartScreen
-                renderer.UpdateStartScreenFX()
 
             Case GameState.Playing
+
                 MovePaddles(dt)
 
                 If model.PlayerMode = NumberOfPlayers.OnePlayer Then
+
                     UpdateAI(dt)
+
                 End If
 
                 HandlePaddleCollisions()
+
                 CheckScore()
 
                 TrackPaddleVelocities()
 
-
-            Case GameState.AIDifficulty
-                renderer.UpdateStartScreenFX()
-
-            Case GameState.Pause
-                    ' No updates needed for Pause screen
-
-            Case GameState.EndScreen
-                renderer.UpdateStartScreenFX()
-
         End Select
 
+        RaiseEvent FrameUpdated()
 
-        form.Invalidate()
 
     End Sub
+
+
+
 
     ' ============================================================
     ' BALL MOVEMENT
@@ -118,20 +128,20 @@ Public Class PhysicsEngine
         Dim left = model.LeftPaddleRect
         Dim right = model.RightPaddleRect
 
-        If model.LeftPaddleUp Then
+        If model.Input.LeftUp Then
             left.Y -= CInt(model.PaddleSpeed * dt)
         End If
 
-        If model.LeftPaddleDown Then
+        If model.Input.LeftDown Then
             left.Y += CInt(model.PaddleSpeed * dt)
         End If
 
         If model.PlayerMode = NumberOfPlayers.TwoPlayers Then
-            If model.RightPaddleUp Then
+            If model.Input.RightUp Then
                 right.Y -= CInt(model.PaddleSpeed * dt)
             End If
 
-            If model.RightPaddleDown Then
+            If model.Input.RightDown Then
                 right.Y += CInt(model.PaddleSpeed * dt)
             End If
         End If
@@ -155,24 +165,12 @@ Public Class PhysicsEngine
 
         Dim factor As Double = Math.Max(model.AIModeFactor * model.AIDifficultyScale, 0.25)
 
-        'If targetY < paddleCenter - (model.ClientSize.Height \ 128) Then
-        '    right.Y -= CSng(model.PaddleSpeed * dt * factor)
-        'ElseIf targetY > paddleCenter + (model.ClientSize.Height \ 128) Then
-        '    right.Y += CSng(model.PaddleSpeed * dt * factor)
-        'End If
 
         If targetY < paddleCenter Then
             right.Y -= CSng(model.PaddleSpeed * dt * factor)
         ElseIf targetY > paddleCenter Then
             right.Y += CSng(model.PaddleSpeed * dt * factor)
         End If
-
-        'If targetY < paddleCenter Then
-        '    right.Y -= CSng(model.PaddleSpeed * dt * 0.25)
-        'ElseIf targetY > paddleCenter Then
-        '    right.Y += CSng(model.PaddleSpeed * dt * 0.25)
-        'End If
-
 
 
         right.Y = Math.Max(0, Math.Min(model.ClientSize.Height - model.PaddleHeight, right.Y))
@@ -264,55 +262,65 @@ Public Class PhysicsEngine
 
     ' ============================================================
     ' SCORING
-    ' ============================================================
+    '' ============================================================
+
     Private Sub CheckScore()
 
         If model.BallPos.X <= 0 Then
 
 
-            model.ScoreRight += 1
-            renderer.UpdateScore(model.ScoreLeft, model.ScoreRight, form, model)
+            AwardPoint(True)
 
-            audio.PlayPoint()
-            ResetBall(1)
-            ResetPaddles()
             Return
+
         End If
 
         If model.BallPos.X >= model.ClientSize.Width - model.BallDiameter Then
 
-            model.ScoreLeft += 1
-            renderer.UpdateScore(model.ScoreLeft, model.ScoreRight, form, model)
 
-            audio.PlayPoint()
-            ResetBall(-1)
-            ResetPaddles()
+            AwardPoint(False)
+
             Return
-        End If
-
-        If model.ScoreLeft >= 10 Then
-
-
-            If model.PlayerMode = NumberOfPlayers.OnePlayer Then
-                model.WinnerText = "You Win!"
-            Else
-                model.WinnerText = "Left Wins!"
-            End If
-            model.WinnerIs = 1
-
-            model.State = GameState.EndScreen
-
-            match.EndMatch(audio, window, model, Me)
 
         End If
 
-        If model.ScoreRight >= 10 Then
-            model.WinnerText = $"{model.RightPlayerName} Wins!"
-            model.WinnerIs = 2
+        If model.ScoreLeft >= WinningScore Then
 
-            model.State = GameState.EndScreen
-            match.EndMatch(audio, window, model, Me)
+
+            RaiseEvent MatchWon(1,
+                                If(model.PlayerMode = NumberOfPlayers.OnePlayer,
+                                "You Win!", "Left Wins!"))
+
+            Return
+
         End If
+
+        If model.ScoreRight >= WinningScore Then
+
+
+            RaiseEvent MatchWon(2,
+                                $"{model.RightPlayerName} Wins!")
+
+            Return
+
+        End If
+
+    End Sub
+
+
+    Private Sub AwardPoint(scoreRight As Boolean)
+
+        If scoreRight Then
+            model.ScoreRight += 1
+            ResetBall(1)
+        Else
+            model.ScoreLeft += 1
+            ResetBall(-1)
+        End If
+
+        audio.PlayPoint()
+
+        ResetPaddles()
 
     End Sub
 
@@ -323,19 +331,50 @@ Public Class PhysicsEngine
     Private Sub ResetBall(direction As Integer)
         CenterBall()
         ServeBall(direction)
-        renderer.ClearTrail()
     End Sub
 
     Public Sub PrepareNewMatch()
-        model.BallSpeed = 800 * (model.ClientSize.Height / 1080.0)
+
+        model.BallSpeed =
+        800 * (model.ClientSize.Height / 1080.0)
+
+        ResetPaddles()
+
         CenterBall()
-        ServeBall(If(model.RNG.Next(0, 2) = 0, -1, 1))
+
+        ServeBall(
+        If(model.RNG.Next(0, 2) = 0, -1, 1))
+
     End Sub
 
+
     Public Sub ResetForMenu()
-        model.BallSpeed = 200 * (model.ClientSize.Height / 1080.0)
+
+        model.BallSpeed =
+        200 * (model.ClientSize.Height / 1080.0)
+
+        ResetPaddles()
+
+        'CenterBall()
+
+        'MoveBallRandom()
+
+    End Sub
+
+
+
+
+    Public Sub ResetForEnd()
+
+        model.BallSpeed =
+        200 * (model.ClientSize.Height / 1080.0)
+
+        ResetPaddles()
+
         CenterBall()
+
         MoveBallRandom()
+
     End Sub
 
     Public Sub ResetPaddles()
