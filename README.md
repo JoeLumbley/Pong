@@ -91,7 +91,7 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 
 ---
 
-<img width="1920" height="1080" alt="045" src="https://github.com/user-attachments/assets/df4bf778-9f27-4e6b-9f68-4f6842fce0eb" />
+<img width="1920" height="1080" alt="003" src="https://github.com/user-attachments/assets/f408f2e1-fa5e-44a9-a439-5ea4d64298cd" />
 
 ## Pause Menu
 | Key | Action |
