@@ -844,6 +844,33 @@ Public Class Rendering
 
     Private Sub DrawBall(g As Graphics, model As GameModel)
         g.FillEllipse(ballBrush, model.BallPos.X, model.BallPos.Y, model.BallDiameter, model.BallDiameter)
+
+        Dim shadowPath As New GraphicsPath()
+        shadowPath.AddEllipse(
+            model.BallPos.X + model.BallDiameter * 0.1F,
+            model.BallPos.Y + model.BallDiameter * 0.1F,
+            model.BallDiameter,
+            model.BallDiameter)
+
+        Using shadowBrush As New PathGradientBrush(shadowPath)
+            shadowBrush.CenterColor = Color.FromArgb(75, Color.Black)
+            shadowBrush.SurroundColors = {Color.FromArgb(0, Color.Black)}
+            g.FillPath(shadowBrush, shadowPath)
+        End Using
+
+        shadowPath.Dispose()
+
+        Dim highlightSize As Single = model.BallDiameter * 0.24F
+        Dim highlightX As Single = model.BallPos.X + model.BallDiameter * 0.2F
+        Dim highlightY As Single = model.BallPos.Y + model.BallDiameter * 0.16F
+
+        Using highlightBrush As New SolidBrush(Color.FromArgb(128, Color.White))
+            g.FillEllipse(highlightBrush,
+                          highlightX,
+                          highlightY,
+                          highlightSize,
+                          highlightSize)
+        End Using
     End Sub
 
     Private Sub DrawPaddles(g As Graphics, model As GameModel)
