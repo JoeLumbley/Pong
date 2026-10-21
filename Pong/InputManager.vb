@@ -1464,7 +1464,9 @@ Public Class InputManager
 
         audio.PlaySelectSound()
 
-        state.GoToStartScreen()
+        'state.GoToStartScreen()
+        state.QuitToStartScreen()
+
 
         form.Invalidate()
 
