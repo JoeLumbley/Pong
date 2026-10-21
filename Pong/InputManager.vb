@@ -404,21 +404,6 @@ Public Class InputManager
                             audio As AudioController,
                             model As GameModel)
 
-        'If model.State = GameState.Pause Then
-        '    HandlePauseMouseWheel(e.Delta, form, audio, model)
-        '    Return
-        'End If
-
-        'If model.State = GameState.StartScreen Then
-        '    HandleStartScreenMouseWheel(e.Delta, form, audio, model)
-        '    Return
-        'End If
-
-        'If model.State = GameState.AIDifficulty Then
-        '    HandleAIDifficultyMouseWheel(e.Delta, form, audio, model)
-        '    Return
-        'End If
-
 
         Select Case model.State
 

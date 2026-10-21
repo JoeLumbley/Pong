@@ -355,13 +355,8 @@ Public Class PhysicsEngine
 
         ResetPaddles()
 
-        'CenterBall()
-
-        'MoveBallRandom()
 
     End Sub
-
-
 
 
     Public Sub ResetForEnd()

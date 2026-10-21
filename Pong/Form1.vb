@@ -33,242 +33,6 @@
 
 
 
-'Public Class Form1
-
-'    'Private window As New WindowManager
-'    Private window As New WindowManager(Me)
-
-
-
-'    Private resource As New ResourceManager
-
-'    Private model As New GameModel(ClientSize)
-
-'    'Private match As New MatchManager
-
-'    Private input As New InputManager
-
-'    Private audio As New AudioController
-
-
-
-'    Public renderer As New Rendering
-
-'    Private physics As New PhysicsEngine(model, audio)
-
-
-'    Private state As New GameStateManager(model, audio, physics, window)
-
-'    ' -------------------------------
-'    '  Random
-'    ' -------------------------------
-'    Private rng As New Random
-
-'    Private WithEvents AudioRestartTimer As Timer
-
-
-'    ' ===============================
-'    '  FORM LIFECYCLE
-'    ' ===============================
-
-'    Protected Overrides Sub OnLoad(e As EventArgs)
-'        MyBase.OnLoad(e)
-
-'        InitAudio()
-'        InitWindow()
-'        InitPhysics()
-'        renderer.InitGraphics(Me, model)
-'        state = New GameStateManager(model, audio, physics, window)
-
-
-'    End Sub
-
-'    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-'        Me.WindowState = FormWindowState.Maximized
-'    End Sub
-
-
-'    ' ===============================
-'    '  CLEANUP / FILES
-'    ' ===============================
-
-'    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-
-'        AudioRestartTimer?.Stop()
-'        physics.Stop()
-
-'        AudioRestartTimer?.Dispose()
-
-'        audio?.DisposeAudio()
-'        audio = Nothing
-
-'        model?.Dispose()
-
-'    End Sub
-
-'    ' ===============================
-'    '  RENDERING
-'    ' ===============================
-
-'    Protected Overrides Sub OnPaint(e As PaintEventArgs)
-'        MyBase.OnPaint(e)
-
-'        renderer.UpdateFPS()
-'        renderer.Render(e.Graphics, model.State, Me, model)
-
-'    End Sub
-
-'    Protected Overrides Sub OnPaintBackground(pevent As PaintEventArgs)
-'        ' Suppress background painting to avoid flicker
-'    End Sub
-
-'    ' ===============================
-'    '  INPUT HANDLING
-'    ' ===============================
-
-'    Protected Overrides Sub OnKeyDown(e As KeyEventArgs)
-'        MyBase.OnKeyDown(e)
-
-'        input.OnKeyDown(e, Me, audio, state, renderer, model)
-
-'    End Sub
-
-'    Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
-'        MyBase.OnKeyUp(e)
-
-'        input.OnKeyUp(e, model)
-
-'    End Sub
-
-'    Private Sub Form1_MouseClick(sender As Object, e As MouseEventArgs) Handles Me.MouseClick
-
-'        'input.OnMouseClick(e, Me, audio, renderer, window, physics, model)
-
-'        input.OnMouseClick(e,
-'                           Me,
-'                           audio,
-'                           renderer,
-'                           state,
-'                           model)
-
-'    End Sub
-
-'    Private Sub Form1_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
-
-'        input.OnMouseUp()
-
-'    End Sub
-
-'    Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
-
-'        input.OnMouseMove(e, renderer, Me, audio, model)
-
-'    End Sub
-
-'    Private Sub Form1_MouseWheel(sender As Object, e As MouseEventArgs) Handles Me.MouseWheel
-
-'        input.OnMouseWheel(e, Me, audio, model)
-
-'    End Sub
-
-'    ' ===============================
-'    '  AUDIO RESTART
-'    ' ===============================
-
-'    Private Sub AudioRestartTimer_Tick(sender As Object, e As EventArgs) Handles AudioRestartTimer.Tick
-'        audio.RestartAudioEngine(model)
-'    End Sub
-
-
-'    ' ===============================
-'    '  RESIZE / SCALING
-'    ' ===============================
-
-'    Protected Overrides Sub OnResize(e As EventArgs)
-'        MyBase.OnResize(e)
-
-'        If Me.WindowState = FormWindowState.Minimized Then Return
-
-'        renderer.OnResize(Me, model, physics)
-
-'        Invalidate()
-
-'    End Sub
-
-
-'    Private Sub InitWindow()
-
-'        Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or
-'                    ControlStyles.UserPaint Or
-'                    ControlStyles.OptimizedDoubleBuffer, True)
-
-'        Me.DoubleBuffered = True
-
-'        window.InitWindow()
-
-'        window.MovePointerCenterScreen()
-
-'    End Sub
-
-
-'    Private Sub InitPhysics()
-'        physics.Start()
-'    End Sub
-
-'    Private Sub InitAudio()
-'        resource.CreateAudioFilesAsNeeded()
-'        audio.InitAudio()
-'        InitAudioRestartTimer()
-'    End Sub
-
-'    Private Sub InitAudioRestartTimer()
-
-'        'Restart Audio every 3 minutes
-'        AudioRestartTimer = New Timer With {
-'            .Interval = 180000,
-'            .Enabled = True
-'        }
-
-'        ''Restart Audio every 15 seconds for testing
-'        'AudioRestartTimer = New Timer With {
-'        '    .Interval = 15000,
-'        '    .Enabled = True
-'        '}
-
-'    End Sub
-
-'    Public Sub QuitGame()
-
-'        AudioRestartTimer?.Stop()
-
-'        audio.PlayExitSound()
-
-'        audio.FadeOutAndStopActiveLoops(700)
-
-'        physics.Stop()
-
-'        ' Wait for the sound to finish before closing
-'        Dim t As New Timer() With {.Interval = 800}
-'        AddHandler t.Tick,
-'        Sub()
-'            t.Stop()
-'            t.Dispose()
-
-'            Me.Close()
-
-'        End Sub
-
-'        t.Start()
-
-'    End Sub
-
-
-'End Class
-
-
-
-
-
 Public Class Form1
 
 
@@ -302,25 +66,6 @@ Public Class Form1
 
 #Region "Form Lifecycle"
 
-    'Protected Overrides Sub OnLoad(e As EventArgs)
-
-
-    '    CreateSystems()
-
-    '    MyBase.OnLoad(e)
-
-
-    '    WireEvents()
-
-    '    InitAudio()
-    '    InitWindow()
-
-    '    renderer.InitGraphics(Me, model)
-
-    '    InitPhysics()
-
-    'End Sub
-
     Protected Overrides Sub OnLoad(e As EventArgs)
 
         CreateSystems()
@@ -339,21 +84,6 @@ Public Class Form1
         isInitialized = True
 
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     Private Sub Form1_Shown(
@@ -557,21 +287,6 @@ Public Class Form1
 
 #Region "Rendering"
 
-    'Protected Overrides Sub OnPaint(
-    '    e As PaintEventArgs)
-
-    '    MyBase.OnPaint(e)
-
-    '    renderer.UpdateFPS()
-
-    '    renderer.Render(
-    '        e.Graphics,
-    '        model.State,
-    '        Me,
-    '        model)
-
-    'End Sub
-
 
     Protected Overrides Sub OnPaint(
     e As PaintEventArgs)
@@ -601,23 +316,6 @@ Public Class Form1
 
 #Region "Resize"
 
-    'Protected Overrides Sub OnResize(
-    '    e As EventArgs)
-
-    '    MyBase.OnResize(e)
-
-    '    If WindowState = FormWindowState.Minimized Then
-    '        Return
-    '    End If
-
-    '    renderer.OnResize(
-    '        Me,
-    '        model,
-    '        physics)
-
-    '    Invalidate()
-
-    'End Sub
 
     Protected Overrides Sub OnResize(
     e As EventArgs)
@@ -642,19 +340,6 @@ Public Class Form1
         Invalidate()
 
     End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #End Region
 

@@ -49,11 +49,6 @@ Public Class GameModel
     Public Property PaddleHeight As Integer = 128
     Public Property PaddleSpeed As Integer = 700
 
-    ' Movement flags (set by InputManager, consumed by PhysicsEngine)
-    'Public Property LeftPaddleUp As Boolean
-    'Public Property LeftPaddleDown As Boolean
-    'Public Property RightPaddleUp As Boolean
-    'Public Property RightPaddleDown As Boolean
 
     ' Paddle velocity (for spin)
     Public Property LastPaddleLeftY As Single
