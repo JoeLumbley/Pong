@@ -151,6 +151,9 @@ Public Class Form1
         AddHandler physics.FrameUpdated,
             AddressOf HandleFrameUpdated
 
+        AddHandler physics.WallImpact,
+            AddressOf HandleWallImpact
+
     End Sub
 
     Private Sub InitWindow()
@@ -377,6 +380,7 @@ Public Class Form1
         If IsDisposed OrElse Not IsHandleCreated Then Return
 
         renderer.UpdateTrail(model)
+        renderer.UpdateWallImpact()
         renderer.UpdateStartScreenFX()
 
         If model.State = GameState.Playing Then
@@ -403,6 +407,10 @@ Public Class Form1
 
         Invalidate()
 
+    End Sub
+
+    Private Sub HandleWallImpact(location As PointF)
+        renderer.TriggerWallImpact(location)
     End Sub
 
 #End Region

@@ -19,6 +19,7 @@ Public Class PhysicsEngine
                           winnerText As String)
 
     Public Event FrameUpdated()
+    Public Event WallImpact(location As PointF)
 
 
 
@@ -189,10 +190,16 @@ Public Class PhysicsEngine
             pos.Y = 0
             model.VelY = Math.Abs(model.VelY)
             audio.PlayWithCooldown("bounce", 100)
+            RaiseEvent WallImpact(New PointF(
+                pos.X + model.BallDiameter / 2.0F,
+                0))
         ElseIf pos.Y >= model.ClientSize.Height - model.BallDiameter Then
             pos.Y = model.ClientSize.Height - model.BallDiameter
             model.VelY = -Math.Abs(model.VelY)
             audio.PlayWithCooldown("bounce", 100)
+            RaiseEvent WallImpact(New PointF(
+                pos.X + model.BallDiameter / 2.0F,
+                model.ClientSize.Height))
         End If
 
         If model.State = GameState.StartScreen OrElse

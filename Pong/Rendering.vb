@@ -65,6 +65,13 @@ Public Class Rendering
     Private paddleTrailIndex As Integer = -1
     Private paddleTrailCount As Integer = 0
 
+    ' ============================================================
+    '   WALL IMPACT EFFECT
+    ' ============================================================
+    Private Const WallImpactDuration As Double = 0.9
+    Private wallImpactPoint As PointF
+    Private wallImpactAge As Double = WallImpactDuration
+
 
     ' ============================================================
     '   HUD LAYOUT CACHE
@@ -774,6 +781,20 @@ Public Class Rendering
         Next
     End Sub
 
+    Public Sub TriggerWallImpact(location As PointF)
+        wallImpactPoint = location
+        wallImpactAge = 0
+    End Sub
+
+    Public Sub UpdateWallImpact()
+        If wallImpactAge < WallImpactDuration Then
+            wallImpactAge += 0.015
+            If wallImpactAge > WallImpactDuration Then
+                wallImpactAge = WallImpactDuration
+            End If
+        End If
+    End Sub
+
     Public Sub UpdateScore(leftScore As Integer, rightScore As Integer, form As Form, model As GameModel)
         model.ScoreLeft = leftScore
         model.ScoreRight = rightScore
@@ -880,6 +901,24 @@ Public Class Rendering
         Next
     End Sub
 
+    Private Sub DrawWallImpact(g As Graphics, model As GameModel)
+        If wallImpactAge >= WallImpactDuration Then Return
+
+        Dim progress As Double = wallImpactAge / WallImpactDuration
+        Dim size As Single = CSng((model.BallDiameter * 2) * (0.35 + 1.25 * progress))
+        Dim alpha As Integer = CInt(210 * (1.0 - progress))
+
+        If alpha <= 0 Then Return
+
+        Using impactBrush As New SolidBrush(Color.FromArgb(alpha, Color.White))
+            g.FillEllipse(impactBrush,
+                          wallImpactPoint.X - size / 2.0F,
+                          wallImpactPoint.Y - size / 2.0F,
+                          size,
+                          size)
+        End Using
+    End Sub
+
     Private Sub DrawBall(g As Graphics, model As GameModel)
         g.FillEllipse(ballBrush, model.BallPos.X, model.BallPos.Y, model.BallDiameter, model.BallDiameter)
 
@@ -983,6 +1022,7 @@ Public Class Rendering
 
     Private Sub DrawGamePlayScreen(g As Graphics, model As GameModel)
         DrawTrail(g)
+        DrawWallImpact(g, model)
         DrawPaddleTrails(g, model)
         DrawBall(g, model)
         DrawPaddles(g, model)
