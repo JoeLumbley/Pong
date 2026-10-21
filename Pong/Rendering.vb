@@ -59,6 +59,12 @@ Public Class Rendering
     Private paddleWidth As Integer
     Private paddleHeight As Integer
 
+    Private Const PaddleTrailLength As Integer = 10
+    Private leftPaddleTrail(PaddleTrailLength - 1) As Rectangle
+    Private rightPaddleTrail(PaddleTrailLength - 1) As Rectangle
+    Private paddleTrailIndex As Integer = -1
+    Private paddleTrailCount As Integer = 0
+
 
     ' ============================================================
     '   HUD LAYOUT CACHE
@@ -296,6 +302,21 @@ Public Class Rendering
         startInfoY = form.ClientSize.Height * 0.65F
     End Sub
 
+    Public Sub UpdatePaddleTrails(model As GameModel)
+        paddleTrailIndex = (paddleTrailIndex + 1) Mod PaddleTrailLength
+        leftPaddleTrail(paddleTrailIndex) = model.LeftPaddleRect
+        rightPaddleTrail(paddleTrailIndex) = model.RightPaddleRect
+
+        If paddleTrailCount < PaddleTrailLength Then
+            paddleTrailCount += 1
+        End If
+    End Sub
+
+    Public Sub ClearPaddleTrails()
+        paddleTrailIndex = -1
+        paddleTrailCount = 0
+    End Sub
+
 
 
 
@@ -306,6 +327,23 @@ Public Class Rendering
         'model.BallDiameter = CInt(Math.Min(size.Width, size.Height) / 18.0F)
         model.BallDiameter = CInt(model.ClientSize.Height / 18.0F)
 
+    End Sub
+
+    Private Sub DrawPaddleTrails(g As Graphics, model As GameModel)
+        If paddleTrailCount <= 0 Then Return
+
+        Using trailBrush As New SolidBrush(Color.White)
+            For i As Integer = paddleTrailCount - 1 To 0 Step -1
+                Dim index As Integer =
+                    (paddleTrailIndex - i + PaddleTrailLength) Mod PaddleTrailLength
+                Dim alpha As Integer =
+                    CInt(20 * (1.0 - i / CDbl(paddleTrailCount)))
+
+                trailBrush.Color = Color.FromArgb(alpha, Color.White)
+                g.FillRectangle(trailBrush, leftPaddleTrail(index))
+                g.FillRectangle(trailBrush, rightPaddleTrail(index))
+            Next
+        End Using
     End Sub
 
     Public Sub InitGraphics(form As Form, model As GameModel)
@@ -945,6 +983,7 @@ Public Class Rendering
 
     Private Sub DrawGamePlayScreen(g As Graphics, model As GameModel)
         DrawTrail(g)
+        DrawPaddleTrails(g, model)
         DrawBall(g, model)
         DrawPaddles(g, model)
         DrawHUD(g, model)

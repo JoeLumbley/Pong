@@ -379,6 +379,14 @@ Public Class Form1
         renderer.UpdateTrail(model)
         renderer.UpdateStartScreenFX()
 
+        If model.State = GameState.Playing Then
+            renderer.UpdatePaddleTrails(model)
+        ElseIf model.State = GameState.StartScreen OrElse
+               model.State = GameState.AIDifficulty OrElse
+               model.State = GameState.EndScreen Then
+            renderer.ClearPaddleTrails()
+        End If
+
         If model.ScoreLeft <> cachedScoreLeft OrElse
            model.ScoreRight <> cachedScoreRight OrElse
            model.LeftPlayerName <> cachedLeftPlayerName OrElse
