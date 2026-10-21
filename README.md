@@ -3,7 +3,7 @@
 A modern, full‑screen remake of the classic Pong arcade game. Rebuilt from scratch with smooth physics, glowing motion trails, dynamic paddle spin, an AI opponent, animated menus, and a fully‑featured audio system.
 
 
-<img width="1920" height="1080" alt="044" src="https://github.com/user-attachments/assets/73677a3b-c2d4-4de7-aa41-60b77db9e796" />
+<img width="1920" height="1080" alt="002" src="https://github.com/user-attachments/assets/80f122bf-aa66-45b1-ae91-811aabd1673e" />
 
 This project isn’t just Pong.
 It’s a compact 2D game engine demonstrating real‑time rendering, delta‑time physics, state‑driven UI, and responsive design.
@@ -17,7 +17,7 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 - **Single and Multiplayer Modes**: Challenge yourself against a computer player or compete with friends, making the game versatile for different play styles.
 
 
-<img width="1920" height="1080" alt="043" src="https://github.com/user-attachments/assets/b403e9fa-208e-4ffe-a1cd-5eb18e80273b" />
+<img width="1920" height="1080" alt="001" src="https://github.com/user-attachments/assets/0643e2d4-afa3-49e6-9b5f-92d78ce5df42" />
 
 ### Learning Objectives
 - Understand the basics of game mechanics and physics, including how to simulate movement and collisions.
@@ -91,7 +91,7 @@ It’s a compact 2D game engine demonstrating real‑time rendering, delta‑tim
 
 ---
 
-<img width="1920" height="1080" alt="045" src="https://github.com/user-attachments/assets/df4bf778-9f27-4e6b-9f68-4f6842fce0eb" />
+<img width="1920" height="1080" alt="003" src="https://github.com/user-attachments/assets/f408f2e1-fa5e-44a9-a439-5ea4d64298cd" />
 
 ## Pause Menu
 | Key | Action |
