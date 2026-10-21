@@ -483,7 +483,7 @@ Public Class Rendering
     End Sub
 
     Private Sub ScalePaddleSpeed(model As GameModel)
-        model.PaddleSpeed = CInt(350 * Math.Sqrt(model.ClientSize.Height / 1080))
+        model.PaddleSpeed = CInt(700 * Math.Sqrt(model.ClientSize.Height / 1080))
     End Sub
 
 
