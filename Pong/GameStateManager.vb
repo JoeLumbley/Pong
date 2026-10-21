@@ -184,7 +184,7 @@ Public Class GameStateManager
 
         physics.ResetForMenu()
 
-        window.MovePointerCenterScreen()
+        'window.MovePointerCenterScreen()
 
         StopGameplayAudio()
 
@@ -197,7 +197,7 @@ Public Class GameStateManager
 
         physics.ResetForEnd()
 
-        window.MovePointerCenterScreen()
+        'window.MovePointerCenterScreen()
 
         StopGameplayAudio()
 
