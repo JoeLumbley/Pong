@@ -68,7 +68,7 @@ Public Class Rendering
     ' ============================================================
     '   WALL IMPACT EFFECT
     ' ============================================================
-    Private Const WallImpactDuration As Double = 0.9
+    Private Const WallImpactDuration As Double = 0.1
     Private wallImpactPoint As PointF
     Private wallImpactAge As Double = WallImpactDuration
 
@@ -941,7 +941,7 @@ Public Class Rendering
         Dim highlightX As Single = model.BallPos.X + model.BallDiameter * 0.2F
         Dim highlightY As Single = model.BallPos.Y + model.BallDiameter * 0.16F
 
-        Using highlightBrush As New SolidBrush(Color.FromArgb(128, Color.White))
+        Using highlightBrush As New SolidBrush(Color.FromArgb(110, Color.White))
             g.FillEllipse(highlightBrush,
                           highlightX,
                           highlightY,

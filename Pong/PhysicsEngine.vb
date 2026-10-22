@@ -157,27 +157,79 @@ Public Class PhysicsEngine
     ' ============================================================
     ' AI MOVEMENT
     ' ============================================================
+    'Private Sub UpdateAI(dt As Double)
+
+    '    Dim right = model.RightPaddleRect
+
+    '    Dim targetY As Single = model.BallPos.Y + model.BallDiameter / 2
+    '    Dim paddleCenter As Single = right.Y + model.PaddleHeight / 2
+
+    '    Dim factor As Double = Math.Max(model.AIModeFactor * model.AIDifficultyScale, 0.25)
+
+
+    '    If targetY < paddleCenter Then
+    '        right.Y -= CSng(model.PaddleSpeed * dt * factor)
+    '    ElseIf targetY > paddleCenter Then
+    '        right.Y += CSng(model.PaddleSpeed * dt * factor)
+    '    End If
+
+
+    '    right.Y = Math.Max(0, Math.Min(model.ClientSize.Height - model.PaddleHeight, right.Y))
+
+    '    model.RightPaddleRect = right
+    'End Sub
+
+
+
+    Private Const AI_DEADZONE As Single = 8.0F
+
     Private Sub UpdateAI(dt As Double)
 
         Dim right = model.RightPaddleRect
 
-        Dim targetY As Single = model.BallPos.Y + model.BallDiameter / 2
-        Dim paddleCenter As Single = right.Y + model.PaddleHeight / 2
+        Dim targetY As Single =
+        model.BallPos.Y +
+        model.BallDiameter / 2
 
-        Dim factor As Double = Math.Max(model.AIModeFactor * model.AIDifficultyScale, 0.25)
+        Dim paddleCenter As Single =
+        right.Y +
+        model.PaddleHeight / 2
 
+        Dim factor As Double =
+        Math.Max(
+            model.AIModeFactor * model.AIDifficultyScale,
+            0.25
+        )
 
-        If targetY < paddleCenter Then
-            right.Y -= CSng(model.PaddleSpeed * dt * factor)
-        ElseIf targetY > paddleCenter Then
-            right.Y += CSng(model.PaddleSpeed * dt * factor)
+        Dim difference As Single =
+        targetY - paddleCenter
+
+        If Math.Abs(difference) > AI_DEADZONE Then
+
+            Dim movement As Single =
+            CSng(model.PaddleSpeed * dt * factor)
+
+            right.Y +=
+            Math.Sign(difference) * movement
         End If
 
-
-        right.Y = Math.Max(0, Math.Min(model.ClientSize.Height - model.PaddleHeight, right.Y))
+        right.Y = Math.Max(
+        0,
+        Math.Min(
+                model.ClientSize.Height - model.PaddleHeight,
+                right.Y
+            )
+        )
 
         model.RightPaddleRect = right
+
     End Sub
+
+
+
+
+
+
 
     ' ============================================================
     ' WALL COLLISIONS
