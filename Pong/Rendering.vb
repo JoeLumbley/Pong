@@ -6,6 +6,7 @@ Imports Pong.Enums
 Public Class Rendering
     Implements IDisposable
 
+    Private ReadOnly layout As New Layout()
 
     ' ============================================================
     '   FPS
@@ -366,12 +367,11 @@ Public Class Rendering
 
 
         InitTrails(model)
-        InitPaddles(form)
+        layout.InitializePaddles(form.ClientSize, model)
 
 
-        RescalePaddles(form.ClientSize, model)
-
-        ScaleBall(model)
+        layout.RescalePaddles(form.ClientSize, model)
+        layout.ScaleBall(model)
 
         RescaleFonts(form)
 
@@ -389,21 +389,6 @@ Public Class Rendering
         scoreY = form.ClientSize.Height / 20
 
 
-    End Sub
-
-    Public Sub InitPaddles(form As Form)
-        paddleHeight = form.ClientSize.Height \ 8
-        paddleWidth = form.ClientSize.Width \ 50
-
-        paddleLeft = New RectangleF(form.ClientSize.Width / 50.0F,
-                                    (form.ClientSize.Height - paddleHeight) / 2.0F,
-                                    paddleWidth,
-                                    paddleHeight)
-
-        paddleRight = New RectangleF(form.ClientSize.Width - form.ClientSize.Width / 50.0F - paddleWidth,
-                                     (form.ClientSize.Height - paddleHeight) / 2.0F,
-                                     paddleWidth,
-                                     paddleHeight)
     End Sub
 
     Public Sub InitTrails(model As GameModel)
@@ -429,13 +414,7 @@ Public Class Rendering
 
         If form.WindowState = FormWindowState.Minimized Then Return
 
-        model.ClientSize = form.ClientSize
-
-        ScaleBall(model)
-
-        ScaleBallSpeed4State(model)
-        ScalePaddleSpeed(model)
-        RescalePaddles(form.ClientSize, model)
+        layout.Resize(form.ClientSize, model)
         physics.ResetPaddles()
         physics.CenterBall()
 
@@ -465,32 +444,6 @@ Public Class Rendering
         CacheKeyboardHints(form, model)
 
 
-        ' -------------------------------
-        ' AI difficulty scaling
-        ' -------------------------------
-        'model.AIDifficultyScale = model.ClientSize.Height / 1080.0
-        model.AIDifficultyScale = model.ClientSize.Height / 2000
-
-
-    End Sub
-    Private Sub ScaleBallSpeed4State(model As GameModel)
-
-        If model.State = GameState.StartScreen OrElse
-           model.State = GameState.EndScreen OrElse
-           model.State = GameState.AIDifficulty Then
-
-            model.BallSpeed = 200 * (model.ClientSize.Height / 1080)
-
-        Else
-
-            model.BallSpeed = 800 * (model.ClientSize.Height / 1080)
-
-        End If
-
-    End Sub
-
-    Private Sub ScalePaddleSpeed(model As GameModel)
-        model.PaddleSpeed = CInt(700 * Math.Sqrt(model.ClientSize.Height / 1080))
     End Sub
 
 
