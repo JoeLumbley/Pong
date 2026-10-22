@@ -59,7 +59,7 @@ Public Class Rendering
     Private paddleWidth As Integer
     Private paddleHeight As Integer
 
-    Private Const PaddleTrailLength As Integer = 10
+    Private Const PaddleTrailLength As Integer = 6
     Private leftPaddleTrail(PaddleTrailLength - 1) As Rectangle
     Private rightPaddleTrail(PaddleTrailLength - 1) As Rectangle
     Private paddleTrailIndex As Integer = -1
