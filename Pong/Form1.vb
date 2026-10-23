@@ -1,6 +1,4 @@
-﻿Imports Pong.Enums
-
-' PONG – Code with Joe 
+﻿' PONG – Code with Joe 
 ' A modern, full‑screen remake of the classic Pong arcade game featuring
 ' smooth physics, glowing motion trails, dynamic paddle spin, AI or two‑player 
 ' mode, animated menus, and immersive sound effects. Built with VB.NET and 
@@ -31,14 +29,15 @@
 ' OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ' SOFTWARE.
 
-
+Imports Pong.Enums
 
 Public Class Form1
 
-
     Private isInitialized As Boolean
 
-#Region "Systems"
+    ' ===========================================
+    '  Systems
+    ' ===========================================
 
     Private window As WindowManager
     Private resource As ResourceManager
@@ -56,15 +55,15 @@ Public Class Form1
     Private cachedLeftPlayerName As String = Nothing
     Private cachedRightPlayerName As String = Nothing
 
-#End Region
-
-#Region "Timers"
+    ' ===========================================
+    '  Timers
+    ' ===========================================
 
     Private WithEvents AudioRestartTimer As Timer
 
-#End Region
-
-#Region "Form Lifecycle"
+    ' ===========================================
+    '  Form Lifecycle
+    ' ===========================================
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
@@ -84,7 +83,6 @@ Public Class Form1
         isInitialized = True
 
     End Sub
-
 
     Private Sub Form1_Shown(
         sender As Object,
@@ -110,9 +108,9 @@ Public Class Form1
 
     End Sub
 
-#End Region
-
-#Region "Initialization"
+    ' ===========================================
+    '  Initialization
+    ' ===========================================
 
     Private Sub CreateSystems()
 
@@ -197,9 +195,9 @@ Public Class Form1
 
     End Sub
 
-#End Region
-
-#Region "Input Events"
+    ' ===========================================
+    '  Input Events
+    ' ===========================================
 
     Protected Overrides Sub OnKeyDown(
         e As KeyEventArgs)
@@ -286,10 +284,9 @@ Public Class Form1
 
     End Sub
 
-#End Region
-
-#Region "Rendering"
-
+    ' ===========================================
+    '  Rendering
+    ' ===========================================
 
     Protected Overrides Sub OnPaint(
     e As PaintEventArgs)
@@ -315,10 +312,9 @@ Public Class Form1
 
     End Sub
 
-#End Region
-
-#Region "Resize"
-
+    ' ===========================================
+    '  Resize
+    ' ===========================================
 
     Protected Overrides Sub OnResize(
     e As EventArgs)
@@ -344,9 +340,9 @@ Public Class Form1
 
     End Sub
 
-#End Region
-
-#Region "Audio"
+    ' ===========================================
+    '  Audio
+    ' ===========================================
 
     Private Sub AudioRestartTimer_Tick(
         sender As Object,
@@ -356,9 +352,10 @@ Public Class Form1
 
     End Sub
 
-#End Region
+    ' ===========================================
+    '  InputManager Event Handlers
+    ' ===========================================
 
-#Region "InputManager Event Handlers"
 
     Private Sub HandleFullscreenRequest()
 
@@ -371,9 +368,10 @@ Public Class Form1
 
     End Sub
 
-#End Region
+    ' ===========================================
+    '  Physics Event Handlers
+    ' ===========================================
 
-#Region "Physics Event Handlers"
 
     Private Sub HandleFrameUpdated()
 
@@ -413,9 +411,10 @@ Public Class Form1
         renderer.TriggerWallImpact(location)
     End Sub
 
-#End Region
+    ' ===========================================
+    '  Application Commands
+    ' ===========================================
 
-#Region "Application Commands"
 
     Public Sub QuitGame()
 
@@ -446,6 +445,5 @@ Public Class Form1
 
     End Sub
 
-#End Region
 
 End Class
