@@ -1721,9 +1721,9 @@ Public Class InputManager
 
     Public Sub SetAIModeFactor(model As GameModel)
         Select Case model.AISelection()
-            Case AIDifficultyLevel.Easy : model.AIModeFactor = 1.0
-            Case AIDifficultyLevel.Normal : model.AIModeFactor = 1.1
-            Case AIDifficultyLevel.Hard : model.AIModeFactor = 1.2
+            Case AIDifficultyLevel.Easy : model.AIModeFactor = 0.8
+            Case AIDifficultyLevel.Normal : model.AIModeFactor = 0.85
+            Case AIDifficultyLevel.Hard : model.AIModeFactor = 0.89
         End Select
     End Sub
 
