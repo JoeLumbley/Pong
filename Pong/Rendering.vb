@@ -858,7 +858,7 @@ Public Class Rendering
         If wallImpactAge >= WallImpactDuration Then Return
 
         Dim progress As Double = wallImpactAge / WallImpactDuration
-        Dim size As Single = CSng((model.BallDiameter * 2) * (0.35 + 1.25 * progress))
+        Dim size As Single = CSng(model.BallDiameter * (0.35 + 1.25 * progress))
         Dim alpha As Integer = CInt(210 * (1.0 - progress))
 
         If alpha <= 0 Then Return
