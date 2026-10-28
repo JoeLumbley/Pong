@@ -78,6 +78,9 @@ Public Class PhysicsEngine
 
         dt = Math.Min(dt, 0.05)
 
+        model.dt = dt
+
+
 
         MoveBall(dt)
 
@@ -242,9 +245,11 @@ Public Class PhysicsEngine
             pos.Y = 0
             model.VelY = Math.Abs(model.VelY)
             audio.PlayWithCooldown("bounce", 100)
+
             RaiseEvent WallImpact(New PointF(
                 pos.X + model.BallDiameter / 2.0F,
                 0))
+
         ElseIf pos.Y >= model.ClientSize.Height - model.BallDiameter Then
             pos.Y = model.ClientSize.Height - model.BallDiameter
             model.VelY = -Math.Abs(model.VelY)
@@ -281,6 +286,16 @@ Public Class PhysicsEngine
         Dim angle As Double
 
         If ballRect.IntersectsWith(model.LeftPaddleRect) AndAlso model.VelX < 0 Then
+
+            'RaiseEvent WallImpact(New PointF(
+            '    model.BallPos.X + model.BallDiameter / 2.0F,
+            '    model.BallPos.Y))
+
+            RaiseEvent WallImpact(New PointF(
+                model.BallPos.X,
+                model.BallPos.Y))
+
+
             angle = ComputeLeftPaddleAngle()
             model.VelX = Math.Cos(angle) * model.BallSpeed
             model.VelY = Math.Sin(angle) * model.BallSpeed
@@ -288,6 +303,11 @@ Public Class PhysicsEngine
         End If
 
         If ballRect.IntersectsWith(model.RightPaddleRect) AndAlso model.VelX > 0 Then
+
+            RaiseEvent WallImpact(New PointF(
+                model.BallPos.X + model.BallDiameter / 2.0F + model.PaddleWidth / 2.0F,
+                model.BallPos.Y))
+
             angle = ComputeRightPaddleAngle()
             model.VelX = Math.Cos(angle) * model.BallSpeed
             model.VelY = Math.Sin(angle) * model.BallSpeed
@@ -410,7 +430,7 @@ Public Class PhysicsEngine
     Public Sub ResetForMenu()
 
         model.BallSpeed =
-        200 * (model.ClientSize.Height / 1080.0)
+        75 * (model.ClientSize.Height / 1080.0)
 
         ResetPaddles()
 
@@ -421,7 +441,7 @@ Public Class PhysicsEngine
     Public Sub ResetForEnd()
 
         model.BallSpeed =
-        200 * (model.ClientSize.Height / 1080.0)
+        75 * (model.ClientSize.Height / 1080.0)
 
         ResetPaddles()
 

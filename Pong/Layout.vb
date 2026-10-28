@@ -29,7 +29,7 @@ Public Class Layout
         If model.State = GameState.StartScreen OrElse
            model.State = GameState.EndScreen OrElse
            model.State = GameState.AIDifficulty Then
-            model.BallSpeed = 200 * (size.Height / 1080.0)
+            model.BallSpeed = 5 * (size.Height / 1080.0)
         Else
             model.BallSpeed = 800 * (size.Height / 1080.0)
         End If
@@ -56,6 +56,8 @@ Public Class Layout
 
     Public Sub ScaleBall(model As GameModel)
         model.BallDiameter = CInt(model.ClientSize.Height / 18.0F)
+
+
     End Sub
 
     Public Sub ScaleMovement(model As GameModel)

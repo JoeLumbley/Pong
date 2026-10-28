@@ -993,10 +993,10 @@ Public Class Rendering
 
 
         ' --- Menu Option Highlighting (shape fill + outline) ---
-        Dim opt1Brush As SolidBrush = If(model.PlayerSelection = NumberOfPlayers.OnePlayer, whiteBrush, grayBrush)
-        Dim opt2Brush As SolidBrush = If(model.PlayerSelection = NumberOfPlayers.TwoPlayers, whiteBrush, grayBrush)
+        Dim opt1Brush As SolidBrush = If(model.PlayerMode = NumberOfPlayers.OnePlayer, whiteBrush, grayBrush)
+        Dim opt2Brush As SolidBrush = If(model.PlayerMode = NumberOfPlayers.TwoPlayers, whiteBrush, grayBrush)
 
-        If model.PlayerSelection = NumberOfPlayers.OnePlayer Then
+        If model.PlayerMode = NumberOfPlayers.OnePlayer Then
             g.FillPath(lightBrush, onePlayerPath)
             g.DrawPath(outlinePen, onePlayerPath)
             g.FillPath(darkBrush, twoPlayersPath)
@@ -1071,11 +1071,11 @@ Public Class Rendering
             Select Case i
                 Case PauseMenu.ResumeMatch : gPath = pauseResumePath
                 Case PauseMenu.NewMatch : gPath = pauseNewPath
-                Case PauseMenu.QuitMatch : gPath = pauseQuitPath
+                Case PauseMenu.QuitToMenu : gPath = pauseQuitPath
             End Select
 
 
-            If i = model.PauseSelection Then
+            If i = model.PauseMenuSelection Then
                 g.FillPath(lightBrush, gPath)
                 g.DrawPath(outlinePen, gPath)
             Else
@@ -1083,7 +1083,7 @@ Public Class Rendering
                 g.DrawPath(darkOutlinePen, gPath)
             End If
 
-            Dim brush As SolidBrush = If(i = model.PauseSelection, whiteBrush, grayBrush)
+            Dim brush As SolidBrush = If(i = model.PauseMenuSelection, whiteBrush, grayBrush)
             g.DrawString(text, pauseMenuFont, brush, x, y)
 
         Next
@@ -1260,6 +1260,8 @@ Public Class Rendering
         End If
 
         g.DrawString(fpsText, keyboardFont, fsIndicatorBrush, fpsX, fpsY)
+
+
     End Sub
 
     Private Sub DrawAIDifficultyHints(g As Graphics, form As Form)

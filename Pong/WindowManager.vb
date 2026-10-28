@@ -48,6 +48,8 @@ Public Class WindowManager
             hostForm.Size = hdSize
             CenterWindow()
             hostForm.WindowState = FormWindowState.Maximized
+
+
         End If
 
     End Sub

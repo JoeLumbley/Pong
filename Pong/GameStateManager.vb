@@ -88,7 +88,7 @@ Public Class GameStateManager
 
         ClearMovementFlags()
 
-        model.PauseSelection = PauseMenu.ResumeMatch
+        model.PauseMenuSelection = PauseMenu.ResumeMatch
 
         window.MovePointerCenterScreen()
 
