@@ -62,7 +62,7 @@ Public Class GameStateManager
 
         StopMenuAudio()
 
-        window.MovePointerOffScreen()
+        window.MoveCursorOffScreen()
 
         ResetScores()
 
@@ -90,7 +90,7 @@ Public Class GameStateManager
 
         model.PauseMenuSelection = PauseMenu.ResumeMatch
 
-        window.MovePointerCenterScreen()
+        window.CenterCursor()
 
         SetState(GameState.Pause)
 
@@ -104,7 +104,7 @@ Public Class GameStateManager
 
         audio.FadeOutAndStopPausedLoop(600)
 
-        window.MovePointerOffScreen()
+        window.MoveCursorOffScreen()
 
         SetState(GameState.Playing)
 
@@ -122,7 +122,7 @@ Public Class GameStateManager
 
         physics.ResetForEnd()
 
-        window.MovePointerCenterScreen()
+        window.CenterCursor()
 
         audio.FadeOutAndStopGamePlayLoop(600)
 

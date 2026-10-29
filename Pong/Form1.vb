@@ -317,9 +317,9 @@ Public Class Form1
 
         DoubleBuffered = True
 
-        window.InitWindow()
+        window.Initialize()
 
-        window.MovePointerCenterScreen()
+        window.CenterCursor()
 
     End Sub
 
@@ -681,6 +681,36 @@ Public Class Form1
     End Sub
 
 #End Region
+
+
+    ' ============================================================
+    '  SYSTEM THEME CHANGE DETECTION
+    '
+    '  Windows sends WM_SETTINGCHANGE whenever a system setting
+    '  changes. We use this notification to detect Light/Dark
+    '  theme changes and update the title bar appearance without
+    '  requiring the application to restart.
+    ' ============================================================
+    Protected Overrides Sub WndProc(ByRef m As Message)
+
+        Const WM_SETTINGCHANGE As Integer = &H1A
+
+        If m.Msg = WM_SETTINGCHANGE Then
+
+            ' Reapply the current system theme to the window.
+            If window IsNot Nothing Then
+                window.ApplySystemTheme()
+            End If
+
+        End If
+
+        MyBase.WndProc(m)
+
+    End Sub
+
+
+
+
 
 End Class
 
