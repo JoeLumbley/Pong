@@ -152,15 +152,14 @@ Public Class RenderingEngine
     Private Shared Sub DrawBackground(
         g As Graphics)
 
-        Using brush As New LinearGradientBrush(
-            New Point(CInt(g.VisibleClipBounds.Width \ 2), -300),
-            New Point(CInt(g.VisibleClipBounds.Width \ 2),
-                     CInt(g.VisibleClipBounds.Height)),
-            Color.FromArgb(32, 32, 32),
-            Color.Black)
+        Using backgroundBrush As New LinearGradientBrush(
+            New RectangleF(g.VisibleClipBounds),
+            Color.FromArgb(25, 25, 25),
+            Color.Black,
+            LinearGradientMode.Vertical)
 
             g.FillRectangle(
-                brush,
+                backgroundBrush,
                 g.VisibleClipBounds)
 
         End Using
