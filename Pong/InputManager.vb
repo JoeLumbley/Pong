@@ -62,7 +62,6 @@ Public Class InputManager
     form As Form,
     audio As AudioController,
     state As GameStateManager,
-    renderer As RenderingEngine,
     model As GameModel)
 
         ' ==========================================
@@ -156,7 +155,6 @@ Public Class InputManager
                     e,
                     form,
                     audio,
-                    renderer,
                     state,
                     model)
 
@@ -193,19 +191,12 @@ Public Class InputManager
                     e,
                     form,
                     audio,
-                    renderer,
                     state,
                     model)
 
         End Select
 
     End Sub
-
-    'Public Sub ToggleShowKeyboardHints(model As GameModel)
-
-    '    model.ShowKeyboardHints = Not model.ShowKeyboardHints
-
-    'End Sub
 
     Public Sub OnKeyUp(e As KeyEventArgs,
                        model As GameModel)
@@ -295,7 +286,6 @@ Public Class InputManager
     e As MouseEventArgs,
     form As Form,
     audio As AudioController,
-    renderer As RenderingEngine,
     state As GameStateManager,
     model As GameModel)
 
@@ -307,7 +297,6 @@ Public Class InputManager
                 e,
                 form,
                 audio,
-                renderer,
                 state,
                 model)
 
@@ -317,7 +306,6 @@ Public Class InputManager
                 e,
                 form,
                 audio,
-                renderer,
                 state,
                 model)
 
@@ -327,7 +315,6 @@ Public Class InputManager
                 e,
                 form,
                 audio,
-                renderer,
                 state,
                 model)
 
@@ -366,11 +353,10 @@ Public Class InputManager
     End Sub
 
     Public Sub OnMouseMove(
-    e As MouseEventArgs,
-    renderer As RenderingEngine,
-    form As Form,
-    audio As AudioController,
-    model As GameModel)
+        e As MouseEventArgs,
+        form As Form,
+        audio As AudioController,
+        model As GameModel)
 
         Select Case model.State
 
@@ -378,7 +364,6 @@ Public Class InputManager
 
                 HandleStartScreen_MouseMove(
                 e,
-                renderer,
                 form,
                 audio,
                 model)
@@ -387,7 +372,6 @@ Public Class InputManager
 
                 HandleAIDifficulty_MouseMove(
                 e,
-                renderer,
                 form,
                 audio,
                 model)
@@ -396,7 +380,6 @@ Public Class InputManager
 
                 HandlePauseMenu_MouseMove(
                 e,
-                renderer,
                 form,
                 audio,
                 model)
@@ -405,11 +388,11 @@ Public Class InputManager
 
     End Sub
 
-    Public Sub OnMouseWheel(e As MouseEventArgs,
-                            form As Form,
-                            audio As AudioController,
-                            model As GameModel)
-
+    Public Sub OnMouseWheel(
+        e As MouseEventArgs,
+        form As Form,
+        audio As AudioController,
+        model As GameModel)
 
         Select Case model.State
 
@@ -445,12 +428,12 @@ Public Class InputManager
     '  KEYBOARD HANDLERS
     ' ===========================
 
-    Private Sub HandleStartScreen_KeyDown(e As KeyEventArgs,
-                                          form As Form,
-                                          audio As AudioController,
-                                          renderer As RenderingEngine,
-                                          state As GameStateManager,
-                                          model As GameModel)
+    Private Sub HandleStartScreen_KeyDown(
+        e As KeyEventArgs,
+        form As Form,
+        audio As AudioController,
+        state As GameStateManager,
+        model As GameModel)
 
         ' ============================================================
         ' 1. Menu Navigation (Up/W and Down/S)
@@ -524,7 +507,7 @@ Public Class InputManager
 
                 model.PlayerMode = NumberOfPlayers.OnePlayer
 
-                HandleOnePlayerSelection(model, renderer, form, state)
+                HandleOnePlayerSelection(model, form, state)
 
                 audio.PlaySelectSound()
                 form.Invalidate()
@@ -534,7 +517,7 @@ Public Class InputManager
 
                 model.PlayerMode = NumberOfPlayers.TwoPlayers
 
-                HandleTwoPlayerSelection(model, renderer, form, state)
+                HandleTwoPlayerSelection(model, form, state)
 
                 audio.PlaySelectSound()
                 form.Invalidate()
@@ -550,11 +533,11 @@ Public Class InputManager
 
                 If model.PlayerMode = NumberOfPlayers.OnePlayer Then
 
-                    HandleOnePlayerSelection(model, renderer, form, state)
+                    HandleOnePlayerSelection(model, form, state)
 
                 Else
 
-                    HandleTwoPlayerSelection(model, renderer, form, state)
+                    HandleTwoPlayerSelection(model, form, state)
 
                 End If
 
@@ -570,11 +553,11 @@ Public Class InputManager
 
                 If model.PlayerMode = NumberOfPlayers.OnePlayer Then
 
-                    HandleOnePlayerSelection(model, renderer, form, state)
+                    HandleOnePlayerSelection(model, form, state)
 
                 Else
 
-                    HandleTwoPlayerSelection(model, renderer, form, state)
+                    HandleTwoPlayerSelection(model, form, state)
 
                 End If
 
@@ -606,15 +589,10 @@ Public Class InputManager
 
     Private Sub HandleOnePlayerSelection(
     model As GameModel,
-    renderer As RenderingEngine,
     form As Form,
     state As GameStateManager)
 
         model.PlayerMode = NumberOfPlayers.OnePlayer
-
-        'renderer.CacheKeyboardHints(
-        'form,
-        'model)
 
         state.GoToAIDifficulty()
 
@@ -623,15 +601,10 @@ Public Class InputManager
 
     Private Sub HandleTwoPlayerSelection(
     model As GameModel,
-    renderer As RenderingEngine,
     form As Form,
     state As GameStateManager)
 
         model.PlayerMode = NumberOfPlayers.TwoPlayers
-
-        'renderer.CacheKeyboardHints(
-        'form,
-        'model)
 
         state.StartMatch()
 
@@ -641,7 +614,6 @@ Public Class InputManager
     e As KeyEventArgs,
     form As Form,
     audio As AudioController,
-    renderer As RenderingEngine,
     state As GameStateManager,
     model As GameModel)
 
@@ -663,9 +635,6 @@ Public Class InputManager
             If model.AISelection > AIDifficultyLevel.Easy Then
 
                 model.AISelection -= 1
-
-                'renderer.SetAIDifficultySelection(
-                'model.AISelection)
 
                 audio.PlayMenuUpSound()
 
@@ -695,9 +664,6 @@ Public Class InputManager
             If model.AISelection < AIDifficultyLevel.Hard Then
 
                 model.AISelection += 1
-
-                'renderer.SetAIDifficultySelection(
-                'model.AISelection)
 
                 audio.PlayMenuDownSound()
 
@@ -798,7 +764,6 @@ Public Class InputManager
             escapeKeyDown = True
 
             state.GoToStartScreen()
-            'state.QuitToStartScreen()
 
             audio.PlaySelectSound()
 
@@ -1054,9 +1019,7 @@ Public Class InputManager
 
             escapeKeyDown = True
 
-            'state.GoToStartScreen()
             state.QuitToStartScreen()
-
 
             audio.PlaySelectSound()
 
@@ -1119,19 +1082,18 @@ Public Class InputManager
 
             Case PauseMenu.QuitToMenu
 
-                'state.GoToStartScreen()
-
                 state.QuitToStartScreen()
 
         End Select
 
     End Sub
 
-    Private Sub HandleEndScreen_KeyDown(e As KeyEventArgs,
-                                        form As Form,
-                                        audio As AudioController,
-                                        state As GameStateManager,
-                                        model As GameModel)
+    Private Sub HandleEndScreen_KeyDown(
+        e As KeyEventArgs,
+        form As Form,
+        audio As AudioController,
+        state As GameStateManager,
+        model As GameModel)
 
         ' ============================================================
         ' 1. Return to Start Screen (Space)
@@ -1187,12 +1149,11 @@ Public Class InputManager
     ' ===========================
 
     Private Sub HandleStartScreen_MouseClick(
-    e As MouseEventArgs,
-    form As Form,
-    audio As AudioController,
-    renderer As RenderingEngine,
-    state As GameStateManager,
-    model As GameModel)
+        e As MouseEventArgs,
+        form As Form,
+        audio As AudioController,
+        state As GameStateManager,
+        model As GameModel)
 
         If model.State <> GameState.StartScreen Then Return
 
@@ -1210,7 +1171,6 @@ Public Class InputManager
 
                 HandleOnePlayerSelection(
                 model,
-                renderer,
                 form,
                 state)
 
@@ -1218,7 +1178,6 @@ Public Class InputManager
 
                 HandleTwoPlayerSelection(
                 model,
-                renderer,
                 form,
                 state)
 
@@ -1235,33 +1194,28 @@ Public Class InputManager
         ' =====================================
         ' One Player
         ' =====================================
-        'If renderer.OnePlayerOptionRect.Contains(
-        'e.Location) Then
 
         If startLayout.OnePlayerRect.Contains(e.Location) Then
 
-                model.PlayerMode =
+            model.PlayerMode =
             NumberOfPlayers.OnePlayer
 
-                HandleOnePlayerSelection(
-            model,
-            renderer,
-            form,
-            state)
+            HandleOnePlayerSelection(
+                model,
+                form,
+                state)
 
-                audio.PlaySelectSound()
+            audio.PlaySelectSound()
 
-                form.Invalidate()
+            form.Invalidate()
 
-                Return
+            Return
 
-            End If
+        End If
 
         ' =====================================
         ' Two Players
         ' =====================================
-        '    If renderer.TwoPlayersOptionRect.Contains(
-        'e.Location) Then
         If startLayout.TwoPlayersRect.Contains(e.Location) Then
 
 
@@ -1270,7 +1224,6 @@ Public Class InputManager
 
             HandleTwoPlayerSelection(
             model,
-            renderer,
             form,
             state)
 
@@ -1290,7 +1243,6 @@ Public Class InputManager
     e As MouseEventArgs,
     form As Form,
     audio As AudioController,
-    renderer As RenderingEngine,
     state As GameStateManager,
     model As GameModel)
 
@@ -1321,26 +1273,24 @@ Public Class InputManager
         ' =====================================
         ' Easy
         ' =====================================
-        'If renderer.EasyRect.Contains(e.Location) Then
         If aiLayout.EasyRect.Contains(e.Location) Then
 
-                ActivateAIDifficulty(
+            ActivateAIDifficulty(
             AIDifficultyLevel.Easy,
             state,
             model)
 
-                audio.PlaySelectSound()
+            audio.PlaySelectSound()
 
-                form.Invalidate()
+            form.Invalidate()
 
-                Return
+            Return
 
-            End If
+        End If
 
         ' =====================================
         ' Normal
         ' =====================================
-        'If renderer.NormalRect.Contains(e.Location) Then
         If aiLayout.NormalRect.Contains(e.Location) Then
             ActivateAIDifficulty(
             AIDifficultyLevel.Normal,
@@ -1358,7 +1308,6 @@ Public Class InputManager
         ' =====================================
         ' Hard
         ' =====================================
-        'If renderer.HardRect.Contains(e.Location) Then
         If aiLayout.HardRect.Contains(e.Location) Then
             ActivateAIDifficulty(
             AIDifficultyLevel.Hard,
@@ -1378,12 +1327,11 @@ Public Class InputManager
 
 
     Private Sub HandlePauseMenu_MouseClick(
-    e As MouseEventArgs,
-    form As Form,
-    audio As AudioController,
-    renderer As RenderingEngine,
-    state As GameStateManager,
-    model As GameModel)
+        e As MouseEventArgs,
+        form As Form,
+        audio As AudioController,
+        state As GameStateManager,
+        model As GameModel)
 
         If model.State <> GameState.Pause Then Return
 
@@ -1409,26 +1357,24 @@ Public Class InputManager
         ' ======================================
         ' Resume
         ' ======================================
-        'If renderer.ResumeRect.Contains(e.Location) Then
         If pauseLayout.ResumeRect.Contains(e.Location) Then
 
-                model.PauseMenuSelection =
+            model.PauseMenuSelection =
                 PauseMenu.ResumeMatch
 
-                ExecutePauseSelection(state, model)
+            ExecutePauseSelection(state, model)
 
-                audio.PlaySelectSound()
+            audio.PlaySelectSound()
 
-                form.Invalidate()
+            form.Invalidate()
 
-                Return
+            Return
 
-            End If
+        End If
 
         ' ======================================
         ' New Match
         ' ======================================
-        'If renderer.NewMatchRect.Contains(e.Location) Then
         If pauseLayout.NewGameRect.Contains(e.Location) Then
 
             model.PauseMenuSelection =
@@ -1447,7 +1393,6 @@ Public Class InputManager
         ' ======================================
         ' Quit
         ' ======================================
-        'If renderer.QuitRect.Contains(e.Location) Then
         If pauseLayout.QuitRect.Contains(e.Location) Then
 
             model.PauseMenuSelection =
@@ -1468,19 +1413,17 @@ Public Class InputManager
 
 
     Private Sub HandleEndScreen_MouseClick(
-    e As MouseEventArgs,
-    form As Form,
-    audio As AudioController,
-    state As GameStateManager,
-    model As GameModel)
+        e As MouseEventArgs,
+        form As Form,
+        audio As AudioController,
+        state As GameStateManager,
+        model As GameModel)
 
         If model.State <> GameState.EndScreen Then Return
 
         audio.PlaySelectSound()
 
-        'state.GoToStartScreen()
         state.QuitToStartScreen()
-
 
         form.Invalidate()
 
@@ -1492,11 +1435,11 @@ Public Class InputManager
     '  MOUSE MOVE HANDLERS
     ' ===========================
 
-    Private Sub HandleStartScreen_MouseMove(e As MouseEventArgs,
-                                            renderer As RenderingEngine,
-                                            form As Form,
-                                            audio As AudioController,
-                                            model As GameModel)
+    Private Sub HandleStartScreen_MouseMove(
+        e As MouseEventArgs,
+        form As Form,
+        audio As AudioController,
+        model As GameModel)
 
         If model.State <> GameState.StartScreen Then Return
 
@@ -1518,19 +1461,16 @@ Public Class InputManager
 
     End Sub
 
-    Private Sub HandleAIDifficulty_MouseMove(e As MouseEventArgs,
-                                             renderer As RenderingEngine,
-                                             form As Form,
-                                             audio As AudioController,
-                                             model As GameModel)
+    Private Sub HandleAIDifficulty_MouseMove(
+        e As MouseEventArgs,
+        form As Form,
+        audio As AudioController,
+        model As GameModel)
 
         If model.State <> GameState.AIDifficulty Then Return
 
         Dim oldSelection = model.AISelection
 
-
-        'If renderer.EasyRect.Contains(e.Location) Then
-        'If pauseLayout.ResumeRect.Contains(e.Location) Then
         If aiLayout.EasyRect.Contains(e.Location) Then
             model.AISelection = AIDifficultyLevel.Easy
         ElseIf aiLayout.NormalRect.Contains(e.Location) Then
@@ -1550,11 +1490,11 @@ Public Class InputManager
         End If
     End Sub
 
-    Private Sub HandlePauseMenu_MouseMove(e As MouseEventArgs,
-                                          renderer As RenderingEngine,
-                                          form As Form,
-                                          audio As AudioController,
-                                          model As GameModel)
+    Private Sub HandlePauseMenu_MouseMove(
+        e As MouseEventArgs,
+        form As Form,
+        audio As AudioController,
+        model As GameModel)
 
         If model.State <> GameState.Pause Then Return
 
@@ -1578,10 +1518,11 @@ Public Class InputManager
     '  MOUSE WHEEL HANDLERS
     ' ===========================
 
-    Private Sub HandleStartScreenMouseWheel(delta As Integer,
-                                            form As Form,
-                                            audio As AudioController,
-                                            model As GameModel)
+    Private Sub HandleStartScreenMouseWheel(
+        delta As Integer,
+        form As Form,
+        audio As AudioController,
+        model As GameModel)
 
         ' Accumulate wheel movement
         startScreenScrollAccum += delta
@@ -1623,10 +1564,11 @@ Public Class InputManager
 
     End Sub
 
-    Private Sub HandleAIDifficultyMouseWheel(delta As Integer,
-                                             form As Form,
-                                             audio As AudioController,
-                                             model As GameModel)
+    Private Sub HandleAIDifficultyMouseWheel(
+        delta As Integer,
+        form As Form,
+        audio As AudioController,
+        model As GameModel)
 
         ' Accumulate wheel movement
         aiDifficultyScrollAccum += delta
@@ -1672,10 +1614,11 @@ Public Class InputManager
 
     End Sub
 
-    Private Sub HandlePauseMouseWheel(delta As Integer,
-                                      form As Form,
-                                      audio As AudioController,
-                                      model As GameModel)
+    Private Sub HandlePauseMouseWheel(
+        delta As Integer,
+        form As Form,
+        audio As AudioController,
+        model As GameModel)
 
         ' Accumulate wheel movement
         pauseScrollAccum += delta
@@ -1736,12 +1679,15 @@ Public Class InputManager
 
     End Sub
 
-    Public Sub SetAIModeFactor(model As GameModel)
+    Public Sub SetAIModeFactor(
+        model As GameModel)
+
         Select Case model.AISelection
-            Case AIDifficultyLevel.Easy : model.AIModeFactor = 0.7
+            Case AIDifficultyLevel.Easy : model.AIModeFactor = 0.5
             Case AIDifficultyLevel.Normal : model.AIModeFactor = 0.7
             Case AIDifficultyLevel.Hard : model.AIModeFactor = 0.7
         End Select
+
     End Sub
 
 End Class

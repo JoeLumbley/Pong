@@ -419,6 +419,11 @@ Public Class Form1
 
         scaler.Scale(model)
 
+
+        UpdateEffectScaling()
+
+
+
         startLayout.Cache(Me, graphicsResources, model)
 
         pauseLayout.Cache(Me, graphicsResources, model)
@@ -448,6 +453,16 @@ Public Class Form1
 
     End Sub
 
+
+    Private Sub UpdateEffectScaling()
+
+        Dim scale As Single = CSng(ClientSize.Height / 150.0F)
+
+        wallImpact.OuterRadius = 5.0F * scale
+        wallImpact.InnerRadius = 3.0F * scale
+
+    End Sub
+
 #End Region
 
 #Region "Input"
@@ -462,7 +477,6 @@ Public Class Form1
             Me,
             audio,
             state,
-            renderer,
             model)
 
     End Sub
@@ -490,7 +504,6 @@ Public Class Form1
             e,
             Me,
             audio,
-            renderer,
             state,
             model)
 
@@ -522,7 +535,6 @@ Public Class Form1
 
         input.OnMouseMove(
             e,
-            renderer,
             Me,
             audio,
             model)

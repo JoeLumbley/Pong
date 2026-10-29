@@ -25,7 +25,7 @@ Public Class WindowManager
         ApplyDarkTitleBar(dark, hostForm.Handle)
 
         hostForm.StartPosition = FormStartPosition.CenterScreen
-        hostForm.MinimumSize = New Size(256, 256)
+        hostForm.MinimumSize = New Size(255, 255)
         hostForm.Size = hdSize
 
         CenterWindow()

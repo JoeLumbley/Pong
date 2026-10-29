@@ -289,7 +289,7 @@ Public Class RenderingEngine
 
             Case GameState.EndScreen
 
-                RenderPaddles(g, model)
+                'RenderPaddles(g, model)
 
                 hudRenderer.Draw(
                     g,

@@ -197,8 +197,6 @@ Public Class GameStateManager
 
         physics.ResetForEnd()
 
-        'window.MovePointerCenterScreen()
-
         StopGameplayAudio()
 
         audio.PlayStartLoop(600)

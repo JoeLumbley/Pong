@@ -90,26 +90,28 @@ Public Class AudioController
         ' Wait for fade-out to complete before restarting engine
         Dim t As New Timer() With {.Interval = 700}
 
-        AddHandler t.Tick, Sub()
-                               t.Stop()
-                               t.Dispose()
+        AddHandler t.Tick,
+            Sub()
+                t.Stop()
+                t.Dispose()
 
-                               ' Dispose old engine
-                               Audio?.Dispose()
+                ' Dispose old engine
+                Audio?.Dispose()
 
-                               ' Create new engine
-                               Audio = New AudioPlayer()
+                ' Create new engine
+                Audio = New AudioPlayer()
 
-                               ' Reload all sounds
-                               LoadAndRegisterSounds()
+                ' Reload all sounds
+                LoadAndRegisterSounds()
 
-                               ' Restore loops based on game state
-                               RestartLoops(model)
-                           End Sub
+                ' Restore loops based on game state
+                RestartLoops(model)
+            End Sub
 
         t.Start()
 
     End Sub
+
 
     Public Sub FadeOutAndStopActiveLoops(durationMs As Integer)
         ' Fade-out and stop only loops that are actually playing
@@ -166,13 +168,16 @@ Public Class AudioController
 
     Public Sub PlayStartLoop(durationMs As Integer)
 
-        ' Fade‑in loop
-        Audio.SetVolume("startloop", 0)
-        Audio.LoopSound("startloop")
-        Audio.FadeVolume("startloop", 0, startLoopVolume, durationMs)
+        If Not Audio.IsPlaying("startloop") Then
+
+            ' Fade‑in loop
+            Audio.SetVolume("startloop", 0)
+            Audio.LoopSound("startloop")
+            Audio.FadeVolume("startloop", 0, startLoopVolume, durationMs)
+
+        End If
 
     End Sub
-
 
     Public Sub PlayGamePlayLoop(durationMs As Integer)
 
