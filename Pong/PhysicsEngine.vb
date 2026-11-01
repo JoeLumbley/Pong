@@ -158,6 +158,29 @@ Public Class PhysicsEngine
         model.RightPaddleRect = right
     End Sub
 
+    Public Sub ResizePlayfield()
+        Dim maxPaddleY As Integer =
+            Math.Max(0, model.ClientSize.Height - model.PaddleHeight)
+
+        Dim left = model.LeftPaddleRect
+        Dim right = model.RightPaddleRect
+
+        left.Y = Math.Max(0, Math.Min(maxPaddleY, left.Y))
+        right.Y = Math.Max(0, Math.Min(maxPaddleY, right.Y))
+
+        model.LeftPaddleRect = left
+        model.RightPaddleRect = right
+
+        Dim maxBallX As Integer =
+            Math.Max(0, model.ClientSize.Width - model.BallDiameter)
+        Dim maxBallY As Integer =
+            Math.Max(0, model.ClientSize.Height - model.BallDiameter)
+
+        model.BallPos = New PointF(
+            Math.Max(0, Math.Min(maxBallX, model.BallPos.X)),
+            Math.Max(0, Math.Min(maxBallY, model.BallPos.Y)))
+    End Sub
+
     ' ============================================================
     ' AI MOVEMENT
     ' ============================================================
@@ -410,7 +433,8 @@ Public Class PhysicsEngine
         75 * (model.ClientSize.Height / 1080.0)
 
         ResetPaddles()
-
+        CenterBall()
+        MoveBallRandom()
 
     End Sub
 
@@ -456,6 +480,18 @@ Public Class PhysicsEngine
         model.VelX = Math.Cos(angle) * model.BallSpeed * direction
         model.VelY = Math.Sin(angle) * model.BallSpeed
     End Sub
+
+
+    Public Sub ServeBallRandom()
+        Dim direction As Integer = If(rng.Next(0, 2) = 0, -1, 1)
+        Dim angle As Double = rng.NextDouble() * (Math.PI / 3.0) - (Math.PI / 6.0)
+        model.VelX = Math.Cos(angle) * model.BallSpeed * direction
+        model.VelY = Math.Sin(angle) * model.BallSpeed
+    End Sub
+
+
+
+
 
     ' ============================================================
     ' PADDLE VELOCITY TRACKING

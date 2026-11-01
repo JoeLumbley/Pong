@@ -4,6 +4,8 @@ Imports Pong.Enums
 Public Class AudioController
 
     Private Audio As AudioPlayer
+    Private restartTimer As Timer
+    Private disposed As Boolean
 
     Private gameplayLoopVolume As Integer = 10
     Private startLoopVolume As Integer = 25
@@ -81,6 +83,8 @@ Public Class AudioController
 
     Public Sub RestartAudioEngine(model As GameModel)
 
+        If disposed Then Return
+
         FadeOutAndStopActiveLoops(600)
 
         If Audio.IsPlaying("bounce") Then
@@ -88,12 +92,18 @@ Public Class AudioController
         End If
 
         ' Wait for fade-out to complete before restarting engine
-        Dim t As New Timer() With {.Interval = 700}
+        restartTimer?.Stop()
+        restartTimer?.Dispose()
 
-        AddHandler t.Tick,
+        restartTimer = New Timer() With {.Interval = 700}
+
+        AddHandler restartTimer.Tick,
             Sub()
-                t.Stop()
-                t.Dispose()
+                restartTimer.Stop()
+                restartTimer.Dispose()
+                restartTimer = Nothing
+
+                If disposed Then Return
 
                 ' Dispose old engine
                 Audio?.Dispose()
@@ -108,7 +118,7 @@ Public Class AudioController
                 RestartLoops(model)
             End Sub
 
-        t.Start()
+        restartTimer.Start()
 
     End Sub
 
@@ -226,6 +236,12 @@ Public Class AudioController
     End Sub
 
     Public Sub DisposeAudio()
+        disposed = True
+
+        restartTimer?.Stop()
+        restartTimer?.Dispose()
+        restartTimer = Nothing
+
         Audio?.Dispose()
     End Sub
 

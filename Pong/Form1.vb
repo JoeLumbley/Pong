@@ -37,6 +37,8 @@ Imports Pong.Enums
 Public Class Form1
 
     Private isInitialized As Boolean
+    Private isClosing As Boolean
+    Private quitRequested As Boolean
 
 #Region "Systems"
 
@@ -99,7 +101,7 @@ Public Class Form1
 
 #Region "Audio"
 
-    Private WithEvents AudioRestartTimer As Timer
+    Private WithEvents audioRestartTimer As Timer
 
 #End Region
 
@@ -112,11 +114,6 @@ Public Class Form1
     Private cachedRightPlayerName As String = Nothing
 
 #End Region
-
-    ' -------------------------------
-    '  Random
-    ' -------------------------------
-    Private ReadOnly rng As New Random()
 
     Private gameOverLayout As GameOverLayout
     Private gameOverRenderer As GameOverRenderer
@@ -153,11 +150,13 @@ Public Class Form1
         sender As Object,
         e As FormClosingEventArgs) Handles Me.FormClosing
 
-        AudioRestartTimer?.Stop()
+        isClosing = True
+
+        audioRestartTimer?.Stop()
 
         physics?.Stop()
 
-        AudioRestartTimer?.Dispose()
+        audioRestartTimer?.Dispose()
 
         graphicsResources?.Dispose()
 
@@ -222,16 +221,7 @@ Public Class Form1
 
         graphicsResources.Initialize(Me)
 
-        startLayout.Cache(Me, graphicsResources, model)
-
-        pauseLayout.Cache(Me, graphicsResources, model)
-
-        aiLayout.Cache(Me, graphicsResources, model)
-
-        hudLayout.Cache(
-        Me,
-        model,
-        graphicsResources)
+        RefreshLayouts()
 
         ballTrail = New BallTrailRenderer()
 
@@ -247,7 +237,7 @@ Public Class Form1
         graphicsResources,
         startLayout)
 
-        HudRenderer =
+        hudRenderer =
             New HudRenderer(
                 graphicsResources,
                 hudLayout)
@@ -314,12 +304,15 @@ Public Class Form1
 
         window.Initialize()
 
+        model.ClientSize = ClientSize
+
         window.CenterCursor()
 
     End Sub
 
     Private Sub InitPhysics()
 
+        physics.ResetForMenu()
         physics.Start()
 
     End Sub
@@ -336,7 +329,7 @@ Public Class Form1
 
     Private Sub InitAudioRestartTimer()
 
-        AudioRestartTimer = New Timer With {
+        audioRestartTimer = New Timer With {
             .Interval = 180000,
             .Enabled = True
         }
@@ -368,10 +361,10 @@ Public Class Form1
 
         MyBase.OnPaint(e)
 
-        If Not isInitialized Then Return
+        If Not isInitialized OrElse isClosing Then Return
 
         fpsCounter.Update()
-        model.fps = fpsCounter.FPS
+        model.FPS = fpsCounter.FPS
 
         renderer.Render(
             e.Graphics,
@@ -419,13 +412,32 @@ Public Class Form1
 
 
 
-        startLayout.Cache(Me, graphicsResources, model)
+        physics.CenterBall()
 
-        pauseLayout.Cache(Me, graphicsResources, model)
+        'If model.State = GameState.Playing Then
+        '    physics.ServeBall()
 
-        aiLayout.Cache(Me, graphicsResources, model)
 
-        hudLayout.Cache(Me, model, graphicsResources)
+
+        'Else
+        '    physics.MoveBallRandom()
+
+        'End If
+
+        'physics.r
+        If model.State = GameState.Playing OrElse model.State = GameState.Pause Then
+            physics.ServeBallRandom()
+
+
+            'physics.
+        Else
+            physics.MoveBallRandom()
+        End If
+
+
+
+
+        RefreshLayouts()
 
         paddleLayout.Resize(ClientSize, model)
 
@@ -434,17 +446,18 @@ Public Class Form1
 
         ballTrail.Reset()
 
-        physics.CenterBall()
-
-        If model.State = GameState.Playing OrElse model.State = GameState.Pause Then
-            physics.ServeBall(If(rng.Next(0, 2) = 0, -1, 1))
-        Else
-            physics.MoveBallRandom()
-        End If
-
-        physics.ResetPaddles()
+        physics.ResizePlayfield()
 
         Invalidate()
+
+    End Sub
+
+    Private Sub RefreshLayouts()
+
+        startLayout.Cache(Me, graphicsResources, model)
+        pauseLayout.Cache(Me, graphicsResources, model)
+        aiLayout.Cache(Me, graphicsResources, model)
+        hudLayout.Cache(Me, model, graphicsResources)
 
     End Sub
 
@@ -554,7 +567,8 @@ Public Class Form1
 
     Private Sub HandleFrameUpdated()
 
-        If IsDisposed OrElse Not IsHandleCreated Then Return
+        If Not isInitialized OrElse isClosing OrElse
+           IsDisposed OrElse Not IsHandleCreated Then Return
 
         ballTrail.Update(model)
 
@@ -611,7 +625,7 @@ Public Class Form1
 
     Private Sub HandleFullscreenRequest()
 
-        window.ToggleFullScreen()
+        window.ToggleFullscreen()
 
         If Me.FormBorderStyle = FormBorderStyle.None Then
             model.IsFullscreen = True
@@ -621,10 +635,7 @@ Public Class Form1
 
         End If
 
-        startLayout.Cache(Me, graphicsResources, model)
-        aiLayout.Cache(Me, graphicsResources, model)
-
-        pauseLayout.Cache(Me, graphicsResources, model)
+        RefreshLayouts()
 
         Invalidate()
 
@@ -636,7 +647,9 @@ Public Class Form1
 
     Private Sub AudioRestartTimer_Tick(
         sender As Object,
-        e As EventArgs) Handles AudioRestartTimer.Tick
+        e As EventArgs) Handles audioRestartTimer.Tick
+
+        If isClosing Then Return
 
         audio.RestartAudioEngine(model)
 
@@ -648,7 +661,10 @@ Public Class Form1
 
     Public Sub QuitGame()
 
-        AudioRestartTimer?.Stop()
+        If quitRequested OrElse isClosing Then Return
+
+        quitRequested = True
+        audioRestartTimer?.Stop()
 
         audio.PlayExitSound()
 
@@ -662,6 +678,8 @@ Public Class Form1
 
         AddHandler t.Tick,
             Sub()
+
+                If IsDisposed Then Return
 
                 t.Stop()
 
