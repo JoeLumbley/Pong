@@ -6,6 +6,7 @@ Public Class PhysicsEngine
 
     Private ReadOnly model As GameModel
     Private ReadOnly audio As AudioController
+    Private ReadOnly rng As New Random()
 
 
     Private ReadOnly physicsTimer As Timer
@@ -160,30 +161,6 @@ Public Class PhysicsEngine
     ' ============================================================
     ' AI MOVEMENT
     ' ============================================================
-    'Private Sub UpdateAI(dt As Double)
-
-    '    Dim right = model.RightPaddleRect
-
-    '    Dim targetY As Single = model.BallPos.Y + model.BallDiameter / 2
-    '    Dim paddleCenter As Single = right.Y + model.PaddleHeight / 2
-
-    '    Dim factor As Double = Math.Max(model.AIModeFactor * model.AIDifficultyScale, 0.25)
-
-
-    '    If targetY < paddleCenter Then
-    '        right.Y -= CSng(model.PaddleSpeed * dt * factor)
-    '    ElseIf targetY > paddleCenter Then
-    '        right.Y += CSng(model.PaddleSpeed * dt * factor)
-    '    End If
-
-
-    '    right.Y = Math.Max(0, Math.Min(model.ClientSize.Height - model.PaddleHeight, right.Y))
-
-    '    model.RightPaddleRect = right
-    'End Sub
-
-
-
     Private Const AI_DEADZONE As Single = 8.0F
 
     Private Sub UpdateAI(dt As Double)
@@ -422,7 +399,7 @@ Public Class PhysicsEngine
         CenterBall()
 
         ServeBall(
-        If(model.RNG.Next(0, 2) = 0, -1, 1))
+        If(rng.Next(0, 2) = 0, -1, 1))
 
     End Sub
 
@@ -469,13 +446,13 @@ Public Class PhysicsEngine
     End Sub
 
     Public Sub MoveBallRandom()
-        Dim angle As Double = model.RNG.NextDouble() * Math.PI * 2.0
+        Dim angle As Double = rng.NextDouble() * Math.PI * 2.0
         model.VelX = Math.Cos(angle) * model.BallSpeed
         model.VelY = Math.Sin(angle) * model.BallSpeed
     End Sub
 
     Public Sub ServeBall(direction As Integer)
-        Dim angle As Double = model.RNG.NextDouble() * (Math.PI / 3.0) - (Math.PI / 6.0)
+        Dim angle As Double = rng.NextDouble() * (Math.PI / 3.0) - (Math.PI / 6.0)
         model.VelX = Math.Cos(angle) * model.BallSpeed * direction
         model.VelY = Math.Sin(angle) * model.BallSpeed
     End Sub

@@ -1,34 +1,4 @@
-﻿'Public Class FpsCounter
-
-'    Private frameCount As Integer
-'    Private FramesPreSecond As Integer
-
-'    Private ReadOnly stopwatch As Stopwatch
-
-'    Public ReadOnly Property FPS As Integer
-'        Get
-'            Return FramesPreSecond
-'        End Get
-'    End Property
-
-'    Public Sub Update()
-
-'        frameCount += 1
-
-'        If stopwatch.ElapsedMilliseconds >= 1000 Then
-'            FramesPreSecond = frameCount
-'            frameCount = 0
-'            stopwatch.Restart()
-'        End If
-
-'    End Sub
-
-'End Class
-
-
-
-
-Imports System.Diagnostics
+﻿Imports System.Diagnostics
 
 Public Class FpsCounter
 

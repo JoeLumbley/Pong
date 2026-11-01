@@ -116,7 +116,7 @@ Public Class Form1
     ' -------------------------------
     '  Random
     ' -------------------------------
-    Private rng As New Random()
+    Private ReadOnly rng As New Random()
 
     Private gameOverLayout As GameOverLayout
     Private gameOverRenderer As GameOverRenderer
@@ -162,8 +162,6 @@ Public Class Form1
         graphicsResources?.Dispose()
 
         audio?.DisposeAudio()
-
-        model?.Dispose()
 
     End Sub
 
@@ -236,9 +234,6 @@ Public Class Form1
         graphicsResources)
 
         ballTrail = New BallTrailRenderer()
-
-
-        paddleTrail = New PaddleTrailRenderer()
 
 
         wallImpact = New WallImpactRenderer
